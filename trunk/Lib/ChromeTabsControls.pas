@@ -1562,7 +1562,7 @@ begin
     Result := Result or SymbolResult;
   end;
 
-  Result := Result or inherited Animate;
+  Result := inherited Animate or Result;
 
   if Result then
     Invalidate;

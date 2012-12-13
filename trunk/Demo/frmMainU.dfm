@@ -1,9 +1,9 @@
 object frmMain: TfrmMain
   Left = 436
   Top = 187
-  Width = 1030
-  Height = 634
   Caption = 'Chrome Tabs Demo'
+  ClientHeight = 596
+  ClientWidth = 1014
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -33,6 +33,7 @@ object frmMain: TfrmMain
     ImagesOverlay = ImageList2
     Options.Display.CloseButton.Offsets.Vertical = 6
     Options.Display.CloseButton.Offsets.Horizontal = 2
+    Options.Display.CloseButton.Offsets.HorizontalFloating = -3
     Options.Display.CloseButton.Height = 14
     Options.Display.CloseButton.Width = 14
     Options.Display.CloseButton.AutoHide = True
@@ -41,16 +42,19 @@ object frmMain: TfrmMain
     Options.Display.CloseButton.CrossRadialOffset = 4
     Options.Display.AddButton.Offsets.Vertical = 10
     Options.Display.AddButton.Offsets.Horizontal = 2
+    Options.Display.AddButton.Offsets.HorizontalFloating = -3
     Options.Display.AddButton.Height = 14
     Options.Display.AddButton.Width = 31
     Options.Display.AddButton.ShowPlusSign = False
     Options.Display.AddButton.Visibility = avRightFloating
     Options.Display.ScrollButtonLeft.Offsets.Vertical = 10
     Options.Display.ScrollButtonLeft.Offsets.Horizontal = 1
+    Options.Display.ScrollButtonLeft.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonLeft.Height = 15
     Options.Display.ScrollButtonLeft.Width = 15
     Options.Display.ScrollButtonRight.Offsets.Vertical = 10
     Options.Display.ScrollButtonRight.Offsets.Horizontal = 1
+    Options.Display.ScrollButtonRight.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonRight.Height = 15
     Options.Display.ScrollButtonRight.Width = 15
     Options.Display.TabModifiedGlow.Style = msRightToLeft
@@ -72,7 +76,6 @@ object frmMain: TfrmMain
     Options.Display.Tabs.ImageOffsetLeft = 13
     Options.Display.Tabs.TextTrimType = tttFade
     Options.Display.Tabs.Orientation = toTop
-    Options.Display.Tabs.CanvasSmoothingMode = 2
     Options.Display.Tabs.BaseLineTabRegionOnly = False
     Options.Display.Tabs.WordWrap = False
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
@@ -85,6 +88,7 @@ object frmMain: TfrmMain
     Options.Display.TabContainer.PaddingRight = 0
     Options.Display.TabMouseGlow.Offsets.Vertical = 0
     Options.Display.TabMouseGlow.Offsets.Horizontal = 0
+    Options.Display.TabMouseGlow.Offsets.HorizontalFloating = -3
     Options.Display.TabMouseGlow.Height = 200
     Options.Display.TabMouseGlow.Width = 200
     Options.Display.TabMouseGlow.Visible = True
@@ -97,7 +101,7 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
-    Options.Animation.AnimationMovement = [aeTabAdd, aeTabMove, aeTabDragCancelled]
+    Options.Animation.AnimationMovement = [aeTabAdd, aeTabMove, aeTabDragCancelled, aeAddButtonMove]
     Options.Animation.AnimationMovementIncrement = 8
     Options.Animation.AnimationStyleIncrement = 10
     Options.Animation.AnimationTimerInterval = 30
@@ -346,6 +350,7 @@ object frmMain: TfrmMain
     ActiveTabIndex = -1
     Options.Display.CloseButton.Offsets.Vertical = 6
     Options.Display.CloseButton.Offsets.Horizontal = 2
+    Options.Display.CloseButton.Offsets.HorizontalFloating = -3
     Options.Display.CloseButton.Height = 14
     Options.Display.CloseButton.Width = 14
     Options.Display.CloseButton.AutoHide = True
@@ -354,16 +359,19 @@ object frmMain: TfrmMain
     Options.Display.CloseButton.CrossRadialOffset = 4
     Options.Display.AddButton.Offsets.Vertical = 7
     Options.Display.AddButton.Offsets.Horizontal = 2
+    Options.Display.AddButton.Offsets.HorizontalFloating = -3
     Options.Display.AddButton.Height = 15
     Options.Display.AddButton.Width = 32
     Options.Display.AddButton.ShowPlusSign = False
     Options.Display.AddButton.Visibility = avRightFloating
     Options.Display.ScrollButtonLeft.Offsets.Vertical = 7
     Options.Display.ScrollButtonLeft.Offsets.Horizontal = 1
+    Options.Display.ScrollButtonLeft.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonLeft.Height = 15
     Options.Display.ScrollButtonLeft.Width = 15
     Options.Display.ScrollButtonRight.Offsets.Vertical = 7
     Options.Display.ScrollButtonRight.Offsets.Horizontal = 1
+    Options.Display.ScrollButtonRight.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonRight.Height = 15
     Options.Display.ScrollButtonRight.Width = 15
     Options.Display.TabModifiedGlow.Style = msRightToLeft
@@ -385,7 +393,6 @@ object frmMain: TfrmMain
     Options.Display.Tabs.ImageOffsetLeft = 13
     Options.Display.Tabs.TextTrimType = tttFade
     Options.Display.Tabs.Orientation = toBottom
-    Options.Display.Tabs.CanvasSmoothingMode = 2
     Options.Display.Tabs.BaseLineTabRegionOnly = False
     Options.Display.Tabs.WordWrap = False
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
@@ -398,6 +405,7 @@ object frmMain: TfrmMain
     Options.Display.TabContainer.PaddingRight = 0
     Options.Display.TabMouseGlow.Offsets.Vertical = 0
     Options.Display.TabMouseGlow.Offsets.Horizontal = 0
+    Options.Display.TabMouseGlow.Offsets.HorizontalFloating = -3
     Options.Display.TabMouseGlow.Height = 200
     Options.Display.TabMouseGlow.Width = 200
     Options.Display.TabMouseGlow.Visible = True
@@ -655,7 +663,6 @@ object frmMain: TfrmMain
         Width = 128
         Height = 23
         Style = csDropDownList
-        ItemHeight = 15
         ItemIndex = 0
         TabOrder = 1
         Text = 'Top Tabs'
@@ -789,7 +796,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 736
           Height = 444
-          ActivePage = TabSheet8
+          ActivePage = TabSheet4
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -1072,7 +1079,6 @@ object frmMain: TfrmMain
                 Width = 143
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 2
                 TabOrder = 0
                 Text = 'Right to Left'
@@ -1290,7 +1296,6 @@ object frmMain: TfrmMain
                 Width = 170
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 4
                 TabOrder = 0
                 Text = 'Anti Alias'
@@ -1308,7 +1313,6 @@ object frmMain: TfrmMain
                 Top = 89
                 Width = 170
                 Height = 23
-                ItemHeight = 0
                 TabOrder = 1
                 Text = 'Segoe UI'
                 OnChange = OnCommonControlPropertyChange
@@ -1341,7 +1345,6 @@ object frmMain: TfrmMain
                 Width = 170
                 Height = 22
                 DefaultColorColor = clSkyBlue
-                ItemHeight = 16
                 TabOrder = 4
                 OnChange = OnCommonControlPropertyChange
               end
@@ -1384,7 +1387,6 @@ object frmMain: TfrmMain
                 Width = 152
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 6
                 TabOrder = 3
                 Text = 'Fade'
@@ -1414,7 +1416,6 @@ object frmMain: TfrmMain
                 Width = 150
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 2
                 Text = 'Left'
@@ -1430,7 +1431,6 @@ object frmMain: TfrmMain
                 Width = 139
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 2
                 TabOrder = 1
                 Text = 'Centre'
@@ -1460,7 +1460,7 @@ object frmMain: TfrmMain
               Top = 19
               Width = 728
               Height = 395
-              ActivePage = TabSheet13
+              ActivePage = TabSheet12
               Align = alClient
               TabOrder = 0
               object TabSheet11: TTabSheet
@@ -1528,7 +1528,6 @@ object frmMain: TfrmMain
                   Width = 94
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 1
                   TabOrder = 1
                   Text = 'All Tabs'
@@ -1657,13 +1656,20 @@ object frmMain: TfrmMain
                   Caption = 'Width:'
                   FocusControl = edtAddButtonWidth
                 end
+                object Label68: TLabel
+                  Left = 443
+                  Top = 56
+                  Width = 109
+                  Height = 15
+                  Caption = 'Floating Horz Offset:'
+                  FocusControl = edtAddButtonFloatingHorzOffset
+                end
                 object cbAddButtonVisibility: TComboBox
                   Left = 11
                   Top = 21
                   Width = 118
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Floating Right'
@@ -1729,6 +1735,17 @@ object frmMain: TfrmMain
                   TabOrder = 1
                   OnClick = OnCommonControlPropertyChange
                 end
+                object edtAddButtonFloatingHorzOffset: TSpinEdit
+                  Left = 443
+                  Top = 73
+                  Width = 118
+                  Height = 24
+                  MaxValue = 65535
+                  MinValue = -65535
+                  TabOrder = 6
+                  Value = 2
+                  OnChange = OnCommonControlPropertyChange
+                end
               end
               object TabSheet13: TTabSheet
                 Caption = 'Scroll Buttons'
@@ -1747,7 +1764,6 @@ object frmMain: TfrmMain
                   Width = 144
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Right'
@@ -2113,7 +2129,6 @@ object frmMain: TfrmMain
               Width = 170
               Height = 23
               Style = csDropDownList
-              ItemHeight = 15
               ItemIndex = 2
               TabOrder = 0
               Text = 'High Quality'
@@ -2283,7 +2298,7 @@ object frmMain: TfrmMain
                 Left = 11
                 Top = 67
                 Width = 377
-                Height = 41
+                Height = 33
                 AutoSize = False
                 Caption = 
                   'Style transition animation properties can be set in the OnAnimat' +
@@ -2338,6 +2353,8 @@ object frmMain: TfrmMain
                 Width = 180
                 Height = 17
                 Caption = 'Add Button Move'
+                Checked = True
+                State = cbChecked
                 TabOrder = 3
                 OnClick = OnCommonMovementAnimationClick
               end
@@ -2354,7 +2371,6 @@ object frmMain: TfrmMain
               Style = csDropDownList
               Constraints.MaxWidth = 200
               Constraints.MinWidth = 200
-              ItemHeight = 15
               ItemIndex = 2
               TabOrder = 1
               Text = 'Drag between containers'
@@ -2410,7 +2426,6 @@ object frmMain: TfrmMain
                 Width = 126
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 0
                 Text = 'Default'
@@ -2436,7 +2451,6 @@ object frmMain: TfrmMain
                 Width = 126
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 3
                 TabOrder = 3
                 Text = 'Tab and Control'

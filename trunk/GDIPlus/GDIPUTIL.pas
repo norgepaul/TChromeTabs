@@ -19,17 +19,6 @@
       {                                                                  }
       { *****************************************************************}
 
-///////////////////////////////////////////////////////////////////////////////
-// KleverComponents:
-//----------------------------------------------------------------------------
-// This unit is based on "GDIPUTIL.pas" from http://www.progdigy.com/
-// It was renamed to "rkGDIPUTIL.pas" to avoid issues with Delphi XE.
-//   
-// To obtain the original unit(s) please visit 
-// http://www.progdigy.com/?page_id=7
-//
-///////////////////////////////////////////////////////////////////////////////
-
 unit rkGDIPUTIL;
 
 interface

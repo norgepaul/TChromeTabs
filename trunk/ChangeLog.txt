@@ -1,0 +1,6 @@
+TChromeTabs Beta 1
+
+Fixed: GDI+ error under Windows 8
+Fixed: "Cannot focus window" error after opening then closing additional form.
+Fixed: Better handling of add button animation when adding/deleting tabs (still not 100% perfect).
+Fixed: Added TabOrder property

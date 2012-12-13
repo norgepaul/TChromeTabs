@@ -19,17 +19,6 @@
       {                                                                  }
       { *****************************************************************}
 
-///////////////////////////////////////////////////////////////////////////////
-// KleverComponents:
-//----------------------------------------------------------------------------
-// This unit is based on "GDIPAPI.pas" from http://www.progdigy.com/
-// It was renamed to "rkGDIPAPI.pas" to avoid issues with Delphi XE.
-//   
-// To obtain the original unit(s) please visit 
-// http://www.progdigy.com/?page_id=7
-//
-///////////////////////////////////////////////////////////////////////////////
-
 unit GDIPAPI;
 
 {$ALIGN ON}
