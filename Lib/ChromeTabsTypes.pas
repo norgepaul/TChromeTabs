@@ -172,7 +172,8 @@ type
     stsAnimatingNewTab,
     stsFirstPaint,
     stsControlsPositionsInvalidated,
-    stsDebug
+    stsDebug,
+    stsInitialAddButtonPosition
   );
   TChromeTabStates = set of TChromeTabState;
 
@@ -252,7 +253,8 @@ const
     'Animating New Tab',
     'First Paint',
     'Controls Invalidated',
-    'Debug'
+    'Debug',
+    'Initial Add Button Position'
   );
 
   ChromeTabsControlTypeDescriptions: Array[TChromeTabItemType] of String = (

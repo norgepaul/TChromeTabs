@@ -283,6 +283,8 @@ type
     Panel10: TPanel;
     chkDebugLog: TCheckBox;
     Label30: TLabel;
+    Label68: TLabel;
+    edtAddButtonFloatingHorzOffset: TSpinEdit;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -535,13 +537,13 @@ begin
     FCurrentColorPickerFrame.StopColorPicking(Cancelled);
 
     FCurrentColorPickerFrame := nil;
+
+    SetFocus;
+
+    BringToFront;
+
+    FormStyle := fsNormal;
   end;
-
-  SetFocus;
-
-  BringToFront;
-
-  FormStyle := fsNormal;
 end;
 
 procedure TfrmMain.ApplicationEvents1Message(var Msg: tagMSG;
@@ -1137,6 +1139,7 @@ begin
     cbAddButtonVisibility.ItemIndex := Integer(ChromeTabs.Options.Display.AddButton.Visibility);
     edtAddButtonVerticalOffset.Value := ChromeTabs.Options.Display.AddButton.Offsets.Vertical;
     edtAddButtonHorzOffset.Value := ChromeTabs.Options.Display.AddButton.Offsets.Horizontal;
+    edtAddButtonFloatingHorzOffset.Value := ChromeTabs.Options.Display.AddButton.Offsets.HorizontalFloating;
     edtAddButtonHeight.Value := ChromeTabs.Options.Display.AddButton.Height;
     edtAddButtonWidth.Value := ChromeTabs.Options.Display.AddButton.Width;
 
@@ -1247,6 +1250,7 @@ begin
       ChromeTabs.Options.Display.AddButton.Visibility := TAddButtonVisibility(cbAddButtonVisibility.ItemIndex);
       ChromeTabs.Options.Display.AddButton.Offsets.Vertical := edtAddButtonVerticalOffset.Value;
       ChromeTabs.Options.Display.AddButton.Offsets.Horizontal := edtAddButtonHorzOffset.Value;
+      ChromeTabs.Options.Display.AddButton.Offsets.HorizontalFloating := edtAddButtonFloatingHorzOffset.Value;
       ChromeTabs.Options.Display.AddButton.Height := edtAddButtonHeight.Value;
       ChromeTabs.Options.Display.AddButton.Width := edtAddButtonWidth.Value;
 

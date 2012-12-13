@@ -1,4 +1,4 @@
-      {******************************************************************}
+ï»¿      {******************************************************************}
       { GDI+ Class                                                       }
       {                                                                  }
       { home page : http://www.progdigy.com                              }
@@ -18,17 +18,6 @@
       { rights and limitations under the License.                        }
       {                                                                  }
       { *****************************************************************}
-
-///////////////////////////////////////////////////////////////////////////////
-// KleverComponents:
-//----------------------------------------------------------------------------
-// This unit is based on "GDIPOBJ.pas" from http://www.progdigy.com/
-// It was renamed to "rkGDIPOBJ.pas" to avoid issues with Delphi XE.
-//   
-// To obtain the original unit(s) please visit 
-// http://www.progdigy.com/?page_id=7
-//
-///////////////////////////////////////////////////////////////////////////////
 
 unit GDIPOBJ;
 
@@ -219,7 +208,7 @@ type
   TGPPrivateFontCollection = class(TGPFontCollection)
   public
     constructor Create; reintroduce;
-    destructor destroy; override;
+    destructor Destroy; override;
     function AddFontFile(filename: WideString): TStatus;
     function AddMemoryFont(memory: Pointer; length: Integer): TStatus;
   end;
@@ -277,7 +266,7 @@ type
     constructor Create(stream: IStream; useEmbeddedColorManagement: BOOL  = FALSE); reintroduce; overload;
     function FromFile(filename: WideString; useEmbeddedColorManagement: BOOL = FALSE): TGPImage;
     function FromStream(stream: IStream; useEmbeddedColorManagement: BOOL = FALSE): TGPImage;
-    destructor destroy; override;
+    destructor Destroy; override;
     function Clone: TGPImage;
     function Save(filename: WideString; const clsidEncoder: TGUID;
       encoderParams: PEncoderParameters = nil): TStatus; overload;
@@ -335,7 +324,7 @@ type
     function Clone(x, y, width, height: Integer; format: TPixelFormat): TGPBitmap; overload;
     function Clone(rect: TGPRectF; format: TPixelFormat): TGPBitmap; overload;
     function Clone(x, y, width, height: Single; format: TPixelFormat): TGPBitmap; overload;
-    function LockBits(rect: TGPRect; flags: UINT; format: TPixelFormat; out lockedBitmapData: TBitmapData): TStatus; 
+    function LockBits(rect: TGPRect; flags: UINT; format: TPixelFormat; out lockedBitmapData: TBitmapData): TStatus;
     function UnlockBits(var lockedBitmapData: TBitmapData): TStatus;
     function GetPixel(x, y: Integer; out color: TGPColor): TStatus;
     function SetPixel(x, y: Integer; color: TGPColor): TStatus;
@@ -379,7 +368,7 @@ type
     function SetBaseInset(inset: Single): TStatus;
     function GetBaseInset: Single;
     function SetWidthScale(widthScale: Single): TStatus;
-    function GetWidthScale: Single;                                
+    function GetWidthScale: Single;
     function GetLastStatus: TStatus;
   end;
 
@@ -639,7 +628,7 @@ type
 \**************************************************************************)
 
 //--------------------------------------------------------------------------
-// Pen class 
+// Pen class
 //--------------------------------------------------------------------------
 
   TGPPen = class(TGdiplusBase)
@@ -756,12 +745,12 @@ type
     constructor Create(nativePath: GpPath); reintroduce; overload;
   public
     constructor Create(path: TGPGraphicsPath); reintroduce; overload;
-    constructor Create(fillMode: TFillMode = FillModeAlternate); reintroduce; overload;      
+    constructor Create(fillMode: TFillMode = FillModeAlternate); reintroduce; overload;
     constructor Create(points: PGPPointF; types: PBYTE; count: Integer;
       fillMode: TFillMode = FillModeAlternate); reintroduce; overload;
     constructor Create(points: PGPPoint; types: PBYTE; count: Integer;
       fillMode: TFillMode = FillModeAlternate); reintroduce; overload;
-    destructor destroy; override;
+    destructor Destroy; override;
     function Clone: TGPGraphicsPath;
     // Reset the path object to empty (and fill mode to FillModeAlternate)
     function Reset: TStatus;
@@ -976,7 +965,7 @@ type
     constructor Create(hdc: HDC; hdevice: THANDLE); reintroduce; overload;
     constructor Create(hwnd: HWND; icm: BOOL{ = FALSE}); reintroduce; overload;
     constructor Create(image: TGPImage); reintroduce; overload;
-    destructor destroy; override;
+    destructor Destroy; override;
     procedure Flush(intention: TFlushIntention = FlushIntentionFlush);
     //------------------------------------------------------------------------
     // GDI Interop methods
@@ -1223,7 +1212,7 @@ type
     function EnumerateMetafile(metafile: TGPMetafile; const destPoint: TGPPointF;
       callback: EnumerateMetafileProc; callbackData: Pointer = nil;
       imageAttributes: TGPImageAttributes = nil): TStatus; overload;
-    function EnumerateMetafile(metafile: TGPMetafile; const destPoint: TGPPoint;    
+    function EnumerateMetafile(metafile: TGPMetafile; const destPoint: TGPPoint;
        callback: EnumerateMetafileProc; callbackData: pointer = nil;
        imageAttributes: TGPImageAttributes = nil): TStatus; overload;
     function EnumerateMetafile(metafile: TGPMetafile; const destRect: TGPRectF;
@@ -1316,7 +1305,7 @@ type
     // Only valid when recording metafiles.
     function AddMetafileComment(data: PBYTE; sizeData: UINT): TStatus;
 
-    function GetHalftonePalette: HPALETTE;                                      
+    function GetHalftonePalette: HPALETTE;
     function GetLastStatus: TStatus;
   end;
 
@@ -1329,7 +1318,7 @@ type
 
   TGPAdjustableArrowCap = class(TGPCustomLineCap)
   public
-    constructor Create(height, width: Single; isFilled: Bool = TRUE); 
+    constructor Create(height, width: Single; isFilled: Bool = TRUE);
     function SetHeight(height: Single): TStatus;
     function GetHeight: Single;
     function SetWidth(width: Single): TStatus;
@@ -1501,7 +1490,7 @@ implementation
       FALSE, nil, nil, ColorMatrixFlagsDefault));
   end;
 
-    
+
   function TGPImageAttributes.SetColorMatrices(const colorMatrix: TColorMatrix;
     const grayMatrix: TColorMatrix; mode: TColorMatrixFlags  = ColorMatrixFlagsDefault;
     type_: TColorAdjustType  = ColorAdjustTypeDefault): TStatus;
@@ -3031,7 +3020,7 @@ implementation
   begin
     SetStatus(GdipGetPenWidth(nativePen, result));
   end;
-    
+
   // Set/get line caps: start, end, and dash
   // Line cap and join APIs by using LineCap and LineJoin enums.
 
@@ -3245,7 +3234,7 @@ implementation
   begin
     result := SetStatus(GdipSetPenDashOffset(nativePen, dashOffset));
   end;
-    
+
   function TGPPen.SetDashPattern(dashArray: PSingle; count: Integer): TStatus;
   begin
     result := SetStatus(GdipSetPenDashArray(nativePen, dashArray, count));
@@ -3630,7 +3619,7 @@ implementation
     result := SetStatus(GdipSetLineGammaCorrection(GpLineGradient(nativeBrush),
                 useGammaCorrection));
   end;
-    
+
   function TGPLinearGradientBrush.GetGammaCorrection: BOOL;
   var useGammaCorrection: BOOL;
   begin
@@ -4746,7 +4735,7 @@ implementation
   end;
 
   function TGPGraphics.DrawArc(pen: TGPPen; x, y, width, height: Integer; startAngle,
-           sweepAngle: Single): TStatus; 
+           sweepAngle: Single): TStatus;
   begin
     result := SetStatus(GdipDrawArcI(nativeGraphics,
                           pen.nativePen,
@@ -5027,7 +5016,7 @@ implementation
   end;
 
   function TGPGraphics.DrawCurve(pen: TGPPen; points: PGPPoint; count, offset,
-           numberOfSegments: Integer; tension: Single = 0.5): TStatus; 
+           numberOfSegments: Integer; tension: Single = 0.5): TStatus;
   begin
     result := SetStatus(GdipDrawCurve3I(nativeGraphics,
                              pen.nativePen,
@@ -5063,7 +5052,7 @@ implementation
   end;
 
   function TGPGraphics.DrawClosedCurve(pen: TGPPen; points: PGPPoint;
-           count: Integer; tension: Single): TStatus; 
+           count: Integer; tension: Single): TStatus;
   begin
     result := SetStatus(GdipDrawClosedCurve2I(nativeGraphics,
                                pen.nativePen,
@@ -5200,7 +5189,7 @@ implementation
   end;
 
   function TGPGraphics.FillPie(brush: TGPBrush; x, y, width, height: Integer; startAngle,
-           sweepAngle: Single): TStatus; 
+           sweepAngle: Single): TStatus;
   begin
     result := SetStatus(GdipFillPieI(nativeGraphics,
                           brush.nativeBrush,
@@ -5390,7 +5379,7 @@ implementation
     result := status;
   end;
 
-    
+
   function TGPGraphics.MeasureString(string_: WideString ; length: Integer; font: TGPFont;
        const origin: TGPPointF; stringFormat: TGPStringFormat; out boundingBox: TGPRectF): TStatus;
   var
@@ -5419,7 +5408,7 @@ implementation
     ));
   end;
 
-    
+
   function TGPGraphics.MeasureString(string_: WideString; length: Integer; font: TGPFont;
        const layoutRect: TGPRectF; out boundingBox: TGPRectF): TStatus;
   var
@@ -5439,7 +5428,7 @@ implementation
     ));
   end;
 
-    
+
   function TGPGraphics.MeasureString(string_: WideString; length: Integer; font: TGPFont;
        const origin: TGPPointF; out boundingBox: TGPRectF): TStatus;
   var
@@ -5606,11 +5595,23 @@ implementation
   var
    nImage: GpImage;
   begin
-    if assigned(Image) then nImage := Image.nativeImage else nImage := nil;
-    result := SetStatus(GdipDrawImageI(nativeGraphics,
+    if assigned(Image) then
+        nImage := Image.nativeImage
+    else
+       nImage := nil;
+
+    if Assigned(nImage) then
+    begin
+      if Image.lastResult<>win32Error then
+      result := SetStatus(GdipDrawImageI(nativeGraphics,
                             nimage,
                             x,
-                            y));
+                            y))
+      else
+          result := GdiplusNotInitialized;
+    end
+      else
+        result := GdiplusNotInitialized;
   end;
 
   function TGPGraphics.DrawImage(image: TGPImage; const rect: TGPRect): TStatus;
@@ -5807,7 +5808,7 @@ implementation
     // the callback can invoke the Metafile::PlayRecord method
     // to play the particular record.
 
-    
+
   function TGPGraphics.EnumerateMetafile(metafile: TGPMetafile; const destPoint: TGPPointF;
       callback: EnumerateMetafileProc; callbackData: Pointer = nil;
       imageAttributes: TGPImageAttributes = nil): TStatus;
@@ -5826,7 +5827,7 @@ implementation
             nimageAttributes));
   end;
 
-    
+
   function TGPGraphics.EnumerateMetafile(metafile: TGPMetafile; const destPoint: TGPPoint;
        callback: EnumerateMetafileProc; callbackData: pointer = nil;
        imageAttributes: TGPImageAttributes = nil): TStatus;
@@ -5903,7 +5904,7 @@ implementation
             nimageAttributes));
   end;
 
-    
+
   function TGPGraphics.EnumerateMetafile(metafile: TGPMetafile; destPoints: PGPPoint;
        count: Integer; callback: EnumerateMetafileProc; callbackData: Pointer = nil;
        imageAttributes: TGPImageAttributes = nil): TStatus;
@@ -5923,7 +5924,7 @@ implementation
             nimageAttributes));
   end;
 
-    
+
   function TGPGraphics.EnumerateMetafile(metafile: TGPMetafile; const destPoint: TGPPointF;
        const srcRect: TGPRectF; srcUnit: TUnit; callback: EnumerateMetafileProc;
        callbackData: pointer = nil; imageAttributes: TGPImageAttributes = nil): TStatus;
@@ -5944,7 +5945,7 @@ implementation
             nimageAttributes));
   end;
 
-    
+
   function TGPGraphics.EnumerateMetafile(metafile : TGPMetafile; const destPoint : TGPPoint;
        const srcRect : TGPRect; srcUnit : TUnit; callback : EnumerateMetafileProc;
        callbackData : Pointer = nil; imageAttributes : TGPImageAttributes = nil): TStatus;
@@ -6007,7 +6008,7 @@ implementation
             nimageAttributes));
   end;
 
-    
+
   function TGPGraphics.EnumerateMetafile( metafile: TGPMetafile; destPoints: PGPPointF;
     count: Integer; const srcRect: TGPRectF; srcUnit: TUnit; callback: EnumerateMetafileProc;
     callbackData: Pointer = nil; imageAttributes: TGPImageAttributes = nil): TStatus;
@@ -6050,7 +6051,7 @@ implementation
             callbackData,
             nimageAttributes));
   end;
-    
+
   function TGPGraphics.SetClip(g: TGPGraphics; combineMode: TCombineMode = CombineModeReplace): TStatus;
   begin
     result := SetStatus(GdipSetClipGraphics(nativeGraphics,
@@ -6091,7 +6092,7 @@ implementation
     // This is different than the other SetClip methods because it assumes
     // that the HRGN is already in device units, so it doesn't transform
     // the coordinates in the HRGN.
-    
+
   function TGPGraphics.SetClip(hRgn: HRGN; combineMode: TCombineMode = CombineModeReplace): TStatus;
   begin
     result := SetStatus(GdipSetClipHrgn(nativeGraphics, hRgn,
@@ -6778,7 +6779,7 @@ implementation
         nativeFamilyList,
         numFound
     ));
-    
+
     if (status = Ok) then
       for i := 0 to numFound - 1 do
          GdipCloneFontFamily(ArrGpFontFamily(nativeFamilyList)[i], gpfamilies[i].nativeFamily);
@@ -7970,7 +7971,7 @@ implementation
 
   constructor TGPPathGradientBrush.Create;
   begin
-     // écrase la fonction parent
+     // ï¿½crase la fonction parent
   end;
 
 initialization

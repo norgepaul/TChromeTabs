@@ -638,20 +638,31 @@ type
     property Horizontal: Integer read FHorizontal write SetHorizontal;
   end;
 
+  TChromeTabsAddButtonOffsets = class(TChromeTabsOffsets)
+  private
+    FHorizontalFloating: Integer;
+
+    procedure SetHorizontalFloating(const Value: Integer);
+  public
+    constructor Create(AOwner: TPersistent); override;
+  published
+    property HorizontalFloating: Integer read FHorizontalFloating write SetHorizontalFloating;
+  end;
+
   TChromeTabsControlPosition = class(TChromeTabsPersistent)
   private
-    FOffsets: TChromeTabsOffsets;
+    FOffsets: TChromeTabsAddButtonOffsets;
     FHeight: Integer;
     FWidth: Integer;
   private
     procedure SetHeight(const Value: Integer);
-    procedure SetOffsets(const Value: TChromeTabsOffsets);
+    procedure SetOffsets(const Value: TChromeTabsAddButtonOffsets);
     procedure SetWidth(const Value: Integer);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
   published
-    property Offsets: TChromeTabsOffsets read FOffsets write SetOffsets;
+    property Offsets: TChromeTabsAddButtonOffsets read FOffsets write SetOffsets;
     property Height: Integer read FHeight write SetHeight;
     property Width: Integer read FWidth write SetWidth;
   end;
@@ -2619,7 +2630,7 @@ end;
 
 constructor TChromeTabsControlPosition.Create(AOwner: TPersistent);
 begin
-  FOffsets := TChromeTabsOffsets.Create(Self);
+  FOffsets := TChromeTabsAddButtonOffsets.Create(Self);
 
   inherited;
 end;
@@ -2638,7 +2649,7 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabsControlPosition.SetOffsets(const Value: TChromeTabsOffsets);
+procedure TChromeTabsControlPosition.SetOffsets(const Value: TChromeTabsAddButtonOffsets);
 begin
   FOffsets.Assign(Value);
 end;
@@ -3368,6 +3379,23 @@ end;
 procedure TChromeTabsLookAndFeelFont.SetUseDefaultFont(const Value: Boolean);
 begin
   FUseDefaultFont := Value;
+
+  DoChanged;
+end;
+
+{ TChromeTabsAddButtonOffsets }
+
+constructor TChromeTabsAddButtonOffsets.Create(AOwner: TPersistent);
+begin
+  inherited;
+
+  FHorizontalFloating := 0;
+end;
+
+procedure TChromeTabsAddButtonOffsets.SetHorizontalFloating(
+  const Value: Integer);
+begin
+  FHorizontalFloating := Value;
 
   DoChanged;
 end;

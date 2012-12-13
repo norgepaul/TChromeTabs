@@ -63,17 +63,6 @@
 //   DIRECTX3 equal to DIRECTDRAW_VERSION_3
 ///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-// KleverComponents:
-//----------------------------------------------------------------------------
-// This unit is based on "DirectDraw.pas" from http://www.progdigy.com/
-// It was renamed to "rkDirectDraw.pas" to avoid issues with Delphi XE.
-//   
-// To obtain the original unit(s) please visit 
-// http://www.progdigy.com/?page_id=7
-//
-///////////////////////////////////////////////////////////////////////////////
-
 unit DirectDraw;
 
 interface
