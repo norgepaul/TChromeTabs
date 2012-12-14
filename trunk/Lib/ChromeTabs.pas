@@ -74,6 +74,7 @@ interface
 { TODO -cBug : Windows 7 - System buttons highlighted when dragging a tab }
 { TODO -cBug : Designtime editor not working in Delphi 7 }
 { TODO -cBug : Tab drag image needs better tranparency - Not working in Delphi 7}
+{ TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect}
 
 {$include versions.inc}
 
@@ -246,6 +247,7 @@ type
     function GetVisibleTabCount: Integer;
     function ScrollingActive: Boolean;
     procedure SetControlDrawState(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; ForceUpdate: Boolean = FALSE);
+    function BidiRect(ARect: TRect): TRect;
   protected
     // ** Important, often called procedures ** //
     procedure RepositionTabs; virtual;
@@ -620,6 +622,8 @@ end;
 
 procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
+  SetControlDrawStates(TRUE);
+
   if Assigned(FOnMouseLeave) then
     FOnMouseLeave(Self);
 end;
@@ -1535,6 +1539,8 @@ begin
   Result.HitTestArea := htBackground;
   Result.TabIndex := -1;
 
+  if not PtInRect(ControlRect, pt) then
+    Result.HitTestArea := htNoWhere else
   if FAddButtonControl.ContainsPoint(Pt) then
     Result.HitTestArea := htAddButton else
   begin
@@ -1689,6 +1695,14 @@ begin
   end;
 end;
 
+function TCustomChromeTabs.BidiRect(ARect: TRect): TRect;
+begin
+  if FOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+    Result := HorzFlipRect(ControlRect, ARect)
+  else
+    Result := ARect;
+end;
+
 procedure TCustomChromeTabs.MouseMove(Shift: TShiftState; x, y: Integer);
 var
   HitTestResult: THitTestResult;
@@ -1698,6 +1712,7 @@ var
   TabDockControl, PreviousDockControl: IChromeTabDockControl;
   Accept, DummyAccept: Boolean;
   ScreenPoint, ControlPoint: TPoint;
+  DragTabLeft: Integer;
 begin
   inherited;
 
@@ -1740,9 +1755,14 @@ begin
       begin
         DragTabControl := TabControls[FDragTabObject.DragTab.Index];
 
+        if FOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+          DragTabLeft := (X - FDragTabObject.DragCursorOffset.X) - ((X - FDragTabObject.DragPoint.X) * 2)
+        else
+          DragTabLeft := X - FDragTabObject.DragCursorOffset.X;
+
         // Note that we only set the position of the tab, the index doesn't change.
         // We will move the tab to a new index when the MouseUp event
-        DragTabControl.SetLeft(X - FDragTabObject.DragCursorOffset.X, FALSE); // Never animate beacause we're dragging
+        DragTabControl.SetLeft(DragTabLeft, FALSE); // Never animate beacause we're dragging
 
         if FOptions.DragDrop.DragType = dtWithinContainer then
         begin
@@ -1837,6 +1857,7 @@ var
   TabTop, ControlTop, TabEndX, BorderOffset: Integer;
   ActualDragDisplay: TChromeTabDragDisplay;
   BorderPen: TGPPen;
+  BiDiX: Integer;
 begin
   Result := nil;
   DragControl := nil;
@@ -1857,7 +1878,12 @@ begin
           ActualDragDisplay := ddTab;
       end;
 
-      FDragTabObject.DragFormOffset := Point(Round(FDragTabObject.DragCursorOffset.X * FOptions.DragDrop.DragControlImageResizeFactor),
+      if FOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+        BiDiX := ControlRect.Right  { Todo: Needs fixing }
+      else
+        BiDiX := FDragTabObject.DragCursorOffset.X;
+
+      FDragTabObject.DragFormOffset := Point(Round(BiDiX * FOptions.DragDrop.DragControlImageResizeFactor),
                                              Round(FDragTabObject.DragCursorOffset.Y * FOptions.DragDrop.DragControlImageResizeFactor));
 
       Bitmap := TBitmap.Create;
@@ -2641,6 +2667,7 @@ procedure TCustomChromeTabs.RepositionTabs;
 
 var
   TabLeft, AddButtonLeft: Integer;
+  i: Integer;
 begin
   try
     FScrollWidth := 0;
@@ -3250,9 +3277,6 @@ begin
         TabCanvas.SetSmoothingMode(FOptions.Display.Tabs.CanvasSmoothingMode);
         BackgroundCanvas.SetSmoothingMode(FOptions.Display.Tabs.CanvasSmoothingMode);
 
-        //TabCanvas.SetInterpolationMode(InterpolationModeHighQualityBicubic);
-        //BackgroundCanvas.SetInterpolationMode(InterpolationModeHighQualityBicubic);
-
         // Allow the user to draw the tab canvas
         DoOnBeforeDrawItem(TabCanvas, ControlRect, itTabContainer, -1, Handled);
 
@@ -3318,7 +3342,9 @@ begin
 
         // Draw the drag tab if required
         if FDragTabControl <> nil then
+        begin
           FDragTabControl.DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+        end;
 
         // Draw the new button
         if (FOptions.Display.AddButton.Visibility <> avNone) and

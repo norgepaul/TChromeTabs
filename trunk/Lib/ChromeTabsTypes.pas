@@ -37,6 +37,12 @@ type
   );
   {$ENDIF}
 
+  TChromeTabsBidiMode = (
+    bdmLeftToRight,
+    bdmRightToLeftText,
+    bdmRightToLeftTextAndTabs
+  );
+
   TChromeTabDirection = (
     drLeft,
     drRight
@@ -102,6 +108,7 @@ type
   );
 
   THitTestArea = (
+    htNowhere,
     htBackground,
     htTab,
     htAddButton,
@@ -206,6 +213,7 @@ type
 
 const
   HitTestDescriptions: Array[THitTestArea] of String = (
+    'Nowhere',
     'Background',
     'Tab',
     'New Button',

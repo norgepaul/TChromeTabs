@@ -42,6 +42,9 @@ type
     FAnimationIncrements: TRect;
     FPositionInitialised: Boolean;
     FScrollableControl: Boolean;
+    FOverrideBidi: Boolean;
+
+    function GetBidiControlRect: TRect;
   protected
     FInvalidated: Boolean;
     FControlType: TChromeTabItemType;
@@ -53,6 +56,7 @@ type
     function NewPolygon(ControlRect: TRect; const Polygon: array of TPoint; Orientation: TTabOrientation): TPolygon; virtual;
     procedure Invalidate; virtual;
     function ScrollRect(ARect: TRect): TRect;
+    function BidiRect(ARect: TRect): TRect;
 
     property ChromeTabs: IChromeTabs read FChromeTabs;
   public
@@ -67,6 +71,7 @@ type
     function ContainsPoint(Pt: TPoint): Boolean; virtual;
 
     property ControlRect: TRect read FControlRect;
+    property BiDiControlRect: TRect read GetBidiControlRect;
     property DestinationRect: TRect read FDestinationRect;
 
     procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); virtual;
@@ -79,6 +84,7 @@ type
     property DrawState: TDrawState read FDrawState;
     property ControlType: TChromeTabItemType read FControlType;
     property ScrollableControl: Boolean read FScrollableControl write FScrollableControl;
+    property OverrideBidi: Boolean read FOverrideBidi write FOverrideBidi;
   end;
 
   TChromeTabControlProperties = record
@@ -90,7 +96,7 @@ type
     StartColor: TColor;
     StopColor: TColor;
     OutlineColor: TColor;
-    OutlineSize: TColor;
+    OutlineSize: Single;
     OutlineAlpha: Integer;
     StartAlpha: Integer;
     StopAlpha: Integer;
@@ -237,6 +243,14 @@ begin
     Result := ARect;
 end;
 
+function TBaseChromeTabsControl.BidiRect(ARect: TRect): TRect;
+begin
+  if ChromeTabs.GetOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+    Result := HorzFlipRect(BidiControlRect, HorzFlipRect(BidiControlRect, ChromeTabs.BidiRect(ARect)))
+  else
+    Result := ARect;
+end;
+
 function TBaseChromeTabsControl.NewPolygon(ControlRect: TRect; const Polygon: Array of TPoint; Orientation: TTabOrientation): TPolygon;
 var
   ScrolledRect: TRect;
@@ -329,6 +343,14 @@ end;
 procedure TBaseChromeTabsControl.EndAnimation;
 begin
   // Override if required
+end;
+
+function TBaseChromeTabsControl.GetBidiControlRect: TRect;
+begin
+  if FOverrideBidi then
+    REsult := FControlRect
+  else
+    Result := ChromeTabs.BidiRect(FControlRect);
 end;
 
 function TBaseChromeTabsControl.GetPolygons: IChromeTabPolygons;
@@ -466,14 +488,14 @@ begin
 
     Brush := GetButtonBrush;
 
-    Result.AddPolygon(NewPolygon(ControlRect, [Point(7, RectHeight(ControlRect)),
-                                 Point(4, RectHeight(ControlRect) - 2),
+    Result.AddPolygon(NewPolygon(BidiControlRect, [Point(7, RectHeight(BidiControlRect)),
+                                 Point(4, RectHeight(BidiControlRect) - 2),
                                  Point(0, 2),
                                  Point(1, 0),
-                                 Point(RectWidth(ControlRect) - 7, 0),
-                                 Point(RectWidth(ControlRect) - 4, 2),
-                                 Point(RectWidth(ControlRect), RectHeight(ControlRect) - 2),
-                                 Point(RectWidth(ControlRect), RectHeight(ControlRect))],
+                                 Point(RectWidth(BidiControlRect) - 7, 0),
+                                 Point(RectWidth(BidiControlRect) - 4, 2),
+                                 Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - 2),
+                                 Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect))],
                       ChromeTabs.GetOptions.Display.Tabs.Orientation),
                       Brush,
                       GetButtonPen);
@@ -484,10 +506,10 @@ begin
       LeftOffset := (ChromeTabs.GetOptions.Display.AddButton.Width div 2) - 4;
       TopOffset := (ChromeTabs.GetOptions.Display.AddButton.Height div 2) - 4;
 
-      Result.AddPolygon(NewPolygon(Rect(ControlRect.Left + LeftOffset,
-                                   ControlRect.Top + TopOffset,
-                                   ControlRect.Right - LeftOffset,
-                                   ControlRect.Bottom - TopOffset),
+      Result.AddPolygon(NewPolygon(Rect(BidiControlRect.Left + LeftOffset,
+                                   BidiControlRect.Top + TopOffset,
+                                   BidiControlRect.Right - LeftOffset,
+                                   BidiControlRect.Bottom - TopOffset),
                                   [Point(0, 3),
                                    Point(3, 3),
                                    Point(3, 0),
@@ -602,7 +624,7 @@ begin
 
   if CloseButtonVisible then
   begin
-    CloseRect := ChromeTabs.ScrollRect(GetCloseButonRect);
+    CloseRect := ChromeTabs.ScrollRect(BidiRect(GetCloseButonRect));
 
     if PtInRect(CloseRect, Point(MouseX, MouseY)) then
     begin
@@ -740,7 +762,7 @@ begin
   begin
     Result := TChromeTabPolygons.Create;
 
-    Result.AddPolygon(NewPolygon(ControlRect, [Point(0, RectHeight(ControlRect)),
+    Result.AddPolygon(NewPolygon(BidiControlRect, [Point(0, RectHeight(ControlRect)),
                                        Point(4, RectHeight(ControlRect) - 3),
                                        Point(12, 3),
                                        Point(13, 2),
@@ -885,17 +907,17 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, Background
             // Set the fade blend factors to fade the end of the text
             TxtFormat.SetTrimming(StringTrimmingNone);
 
-            if ChromeTabs.GetOptions.Display.Tabs.RightToLeftText then
+            if ChromeTabs.GetOptions.Display.Tabs.BiDiMode = bdmLeftToRight then
+            begin
+              BlendFactorsFade[0] := 0.0;
+              BlendFactorsFade[2] := 1.0;
+            end
+            else
             begin
               BlendFactorsFade[0] := 1.0;
               BlendFactorsFade[2] := 0.0;
 
               BlendPositions[1] := 1 - BlendPositions[1];
-            end
-            else
-            begin
-              BlendFactorsFade[0] := 0.0;
-              BlendFactorsFade[2] := 1.0;
             end;
 
             TabsTxtBrush.SetBlend(@BlendFactorsFade[0], @BlendPositions[0], Length(BlendFactorsFade));
@@ -923,7 +945,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, Background
             if not ChromeTabs.GetOptions.Display.Tabs.WordWrap then
               TextFormatFlags := TextFormatFlags + StringFormatFlagsNoWrap;
 
-            if ChromeTabs.GetOptions.Display.Tabs.RightToLeftText then
+            if ChromeTabs.GetOptions.Display.Tabs.BiDiMode <> bdmLeftToRight then
               TextFormatFlags := TextFormatFlags + StringFormatFlagsDirectionRightToLeft;
           end;
 
@@ -1077,10 +1099,10 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, Background
                                    CloseButtonCrossRect.Bottom);
     end;
 
-    ImageRect := ScrollRect(ImageRect);
-    TextRect := ScrollRect(TextRect);
-    CloseButtonRect := ScrollRect(CloseButtonRect);
-    CloseButtonCrossRect := ScrollRect(CloseButtonCrossRect);
+    ImageRect := ScrollRect(BidiRect(ImageRect));
+    TextRect := ScrollRect(BidiRect(TextRect));
+    CloseButtonRect := ScrollRect(BidiRect(CloseButtonRect));
+    CloseButtonCrossRect := ScrollRect(BidiRect(CloseButtonCrossRect));
   end;
 
   procedure SetTabClipRegion(ChromeTabPolygons: IChromeTabPolygons);
@@ -1528,7 +1550,7 @@ begin
     FCurrentTabProperties.StartColor := ColorBetween(FStartTabProperties.StartColor, FStopTabProperties.StartColor, FTransformPercent);
     FCurrentTabProperties.StopColor := ColorBetween(FStartTabProperties.StopColor, FStopTabProperties.StopColor, FTransformPercent);
     FCurrentTabProperties.OutlineColor := ColorBetween(FStartTabProperties.OutlineColor, FStopTabProperties.OutlineColor, FTransformPercent);
-    FCurrentTabProperties.OutlineSize := IntegerBetween(FStartTabProperties.OutlineSize, FStopTabProperties.OutlineSize, FTransformPercent);
+    FCurrentTabProperties.OutlineSize := SingleBetween(FStartTabProperties.OutlineSize, FStopTabProperties.OutlineSize, FTransformPercent);
     FCurrentTabProperties.StartAlpha := IntegerBetween(FStartTabProperties.StartAlpha, FStopTabProperties.StartAlpha, FTransformPercent);
     FCurrentTabProperties.StopAlpha := IntegerBetween(FStartTabProperties.StopAlpha, FStopTabProperties.StopAlpha, FTransformPercent);
     FCurrentTabProperties.OutlineAlpha := IntegerBetween(FStartTabProperties.OutlineAlpha, FStopTabProperties.OutlineAlpha, FTransformPercent);

@@ -40,6 +40,7 @@ function PointInPolygon(Polygon: TPolygon; X, Y: Integer): Boolean;
 function SameRect(Rect1, Rect2: TRect): Boolean;
 function ColorBetween(const ColorA, ColorB: TColor; const Percent: Integer): TColor;
 function IntegerBetween(const IntA, IntB: Integer; const Percent: Integer): Integer;
+function SingleBetween(const SingA, SingB: Single; const Percent: Integer): Single;
 procedure PaintControlToCanvas(SrcControl: TControl; TargetCanvas: TCanvas);
 procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: TBitmap; X, Y: Integer);
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
@@ -59,12 +60,21 @@ procedure SaveComponentToStream(AComponent: TComponent; AStream: TStream);
 procedure ReadComponentFromStream(AComponent: TComponent; AStream: TStream);
 function ContrastingColor(Color: TColor): TColor;
 function ComponentToCode(AComponent: TComponent; const ComponentName: String): String;
+function HorzFlipRect(ParentRect, ChildRect: TRect): TRect;
 
 function RectHeight(Rect: TRect): Integer;
 function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
 
 implementation
+
+function HorzFlipRect(ParentRect, ChildRect: TRect): TRect;
+begin
+  Result := Rect(ParentRect.Left + ParentRect.Right - ChildRect.Right,
+                 ChildRect.Top,
+                 ParentRect.Left + ParentRect.Right - ChildRect.Left,
+                 ChildRect.Bottom);
+end;
 
 function ContrastingColor(Color: TColor): TColor;
 begin
@@ -366,7 +376,12 @@ end;
 
 function IntegerBetween(const IntA, IntB: Integer; const Percent: Integer): Integer;
 begin
-  Result := Percent * (IntB-IntA) div 100 + IntA;
+  Result := Percent * (IntB - IntA) div 100 + IntA;
+end;
+
+function SingleBetween(const SingA, SingB: Single; const Percent: Integer): Single;
+begin
+  Result := Percent * (SingB - SingA) / 100 + SingA;
 end;
 
 function ColorBetween(const ColorA, ColorB: TColor; const Percent: Integer): TColor;

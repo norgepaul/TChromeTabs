@@ -81,7 +81,7 @@ object frmMain: TfrmMain
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
     Options.Display.Tabs.TextAlignmentVertical = taVerticalCenter
     Options.Display.Tabs.ShowImages = True
-    Options.Display.Tabs.RightToLeftText = False
+    Options.Display.Tabs.BiDiMode = bdmLeftToRight
     Options.Display.TabContainer.TransparentBackground = True
     Options.Display.TabContainer.OverlayButtons = True
     Options.Display.TabContainer.PaddingLeft = 0
@@ -148,10 +148,9 @@ object frmMain: TfrmMain
     LookAndFeel.TabsContainer.StartAlpha = 255
     LookAndFeel.TabsContainer.StopAlpha = 255
     LookAndFeel.TabsContainer.OutlineColor = 14520930
-    LookAndFeel.TabsContainer.OutlineSize = 0
     LookAndFeel.TabsContainer.OutlineAlpha = 0
     LookAndFeel.Tabs.BaseLine.Color = 11110509
-    LookAndFeel.Tabs.BaseLine.Thickness = 1
+    LookAndFeel.Tabs.BaseLine.Thickness = 1.000000000000000000
     LookAndFeel.Tabs.BaseLine.Alpha = 255
     LookAndFeel.Tabs.Modified.CentreColor = clWhite
     LookAndFeel.Tabs.Modified.OutsideColor = clWhite
@@ -177,7 +176,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Active.Style.StartAlpha = 255
     LookAndFeel.Tabs.Active.Style.StopAlpha = 255
     LookAndFeel.Tabs.Active.Style.OutlineColor = 10189918
-    LookAndFeel.Tabs.Active.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
     LookAndFeel.Tabs.NotActive.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.NotActive.Font.Color = 4603477
@@ -190,7 +189,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.NotActive.Style.StartAlpha = 210
     LookAndFeel.Tabs.NotActive.Style.StopAlpha = 230
     LookAndFeel.Tabs.NotActive.Style.OutlineColor = 13546390
-    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1
+    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.NotActive.Style.OutlineAlpha = 215
     LookAndFeel.Tabs.Hot.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.Hot.Font.Color = 4210752
@@ -203,138 +202,139 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Hot.Style.StartAlpha = 255
     LookAndFeel.Tabs.Hot.Style.StopAlpha = 255
     LookAndFeel.Tabs.Hot.Style.OutlineColor = 12423799
-    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Hot.Style.OutlineAlpha = 235
     LookAndFeel.CloseButton.Cross.Normal.Color = 6643031
-    LookAndFeel.CloseButton.Cross.Normal.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Normal.Thickness = 1.500000000000000000
     LookAndFeel.CloseButton.Cross.Normal.Alpha = 255
     LookAndFeel.CloseButton.Cross.Down.Color = 15461369
-    LookAndFeel.CloseButton.Cross.Down.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Down.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Down.Alpha = 220
     LookAndFeel.CloseButton.Cross.Hot.Color = clWhite
-    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Hot.Alpha = 220
     LookAndFeel.CloseButton.Circle.Normal.StartColor = clGradientActiveCaption
     LookAndFeel.CloseButton.Circle.Normal.StopColor = clNone
     LookAndFeel.CloseButton.Circle.Normal.StartAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.StopAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Normal.OutlineAlpha = 0
     LookAndFeel.CloseButton.Circle.Down.StartColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StopColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Down.OutlineAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StartColor = 9408475
     LookAndFeel.CloseButton.Circle.Hot.StopColor = 9803748
     LookAndFeel.CloseButton.Circle.Hot.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.OutlineColor = 6054595
-    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StartColor = 14340292
     LookAndFeel.AddButton.Button.Normal.StopColor = 14340035
     LookAndFeel.AddButton.Button.Normal.StartAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StopAlpha = 255
     LookAndFeel.AddButton.Button.Normal.OutlineColor = 13088421
-    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Down.StartColor = 13417645
     LookAndFeel.AddButton.Button.Down.StopColor = 13417644
     LookAndFeel.AddButton.Button.Down.StartAlpha = 255
     LookAndFeel.AddButton.Button.Down.StopAlpha = 255
     LookAndFeel.AddButton.Button.Down.OutlineColor = 10852748
-    LookAndFeel.AddButton.Button.Down.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StartColor = 15524314
     LookAndFeel.AddButton.Button.Hot.StopColor = 15524314
     LookAndFeel.AddButton.Button.Hot.StartAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StopAlpha = 255
     LookAndFeel.AddButton.Button.Hot.OutlineColor = 14927787
-    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StartColor = 14735310
     LookAndFeel.ScrollButtons.Button.Normal.StopColor = 14274499
     LookAndFeel.ScrollButtons.Button.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.OutlineColor = 11507842
-    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Normal.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StartColor = 13417645
     LookAndFeel.ScrollButtons.Button.Down.StopColor = 13417644
     LookAndFeel.ScrollButtons.Button.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.OutlineColor = 10852748
-    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Down.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StartColor = 15524314
     LookAndFeel.ScrollButtons.Button.Hot.StopColor = 15524313
     LookAndFeel.ScrollButtons.Button.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.OutlineColor = 14927788
-    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Disabled.StartColor = 14340036
     LookAndFeel.ScrollButtons.Button.Disabled.StopColor = 14274499
     LookAndFeel.ScrollButtons.Button.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineColor = 11113341
-    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineAlpha = 100
     LookAndFeel.ScrollButtons.Arrow.Normal.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Down.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Hot.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alTop
     OnResize = ChromeTabs1Resize
+    TabOrder = 1
   end
   object ChromeTabs2: TChromeTabs
     Left = 0
@@ -398,7 +398,7 @@ object frmMain: TfrmMain
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
     Options.Display.Tabs.TextAlignmentVertical = taVerticalCenter
     Options.Display.Tabs.ShowImages = True
-    Options.Display.Tabs.RightToLeftText = False
+    Options.Display.Tabs.BiDiMode = bdmLeftToRight
     Options.Display.TabContainer.TransparentBackground = False
     Options.Display.TabContainer.OverlayButtons = True
     Options.Display.TabContainer.PaddingLeft = 0
@@ -445,10 +445,9 @@ object frmMain: TfrmMain
     LookAndFeel.TabsContainer.StartAlpha = 255
     LookAndFeel.TabsContainer.StopAlpha = 255
     LookAndFeel.TabsContainer.OutlineColor = 14520930
-    LookAndFeel.TabsContainer.OutlineSize = 0
     LookAndFeel.TabsContainer.OutlineAlpha = 0
     LookAndFeel.Tabs.BaseLine.Color = 11110509
-    LookAndFeel.Tabs.BaseLine.Thickness = 1
+    LookAndFeel.Tabs.BaseLine.Thickness = 1.000000000000000000
     LookAndFeel.Tabs.BaseLine.Alpha = 255
     LookAndFeel.Tabs.Modified.CentreColor = clWhite
     LookAndFeel.Tabs.Modified.OutsideColor = clWhite
@@ -474,7 +473,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Active.Style.StartAlpha = 255
     LookAndFeel.Tabs.Active.Style.StopAlpha = 255
     LookAndFeel.Tabs.Active.Style.OutlineColor = 9985595
-    LookAndFeel.Tabs.Active.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
     LookAndFeel.Tabs.NotActive.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.NotActive.Font.Color = clBlack
@@ -487,7 +486,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.NotActive.Style.StartAlpha = 210
     LookAndFeel.Tabs.NotActive.Style.StopAlpha = 210
     LookAndFeel.Tabs.NotActive.Style.OutlineColor = 10576703
-    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1
+    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.NotActive.Style.OutlineAlpha = 215
     LookAndFeel.Tabs.Hot.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.Hot.Font.Color = 4210752
@@ -500,137 +499,138 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Hot.Style.StartAlpha = 255
     LookAndFeel.Tabs.Hot.Style.StopAlpha = 255
     LookAndFeel.Tabs.Hot.Style.OutlineColor = 12423799
-    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Hot.Style.OutlineAlpha = 235
     LookAndFeel.CloseButton.Cross.Normal.Color = 6643031
-    LookAndFeel.CloseButton.Cross.Normal.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Normal.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Normal.Alpha = 255
     LookAndFeel.CloseButton.Cross.Down.Color = 15461369
-    LookAndFeel.CloseButton.Cross.Down.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Down.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Down.Alpha = 220
     LookAndFeel.CloseButton.Cross.Hot.Color = clWhite
-    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Hot.Alpha = 220
     LookAndFeel.CloseButton.Circle.Normal.StartColor = clGradientActiveCaption
     LookAndFeel.CloseButton.Circle.Normal.StopColor = clNone
     LookAndFeel.CloseButton.Circle.Normal.StartAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.StopAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Normal.OutlineAlpha = 0
     LookAndFeel.CloseButton.Circle.Down.StartColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StopColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Down.OutlineAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StartColor = 9408475
     LookAndFeel.CloseButton.Circle.Hot.StopColor = 9803748
     LookAndFeel.CloseButton.Circle.Hot.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.OutlineColor = 6054595
-    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StartColor = 16041889
     LookAndFeel.AddButton.Button.Normal.StopColor = 15844511
     LookAndFeel.AddButton.Button.Normal.StartAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StopAlpha = 255
     LookAndFeel.AddButton.Button.Normal.OutlineColor = 11889731
-    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Down.StartColor = 12355685
     LookAndFeel.AddButton.Button.Down.StopColor = 12091999
     LookAndFeel.AddButton.Button.Down.StartAlpha = 255
     LookAndFeel.AddButton.Button.Down.StopAlpha = 255
     LookAndFeel.AddButton.Button.Down.OutlineColor = 9135436
-    LookAndFeel.AddButton.Button.Down.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StartColor = 16375240
     LookAndFeel.AddButton.Button.Hot.StopColor = 16044468
     LookAndFeel.AddButton.Button.Hot.StartAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StopAlpha = 255
     LookAndFeel.AddButton.Button.Hot.OutlineColor = 11824194
-    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StartColor = 15975841
     LookAndFeel.ScrollButtons.Button.Normal.StopColor = 15778204
     LookAndFeel.ScrollButtons.Button.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Normal.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StartColor = 12355684
     LookAndFeel.ScrollButtons.Button.Down.StopColor = 12091999
     LookAndFeel.ScrollButtons.Button.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.OutlineColor = 9135180
-    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Down.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StartColor = 16241848
     LookAndFeel.ScrollButtons.Button.Hot.StopColor = 16044468
     LookAndFeel.ScrollButtons.Button.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.OutlineColor = 11824194
-    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Disabled.StartColor = 13531723
     LookAndFeel.ScrollButtons.Button.Disabled.StopColor = 13267523
     LookAndFeel.ScrollButtons.Button.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineColor = 9985595
-    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineAlpha = 100
     LookAndFeel.ScrollButtons.Arrow.Normal.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Down.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Hot.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alBottom
+    TabOrder = 2
   end
   object Panel1: TPanel
     Left = 0
@@ -796,7 +796,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 736
           Height = 444
-          ActivePage = TabSheet4
+          ActivePage = TabSheet10
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -1353,13 +1353,13 @@ object frmMain: TfrmMain
               Left = 0
               Top = 172
               Width = 728
-              Height = 140
+              Height = 151
               Align = alTop
               Caption = 'Display'
               TabOrder = 1
               object Label67: TLabel
-                Left = 11
-                Top = 91
+                Left = 13
+                Top = 99
                 Width = 90
                 Height = 15
                 Caption = 'Trimming Mode:'
@@ -1367,7 +1367,7 @@ object frmMain: TfrmMain
               end
               object Label18: TLabel
                 Left = 13
-                Top = 43
+                Top = 51
                 Width = 122
                 Height = 15
                 Caption = 'Horzizontal Alignment:'
@@ -1375,15 +1375,15 @@ object frmMain: TfrmMain
               end
               object Label52: TLabel
                 Left = 174
-                Top = 43
+                Top = 51
                 Width = 101
                 Height = 15
                 Caption = 'Vertical Alignment:'
                 FocusControl = cbTextVerticalAlignment
               end
               object cbTextTrimming: TComboBox
-                Left = 11
-                Top = 107
+                Left = 13
+                Top = 115
                 Width = 152
                 Height = 23
                 Style = csDropDownList
@@ -1403,7 +1403,7 @@ object frmMain: TfrmMain
               object chkTabWordWrap: TCheckBox
                 Tag = 1
                 Left = 13
-                Top = 21
+                Top = 24
                 Width = 91
                 Height = 17
                 Caption = 'Word Wrap'
@@ -1412,7 +1412,7 @@ object frmMain: TfrmMain
               end
               object cbTextAlignment: TComboBox
                 Left = 13
-                Top = 59
+                Top = 66
                 Width = 150
                 Height = 23
                 Style = csDropDownList
@@ -1427,7 +1427,7 @@ object frmMain: TfrmMain
               end
               object cbTextVerticalAlignment: TComboBox
                 Left = 174
-                Top = 58
+                Top = 66
                 Width = 139
                 Height = 23
                 Style = csDropDownList
@@ -1440,16 +1440,6 @@ object frmMain: TfrmMain
                   'Bottom'
                   'Centre')
               end
-              object chkRightToLeftText: TCheckBox
-                Tag = 1
-                Left = 174
-                Top = 20
-                Width = 171
-                Height = 17
-                Caption = 'Right to Left Text'
-                TabOrder = 4
-                OnClick = OnCommonControlPropertyChange
-              end
             end
           end
           object TabSheet4: TTabSheet
@@ -1460,7 +1450,7 @@ object frmMain: TfrmMain
               Top = 19
               Width = 728
               Height = 395
-              ActivePage = TabSheet12
+              ActivePage = TabSheet11
               Align = alClient
               TabOrder = 0
               object TabSheet11: TTabSheet
@@ -1972,6 +1962,33 @@ object frmMain: TfrmMain
                 TabOrder = 0
                 OnClick = OnCommonControlPropertyChange
               end
+            end
+          end
+          object TabSheet10: TTabSheet
+            Caption = 'Internationlization'
+            ImageIndex = 8
+            object Label69: TLabel
+              Left = 3
+              Top = 6
+              Width = 57
+              Height = 15
+              Caption = 'Bidi Mode:'
+              FocusControl = cbBidiMode
+            end
+            object cbBidiMode: TComboBox
+              Left = 3
+              Top = 21
+              Width = 206
+              Height = 23
+              Style = csDropDownList
+              ItemIndex = 2
+              TabOrder = 0
+              Text = 'Right to Left Text and Tabs'
+              OnChange = OnCommonControlPropertyChange
+              Items.Strings = (
+                'Left to Right'
+                'Right to Left Text'
+                'Right to Left Text and Tabs')
             end
           end
           object Scrolling: TTabSheet

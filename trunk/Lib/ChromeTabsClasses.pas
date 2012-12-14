@@ -205,14 +205,14 @@ type
     FPen: TGPPen;
     FOutlineColor: TColor;
     FOutlineAlpha: Byte;
-    FOutlineSize: Integer;
+    FOutlineSize: Single;
     FPenInvalidated: Boolean;
 
     procedure SetStartColor(const Value: TColor);
     procedure SetStopColor(const Value: TColor);
     procedure SetStartAlpha(const Value: Byte);
     procedure SetOutlineColor(const Value: TColor);
-    procedure SetOutlineSize(const Value: Integer);
+    procedure SetOutlineSize(const Value: Single);
     procedure SetStopAlpha(const Value: Byte);
     procedure SetOutlineAlpha(const Value: Byte);
   public
@@ -229,19 +229,19 @@ type
     property StartAlpha: Byte read FStartAlpha write SetStartAlpha;
     property StopAlpha: Byte read FStopAlpha write SetStopAlpha;
     property OutlineColor: TColor read FOutlineColor write SetOutlineColor;
-    property OutlineSize: Integer read FOutlineSize write SetOutlineSize;
+    property OutlineSize: Single read FOutlineSize write SetOutlineSize;
     property OutlineAlpha: Byte read FOutlineAlpha write SetOutlineAlpha;
   end;
 
   TChromeTabsLookAndFeelPen = class(TChromeTabsPersistent)
   private
     FColor: TColor;
-    FThickness: Integer;
+    FThickness: Single;
     FAlpha: Integer;
     FPen: TGPPen;
   private
     procedure SetColor(const Value: TColor);
-    procedure SetThickness(const Value: Integer);
+    procedure SetThickness(const Value: Single);
     procedure SetAlpha(const Value: Integer);
   public
     constructor Create(AOwner: TPersistent); override;
@@ -251,7 +251,7 @@ type
     procedure Invalidate; override;
   published
     property Color: TColor read FColor write SetColor;
-    property Thickness: Integer read FThickness write SetThickness;
+    property Thickness: Single read FThickness write SetThickness;
     property Alpha: Integer read FAlpha write SetAlpha;
   end;
 
@@ -846,7 +846,7 @@ type
     FTextHorizontalAlignment: TAlignment;
     FTextAlignmentVertical: TVerticalAlignment;
     FShowImages: Boolean;
-    FRightToLeftText: Boolean;
+    FBiDiMode: TChromeTabsBidiMode;
   private
     procedure SetSeeThroughTabs(const Value: Boolean);
     procedure SetOverlap(const Value: Integer);
@@ -868,7 +868,7 @@ type
     procedure SetTextAlignmentHorizontal(const Value: TAlignment);
     procedure SetTextAlignmentVertical(const Value: TVerticalAlignment);
     procedure SetShowImages(const Value: Boolean);
-    procedure SetRightToLeftText(const Value: Boolean);
+    procedure SetBiDiMode(const Value: TChromeTabsBidiMode);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
@@ -893,7 +893,7 @@ type
     property TextAlignmentHorizontal: TAlignment read FTextHorizontalAlignment write SetTextAlignmentHorizontal;
     property TextAlignmentVertical: TVerticalAlignment read FTextAlignmentVertical write SetTextAlignmentVertical;
     property ShowImages: Boolean read FShowImages write SetShowImages;
-    property RightToLeftText: Boolean read FRightToLeftText write SetRightToLeftText;
+    property BiDiMode: TChromeTabsBidiMode read FBiDiMode write SetBiDiMode;
   end;
 
   TChromeTabsScrollOptions = class(TChromeTabsPersistent)
@@ -1023,6 +1023,7 @@ type
     procedure DoOnChange(ATab: TChromeTab; TabChangeType: TTabChangeType);
     function ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect; overload;
     function ScrollRect(ARect: TRect): TRect; overload;
+    function BidiRect(ARect: TRect): TRect;
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;
@@ -1479,6 +1480,13 @@ begin
   DoChanged;
 end;
 
+procedure TChromeTabsOptions.SetBiDiMode(const Value: TChromeTabsBidiMode);
+begin
+  FBiDiMode := Value;
+
+  DoChanged;
+end;
+
 procedure TChromeTabsOptions.SetCanvasSmoothingMode(const Value: TSmoothingMode);
 begin
   FCanvasSmoothingMode := Value;
@@ -1562,13 +1570,6 @@ end;
 procedure TChromeTabsOptions.SetPinnedWidth(const Value: Integer);
 begin
   FPinnedWidth := Value;
-
-  DoChanged;
-end;
-
-procedure TChromeTabsOptions.SetRightToLeftText(const Value: Boolean);
-begin
-  FRightToLeftText := Value;
 
   DoChanged;
 end;
@@ -1852,7 +1853,7 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabsLookAndFeelStyle.SetOutlineSize(const Value: Integer);
+procedure TChromeTabsLookAndFeelStyle.SetOutlineSize(const Value: Single);
 begin
   FOutlineSize := Value;
 
@@ -2936,7 +2937,7 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabsLookAndFeelPen.SetThickness(const Value: Integer);
+procedure TChromeTabsLookAndFeelPen.SetThickness(const Value: Single);
 begin
   FThickness := Value;
 
