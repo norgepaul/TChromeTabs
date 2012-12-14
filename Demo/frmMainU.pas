@@ -271,7 +271,6 @@ type
     edtCloseButtonMouseLeaveDelay: TSpinEdit;
     chkRightClickSelect: TCheckBox;
     Label62: TLabel;
-    chkRightToLeftText: TCheckBox;
     Panel8: TPanel;
     chkScrollOverlayButtons: TCheckBox;
     Panel9: TPanel;
@@ -285,6 +284,9 @@ type
     Label30: TLabel;
     Label68: TLabel;
     edtAddButtonFloatingHorzOffset: TSpinEdit;
+    TabSheet10: TTabSheet;
+    cbBidiMode: TComboBox;
+    Label69: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -1173,7 +1175,7 @@ begin
 
     edtTabContentMarginLeft.Value := ChromeTabs.Options.Display.Tabs.ContentOffsetLeft;
     edtTabContentMarginRight.Value := ChromeTabs.Options.Display.Tabs.ContentOffsetRight;
-    chkRightToLeftText.Checked := ChromeTabs.Options.Display.Tabs.RightToLeftText;
+    cbBidiMode.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.BiDiMode);
 
     edtPinnedWidth.Value := ChromeTabs.Options.Display.Tabs.PinnedWidth;
     edtMaxTabWidth.Value := ChromeTabs.Options.Display.Tabs.MaxWidth;
@@ -1297,7 +1299,7 @@ begin
       ChromeTabs.Options.Display.Tabs.TextAlignmentHorizontal := TAlignment(cbTextAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextAlignmentVertical := TVerticalAlignment(cbTextVerticalAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextTrimType := TTextTrimType(cbTextTrimming.ItemIndex);
-      ChromeTabs.Options.Display.Tabs.RightToLeftText := chkRightToLeftText.Checked;
+      ChromeTabs.Options.Display.Tabs.BiDiMode := TChromeTabsBidiMode(cbBidiMode.ItemIndex);
 
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.Name := cbFontName.Text;

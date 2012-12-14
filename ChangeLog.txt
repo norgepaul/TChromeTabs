@@ -1,5 +1,10 @@
 TChromeTabs Beta 1
 
+
+Fixed: Changed border/pen thickness properties from Integer to Single (although it doesn't seem to make any difference to the lines)
+Fixed: Erroneous hit test result if point wasn't in control. Caused tabs to stay hot when mouse left.
+
+13/12/2012
 Fixed: GDI+ error under Windows 8
 Fixed: "Cannot focus window" error after opening then closing additional form.
 Fixed: Better handling of add button animation when adding/deleting tabs (still not 100% perfect).

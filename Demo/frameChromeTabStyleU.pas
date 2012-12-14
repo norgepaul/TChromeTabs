@@ -250,14 +250,14 @@ begin
         edtAlphaStart.Value := FChromeTabLookAndFeelStyle.StartAlpha;
         edtAlphaStop.Value := FChromeTabLookAndFeelStyle.StopAlpha;
         SetColor(colOutline, FChromeTabLookAndFeelStyle.OutlineColor, TRUE);
-        edtOutlineWidth.Value := FChromeTabLookAndFeelStyle.OutlineSize;
+        edtOutlineWidth.Value := Round(FChromeTabLookAndFeelStyle.OutlineSize);
         edtOutlineAlpha.Value := FChromeTabLookAndFeelStyle.OutlineAlpha;
       end;
 
       if FChromeTabLookAndFeelPen <> nil then
       begin
         SetColor(colOutline, FChromeTabLookAndFeelPen.Color, TRUE);
-        edtOutlineWidth.Value := FChromeTabLookAndFeelPen.Thickness;
+        edtOutlineWidth.Value := Round(FChromeTabLookAndFeelPen.Thickness);
         edtOutlineAlpha.Value := FChromeTabLookAndFeelPen.Alpha;
       end;
 

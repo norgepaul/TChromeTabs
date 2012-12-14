@@ -16,21 +16,21 @@ object frameChromeTabStyle: TframeChromeTabStyle
     object Label1: TLabel
       Left = 7
       Top = 16
-      Width = 52
+      Width = 56
       Height = 13
       Caption = 'Start Color:'
     end
     object Label2: TLabel
       Left = 7
       Top = 56
-      Width = 52
+      Width = 54
       Height = 13
       Caption = 'Stop Color:'
     end
     object Label3: TLabel
       Left = 7
       Top = 98
-      Width = 55
+      Width = 58
       Height = 13
       Caption = 'Start Alpha:'
       FocusControl = edtAlphaStart
@@ -38,7 +38,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
     object Label6: TLabel
       Left = 83
       Top = 98
-      Width = 55
+      Width = 56
       Height = 13
       Caption = 'Stop Alpha:'
       FocusControl = edtAlphaStop
@@ -72,8 +72,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
       Top = 30
       Width = 22
       Height = 22
-      TabOrder = 0
-      OnClick = OnSelectColorClick
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         1800000000000003000001000000010000000000000000000000FFFFFFFFFFFF
@@ -101,14 +99,14 @@ object frameChromeTabStyle: TframeChromeTabStyle
         00AED10087D50059C80044D10330D80616D81106D82C04D84100D45A00CF8400
         D6AD00D3BA00C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 0
+      OnClick = OnSelectColorClick
     end
     object Button2: TBitBtn
       Left = 129
       Top = 69
       Width = 22
       Height = 22
-      TabOrder = 2
-      OnClick = Button2Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         1800000000000003000001000000010000000000000000000000FFFFFFFFFFFF
@@ -136,6 +134,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
         00AED10087D50059C80044D10330D80616D81106D82C04D84100D45A00CF8400
         D6AD00D3BA00C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 2
+      OnClick = Button2Click
     end
     object colStart: TPanel
       Left = 7
@@ -162,8 +162,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
       Top = 30
       Width = 22
       Height = 22
-      TabOrder = 6
-      OnClick = BitBtn1Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         18000000000000030000C40E0000C40E00000000000000000000838383838383
@@ -191,14 +189,14 @@ object frameChromeTabStyle: TframeChromeTabStyle
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542FFDA
         D0D05E42A15542A15542FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542A15542A15542F5F5F5}
+      TabOrder = 6
+      OnClick = BitBtn1Click
     end
     object BitBtn2: TBitBtn
       Left = 107
       Top = 69
       Width = 22
       Height = 22
-      TabOrder = 7
-      OnClick = BitBtn2Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         18000000000000030000C40E0000C40E00000000000000000000838383838383
@@ -226,6 +224,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542FFDA
         D0D05E42A15542A15542FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542A15542A15542F5F5F5}
+      TabOrder = 7
+      OnClick = BitBtn2Click
     end
   end
   object gbPen: TGroupBox
@@ -240,7 +240,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
     object Label4: TLabel
       Left = 7
       Top = 17
-      Width = 27
+      Width = 29
       Height = 13
       Caption = 'Color:'
     end
@@ -288,8 +288,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
       Top = 30
       Width = 22
       Height = 22
-      TabOrder = 0
-      OnClick = Button3Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         1800000000000003000001000000010000000000000000000000FFFFFFFFFFFF
@@ -317,6 +315,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
         00AED10087D50059C80044D10330D80616D81106D82C04D84100D45A00CF8400
         D6AD00D3BA00C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 0
+      OnClick = Button3Click
     end
     object colOutline: TPanel
       Left = 7
@@ -333,8 +333,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
       Top = 30
       Width = 22
       Height = 22
-      TabOrder = 4
-      OnClick = BitBtn3Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         18000000000000030000C40E0000C40E00000000000000000000838383838383
@@ -362,6 +360,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542FFDA
         D0D05E42A15542A15542FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542A15542A15542F5F5F5}
+      TabOrder = 4
+      OnClick = BitBtn3Click
     end
   end
   object gbFont: TGroupBox
@@ -393,7 +393,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
       object Label9: TLabel
         Left = 0
         Top = 129
-        Width = 30
+        Width = 31
         Height = 13
         Caption = 'Alpha:'
         FocusControl = edtFontAlpha
@@ -424,7 +424,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
       object Label8: TLabel
         Left = 0
         Top = 88
-        Width = 27
+        Width = 29
         Height = 13
         Caption = 'Color:'
       end
@@ -434,7 +434,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
         Width = 144
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
         ItemIndex = 4
         TabOrder = 0
         Text = 'Anti Alias'
@@ -475,7 +474,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
         Top = 62
         Width = 144
         Height = 21
-        ItemHeight = 13
         TabOrder = 1
         Text = 'Segoe UI'
         OnChange = colStartChange
@@ -485,8 +483,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
         Top = 102
         Width = 22
         Height = 22
-        TabOrder = 2
-        OnClick = Button4Click
         Glyph.Data = {
           36030000424D3603000000000000360000002800000010000000100000000100
           1800000000000003000001000000010000000000000000000000FFFFFFFFFFFF
@@ -514,6 +510,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
           00AED10087D50059C80044D10330D80616D81106D82C04D84100D45A00CF8400
           D6AD00D3BA00C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+        TabOrder = 2
+        OnClick = Button4Click
       end
       object colFont: TPanel
         Left = 2
@@ -530,8 +528,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
         Top = 102
         Width = 22
         Height = 22
-        TabOrder = 6
-        OnClick = BitBtn4Click
         Glyph.Data = {
           36030000424D3603000000000000360000002800000010000000100000000100
           18000000000000030000C40E0000C40E00000000000000000000838383838383
@@ -559,6 +555,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542FFDA
           D0D05E42A15542A15542FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542A15542A15542F5F5F5}
+        TabOrder = 6
+        OnClick = BitBtn4Click
       end
     end
   end
@@ -574,21 +572,21 @@ object frameChromeTabStyle: TframeChromeTabStyle
     object Label13: TLabel
       Left = 7
       Top = 16
-      Width = 61
+      Width = 65
       Height = 13
       Caption = 'Centre Color:'
     end
     object Label14: TLabel
       Left = -273
       Top = -406
-      Width = 52
+      Width = 54
       Height = 13
       Caption = 'Stop Color:'
     end
     object Label15: TLabel
       Left = 7
       Top = 98
-      Width = 64
+      Width = 67
       Height = 13
       Caption = 'Centre Alpha:'
       FocusControl = edtCentreAlpha
@@ -596,7 +594,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
     object Label16: TLabel
       Left = 83
       Top = 98
-      Width = 69
+      Width = 71
       Height = 13
       Caption = 'Outside Alpha:'
       FocusControl = edtOutsideAlpha
@@ -604,7 +602,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
     object Label17: TLabel
       Left = 7
       Top = 56
-      Width = 66
+      Width = 69
       Height = 13
       Caption = 'Outside Color:'
     end
@@ -637,8 +635,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
       Top = 30
       Width = 22
       Height = 22
-      TabOrder = 1
-      OnClick = Button5Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         1800000000000003000001000000010000000000000000000000FFFFFFFFFFFF
@@ -666,14 +662,14 @@ object frameChromeTabStyle: TframeChromeTabStyle
         00AED10087D50059C80044D10330D80616D81106D82C04D84100D45A00CF8400
         D6AD00D3BA00C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 1
+      OnClick = Button5Click
     end
     object Button6: TBitBtn
       Left = 129
       Top = 70
       Width = 22
       Height = 22
-      TabOrder = 2
-      OnClick = Button6Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         1800000000000003000001000000010000000000000000000000FFFFFFFFFFFF
@@ -701,6 +697,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
         00AED10087D50059C80044D10330D80616D81106D82C04D84100D45A00CF8400
         D6AD00D3BA00C0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 2
+      OnClick = Button6Click
     end
     object colCentre: TPanel
       Left = 7
@@ -727,8 +725,6 @@ object frameChromeTabStyle: TframeChromeTabStyle
       Top = 30
       Width = 22
       Height = 22
-      TabOrder = 6
-      OnClick = BitBtn5Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         18000000000000030000C40E0000C40E00000000000000000000838383838383
@@ -756,14 +752,14 @@ object frameChromeTabStyle: TframeChromeTabStyle
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542FFDA
         D0D05E42A15542A15542FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542A15542A15542F5F5F5}
+      TabOrder = 6
+      OnClick = BitBtn5Click
     end
     object BitBtn6: TBitBtn
       Left = 107
       Top = 70
       Width = 22
       Height = 22
-      TabOrder = 7
-      OnClick = BitBtn6Click
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
         18000000000000030000C40E0000C40E00000000000000000000838383838383
@@ -791,6 +787,8 @@ object frameChromeTabStyle: TframeChromeTabStyle
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542FFDA
         D0D05E42A15542A15542FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFA15542A15542A15542F5F5F5}
+      TabOrder = 7
+      OnClick = BitBtn6Click
     end
   end
   object ColorDialog1: TColorDialog
