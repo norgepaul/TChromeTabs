@@ -1,6 +1,14 @@
 TChromeTabs Beta 1
 
+15/12/2012
+Update: More work on Bidi. Working except for scrolling and some drag outside container issues.
+Fixed: Style transition was animated by default for tab <-> active.
+Fixed: Demo didn't update animation type checkboxes from control.
+Fixed: BitmapToGPImage stream free issue.
+Added: Close tab animation.
 
+14/12/2012
+Experimental: BiDi support.
 Fixed: Changed border/pen thickness properties from Integer to Single (although it doesn't seem to make any difference to the lines)
 Fixed: Erroneous hit test result if point wasn't in control. Caused tabs to stay hot when mouse left.
 

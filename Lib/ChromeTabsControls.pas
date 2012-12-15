@@ -57,6 +57,7 @@ type
     procedure Invalidate; virtual;
     function ScrollRect(ARect: TRect): TRect;
     function BidiRect(ARect: TRect): TRect;
+    function BidiPolygon(Polygon: TPolygon): TPolygon;
 
     property ChromeTabs: IChromeTabs read FChromeTabs;
   public
@@ -200,9 +201,6 @@ type
 
     procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
     function GetPolygons: IChromeTabPolygons; override;
-    function GetPlusPolygon: TPolygon;
-
-    procedure Invalidate; override;
   end;
 
   TScrollButtonControl = class(TBaseChromeButtonControl)
@@ -211,8 +209,6 @@ type
     function GetArrowPolygons(Direction: TChromeTabDirection): IChromeTabPolygons;
   public
     procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
-
-    procedure Invalidate; override;
   end;
 
   TScrollButtonLeftControl = class(TScrollButtonControl)
@@ -243,9 +239,17 @@ begin
     Result := ARect;
 end;
 
+function TBaseChromeTabsControl.BidiPolygon(Polygon: TPolygon): TPolygon;
+begin
+  if ChromeTabs.GetBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+    Result := HorzFlipPolygon(BidiControlRect, Polygon)
+  else
+    Result := Polygon;
+end;
+
 function TBaseChromeTabsControl.BidiRect(ARect: TRect): TRect;
 begin
-  if ChromeTabs.GetOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+  if ChromeTabs.GetBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
     Result := HorzFlipRect(BidiControlRect, HorzFlipRect(BidiControlRect, ChromeTabs.BidiRect(ARect)))
   else
     Result := ARect;
@@ -488,7 +492,8 @@ begin
 
     Brush := GetButtonBrush;
 
-    Result.AddPolygon(NewPolygon(BidiControlRect, [Point(7, RectHeight(BidiControlRect)),
+    Result.AddPolygon(BidiPolygon(
+                      NewPolygon(BidiControlRect, [Point(7, RectHeight(BidiControlRect)),
                                  Point(4, RectHeight(BidiControlRect) - 2),
                                  Point(0, 2),
                                  Point(1, 0),
@@ -496,7 +501,7 @@ begin
                                  Point(RectWidth(BidiControlRect) - 4, 2),
                                  Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - 2),
                                  Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect))],
-                      ChromeTabs.GetOptions.Display.Tabs.Orientation),
+                      ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                       Brush,
                       GetButtonPen);
 
@@ -506,7 +511,8 @@ begin
       LeftOffset := (ChromeTabs.GetOptions.Display.AddButton.Width div 2) - 4;
       TopOffset := (ChromeTabs.GetOptions.Display.AddButton.Height div 2) - 4;
 
-      Result.AddPolygon(NewPolygon(Rect(BidiControlRect.Left + LeftOffset,
+      Result.AddPolygon(BidiPolygon(
+                        NewPolygon(Rect(BidiControlRect.Left + LeftOffset,
                                    BidiControlRect.Top + TopOffset,
                                    BidiControlRect.Right - LeftOffset,
                                    BidiControlRect.Bottom - TopOffset),
@@ -523,18 +529,11 @@ begin
                                    Point(3, 6),
                                    Point(0, 6),
                                    Point(0, 3)],
-                               ChromeTabs.GetOptions.Display.Tabs.Orientation),
+                               ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                GetSymbolBrush,
                                GetSymbolPen);
     end;
   end;
-end;
-
-procedure TAddButtonControl.Invalidate;
-begin
-  inherited;
-
-  //FChromeTabs.GetLookAndFeel.AddButton.Invalidate;
 end;
 
 procedure TAddButtonControl.SetStylePropertyClasses;
@@ -557,10 +556,6 @@ begin
       FSymbolStyle := ChromeTabs.GetLookAndFeel.AddButton.PlusSign.Normal;
     end;
   end;
-end;
-
-function TAddButtonControl.GetPlusPolygon: TPolygon;
-begin
 end;
 
 constructor TAddButtonControl.Create(ChromeTabs: IChromeTabs);
@@ -907,7 +902,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, Background
             // Set the fade blend factors to fade the end of the text
             TxtFormat.SetTrimming(StringTrimmingNone);
 
-            if ChromeTabs.GetOptions.Display.Tabs.BiDiMode = bdmLeftToRight then
+            if ChromeTabs.GetBiDiMode in [bdLeftToRight, bdRightToLeftNoAlign] then
             begin
               BlendFactorsFade[0] := 0.0;
               BlendFactorsFade[2] := 1.0;
@@ -945,7 +940,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, Background
             if not ChromeTabs.GetOptions.Display.Tabs.WordWrap then
               TextFormatFlags := TextFormatFlags + StringFormatFlagsNoWrap;
 
-            if ChromeTabs.GetOptions.Display.Tabs.BiDiMode <> bdmLeftToRight then
+            if ChromeTabs.GetBiDiMode in [bdRightToLeft, bdRightToLeftReadingOnly] then
               TextFormatFlags := TextFormatFlags + StringFormatFlagsDirectionRightToLeft;
           end;
 
@@ -1349,11 +1344,12 @@ function TScrollButtonControl.GetArrowPolygons(
 begin
   Result := TChromeTabPolygons.Create;
 
-  Result.AddPolygon(NewPolygon(ControlRect, [Point(0, RectHeight(ControlRect)),
+  Result.AddPolygon(BidiPolygon(
+                    NewPolygon(BidiControlRect, [Point(0, RectHeight(ControlRect)),
                                              Point(0, 0),
                                              Point(RectWidth(ControlRect), 0),
                                              Point(RectWidth(ControlRect), RectHeight(ControlRect))],
-                               ChromeTabs.GetOptions.Display.Tabs.Orientation),
+                               ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                GetButtonBrush,
                                GetButtonPen);
 
@@ -1361,32 +1357,28 @@ begin
   case Direction of
     drLeft:
       begin
-        Result.AddPolygon(NewPolygon(ControlRect, [Point(3, RectHeight(ControlRect) div 2),
+        Result.AddPolygon(BidiPolygon(
+                          NewPolygon(BidiControlRect, [Point(3, RectHeight(ControlRect) div 2),
                                                    Point(RectWidth(ControlRect) - 3, 2),
                                                    Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) - 2),
                                                    Point(3, RectHeight(ControlRect) div 2)],
-                                     ChromeTabs.GetOptions.Display.Tabs.Orientation),
+                                     ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                      GetSymbolBrush,
                                      GetSymbolPen);
       end;
 
     drRight:
       begin
-        Result.AddPolygon(NewPolygon(ControlRect, [Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2),
+        Result.AddPolygon(BidiPolygon(
+                          NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2),
                                                    Point(3, 2),
                                                    Point(3, RectHeight(ControlRect) - 2),
                                                    Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2)],
-                                     ChromeTabs.GetOptions.Display.Tabs.Orientation),
+                                     ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                      GetSymbolBrush,
                                      GetSymbolPen);
       end;
   end;
-end;
-
-procedure TScrollButtonControl.Invalidate;
-begin
-  inherited;
-
 end;
 
 procedure TScrollButtonControl.SetStylePropertyClasses;

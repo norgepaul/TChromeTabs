@@ -37,12 +37,6 @@ type
   );
   {$ENDIF}
 
-  TChromeTabsBidiMode = (
-    bdmLeftToRight,
-    bdmRightToLeftText,
-    bdmRightToLeftTextAndTabs
-  );
-
   TChromeTabDirection = (
     drLeft,
     drRight
@@ -155,6 +149,7 @@ type
 
   TChromeTabsAnimationMovementType = (
     aeTabAdd,
+    aeTabDelete,
     aeTabMove,
     aeTabDragCancelled,
     aeAddButtonMove
@@ -180,7 +175,8 @@ type
     stsFirstPaint,
     stsControlsPositionsInvalidated,
     stsDebug,
-    stsInitialAddButtonPosition
+    stsInitialAddButtonPosition,
+    stsAnimatingCloseTab
   );
   TChromeTabStates = set of TChromeTabState;
 
@@ -189,6 +185,12 @@ type
     csbLeft,
     csbRight,
     csbLeftAndRight
+  );
+
+  TTabDisplayState = (
+    tdNormal,
+    tdCompressed,
+    tdScrolling
   );
 
   TScrollDirection = (
@@ -262,7 +264,8 @@ const
     'First Paint',
     'Controls Invalidated',
     'Debug',
-    'Initial Add Button Position'
+    'Initial Add Button Position',
+    'Animating Close Tab'
   );
 
   ChromeTabsControlTypeDescriptions: Array[TChromeTabItemType] of String = (

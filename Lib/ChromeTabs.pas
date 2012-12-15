@@ -192,6 +192,7 @@ type
     FScrollDirection: TScrollDirection;
     FLastClientWidth: Integer;
     FLastHitTestResult: THitTestResult;
+    FBiDiMode: TBiDiMode;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -235,7 +236,6 @@ type
     function GetLastVisibleTabIndex(StartIndex: Integer): Integer;
     procedure SetScrollOffset(const Value: Integer);
     procedure SetScrollOffsetEx(const Value: Integer; IgnoreContraints: Boolean);
-    function CanvasWidth: Integer;
     function ScrollRect(ARect: TRect): TRect; overload;
     function ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect; overload;
     procedure CorrectScrollOffset;
@@ -248,6 +248,9 @@ type
     function ScrollingActive: Boolean;
     procedure SetControlDrawState(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; ForceUpdate: Boolean = FALSE);
     function BidiRect(ARect: TRect): TRect;
+    procedure SetBiDiMode(const Value: TBiDiMode);
+    function GetBiDiMode: TBiDiMode;
+    function GetBidiScrollOffset: Integer;
   protected
     // ** Important, often called procedures ** //
     procedure RepositionTabs; virtual;
@@ -337,6 +340,7 @@ type
     property OnScrollWidthChanged: TNotifyEvent read FOnScrollWidthChanged write FOnScrollWidthChanged;
     property OnAnimateStyleTransisiton: TOnAnimateStyleTransisiton read FOnAnimateStyleTransisiton write FOnAnimateStyleTransisiton;
 
+    property BiDiMode: TBiDiMode read GetBiDiMode write SetBiDiMode;
     property LookAndFeel: TChromeTabsLookAndFeel read GetLookAndFeel write SetLookAndFeel;
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
     property Images: TCustomImageList read GetImages write SetImages;
@@ -360,6 +364,7 @@ type
     function HasState(State: TChromeTabState): Boolean; virtual;
     procedure ScrollIntoView(Tab: TChromeTab); virtual;
     function GetTabUnderMouse: TChromeTab;
+    function GetTabDisplayState: TTabDisplayState;
 
     procedure SaveLookAndFeel(Stream: TStream); overload; virtual;
     procedure SaveLookAndFeel(const Filename: String); overload; virtual;
@@ -378,6 +383,7 @@ type
     property State: TChromeTabStates read FState;
     property PausedUpdateCount: Integer read FPausedUpdateCount;
     property ScrollOffset: Integer read FScrollOffset write SetScrollOffset;
+    property BidiScrollOffset: Integer read GetBidiScrollOffset;
     property ScrollWidth: Integer read FScrollWidth;
     property TabContainerRect: TRect read FTabContainerRect;
     property MaxScrollOffset: Integer read GetMaxScrollOffset;
@@ -415,6 +421,7 @@ type
     property Options;
     property Tabs;
     property LookAndFeel;
+    property BiDiMode;
 
     property Align;
     property Anchors;
@@ -515,7 +522,7 @@ begin
   Result := 0;
 
   for i := 0 to pred(GetPinnedTabCount) do
-    if Tabs[i].Visible then
+    if (Tabs[i].Visible) and (not Tabs[i].MarkedForDeletion) then
       Inc(Result);
 end;
 
@@ -531,7 +538,7 @@ begin
   Result := 0;
 
   for i := GetLastPinnedIndex + 1 to pred(Tabs.Count) do
-    if Tabs[i].Visible then
+    if (Tabs[i].Visible) and (not Tabs[i].MarkedForDeletion) then
       Inc(Result);
 end;
 
@@ -609,6 +616,16 @@ begin
   Redraw;
 
   DoOnMouseLeave;
+end;
+
+function TCustomChromeTabs.GetTabDisplayState: TTabDisplayState;
+begin
+  if FAdjustedTabWidth = FOptions.Display.Tabs.MaxWidth then
+    Result := tdNormal else
+  if ScrollingActive then
+    Result := tdScrolling
+  else
+    Result := tdCompressed;
 end;
 
 procedure TCustomChromeTabs.ClearTabClosingStates;
@@ -724,7 +741,8 @@ begin
 
   // Disable style animation for new tabs
   if ((ChromeTabsControl.ControlType = itTab) and
-      (ChromeTabsControl.DrawState = dsUnknown)) or
+      ((ChromeTabsControl.DrawState in [dsUnknown, dsActive])) or
+       (NewDrawState = dsActive)) or
 
     ((ChromeTabsControl.ControlType = itAddButton) and
      ((ChromeTabsControl.DrawState = dsDown) or
@@ -761,12 +779,14 @@ begin
       begin
         FLastHitTestResult := HitTestResult;
 
-        if ScrollOffset = 0 then
+        if (BiDiMode in [bdLeftToRight, bdRightToLeft]) and (ScrollOffset = 0) or
+           (BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]) and (ScrollOffset = GetMaxScrollOffset) then
           SetControlDrawState(FScrollButtonLeftControl, dsDisabled)
         else
           SetControlDrawState(FScrollButtonLeftControl, dsActive);
 
-        if GetMaxScrollOffset = ScrollOffset then
+        if (BiDiMode in [bdLeftToRight, bdRightToLeft]) and (ScrollOffset = GetMaxScrollOffset) or
+           (BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]) and (ScrollOffset = 0) then
           SetControlDrawState(FScrollButtonRightControl, dsDisabled)
         else
           SetControlDrawState(FScrollButtonRightControl, dsActive);
@@ -847,6 +867,8 @@ end;
 procedure TCustomChromeTabs.SetImages(const Value: TCustomImageList);
 begin
   FImages := Value;
+
+  Redraw;
 end;
 
 procedure TCustomChromeTabs.SetOptions(const Value: TOptions);
@@ -894,6 +916,8 @@ end;
 procedure TCustomChromeTabs.SetImagesOverlay(const Value: TCustomImageList);
 begin
   FImagesOverlay := Value;
+
+  Redraw;
 end;
 
 procedure TCustomChromeTabs.DoPopupClick(Sender: TObject);
@@ -1087,7 +1111,7 @@ begin
 
       NewTabControl.SetPosition(Rect(NewTabLeft,
                                      FOptions.Display.Tabs.OffsetTop,
-                                     NewTabLeft + FOptions.Display.Tabs.MinWidth,
+                                     NewTabLeft + FOptions.Animation.MinimumTabAnimationWidth,
                                      ClientHeight - FOptions.Display.Tabs.OffsetBottom),
                                 FALSE);
     end;
@@ -1164,6 +1188,26 @@ begin
       end;
 
     tcAdded: ClearTabClosingStates;
+
+    tcDeleted:
+      begin
+        // We're deleting the tab but we need to animate it first
+        if (aeTabDelete in FOptions.Animation.AnimationMovement) and
+           (ATab <> nil) then
+        begin
+          // If the tabs are compressed and this is the last tab, don't animate
+          if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
+          begin
+            Tabs.Delete(ATab.Index);
+          end
+          else
+          begin
+            AddState(stsAnimatingCloseTab);
+
+            TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth, TRUE);
+          end;
+        end;
+      end;
 
     tcDeleting:
       begin
@@ -1367,12 +1411,19 @@ begin
 end;
 
 procedure TCustomChromeTabs.ScrollTabs(ScrollDirection: TScrollDirection; StartTimer: Boolean);
+var
+  IncValue: Integer;
 begin
   FScrollDirection := ScrollDirection;
 
+  IncValue := FOptions.Scrolling.ScrollStep;
+
+  if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+    IncValue := -IncValue;
+
   case FScrollDirection of
-    mdsLeft: ScrollOffset := ScrollOffset - FOptions.Scrolling.ScrollStep;
-    mdsRight: ScrollOffset := ScrollOffset + FOptions.Scrolling.ScrollStep;
+    mdsLeft: ScrollOffset := ScrollOffset - IncValue;
+    mdsRight: ScrollOffset := ScrollOffset + IncValue;
   end;
 
   if StartTimer then
@@ -1388,7 +1439,8 @@ begin
   begin
     Animated := FALSE;
 
-    for i := 0 to pred(Tabs.Count) do
+    for i := pred(Tabs.Count) downto 0 do
+    begin
       if TabControls[i].Animate then
       begin
         Animated := TRUE;
@@ -1399,10 +1451,25 @@ begin
       else
       begin
         if (i = ActiveTabIndex) and (HasState(stsAnimatingNewTab)) then
-        begin
           RemoveState(stsAnimatingNewTab);
+      end;
+
+      // We've finshed the delete tab animation. Delete the tab now.
+      if Tabs[i].MarkedForDeletion then
+      begin
+        AddState(stsControlsPositionsInvalidated);
+
+        // Force a redraw
+        Animated := TRUE;
+
+        if RectWidth(TabControls[i].ControlRect) <= FOptions.Animation.MinimumTabAnimationWidth then
+        begin
+          Tabs.Delete(i);
+
+          RemoveState(stsAnimatingCloseTab);
         end;
       end;
+    end;
 
     if FAddButtonControl.Animate then
       Animated := TRUE;
@@ -1467,6 +1534,19 @@ begin
     Result := -1
   else
     Result := Tabs.ActiveTab.Index;
+end;
+
+function TCustomChromeTabs.GetBiDiMode: TBiDiMode;
+begin
+  Result := FBiDiMode;
+end;
+
+function TCustomChromeTabs.GetBidiScrollOffset: Integer;
+begin
+  if BiDiMode in [bdLeftToRight, bdRightToLeft] then
+    Result := FScrollOffset
+  else
+    Result := MaxScrollOffset - FScrollOffset;
 end;
 
 function TCustomChromeTabs.GetControl: TWinControl;
@@ -1697,7 +1777,7 @@ end;
 
 function TCustomChromeTabs.BidiRect(ARect: TRect): TRect;
 begin
-  if FOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+  if FBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
     Result := HorzFlipRect(ControlRect, ARect)
   else
     Result := ARect;
@@ -1755,7 +1835,7 @@ begin
       begin
         DragTabControl := TabControls[FDragTabObject.DragTab.Index];
 
-        if FOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+        if FBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
           DragTabLeft := (X - FDragTabObject.DragCursorOffset.X) - ((X - FDragTabObject.DragPoint.X) * 2)
         else
           DragTabLeft := X - FDragTabObject.DragCursorOffset.X;
@@ -1878,7 +1958,7 @@ begin
           ActualDragDisplay := ddTab;
       end;
 
-      if FOptions.Display.Tabs.BiDiMode = bdmRightToLeftTextAndTabs then
+      if FBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
         BiDiX := ControlRect.Right  { Todo: Needs fixing }
       else
         BiDiX := FDragTabObject.DragCursorOffset.X;
@@ -2489,6 +2569,7 @@ procedure TCustomChromeTabs.RepositionTabs;
   var
     i, TabWidth: Integer;
     TabControl: TChromeTabControl;
+    RealClosedTabIndex: Integer;
   begin
     for i := 0 to pred(Tabs.Count) do
     begin
@@ -2499,7 +2580,14 @@ procedure TCustomChromeTabs.RepositionTabs;
       // Find the actual tab control
       TabControl := TabControls[i];
 
-      if i = FClosedTabIndex then
+      RealClosedTabIndex := FClosedTabIndex;
+
+      // If we're animating, the deleted tab still exists
+      if (aeTabDelete in FOptions.Animation.AnimationMovement) and
+         (HasState(stsAnimatingCloseTab)) then
+        Inc(RealClosedTabIndex);
+
+      if i = RealClosedTabIndex then
       begin
         // Make sure the new tab at this position is exactly the same as
         // the one that was just closed
@@ -2509,12 +2597,15 @@ procedure TCustomChromeTabs.RepositionTabs;
       else
         TabWidth := RectWidth(TabControls[i].ControlRect);
 
-      // Set the position of the tabs
-      TabControl.SetPosition(Rect(TabLeft,
-                                  FOptions.Display.Tabs.OffsetTop,
-                                  TabLeft + TabWidth,
-                                  ClientHeight - FOptions.Display.Tabs.OffsetBottom),
-                             aeTabMove in FOptions.Animation.AnimationMovement);
+      if not Tabs[i].MarkedForDeletion then
+      begin
+        // Set the position of the tabs
+        TabControl.SetPosition(Rect(TabLeft,
+                                    FOptions.Display.Tabs.OffsetTop,
+                                    TabLeft + TabWidth,
+                                    ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                               aeTabMove in FOptions.Animation.AnimationMovement);
+      end;
 
       TabLeft := TabLeft + TabWidth - FOptions.Display.Tabs.TabOverlap;
 
@@ -2578,7 +2669,7 @@ procedure TCustomChromeTabs.RepositionTabs;
       // increment the position of the tabs to the right
       if (DragTabControl <> nil) and
          (DragTabControl.ControlRect.Left +
-          ScrollOffset +
+          BidiScrollOffset +
           (RectWidth(DragTabControl.ControlRect) div 2) -
           FOptions.Display.Tabs.TabOverlap < TabLeft + RectWidth(DragTabControl.ControlRect)) then
       begin
@@ -2617,22 +2708,31 @@ procedure TCustomChromeTabs.RepositionTabs;
         // We add a sigle pixel to some of the tabs in order to align the
         // right hand side perfectly
         if (not PinnedTabs) and
+           (not Tabs[i].MarkedForDeletion) and
            (TabEndSpace > 0) then
           TabWidthAddition := 1
         else
           TabWidthAddition := 0;
 
-        Dec(TabEndSpace);
+        if not Tabs[i].MarkedForDeletion then
+        begin
+          Dec(TabEndSpace);
 
-        TabControl.SetPosition(Rect(TabLeft,
-                                    FOptions.Display.Tabs.OffsetTop,
-                                    TabLeft + TabWidth + FOptions.Display.Tabs.TabOverlap,
-                                    ClientHeight - FOptions.Display.Tabs.OffsetBottom),
-                               (aeTabMove in FOptions.Animation.AnimationMovement) and
-                               (not HasState(stsResizing)));
+          TabControl.SetPosition(Rect(TabLeft,
+                                      FOptions.Display.Tabs.OffsetTop,
+                                      TabLeft + TabWidth + FOptions.Display.Tabs.TabOverlap,
+                                      ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                                 (aeTabMove in FOptions.Animation.AnimationMovement) and
+                                 (not HasState(stsResizing)));
 
-        TabLeft := TabLeft + TabWidth + TabWidthAddition;
-        FScrollWidth := FScrollWidth + TabWidth + TabWidthAddition;
+          TabLeft := TabLeft + TabWidth + TabWidthAddition;
+          FScrollWidth := FScrollWidth + TabWidth + TabWidthAddition;
+        end
+        else
+        begin
+          TabLeft := TabLeft + RectWidth(TabControl.ControlRect);
+          FScrollWidth := FScrollWidth + RectWidth(TabControl.ControlRect);
+        end;
       end;
     end;
 
@@ -2681,9 +2781,7 @@ begin
     else
     begin
       if not DraggingInOwnContainer then
-      begin
         CalculateAverageTabWidth(FAdjustedTabWidth, FTabEndSpace);
-      end;
 
       SetTabPositions(TabLeft, FOptions.Display.Tabs.PinnedWidth, 0, TRUE);
       SetTabPositions(TabLeft, FAdjustedTabWidth, FTabEndSpace, FALSE);
@@ -2825,7 +2923,6 @@ begin
       for i := 0 to pred(Tabs.Count) do
         SetControlDrawState(TabControls[i], TabControls[i].DrawState, TRUE);
 
-      FAddButtonControl.Invalidate;
       FLookAndFeel.Invalidate;
 
       AddState(stsControlsPositionsInvalidated);
@@ -2956,6 +3053,13 @@ begin
   else
   if IsValidTabIndex(Value) then
     Tabs.ActiveTab := FTabs[Value];
+end;
+
+procedure TCustomChromeTabs.SetBiDiMode(const Value: TBiDiMode);
+begin
+  FBiDiMode := Value;
+
+  Redraw;
 end;
 
 procedure TCustomChromeTabs.SetLookAndFeel(Value: TChromeTabsLookAndFeel);
@@ -3201,17 +3305,6 @@ begin
   end;
 end;
 
-function TCustomChromeTabs.CanvasWidth: Integer;
-begin
-  //Result := TabContainerRect.Right;
-
-  //if FOptions.Layout.AddButton.Visible then
-  //  Result := Result + FOptions.Layout.AddButton.Width + FOptions.Layout.AddButton.Offsets.Horizontal + FOptions.Display.Tabs.TabOverlap;
-
-  //if Result < ClientWidth then
-  Result := ClientWidth;
-end;
-
 procedure TCustomChromeTabs.DrawCanvas;
 var
   TabCanvas, BackgroundCanvas: TGPGraphics;
@@ -3220,11 +3313,11 @@ var
   begin
     // Set the clip region while re're drawing the tabs if we're not
     // overlaying the buttons
-    if FOptions.Display.TabContainer.OverlayButtons then
-      TabCanvas.SetClip(RectToGPRectF(Rect(FOptions.Display.Tabs.OffsetLeft,
-                                          FOptions.Display.Tabs.OffsetTop,
-                                          CorrectedClientWidth - FOptions.Display.Tabs.OffsetRight,
-                                          ClientHeight - FOptions.Display.Tabs.OffsetBottom)))
+    if not FOptions.Display.TabContainer.OverlayButtons then
+      TabCanvas.SetClip(RectToGPRectF(BidiRect(Rect(FOptions.Display.Tabs.OffsetLeft,
+                                               FOptions.Display.Tabs.OffsetTop,
+                                               CorrectedClientWidth - FOptions.Display.Tabs.OffsetRight,
+                                               ClientHeight - FOptions.Display.Tabs.OffsetBottom))))
     else
       TabCanvas.SetClip(RectToGPRectF(TabContainerRect));
   end;
@@ -3264,10 +3357,10 @@ begin
       end;
 
       // Set the canvas size
-      FCanvasBmp.Width := CanvasWidth;
+      FCanvasBmp.Width := ClientWidth;
       FCanvasBmp.Height := ClientHeight;
 
-      FBackgroundBmp.Width := CanvasWidth;
+      FBackgroundBmp.Width := ClientWidth;
       FBackgroundBmp.Height := ClientHeight;
 
       TabCanvas := TGPGraphics.Create(FCanvasBmp.Canvas.Handle);
@@ -3311,8 +3404,8 @@ begin
         for i := pred(FTabs.Count) downto 0 do
           if (Tabs[i].Visible) and
              (i <> ActiveTabIndex) and
-             (TabControls[i].ControlRect.Right >= FScrollOffset) and
-             (TabControls[i].ControlRect.Left <= CorrectedClientWidth + FScrollOffset) then
+             (TabControls[i].ControlRect.Right >= BidiScrollOffset) and
+             (TabControls[i].ControlRect.Left <= CorrectedClientWidth + BidiScrollOffset) then
             TabControls[i].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
 
         // Clear the clipping region while we draw the base line
@@ -3333,8 +3426,8 @@ begin
         // Draw the active tab
         if (ActiveTabIndex <> -1) and
            (ActiveTabVisible) and
-           (TabControls[ActiveTabIndex].ControlRect.Right >= FScrollOffset) and
-           (TabControls[ActiveTabIndex].ControlRect.Left <= CorrectedClientWidth + FScrollOffset) then
+           (TabControls[ActiveTabIndex].ControlRect.Right >= BidiScrollOffset) and
+           (TabControls[ActiveTabIndex].ControlRect.Left <= CorrectedClientWidth + BidiScrollOffset) then
           TabControls[ActiveTabIndex].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
 
         // Clear the clip region
@@ -3388,26 +3481,26 @@ end;
 
 function TCustomChromeTabs.ScrollRect(ARect: TRect): TRect;
 begin
-  Result := Rect(ARect.Left - FScrollOffset,
+  Result := Rect(ARect.Left - BidiScrollOffset,
                  ARect.Top,
-                 ARect.Right - FScrollOffset,
+                 ARect.Right - BidiScrollOffset,
                  ARect.Bottom);
 end;
 
 procedure TCustomChromeTabs.ScrollIntoView(Tab: TChromeTab);
 begin
-  if TabControls[Tab.Index].ControlRect.Left < ScrollOffset then
+  if TabControls[Tab.Index].ControlRect.Left < BidiScrollOffset then
     ScrollOffset := TabControls[Tab.Index].ControlRect.Left else
 
-  if TabControls[Tab.Index].ControlRect.Right > ClientWidth + ScrollOffset then
+  if TabControls[Tab.Index].ControlRect.Right > ClientWidth + BidiScrollOffset then
     ScrollOffset := TabControls[Tab.Index].ControlRect.Right - RectWidth(TabContainerRect) + FOptions.Display.Tabs.TabOverlap;
 end;
 
 function TCustomChromeTabs.ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect;
 begin
-  Result := Rect(ALeft - FScrollOffset,
+  Result := Rect(ALeft - BidiScrollOffset,
                  ATop,
-                 ARight - FScrollOffset,
+                 ARight - BidiScrollOffset,
                  ABottom);
 end;
 
@@ -3415,30 +3508,32 @@ procedure TCustomChromeTabs.DrawBackGroundTo(Targets: Array of TGPGraphics);
 var
   GPImage: TGPImage;
   i: Integer;
+  MemStream: TMemoryStream;
 begin
   PaintControlToCanvas(Self, FCanvasBmp.Canvas);
 
-  GPImage := BitmapToGPImage(FCanvasBmp);
+  MemStream := TMemoryStream.Create;
   try
-    for i := low(Targets) to high(Targets) do
-    begin
-      // Erase the background (copy the real background to the canvas)
-      // We need to do this if we're transparent or the background has is transparent
-      {$IFDEF DELPHI2006_UP}
-      if (FOptions.Display.TabContainer.TransparentBackground) or
-         (FLookAndFeel.TabsContainer.StartAlpha < 255) then
-        Targets[i].DrawImage(GPImage, 0, 0);
-      {$ENDIF}
+    FCanvasBmp.SaveToStream(MemStream);
 
-      // Draw the background if required
-      if not FOptions.Display.TabContainer.TransparentBackground then
+    MemStream.Position := 0;
+
+    GPImage := TGPImage.Create(TStreamAdapter.Create(MemStream));
+    try
+      for i := low(Targets) to high(Targets) do
       begin
-        Targets[i].FillRectangle(FLookAndFeel.TabsContainer.GetBrush(ControlRect), RectToGPRectF(ControlRect));
-        Targets[i].DrawRectangle(FLookAndFeel.TabsContainer.GetPen, RectToGPRectF(ControlRect));
+        // Draw the background if required
+        if not FOptions.Display.TabContainer.TransparentBackground then
+        begin
+          Targets[i].FillRectangle(FLookAndFeel.TabsContainer.GetBrush(ControlRect), RectToGPRectF(ControlRect));
+          Targets[i].DrawRectangle(FLookAndFeel.TabsContainer.GetPen, RectToGPRectF(ControlRect));
+        end;
       end;
+    finally
+      FreeAndNil(GPImage);
     end;
   finally
-    FreeAndNil(GPImage);
+    FreeAndNil(MemStream);
   end;
 end;
 
