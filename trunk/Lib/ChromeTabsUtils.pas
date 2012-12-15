@@ -49,7 +49,6 @@ function RectToGPRectF(ARect: TRect): TGPRectF;
 function RectToGPRect(ARect: TRect): TGPRect;
 function PointToGPPoint(Pt: TPoint): TGPPoint;
 function IconToGPImage(Icon: TIcon): TGPImage;
-function BitmapToGPImage(Bitmap: TBitmap): TGPImage;
 function BitmapToGPBitmap(Bitmap: TBitmap): TGPBitmap;
 function GeneratePolygon(ControlRect: TRect; const PolygonPoints: Array of TPoint; Orientation: TTabOrientation): TPolygon;
 function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
@@ -61,7 +60,7 @@ procedure ReadComponentFromStream(AComponent: TComponent; AStream: TStream);
 function ContrastingColor(Color: TColor): TColor;
 function ComponentToCode(AComponent: TComponent; const ComponentName: String): String;
 function HorzFlipRect(ParentRect, ChildRect: TRect): TRect;
-
+function HorzFlipPolygon(ParentRect: TRect; Polygon: TPolygon): TPolygon;
 function RectHeight(Rect: TRect): Integer;
 function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
@@ -74,6 +73,16 @@ begin
                  ChildRect.Top,
                  ParentRect.Left + ParentRect.Right - ChildRect.Left,
                  ChildRect.Bottom);
+end;
+
+function HorzFlipPolygon(ParentRect: TRect; Polygon: TPolygon): TPolygon;
+var
+  i: Integer;
+begin
+  Result := Polygon;
+
+  for i := Low(Polygon) to High(Polygon) do
+    Polygon[i].X := ParentRect.Left + ParentRect.Right - Polygon[i].X;
 end;
 
 function ContrastingColor(Color: TColor): TColor;
@@ -281,22 +290,6 @@ begin
   MemStream := TMemoryStream.Create;
   try
     Icon.SaveToStream(MemStream);
-
-    MemStream.Position := 0;
-
-    Result := TGPImage.Create(TStreamAdapter.Create(MemStream));
-  finally
-    FreeAndNil(MemStream);
-  end;
-end;
-
-function BitmapToGPImage(Bitmap: TBitmap): TGPImage;
-var
-  MemStream: TMemoryStream;
-begin
-  MemStream := TMemoryStream.Create;
-  try
-    Bitmap.SaveToStream(MemStream);
 
     MemStream.Position := 0;
 

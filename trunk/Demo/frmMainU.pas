@@ -287,6 +287,11 @@ type
     TabSheet10: TTabSheet;
     cbBidiMode: TComboBox;
     Label69: TLabel;
+    chkAnimationTabMovements: TCheckbox;
+    chkAnimationAddTab: TCheckbox;
+    chkAnimationDragCancelled: TCheckbox;
+    chkAnimationAddButtonMove: TCheckbox;
+    chkAnimationDeleteTab: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -1175,7 +1180,7 @@ begin
 
     edtTabContentMarginLeft.Value := ChromeTabs.Options.Display.Tabs.ContentOffsetLeft;
     edtTabContentMarginRight.Value := ChromeTabs.Options.Display.Tabs.ContentOffsetRight;
-    cbBidiMode.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.BiDiMode);
+    cbBidiMode.ItemIndex := Integer(ChromeTabs.BiDiMode);
 
     edtPinnedWidth.Value := ChromeTabs.Options.Display.Tabs.PinnedWidth;
     edtMaxTabWidth.Value := ChromeTabs.Options.Display.Tabs.MaxWidth;
@@ -1222,6 +1227,12 @@ begin
     edtDragStartPixels.Value := ChromeTabs.Options.DragDrop.DragStartPixels;
     edtDragImageResize.Text := FloatToStr(ChromeTabs.Options.DragDrop.DragControlImageResizeFactor);
     cbExternalDragDisplay.ItemIndex := Integer(ChromeTabs.Options.DragDrop.DragDisplay);
+
+    chkAnimationTabMovements.Checked := aeTabMove in ChromeTabs.Options.Animation.AnimationMovement;
+    chkAnimationAddTab.Checked := aeTabAdd in ChromeTabs.Options.Animation.AnimationMovement;
+    chkAnimationDragCancelled.Checked := aeTabDragCancelled in ChromeTabs.Options.Animation.AnimationMovement;
+    chkAnimationAddButtonMove.Checked := aeAddButtonMove in ChromeTabs.Options.Animation.AnimationMovement;
+    chkAnimationDeleteTab.Checked := aeTabDelete in ChromeTabs.Options.Animation.AnimationMovement;
 
     if ChromeTabs.Options.DragDrop.DragCursor = crDrag then
       cbDragCursor.ItemIndex := 1
@@ -1299,7 +1310,7 @@ begin
       ChromeTabs.Options.Display.Tabs.TextAlignmentHorizontal := TAlignment(cbTextAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextAlignmentVertical := TVerticalAlignment(cbTextVerticalAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextTrimType := TTextTrimType(cbTextTrimming.ItemIndex);
-      ChromeTabs.Options.Display.Tabs.BiDiMode := TChromeTabsBidiMode(cbBidiMode.ItemIndex);
+      ChromeTabs.BiDiMode := TBiDiMode(cbBidiMode.ItemIndex);
 
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.Name := cbFontName.Text;

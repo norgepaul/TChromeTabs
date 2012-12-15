@@ -47,6 +47,7 @@ type
     function GetIndex: Integer;
     function GetModified: Boolean;
     function GetTab: TChromeTab;
+    function GetMarkedForDeletion: Boolean;
   end;
 
   TChromeTabPolygon = class(TObject)
@@ -107,6 +108,7 @@ type
     FActive: Boolean;
     FVisible: Boolean;
     FModified: Boolean;
+    FMarkedForDeletion: Boolean;
 
     procedure SetActive(Value: boolean);
     procedure SetCaption(Value: TCaption);
@@ -128,6 +130,7 @@ type
     function GetVisible: Boolean;
     function GetModified: Boolean;
     function GetTab: TChromeTab;
+    function GetMarkedForDeletion: Boolean;
   protected
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
@@ -151,6 +154,7 @@ type
     property Pinned: Boolean read GetPinned write SetPinned;
     property Visible: Boolean read GetVisible write SetVisible;
     property Modified: Boolean read GetModified write SetModified;
+    property MarkedForDeletion: Boolean read GetMarkedForDeletion;
   end;
 
   TChromeTabClass = class of TChromeTab;
@@ -778,11 +782,13 @@ type
     FAnimationMovementIncrement: Integer;
     FAnimationStyleIncrement: Integer;
     FAnimationTimerInterval: Integer;
+    FMinimumTabAnimationWidth: Integer;
   private
     procedure SetAnimationMovementIncrement(const Value: Integer);
     procedure SetAnimationStyleIncrement(const Value: Integer);
     procedure SetAnimationTimerInterval(const Value: Integer);
     procedure SetAnimationMovement(const Value: TChromeTabsAnimationMovementTypes);
+    procedure SetMinimumTabAnimationWidth(const Value: Integer);
   public
     constructor Create(AOwner: TPersistent); override;
   published
@@ -790,6 +796,7 @@ type
     property AnimationMovementIncrement: Integer read FAnimationMovementIncrement write SetAnimationMovementIncrement;
     property AnimationStyleIncrement: Integer read FAnimationStyleIncrement write SetAnimationStyleIncrement;
     property AnimationTimerInterval: Integer read FAnimationTimerInterval write SetAnimationTimerInterval;
+    property MinimumTabAnimationWidth: Integer read FMinimumTabAnimationWidth write SetMinimumTabAnimationWidth;
   end;
 
   TChromeTabsBehaviourOptions = class(TChromeTabsPersistent)
@@ -846,7 +853,6 @@ type
     FTextHorizontalAlignment: TAlignment;
     FTextAlignmentVertical: TVerticalAlignment;
     FShowImages: Boolean;
-    FBiDiMode: TChromeTabsBidiMode;
   private
     procedure SetSeeThroughTabs(const Value: Boolean);
     procedure SetOverlap(const Value: Integer);
@@ -868,7 +874,6 @@ type
     procedure SetTextAlignmentHorizontal(const Value: TAlignment);
     procedure SetTextAlignmentVertical(const Value: TVerticalAlignment);
     procedure SetShowImages(const Value: Boolean);
-    procedure SetBiDiMode(const Value: TChromeTabsBidiMode);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
@@ -893,7 +898,6 @@ type
     property TextAlignmentHorizontal: TAlignment read FTextHorizontalAlignment write SetTextAlignmentHorizontal;
     property TextAlignmentVertical: TVerticalAlignment read FTextAlignmentVertical write SetTextAlignmentVertical;
     property ShowImages: Boolean read FShowImages write SetShowImages;
-    property BiDiMode: TChromeTabsBidiMode read FBiDiMode write SetBiDiMode;
   end;
 
   TChromeTabsScrollOptions = class(TChromeTabsPersistent)
@@ -1024,6 +1028,7 @@ type
     function ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect; overload;
     function ScrollRect(ARect: TRect): TRect; overload;
     function BidiRect(ARect: TRect): TRect;
+    function GetBiDiMode: TBiDiMode;
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;
@@ -1201,6 +1206,11 @@ begin
   Result := Index;
 end;
 
+function TChromeTab.GetMarkedForDeletion: Boolean;
+begin
+  Result := FMarkedForDeletion;
+end;
+
 function TChromeTab.GetModified: Boolean;
 begin
   Result := FModified;
@@ -1323,25 +1333,40 @@ procedure TChromeTabsList.Delete(Index: Integer);
 var
   NewIdx: Integer;
 begin
-  if not Items[Index].Active then
-    NewIdx := -1 else
-
-  if Index < pred(Count) then
-    NewIdx := Index else
-
-  if Index > 0 then
-    NewIdx := Index - 1
+  // Has this tab already been marked for deletion? If so, remove it now
+  if Items[Index].FMarkedForDeletion then
+    inherited Delete(Index)
   else
-    NewIdx := -1;
+  begin
+    if not Items[Index].Active then
+      NewIdx := -1 else
 
-  GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
+    if Index < pred(Count) then
+      NewIdx := Index else
 
-  inherited Delete(Index);
+    if Index > 0 then
+      NewIdx := Index - 1
+    else
+      NewIdx := -1;
 
-  GetChromeTabInterface.DoOnChange(nil, tcDeleted);
+    GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
 
-  if NewIdx <> -1 then
-    Items[NewIdx].Active := TRUE;
+    if aeTabDelete in GetChromeTabInterface.GetOptions.Animation.AnimationMovement then
+    begin
+      Items[Index].FMarkedForDeletion := TRUE;
+
+      GetChromeTabInterface.DoOnChange(Items[Index], tcDeleted);
+    end
+    else
+    begin
+      inherited Delete(Index);
+
+      GetChromeTabInterface.DoOnChange(nil, tcDeleted);
+    end;
+
+    if NewIdx <> -1 then
+      Items[NewIdx].Active := TRUE;
+  end;
 end;
 
 procedure TChromeTabsList.SetActiveTab(const Value: TChromeTab);
@@ -1476,13 +1501,6 @@ end;
 procedure TChromeTabsOptions.SetBaseLineTabRegionOnly(const Value: Boolean);
 begin
   FBaseLineTabRegionOnly := Value;
-
-  DoChanged;
-end;
-
-procedure TChromeTabsOptions.SetBiDiMode(const Value: TChromeTabsBidiMode);
-begin
-  FBiDiMode := Value;
 
   DoChanged;
 end;
@@ -2173,11 +2191,13 @@ begin
 
   FAnimationMovement := [aeTabAdd,
                          aeTabMove,
-                         aeTabDragCancelled];
+                         aeTabDragCancelled,
+                         aeAddButtonMove];
 
   FAnimationMovementIncrement := 8;
   FAnimationStyleIncrement := 10;
   FAnimationTimerInterval := 30;
+  FMinimumTabAnimationWidth := 40;
 end;
 
 procedure TChromeTabsAnimationOptions.SetAnimationMovementIncrement(const Value: Integer);
@@ -2193,6 +2213,12 @@ end;
 procedure TChromeTabsAnimationOptions.SetAnimationTimerInterval(const Value: Integer);
 begin
   FAnimationTimerInterval := Value;
+end;
+
+procedure TChromeTabsAnimationOptions.SetMinimumTabAnimationWidth(
+  const Value: Integer);
+begin
+  FMinimumTabAnimationWidth := Value;
 end;
 
 procedure TChromeTabsAnimationOptions.SetAnimationMovement(
