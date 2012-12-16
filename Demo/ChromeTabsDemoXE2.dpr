@@ -1,6 +1,7 @@
 program ChromeTabsDemoXE2;
 
 uses
+  ExceptionLog,
   Forms,
   frmMainU in 'frmMainU.pas' {frmMain},
   ChromeTabsLog in '..\Lib\ChromeTabsLog.pas',

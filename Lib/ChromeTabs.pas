@@ -1546,7 +1546,7 @@ begin
   if BiDiMode in [bdLeftToRight, bdRightToLeft] then
     Result := FScrollOffset
   else
-    Result := MaxScrollOffset - FScrollOffset;
+    Result := -FScrollOffset; //MaxScrollOffset - FScrollOffset;
 end;
 
 function TCustomChromeTabs.GetControl: TWinControl;
@@ -2669,7 +2669,7 @@ procedure TCustomChromeTabs.RepositionTabs;
       // increment the position of the tabs to the right
       if (DragTabControl <> nil) and
          (DragTabControl.ControlRect.Left +
-          BidiScrollOffset +
+          ScrollOffset +
           (RectWidth(DragTabControl.ControlRect) div 2) -
           FOptions.Display.Tabs.TabOverlap < TabLeft + RectWidth(DragTabControl.ControlRect)) then
       begin
@@ -2877,7 +2877,7 @@ var
   LastTabIndex: Integer;
 begin
   if (FOptions.Scrolling.Enabled) and
-     (FScrollOffset > 0) and
+     (ScrollOffset > 0) and
      (FLastClientWidth < CorrectedClientWidth) then
   begin
     // Make sure we're showing as many tabs as possible
@@ -2885,7 +2885,7 @@ begin
 
     if LastTabIndex <> -1 then
     begin
-      if TabControls[LastTabIndex].ControlRect.Right < FScrollOffset + ClientWidth then
+      if TabControls[LastTabIndex].ControlRect.Right < ScrollOffset + ClientWidth then
         ScrollOffset := GetMaxScrollOffset;
     end;
   end;
@@ -3319,7 +3319,7 @@ var
                                                CorrectedClientWidth - FOptions.Display.Tabs.OffsetRight,
                                                ClientHeight - FOptions.Display.Tabs.OffsetBottom))))
     else
-      TabCanvas.SetClip(RectToGPRectF(TabContainerRect));
+      TabCanvas.SetClip(RectToGPRectF(BidiRect(TabContainerRect)));
   end;
 
 var
@@ -3404,8 +3404,8 @@ begin
         for i := pred(FTabs.Count) downto 0 do
           if (Tabs[i].Visible) and
              (i <> ActiveTabIndex) and
-             (TabControls[i].ControlRect.Right >= BidiScrollOffset) and
-             (TabControls[i].ControlRect.Left <= CorrectedClientWidth + BidiScrollOffset) then
+             (TabControls[i].ControlRect.Right >= ScrollOffset) and
+             (TabControls[i].ControlRect.Left <= CorrectedClientWidth + ScrollOffset) then
             TabControls[i].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
 
         // Clear the clipping region while we draw the base line
@@ -3426,8 +3426,8 @@ begin
         // Draw the active tab
         if (ActiveTabIndex <> -1) and
            (ActiveTabVisible) and
-           (TabControls[ActiveTabIndex].ControlRect.Right >= BidiScrollOffset) and
-           (TabControls[ActiveTabIndex].ControlRect.Left <= CorrectedClientWidth + BidiScrollOffset) then
+           (TabControls[ActiveTabIndex].ControlRect.Right >= ScrollOffset) and
+           (TabControls[ActiveTabIndex].ControlRect.Left <= CorrectedClientWidth + ScrollOffset) then
           TabControls[ActiveTabIndex].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
 
         // Clear the clip region
@@ -3489,18 +3489,18 @@ end;
 
 procedure TCustomChromeTabs.ScrollIntoView(Tab: TChromeTab);
 begin
-  if TabControls[Tab.Index].ControlRect.Left < BidiScrollOffset then
+  if TabControls[Tab.Index].ControlRect.Left < ScrollOffset then
     ScrollOffset := TabControls[Tab.Index].ControlRect.Left else
 
-  if TabControls[Tab.Index].ControlRect.Right > ClientWidth + BidiScrollOffset then
+  if TabControls[Tab.Index].ControlRect.Right > ClientWidth + ScrollOffset then
     ScrollOffset := TabControls[Tab.Index].ControlRect.Right - RectWidth(TabContainerRect) + FOptions.Display.Tabs.TabOverlap;
 end;
 
 function TCustomChromeTabs.ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect;
 begin
-  Result := Rect(ALeft - BidiScrollOffset,
+  Result := Rect(ALeft - ScrollOffset,
                  ATop,
-                 ARight - BidiScrollOffset,
+                 ARight - ScrollOffset,
                  ABottom);
 end;
 

@@ -1188,10 +1188,10 @@ begin
 
       // Draw the modified glow
       if FChromeTab.GetModified then
-        DrawGlow(Rect(GetModifiedGlowX,
+        DrawGlow(BidiRect(Rect(GetModifiedGlowX,
                       ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset,
                       ChromeTabs.GetOptions.Display.TabModifiedGlow.Width + GetModifiedGlowX,
-                      ChromeTabs.GetOptions.Display.TabModifiedGlow.Height + ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset),
+                      ChromeTabs.GetOptions.Display.TabModifiedGlow.Height + ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset)),
                       ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreColor,
                       ChromeTabs.GetLookAndFeel.Tabs.Modified.OutsideColor,
                       ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreAlpha,
