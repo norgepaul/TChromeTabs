@@ -94,7 +94,7 @@ OutputDir=..\bin\D7
 UnitOutputDir=..\bin\D7\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\lib
+SearchPath=..\lib;..\GDIPlus
 Packages=vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;VclSmp;dbexpress;dbxcds;inetdb;bdertl;vcldbx;webdsnap;websnap;adortl;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;vclshlctrls;dclOfficeXP;IntrawebDB_50_70;Intraweb_50_70;Rave50CLX;Rave50VCL;ChromeTabs_D7_R
 Conditionals=
 DebugSourceDirs=
@@ -138,12 +138,13 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=..\lib
+Count=2
+Item0=..\lib;..\GDIPlus
+Item1=..\lib
 [HistoryLists\hlUnitOutputDirectory]
 Count=4
-Item0=..\..\bin\D7\DCU
-Item1=..\bin\D7\DCU
+Item0=..\bin\D7\DCU
+Item1=..\..\bin\D7\DCU
 Item2=../bin/DCU
 Item3=../../bin/DCU
 [HistoryLists\hlOutputDirectorry]
@@ -156,3 +157,7 @@ Count=3
 Item0=..\..\bin\D7
 Item1=../../bin
 Item2=../bin
+[Exception Log]
+EurekaLog Version=7001
+
+
