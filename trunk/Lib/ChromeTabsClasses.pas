@@ -1342,7 +1342,17 @@ begin
       NewIdx := -1 else
 
     if Index < pred(Count) then
-      NewIdx := Index else
+    begin
+      NewIdx := Index;
+
+      if aeTabDelete in GetChromeTabInterface.GetOptions.Animation.AnimationMovement then
+      begin
+        if NewIdx < pred(Count) then
+          Inc(NewIdx)
+        else
+          Dec(NewIdx);
+      end;
+    end else
 
     if Index > 0 then
       NewIdx := Index - 1
