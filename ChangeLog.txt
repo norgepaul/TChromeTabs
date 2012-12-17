@@ -1,7 +1,11 @@
-TChromeTabs Beta 1
+TChromeTabs 0.9 Beta 1
 
 17/12/2012
+Fixed: All BiDi mode functionality implemented and working.
 Fixed: Tab close active tab selection broken.
+Fixed: Scroll/Add button clip rect.
+Fixed: Bidi Tab dragging.
+Fixed: Scroll into view.
 
 16/12/2012
 Bidi scrolling working. Still some issues with bidi though. Hopefully fixed soon.

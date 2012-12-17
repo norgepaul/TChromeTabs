@@ -166,6 +166,7 @@ type
   protected
     procedure SetItem(Index: Integer; Value: TChromeTab);
     function GetItem(Index: Integer): TChromeTab;
+    procedure InternalDelete(Index: Integer; DeleteNow: Boolean);
 
     procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
 
@@ -176,6 +177,7 @@ type
     function IndexOf(ATab: TChromeTab): integer;
     property Items[Index: Integer]: TChromeTab read GetItem write SetItem; default;
     procedure Delete(Index: Integer);
+    procedure DeleteNow(Index: Integer);
     procedure Move(OldIndex, NewIndex: Integer);
     procedure Assign(Source: TPersistent); override;
     function Add: TChromeTab; virtual;
@@ -530,10 +532,10 @@ type
     function GetControl: TWinControl;
     procedure TabDragOver(Sender: TObject; X, Y: Integer; State: TDragState; DragTabObject: IDragTabObject; var Accept: Boolean);
     procedure TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
-    procedure DeleteDraggedTab;
     function InsertDroppedTab: TChromeTab;
     procedure FireScrollTimer;
     procedure DragCompleted;
+    function GetBidiMode: TBiDiMode;
   end;
 
   IDragTabObject = interface
@@ -1330,11 +1332,21 @@ begin
 end;
 
 procedure TChromeTabsList.Delete(Index: Integer);
+begin
+  InternalDelete(Index, FALSE);
+end;
+
+procedure TChromeTabsList.DeleteNow(Index: Integer);
+begin
+  InternalDelete(Index, TRUE);
+end;
+
+procedure TChromeTabsList.InternalDelete(Index: Integer; DeleteNow: Boolean);
 var
   NewIdx: Integer;
 begin
   // Has this tab already been marked for deletion? If so, remove it now
-  if Items[Index].FMarkedForDeletion then
+  if (DeleteNow) or (Items[Index].FMarkedForDeletion) then
     inherited Delete(Index)
   else
   begin

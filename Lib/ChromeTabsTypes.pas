@@ -175,7 +175,6 @@ type
     stsFirstPaint,
     stsControlsPositionsInvalidated,
     stsDebug,
-    stsInitialAddButtonPosition,
     stsAnimatingCloseTab
   );
   TChromeTabStates = set of TChromeTabState;
@@ -264,7 +263,6 @@ const
     'First Paint',
     'Controls Invalidated',
     'Debug',
-    'Initial Add Button Position',
     'Animating Close Tab'
   );
 

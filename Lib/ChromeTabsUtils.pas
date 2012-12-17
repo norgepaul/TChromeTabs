@@ -65,6 +65,7 @@ function HorzFlipPolygon(ParentRect: TRect; Polygon: TPolygon): TPolygon;
 function RectHeight(Rect: TRect): Integer;
 function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
+procedure BitmapTo32BitBitmap(Bitmap: TBitmap);
 
 implementation
 
@@ -460,63 +461,13 @@ begin
   end;
 end;
 
-// Thanks to Anders Melander for the transparent form tutorial
-// (http://melander.dk/articles/alphasplash2/2/)
-function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
-
-  procedure PremultiplyBitmap(Bitmap: TBitmap);
-  var
-    Row, Col: integer;
-    p: PRGBQuad;
-    PreMult: array[byte, byte] of byte;
-  begin
-    // precalculate all possible values of a*b
-    for Row := 0 to 255 do
-      for Col := Row to 255 do
-      begin
-        PreMult[Row, Col] := Row*Col div 255;
-
-        if (Row <> Col) then
-          PreMult[Col, Row] := PreMult[Row, Col]; // a*b = b*a
-      end;
-
-    for Row := 0 to Bitmap.Height-1 do
-    begin
-      Col := Bitmap.Width;
-
-      p := Bitmap.ScanLine[Row];
-
-      while (Col > 0) do
-      begin
-        p.rgbBlue := PreMult[p.rgbReserved, p.rgbBlue];
-        p.rgbGreen := PreMult[p.rgbReserved, p.rgbGreen];
-        p.rgbRed := PreMult[p.rgbReserved, p.rgbRed];
-
-        inc(p);
-        dec(Col);
-      end;
-    end;
-  end;
-
+procedure BitmapTo32BitBitmap(Bitmap: TBitmap);
 var
-  BlendFunction: TBlendFunction;
-  BitmapPos: TPoint;
-  BitmapSize: TSize;
-  exStyle: DWORD;
   PNGBitmap: TGPBitmap;
   BitmapHandle: HBITMAP;
   Stream: TMemoryStream;
   StreamAdapter: IStream;
 begin
-  Result := TForm.Create(AOwner);
-
-  // Enable window layering
-  exStyle := GetWindowLongA(Result.Handle, GWL_EXSTYLE);
-
-  if (exStyle and WS_EX_LAYERED = 0) then
-    SetWindowLong(Result.Handle, GWL_EXSTYLE, exStyle or WS_EX_LAYERED);
-
-  // Load the PNG from a resource
   Stream := TMemoryStream.Create;
   try
     Bitmap.SaveToStream(Stream);
@@ -541,9 +492,64 @@ begin
   finally
     FreeAndNil(Stream);
   end;
+end;
+
+// Thanks to Anders Melander for the transparent form tutorial
+// (http://melander.dk/articles/alphasplash2/2/)
+function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
+
+  procedure PremultiplyBitmap(Bitmap: TBitmap);
+  var
+    Row, Col: integer;
+    p: PRGBQuad;
+    PreMult: array[byte, byte] of byte;
+  begin
+    // precalculate all possible values of a*b
+    for Row := 0 to 255 do
+      for Col := Row to 255 do
+      begin
+        PreMult[Row, Col] := Row*Col div 255;
+
+        if (Row <> Col) then
+          PreMult[Col, Row] := PreMult[Row, Col]; // a*b = b*a
+      end;
+
+    for Row := 0 to Bitmap.Height-100 do
+    begin
+      Col := Bitmap.Width;
+
+      p := Bitmap.ScanLine[Row];
+
+      while (Col > 0) do
+      begin
+        p.rgbBlue := PreMult[p.rgbReserved, p.rgbBlue];
+        p.rgbGreen := PreMult[p.rgbReserved, p.rgbGreen];
+        p.rgbRed := PreMult[p.rgbReserved, p.rgbRed];
+
+        inc(p);
+        dec(Col);
+      end;
+    end;
+  end;
+
+var
+  BlendFunction: TBlendFunction;
+  BitmapPos: TPoint;
+  BitmapSize: TSize;
+  exStyle: DWORD;
+begin
+  Result := TForm.Create(AOwner);
+
+  // Enable window layering
+  exStyle := GetWindowLongA(Result.Handle, GWL_EXSTYLE);
+
+  if (exStyle and WS_EX_LAYERED = 0) then
+    SetWindowLong(Result.Handle, GWL_EXSTYLE, exStyle or WS_EX_LAYERED);
 
   // Perform run-time premultiplication
-  PremultiplyBitmap(Bitmap);
+  //PremultiplyBitmap(Bitmap);
+  //Bitmap.Canvas.Brush.Color := clBlack;
+  //Bitmap.Canvas.FillRect(Rect(150, 0, Result.Width, 50));
 
   // Resize form to fit bitmap
   Result.ClientWidth := Bitmap.Width;

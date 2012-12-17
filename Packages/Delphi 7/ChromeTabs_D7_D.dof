@@ -138,12 +138,13 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=..\lib
+Count=2
+Item0=..\lib;..\GDIPlus
+Item1=..\lib
 [HistoryLists\hlUnitOutputDirectory]
 Count=4
-Item0=..\..\bin\D7\DCU
-Item1=..\bin\D7\DCU
+Item0=..\bin\D7\DCU
+Item1=..\..\bin\D7\DCU
 Item2=../bin/DCU
 Item3=../../bin/DCU
 [HistoryLists\hlOutputDirectorry]
@@ -156,3 +157,7 @@ Count=3
 Item0=..\..\bin\D7
 Item1=../../bin
 Item2=../bin
+[Exception Log]
+EurekaLog Version=7001
+
+

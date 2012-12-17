@@ -292,6 +292,7 @@ type
     chkAnimationDragCancelled: TCheckbox;
     chkAnimationAddButtonMove: TCheckbox;
     chkAnimationDeleteTab: TCheckBox;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -368,6 +369,7 @@ type
     procedure actCopyLookAndFeelAsCodeExecute(Sender: TObject);
     procedure ChromeTabs1TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
     procedure ChromeTabs1AnimateStyleTransisiton(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationIncrement: Integer; var Animate: Boolean);
+    procedure Button1Click(Sender: TObject);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -622,6 +624,12 @@ begin
   AddTreeNode(ScrollButtonNode, StrArrow, 10);
 
   tvLookAndFeelItems.FullExpand;
+end;
+
+procedure TfrmMain.Button1Click(Sender: TObject);
+begin
+  if FCurrentTabs.ActiveTab <> nil then
+    FCurrentTabs.ScrollIntoView(FCurrentTabs.ActiveTab);
 end;
 
 procedure TfrmMain.btnHideTabClick(Sender: TObject);
@@ -1069,7 +1077,7 @@ end;
 
 procedure TfrmMain.HookEvents;
 begin
-  FCurrentTabs.OnActiveTabChanging := ChromeTabs1ActiveTabChanging;
+  FCurrentTabs.OnActiveTabChanged := ChromeTabs1ActiveTabChanged;
   FCurrentTabs.OnActiveTabChanging := ChromeTabs1ActiveTabChanging;
   FCurrentTabs.OnAfterDrawItem := ChromeTabs1AfterDrawItem;
   FCurrentTabs.OnBeforeDrawItem := ChromeTabs1BeforeDrawItem;
@@ -1102,7 +1110,7 @@ end;
 
 procedure TfrmMain.UnHookEvents;
 begin
-  FCurrentTabs.OnActiveTabChanging := nil;
+  FCurrentTabs.OnActiveTabChanged := nil;
   FCurrentTabs.OnActiveTabChanging := nil;
   FCurrentTabs.OnAfterDrawItem := nil;
   FCurrentTabs.OnBeforeDrawItem := nil;
@@ -1455,7 +1463,9 @@ var
 begin
   if not (csLoading in ComponentState) then
   begin
-    if (TabChangeType = tcAdded) and (FCurrentTabs <> nil) and (not FCurrentTabs.HasState(stsLoading)) then
+    if (TabChangeType = tcAdded) and
+       (FCurrentTabs <> nil) and
+       (not FCurrentTabs.HasState(stsLoading)) then
       GUIToTabProperties(ATab);
 
     if (chkEnableEvents.Checked) and
@@ -1720,7 +1730,7 @@ begin
       AddLine(StrTabCaption, Tabs.ActiveDragTabObject.DragTab.Caption);
       AddLine(StrTabIndex, Tabs.ActiveDragTabObject.DragTab.Index);
       AddLine(StrHorizontalOffset, Tabs.ActiveDragTabObject.DragCursorOffset.X);
-      AddLine(StrVerticalOffset, Tabs.ActiveDragTabObject.DragCursorOffset.X);
+      AddLine(StrVerticalOffset, Tabs.ActiveDragTabObject.DragCursorOffset.Y);
       AddLine(StrDropTabIndex, Tabs.ActiveDragTabObject.DropTabIndex);
 
       AddLine(StrSourceControl, Tabs.ActiveDragTabObject.SourceControl.GetControl.Name);
