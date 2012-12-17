@@ -52,6 +52,7 @@ function IconToGPImage(Icon: TIcon): TGPImage;
 function BitmapToGPBitmap(Bitmap: TBitmap): TGPBitmap;
 function GeneratePolygon(ControlRect: TRect; const PolygonPoints: Array of TPoint; Orientation: TTabOrientation): TPolygon;
 function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
+procedure SetTabClipRegionFromPolygon(GPGraphics: TGPGraphics; Polygon: TPolygon; CombineMode: TCombineMode);
 procedure ClearBitmap(Bitmap: TBitmap);
 procedure ScaleImage(Bitmap, ScaledBitmap: TBitmap; ScaleFactor: Real);
 procedure EnableControlAndChildren(Control: TWinControl; DoEnable: Boolean);
@@ -206,6 +207,24 @@ begin
 
     ScaledBitmap.Canvas.StretchDraw(Rect(0, 0, NewWidth, NewHeight), Bitmap);
   {$ENDIF}
+end;
+
+procedure SetTabClipRegionFromPolygon(GPGraphics: TGPGraphics; Polygon: TPolygon; CombineMode: TCombineMode);
+var
+  TabPathPolygon: PGPPoint;
+  TabPath: TGPGraphicsPath;
+begin
+  TabPathPolygon := PGPPoint(Polygon);
+
+  // Create a clip region so we don't draw outside the tab
+  TabPath := TGPGraphicsPath.Create;
+  try
+    TabPath.AddPolygon(TabPathPolygon, length(Polygon));
+
+    GPGraphics.SetClip(TabPath, CombineMode);
+  finally
+    FreeAndNil(TabPath);
+  end;
 end;
 
 function GeneratePolygon(ControlRect: TRect; const PolygonPoints: Array of TPoint; Orientation: TTabOrientation): TPolygon;

@@ -1093,24 +1093,6 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, Background
     CloseButtonCrossRect := ScrollRect(BidiRect(CloseButtonCrossRect));
   end;
 
-  procedure SetTabClipRegion(ChromeTabPolygons: IChromeTabPolygons);
-  var
-    TabPathPolygon: PGPPoint;
-    TabPath: TGPGraphicsPath;
-  begin
-    TabPathPolygon := PGPPoint(ChromeTabPolygons.Polygons[0].Polygon);
-
-    // Create a clip region so we don't draw outside the tab
-    TabPath := TGPGraphicsPath.Create;
-    try
-      TabPath.AddPolygon(TabPathPolygon, length(ChromeTabPolygons.Polygons[0].Polygon));
-
-      TabCanvas.SetClip(TabPath);
-    finally
-      FreeAndNil(TabPath);
-    end;
-  end;
-
   procedure DrawGlow(GlowRect: TRect; CentreColor, OutsideColor: TColor; CentreAlpha, OutsideAlpha: Byte);
   var
     GPGraphicsPath: TGPGraphicsPath;
@@ -1183,7 +1165,7 @@ begin
         ChromeTabPolygons.DrawTo(TabCanvas, dfBrush);
 
         // Set the clip region to that of the tab so the glows stay within the tab
-        SetTabClipRegion(ChromeTabPolygons);
+        SetTabClipRegionFromPolygon(TabCanvas, ChromeTabPolygons.Polygons[0].Polygon, CombineModeIntersect);
 
         // Draw the modified glow
         if FChromeTab.GetModified then

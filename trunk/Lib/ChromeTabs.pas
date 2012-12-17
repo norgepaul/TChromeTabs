@@ -3309,6 +3309,8 @@ var
 
   procedure SetTabClipRegion;
   begin
+    TabCanvas.ResetClip;
+
     // Set the clip region while re're drawing the tabs if we're not
     // overlaying the buttons
     if FOptions.Display.TabContainer.OverlayButtons then
@@ -3396,18 +3398,28 @@ begin
         // After background draw event
         DoOnAfterDrawItem(BackgroundCanvas, ControlRect, itBackground, -1);
 
-        SetTabClipRegion;
-
         // Draw the inactive tabs
         for i := pred(FTabs.Count) downto 0 do
           if (Tabs[i].Visible) and
              (i <> ActiveTabIndex) and
              (TabControls[i].ControlRect.Right >= ScrollOffset) and
              (TabControls[i].ControlRect.Left <= CorrectedClientWidth + ScrollOffset) then
+          begin
+            SetTabClipRegion;
+
+            { TODO : Fix - Odd things happen when trying to clip the tab overlap }
+
+            //if (i > 0) and
+            //   (Tabs[i - 1].Visible) then
+            //  SetTabClipRegionFromPolygon(TabCanvas, TabControls[i - 1].GetPolygons.Polygons[0].Polygon, CombineModeExclude);
+
             TabControls[i].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+          end;
 
         // Clear the clipping region while we draw the base line
-        if not FOptions.Display.Tabs.BaseLineTabRegionOnly then
+        if FOptions.Display.Tabs.BaseLineTabRegionOnly then
+          SetTabClipRegion
+        else
           TabCanvas.ResetClip;
 
         // Draw the bottom line
@@ -3433,9 +3445,7 @@ begin
 
         // Draw the drag tab if required
         if FDragTabControl <> nil then
-        begin
           FDragTabControl.DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
-        end;
 
         // Draw the new button
         if (FOptions.Display.AddButton.Visibility <> avNone) and
