@@ -1,5 +1,11 @@
 TChromeTabs Beta 1
 
+17/12/2012
+Fixed: Tab close active tab selection broken.
+
+16/12/2012
+Bidi scrolling working. Still some issues with bidi though. Hopefully fixed soon.
+
 15/12/2012
 Update: More work on Bidi. Working except for scrolling and some drag outside container issues.
 Fixed: Style transition was animated by default for tab <-> active.

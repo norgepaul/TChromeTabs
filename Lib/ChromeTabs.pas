@@ -192,7 +192,6 @@ type
     FScrollDirection: TScrollDirection;
     FLastClientWidth: Integer;
     FLastHitTestResult: THitTestResult;
-    FBiDiMode: TBiDiMode;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -248,7 +247,6 @@ type
     function ScrollingActive: Boolean;
     procedure SetControlDrawState(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; ForceUpdate: Boolean = FALSE);
     function BidiRect(ARect: TRect): TRect;
-    procedure SetBiDiMode(const Value: TBiDiMode);
     function GetBiDiMode: TBiDiMode;
     function GetBidiScrollOffset: Integer;
   protected
@@ -281,6 +279,7 @@ type
     procedure MouseMove(Shift: TShiftState; x, y: Integer); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure WndProc(var Message: TMessage); override;
+    procedure SetBiDiMode(Value: TBiDiMode); override;
     procedure Loaded; override;
 
     // Virtual
@@ -340,7 +339,6 @@ type
     property OnScrollWidthChanged: TNotifyEvent read FOnScrollWidthChanged write FOnScrollWidthChanged;
     property OnAnimateStyleTransisiton: TOnAnimateStyleTransisiton read FOnAnimateStyleTransisiton write FOnAnimateStyleTransisiton;
 
-    property BiDiMode: TBiDiMode read GetBiDiMode write SetBiDiMode;
     property LookAndFeel: TChromeTabsLookAndFeel read GetLookAndFeel write SetLookAndFeel;
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
     property Images: TCustomImageList read GetImages write SetImages;
@@ -1538,7 +1536,7 @@ end;
 
 function TCustomChromeTabs.GetBiDiMode: TBiDiMode;
 begin
-  Result := FBiDiMode;
+  Result := BiDiMode;
 end;
 
 function TCustomChromeTabs.GetBidiScrollOffset: Integer;
@@ -1546,7 +1544,7 @@ begin
   if BiDiMode in [bdLeftToRight, bdRightToLeft] then
     Result := FScrollOffset
   else
-    Result := -FScrollOffset; //MaxScrollOffset - FScrollOffset;
+    Result := -FScrollOffset;
 end;
 
 function TCustomChromeTabs.GetControl: TWinControl;
@@ -1777,7 +1775,7 @@ end;
 
 function TCustomChromeTabs.BidiRect(ARect: TRect): TRect;
 begin
-  if FBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+  if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
     Result := HorzFlipRect(ControlRect, ARect)
   else
     Result := ARect;
@@ -1835,7 +1833,7 @@ begin
       begin
         DragTabControl := TabControls[FDragTabObject.DragTab.Index];
 
-        if FBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+        if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
           DragTabLeft := (X - FDragTabObject.DragCursorOffset.X) - ((X - FDragTabObject.DragPoint.X) * 2)
         else
           DragTabLeft := X - FDragTabObject.DragCursorOffset.X;
@@ -1958,7 +1956,7 @@ begin
           ActualDragDisplay := ddTab;
       end;
 
-      if FBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+      if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
         BiDiX := ControlRect.Right  { Todo: Needs fixing }
       else
         BiDiX := FDragTabObject.DragCursorOffset.X;
@@ -3055,9 +3053,9 @@ begin
     Tabs.ActiveTab := FTabs[Value];
 end;
 
-procedure TCustomChromeTabs.SetBiDiMode(const Value: TBiDiMode);
+procedure TCustomChromeTabs.SetBiDiMode(Value: TBiDiMode);
 begin
-  FBiDiMode := Value;
+  inherited;
 
   Redraw;
 end;
@@ -3313,7 +3311,7 @@ var
   begin
     // Set the clip region while re're drawing the tabs if we're not
     // overlaying the buttons
-    if not FOptions.Display.TabContainer.OverlayButtons then
+    if FOptions.Display.TabContainer.OverlayButtons then
       TabCanvas.SetClip(RectToGPRectF(BidiRect(Rect(FOptions.Display.Tabs.OffsetLeft,
                                                FOptions.Display.Tabs.OffsetTop,
                                                CorrectedClientWidth - FOptions.Display.Tabs.OffsetRight,
