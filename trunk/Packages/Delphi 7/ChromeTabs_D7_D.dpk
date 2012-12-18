@@ -28,7 +28,8 @@ package ChromeTabs_D7_D;
 
 requires
   rtl,
-  ChromeTabs_D7_R;
+  ChromeTabs_D7_R,
+  DesignIDE;
 
 contains
   ChromeTabsDesign in '..\..\Lib\ChromeTabsDesign.pas',

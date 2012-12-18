@@ -62,7 +62,7 @@ unit ChromeTabs;
 
 interface
 
-{ TODO -cImprovement : Design Time invalidation needs improving }
+{ TODO -cImprovement : Design Time invalidation needs improving e.g. Add/Delete tabs }
 { TODO -cImprovement : Animation speed - Selective invalidation of tabs }
 { TODO -cImprovement : Better handling of GDI text alpha on Vista Glass - How? }
 
@@ -1179,6 +1179,8 @@ begin
 
     tcAdded: ClearTabClosingStates;
 
+    tcVisibility: AddState(stsControlsPositionsInvalidated);
+
     tcDeleted:
       begin
         // We're deleting the tab but we need to animate it first
@@ -1421,19 +1423,32 @@ begin
 end;
 
 procedure TCustomChromeTabs.OnAnimateTimer(Sender: TObject);
+
+  procedure AnimateButtonControl(ButtonControl: TBaseChromeButtonControl);
+  begin
+    if ButtonControl.AnimateMovement then
+      AddState(stsAnimatingMovement);
+
+    if ButtonControl.AnimateStyle then
+      AddState(stsAnimatingStyle);
+  end;
+
 var
   i: Integer;
-  Animated: Boolean;
 begin
   if not (csDestroying in ComponentState) then
   begin
-    Animated := FALSE;
+    RemoveState(stsAnimatingMovement);
+    RemoveState(stsAnimatingStyle);
 
     for i := pred(Tabs.Count) downto 0 do
     begin
-      if TabControls[i].Animate then
+      if TabControls[i].AnimateStyle then
+        AddState(stsAnimatingStyle);
+
+      if TabControls[i].AnimateMovement then
       begin
-        Animated := TRUE;
+        AddState(stsAnimatingMovement);
 
         if (i = ActiveTabIndex) and (HasState(stsAnimatingNewTab)) then
           ScrollIntoView(Tabs[i]);
@@ -1454,9 +1469,7 @@ begin
       if Tabs[i].MarkedForDeletion then
       begin
         AddState(stsControlsPositionsInvalidated);
-
-        // Force a redraw
-        Animated := TRUE;
+        AddState(stsAnimatingMovement);
 
         if RectWidth(TabControls[i].ControlRect) <= FOptions.Animation.MinimumTabAnimationWidth then
         begin
@@ -1467,28 +1480,17 @@ begin
       end;
     end;
 
-    if FAddButtonControl.Animate then
-      Animated := TRUE;
+    AnimateButtonControl(FAddButtonControl);
+    AnimateButtonControl(FScrollButtonLeftControl);
+    AnimateButtonControl(FScrollButtonRightControl);
 
-    if FScrollButtonLeftControl.Animate then
-      Animated := TRUE;
-
-    if FScrollButtonRightControl.Animate then
-      Animated := TRUE;
-
-    if Animated then
+    if (HasState(stsAnimatingMovement)) or (HasState(stsAnimatingStyle)) then
     begin
       if (HasState(stsDeletingUnPinnedTabs)) and
          (not HasState(stsDragging)) then
         SetControlDrawStates;
 
-      AddState(stsAnimating);
-
       Redraw;
-    end
-    else
-    begin
-      RemoveState(stsAnimating);
     end;
 
     { TODO :
@@ -2310,23 +2312,27 @@ var
   HitTestResult: THitTestResult;
   ParentForm: TCustomForm;
 begin
-  HitTestResult := HitTest(Point(Message.XPos, Message.YPos));
-
-  if HitTestResult.TabIndex <> -1 then
-    DoOnTabDblClick(FTabs[HitTestResult.TabIndex]);
-
-  if FOptions.Behaviour.BackgroundDblClickMaximiseRestoreForm then
+  if (not FOptions.Behaviour.IgnoreDoubleClicksWhileAnimatingMovement) or
+     (not HasState(stsAnimatingMovement)) then
   begin
-    if HitTestResult.HitTestArea = htBackground then
-    begin
-      ParentForm := GetParentForm(Self {, TRUE}); // XE
+    HitTestResult := HitTest(Point(Message.XPos, Message.YPos));
 
-      if ParentForm <> nil then
+    if HitTestResult.TabIndex <> -1 then
+      DoOnTabDblClick(FTabs[HitTestResult.TabIndex]);
+
+    if FOptions.Behaviour.BackgroundDblClickMaximiseRestoreForm then
+    begin
+      if HitTestResult.HitTestArea = htBackground then
       begin
-        if ParentForm.WindowState = wsNormal then
-          ParentForm.WindowState := wsMaximized
-        else
-          ParentForm.WindowState := wsNormal;
+        ParentForm := GetParentForm(Self);
+
+        if ParentForm <> nil then
+        begin
+          if ParentForm.WindowState = wsNormal then
+            ParentForm.WindowState := wsMaximized
+          else
+            ParentForm.WindowState := wsNormal;
+        end;
       end;
     end;
   end;
@@ -2802,7 +2808,6 @@ procedure TCustomChromeTabs.RepositionTabs;
 
 var
   TabLeft, AddButtonLeft: Integer;
-  i: Integer;
 begin
   try
     FScrollWidth := 0;

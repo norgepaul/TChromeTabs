@@ -438,7 +438,6 @@ resourcestring
   StrDefaultTabFont = 'Default Tab Font';
   StrPleaseSelectACh = ' [Please select a child property]';
   StrTabIndex = ' - Tab Index: ';
-  StrAnimating = 'Animating';
   StrMouseX = 'Mouse X';
   StrMouseY = 'Mouse Y';
   StrHitTestArea = 'Hit Test Area';
@@ -1616,11 +1615,6 @@ begin
 
       if Assigned(TabControl) then
       begin
-        if TabControl.Animating then
-          AddLine(StrAnimating, StrYes)
-        else
-          AddLine(StrAnimating, StrNo);
-
         AddLine(StrTabDrawState, TabDrawStateDescriptions[TabControl.DrawState]);
         AddLine(StrCloseButtonDrawSt, TabDrawStateDescriptions[TabControl.CloseButtonState]);
       end;

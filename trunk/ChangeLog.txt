@@ -1,6 +1,11 @@
-TChromeTabs 0.9 Beta 1
+TChromeTabs 1.0
 
 18/12/2012
+Update: Changed default animation properties to make animation smoother.
+Update: Split animation procedure into two; movement and style.
+Updates: Added Options.Behabiour.IgnoreDoubleClicksWhileAnimatingMovement.
+Fixed: Delphi 7 Design Time editor (right click/double click tab control).
+Fixed: Changing tab visibility didn't update the tab positions.
 Fixed: Drag image tab background is now transparent
 Fixed: Add and scroll button initial draw states
 Fixed: Style transistions are now only active (by default) when moving from x to dsHot and vice versa
