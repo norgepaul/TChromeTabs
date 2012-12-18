@@ -147,6 +147,8 @@ type
     function Animate: Boolean; override;
     function Animating: Boolean; override;
 
+    procedure Invalidate;
+
     procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); override;
   end;
 
@@ -1586,10 +1588,7 @@ begin
   FreeAndNil(FButtonControlPropertyItems);
   FreeAndNil(FSymbolControlPropertyItems);
 
-  FreeAndNil(FButtonBrush);
-  FreeAndNil(FButtonPen);
-  FreeAndNil(FSymbolBrush);
-  FreeAndNil(FSymbolPen);
+  Invalidate;
 
   inherited;
 end;
@@ -1636,6 +1635,14 @@ begin
   Result := FSymbolPen;
 end;
 
+procedure TBaseChromeButtonControl.Invalidate;
+begin
+  FreeAndNil(FButtonBrush);
+  FreeAndNil(FButtonPen);
+  FreeAndNil(FSymbolBrush);
+  FreeAndNil(FSymbolPen);
+end;
+
 procedure TBaseChromeButtonControl.SetDrawState(const Value: TDrawState;
   Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean);
 begin
@@ -1648,6 +1655,8 @@ begin
 
     FButtonControlPropertyItems.SetProperties(FButtonStyle, nil, nil, AnimationSteps, Animate);
     FSymbolControlPropertyItems.SetProperties(FSymbolStyle, nil, nil, AnimationSteps, Animate);
+
+    Invalidate;
   end;
 
   inherited;

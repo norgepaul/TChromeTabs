@@ -2216,9 +2216,9 @@ begin
                          aeTabDragCancelled,
                          aeAddButtonMove];
 
-  FAnimationMovementIncrement := 8;
+  FAnimationMovementIncrement := 7;
   FAnimationStyleIncrement := 10;
-  FAnimationTimerInterval := 30;
+  FAnimationTimerInterval := 15;
   FMinimumTabAnimationWidth := 40;
 end;
 
@@ -3251,7 +3251,7 @@ begin
   FVerticalOffset := -2;
   FHeight := 20;
   FWidth := 50;
-  FAnimationSteps := 20;
+  FAnimationSteps := 150;
 end;
 
 procedure TChromeTabModifiedDisplayOptions.SetHeight(const Value: Integer);

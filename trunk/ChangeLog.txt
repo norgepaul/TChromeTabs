@@ -1,5 +1,11 @@
 TChromeTabs 0.9 Beta 1
 
+18/12/2012
+Fixed: Drag image tab background is now transparent
+Fixed: Add and scroll button initial draw states
+Fixed: Style transistions are now only active (by default) when moving from x to dsHot and vice versa
+Fixed: Left scroll and Add button not drawn at design time.
+
 17/12/2012
 Fixed: All BiDi mode functionality implemented and working.
 Fixed: Tab close active tab selection broken.
