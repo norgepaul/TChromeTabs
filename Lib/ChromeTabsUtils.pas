@@ -66,6 +66,7 @@ function RectHeight(Rect: TRect): Integer;
 function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
 procedure BitmapTo32BitBitmap(Bitmap: TBitmap);
+procedure SetColorAlpha(Bitmap: TBitmap; AColor: TColor; NewAlpha: Byte);
 
 implementation
 
@@ -494,44 +495,50 @@ begin
   end;
 end;
 
-// Thanks to Anders Melander for the transparent form tutorial
-// (http://melander.dk/articles/alphasplash2/2/)
-function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
-
-  procedure PremultiplyBitmap(Bitmap: TBitmap);
-  var
-    Row, Col: integer;
-    p: PRGBQuad;
-    PreMult: array[byte, byte] of byte;
-  begin
-    // precalculate all possible values of a*b
-    for Row := 0 to 255 do
-      for Col := Row to 255 do
-      begin
-        PreMult[Row, Col] := Row*Col div 255;
-
-        if (Row <> Col) then
-          PreMult[Col, Row] := PreMult[Row, Col]; // a*b = b*a
-      end;
-
-    for Row := 0 to Bitmap.Height-100 do
+procedure SetColorAlpha(Bitmap: TBitmap; AColor: TColor; NewAlpha: Byte);
+var
+  Row, Col: integer;
+  p: PRGBQuad;
+  PreMult: array[byte, byte] of byte;
+begin
+  // precalculate all possible values of a*b
+  for Row := 0 to 255 do
+    for Col := Row to 255 do
     begin
-      Col := Bitmap.Width;
+      PreMult[Row, Col] := Row*Col div 255;
 
-      p := Bitmap.ScanLine[Row];
+      if (Row <> Col) then
+        PreMult[Col, Row] := PreMult[Row, Col]; // a*b = b*a
+    end;
 
-      while (Col > 0) do
+  for Row := 0 to pred(Bitmap.Height) do
+  begin
+    Col := Bitmap.Width;
+
+    p := Bitmap.ScanLine[Row];
+
+    while (Col > 0) do
+    begin
+      if (GetRed(AColor) = p.rgbRed) and
+         (GetBlue(AColor) = p.rgbBlue) and
+         (GetGreen(AColor) = p.rgbGreen) then
       begin
+        p.rgbReserved := NewAlpha;
+
         p.rgbBlue := PreMult[p.rgbReserved, p.rgbBlue];
         p.rgbGreen := PreMult[p.rgbReserved, p.rgbGreen];
         p.rgbRed := PreMult[p.rgbReserved, p.rgbRed];
-
-        inc(p);
-        dec(Col);
       end;
+
+      inc(p);
+      dec(Col);
     end;
   end;
+end;
 
+// Thanks to Anders Melander for the transparent form tutorial
+// (http://melander.dk/articles/alphasplash2/2/)
+function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
 var
   BlendFunction: TBlendFunction;
   BitmapPos: TPoint;
@@ -545,11 +552,6 @@ begin
 
   if (exStyle and WS_EX_LAYERED = 0) then
     SetWindowLong(Result.Handle, GWL_EXSTYLE, exStyle or WS_EX_LAYERED);
-
-  // Perform run-time premultiplication
-  //PremultiplyBitmap(Bitmap);
-  //Bitmap.Canvas.Brush.Color := clBlack;
-  //Bitmap.Canvas.FillRect(Rect(150, 0, Result.Width, 50));
 
   // Resize form to fit bitmap
   Result.ClientWidth := Bitmap.Width;

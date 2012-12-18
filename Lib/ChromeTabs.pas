@@ -74,7 +74,6 @@ interface
 { TODO -cBug : Close button hit offset when close button is centered }
 { TODO -cBug : Windows 7 - System buttons highlighted when dragging a tab }
 { TODO -cBug : Designtime editor not working in Delphi 7 }
-{ TODO -cBug : Tab drag image needs better tranparency - Not working in Delphi 7}
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 {$include versions.inc}
@@ -724,17 +723,18 @@ var
   AnimationSteps: Integer;
   Animate: Boolean;
 begin
-  Animate := TRUE;
-
+  Animate := (ChromeTabsControl.DrawState = dsHot) or
+             (NewDrawState = dsHot);
+(*
   // Disable style animation for new tabs
   if ((ChromeTabsControl.ControlType = itTab) and
-      ((ChromeTabsControl.DrawState in [dsUnknown, dsActive])) or
+      ((ChromeTabsControl.DrawState in [dsUnknown, dsActive, dsDisabled, dsDown])) or
        (NewDrawState = dsActive)) or
 
     ((ChromeTabsControl.ControlType = itAddButton) and
      ((ChromeTabsControl.DrawState = dsDown) or
       (NewDrawState = dsDown))) then
-    Animate := FALSE;
+    Animate := FALSE;    *)
 
   AnimationSteps := FOptions.Animation.AnimationStyleIncrement;
 
@@ -1927,6 +1927,8 @@ begin
 end;
 
 function TCustomChromeTabs.CreateDragForm(ATab: TChromeTab): TForm;
+const
+  TransparentColor = clWhite - $100;
 var
   DragControl: TWinControl;
   DragCanvas: TGPGraphics;
@@ -1997,7 +1999,7 @@ begin
 
               toBottom:
                 begin
-                  TabTop := DragControl.Height;
+                  TabTop := DragControl.Height - 1;
                   FDragTabObject.DragFormOffset := Point(FDragTabObject.DragFormOffset.X,
                                                          FDragTabObject.DragFormOffset.Y + Round(DragControl.Height * FOptions.DragDrop.DragControlImageResizeFactor));
                 end;
@@ -2013,6 +2015,14 @@ begin
         try
           if ActualDragDisplay in [ddTab, ddTabAndControl] then
           begin
+            // Draw a background for the tab. This will be made transparent later
+            Bitmap.Canvas.Brush.Color := TransparentColor;
+
+            case FOptions.Display.Tabs.Orientation of
+              toTop: Bitmap.Canvas.FillRect(Rect(0, 0, Bitmap.Width, ControlTop - 1));
+              toBottom: Bitmap.Canvas.FillRect(Rect(0, Bitmap.Height, Bitmap.Width, TabTop));
+            end;
+
             // Do the painting...
             DragCanvas.SetSmoothingMode(FOptions.Display.Tabs.CanvasSmoothingMode);
 
@@ -2066,10 +2076,16 @@ begin
 
         ScaledBitmap := TBitmap.Create;
         try
+          // Scale the image
           ScaleImage(Bitmap, ScaledBitmap, FOptions.DragDrop.DragControlImageResizeFactor);
 
+          // Convert the bitmap to a 32bit bitmap
           BitmapTo32BitBitmap(ScaledBitmap);
 
+          // Make the tab background colour transparent
+          SetColorAlpha(ScaledBitmap, TransparentColor, 0);
+
+          // Create the alpha blend form
           Result := CreateAlphaBlendForm(Self, ScaledBitmap, FOptions.DragDrop.DragOutsideImageAlpha);
 
           Result.BorderStyle := bsNone;
@@ -2944,6 +2960,9 @@ begin
         SetControlDrawState(TabControls[i], TabControls[i].DrawState, TRUE);
 
       FLookAndFeel.Invalidate;
+      FScrollButtonLeftControl.Invalidate;
+      FScrollButtonRightControl.Invalidate;
+      FAddButtonControl.Invalidate;
 
       AddState(stsControlsPositionsInvalidated);
 
@@ -2970,10 +2989,22 @@ begin
   // No Longer loading, so we can start drawing
   RemoveState(stsLoading);
 
+  // Set the intial scroll position
+  ScrollOffset := 0;
+
+  // Fix the draw states
+  FAddButtonControl.SetDrawState(dsNotActive, FALSE, 1, TRUE);
+  FScrollButtonLeftControl.SetDrawState(dsNotActive, FALSE, 1, TRUE);
+  FScrollButtonRightControl.SetDrawState(dsNotActive, FALSE, 1, TRUE);
+  SetControlDrawStates(TRUE);
+
   AddState(stsFirstPaint);
+
+  // Make sure we reset all the control positions
   AddState(stsControlsPositionsInvalidated);
 
-  ScrollOffset := 0;
+  // Force a redraw
+  Redraw;
 end;
 
 procedure TCustomChromeTabs.LoadLookAndFeel(Stream: TStream);

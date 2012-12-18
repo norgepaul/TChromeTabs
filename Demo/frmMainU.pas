@@ -666,7 +666,7 @@ end;
 procedure TfrmMain.CommonTabPropertyChange(Sender: TObject);
 begin
   if FCurrentTabs.ActiveTabIndex <> -1 then
-    GUIToTabProperties(ChromeTabs1.ActiveTab);
+    GUIToTabProperties(FCurrentTabs.ActiveTab);
 end;
 
 function TfrmMain.CreateLog(AParent: TWinControl; const Columns: array of String;
