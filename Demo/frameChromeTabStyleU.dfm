@@ -384,10 +384,9 @@ object frameChromeTabStyle: TframeChromeTabStyle
     end
     object pnlFont: TPanel
       Left = 2
-      Top = 15
+      Top = 34
       Width = 166
       Height = 172
-      Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
       object Label9: TLabel

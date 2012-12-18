@@ -271,7 +271,12 @@ begin
         SetColor(colFont, FChromeTabFont.Color, TRUE);
 
         if FChromeTabFont is TChromeTabsLookAndFeelFont then
-          chkUseDefaultFont.Checked := TChromeTabsLookAndFeelFont(FChromeTabFont).UseDefaultFont;
+          chkUseDefaultFont.Checked := TChromeTabsLookAndFeelFont(FChromeTabFont).UseDefaultFont
+        else
+        begin
+          pnlFont.Align := alTop;
+          chkUseDefaultFont.Visible := FALSE;
+        end;
 
         UpdateControls;
       end;

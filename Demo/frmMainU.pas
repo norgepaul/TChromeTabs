@@ -827,7 +827,6 @@ procedure TfrmMain.UpdateLookAndFeelEditors(ChromeTabs: TChromeTabs; Index: Inte
     frameChromeTabStyle.ChromeTabsLookAndFeelTabModified := ChromeTabsLookAndFeelTabModified;
   end;
 
-
   function GetLookAndFeelPathString: String;
   var
     TreeNode: TTreeNode;
@@ -972,8 +971,7 @@ begin
 
     edtDragImageResize.Text := FloatToStr(0.5);
 
-    edtGlassHeightTop.MaxValue := FCurrentTabs.Height;
-    edtGlassHeightTop.Value := edtGlassHeightTop.MaxValue;
+    edtGlassHeightTop.Value := FCurrentTabs.Height;
 
     edtGlassHeightBottom.MaxValue := ChromeTabs2.Height + 1;
     edtGlassHeightBottom.Value := edtGlassHeightBottom.MaxValue;
