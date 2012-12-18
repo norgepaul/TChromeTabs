@@ -66,8 +66,8 @@ type
     procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); virtual; abstract;
 
     function GetPolygons: IChromeTabPolygons; virtual;
-    function Animate: Boolean; virtual;
-    function Animating: Boolean; virtual;
+    function AnimateMovement: Boolean; virtual;
+    function AnimateStyle: Boolean; virtual;
     function ControlRectScrolled: TRect; virtual;
     function ContainsPoint(Pt: TPoint): Boolean; virtual;
 
@@ -144,10 +144,9 @@ type
     constructor Create(ChromeTabs: IChromeTabs); override;
     destructor Destroy; override;
 
-    function Animate: Boolean; override;
-    function Animating: Boolean; override;
+    function AnimateStyle: Boolean; override;
 
-    procedure Invalidate;
+    procedure Invalidate; override;
 
     procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); override;
   end;
@@ -183,8 +182,7 @@ type
     destructor Destroy; override;
 
     procedure Invalidate; override;
-    function Animate: Boolean; override;
-    function Animating: Boolean; override;
+    function AnimateStyle: Boolean; override;
     procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
     function GetPolygons: IChromeTabPolygons; override;
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
@@ -266,7 +264,7 @@ begin
   Result := GeneratePolygon(ScrolledRect, Polygon, Orientation);
 end;
 
-function TBaseChromeTabsControl.Animate: Boolean;
+function TBaseChromeTabsControl.AnimateMovement: Boolean;
 
   procedure TransformPoint(Current, Destination, AnimationStep: Integer; var Value: Integer);
   begin
@@ -291,9 +289,9 @@ function TBaseChromeTabsControl.Animate: Boolean;
 var
   Right, Left, Top, Bottom: Integer;
 begin
-  Result := FALSE;
+  Result := not SameRect(FControlRect, FDestinationRect);
 
-  if Animating then
+  if Result then
   begin
     TransformPoint(ControlRect.Left, FDestinationRect.Left, FAnimationIncrements.Left, Left);
     TransformPoint(ControlRect.Right, FDestinationRect.Right, FAnimationIncrements.Right, Right);
@@ -304,9 +302,9 @@ begin
   end;
 end;
 
-function TBaseChromeTabsControl.Animating: Boolean;
+function TBaseChromeTabsControl.AnimateStyle: Boolean;
 begin
-  Result := not SameRect(FControlRect, FDestinationRect);
+  Result := FALSE;
 end;
 
 function TBaseChromeTabsControl.ContainsPoint(Pt: TPoint): Boolean;
@@ -377,7 +375,6 @@ begin
     FDrawState := Value;
 
     DoChanged;
-    //Invalidate;
   end;
 end;
 
@@ -436,8 +433,7 @@ begin
     // Set the flag to indicate that we're set the initial position
     FPositionInitialised := TRUE;
 
-    if Animating then
-      EndAnimation;
+    EndAnimation;
 
     // Otherwise, set the destination Rect
     FControlRect := ARect;
@@ -699,21 +695,14 @@ begin
   end;
 end;
 
-function TChromeTabControl.Animate: Boolean;
+function TChromeTabControl.AnimateStyle: Boolean;
 begin
-  Result := inherited Animate;
-
-  Result := FChromeTabControlPropertyItems.TransformColors or Result;
+  Result := FChromeTabControlPropertyItems.TransformColors;
 
   Result := AnimateModified or Result;
 
   if Result then
     Invalidate;
-end;
-
-function TChromeTabControl.Animating: Boolean;
-begin
-  Result := inherited Animating or (FChromeTabControlPropertyItems.TransformPercent <> 100) or (FChromeTab.GetModified);
 end;
 
 function TChromeTabControl.CloseButtonVisible: Boolean;
@@ -1276,7 +1265,7 @@ procedure TChromeTabControl.EndAnimation;
 begin
   FChromeTabControlPropertyItems.TransformPercent := -1;
 
-  Animate;
+  AnimateStyle;
 end;
 
 procedure TChromeTabControl.SetCloseButtonState(const Value: TDrawState);
@@ -1540,7 +1529,7 @@ end;
 
 { TBaseChromeButtonControl }
 
-function TBaseChromeButtonControl.Animate: Boolean;
+function TBaseChromeButtonControl.AnimateStyle: Boolean;
 var
   SymbolResult: Boolean;
 begin
@@ -1562,17 +1551,8 @@ begin
     Result := Result or SymbolResult;
   end;
 
-  Result := inherited Animate or Result;
-
   if Result then
     Invalidate;
-end;
-
-function TBaseChromeButtonControl.Animating: Boolean;
-begin
-  Result := inherited Animating or
-            (FButtonControlPropertyItems.TransformPercent <> 100) or
-            (FSymbolControlPropertyItems.TransformPercent <> 100);
 end;
 
 constructor TBaseChromeButtonControl.Create(ChromeTabs: IChromeTabs);

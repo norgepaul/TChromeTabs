@@ -4,7 +4,6 @@ interface
 
 {$include versions.inc}
 
-{$IFDEF DELPHI2006_UP}
 uses
   Windows,
   Classes,
@@ -25,11 +24,9 @@ type
     function GetVerb(Index: Integer): string; override;
     function GetVerbCount: Integer; override;
   end;
-{$ENDIF}
 
 implementation
 
-{$IFDEF DELPHI2006_UP}
 const
   DefaultLookAndFeelExt = '.ctlf';
   DialogLookAndFeelFilter = 'Chrome Tabs Look and Feel (*.ctlf)|*.ctlf|All Files (*.*)|*.*';
@@ -127,7 +124,5 @@ function TChromeTabEditor.GetVerbCount: Integer;
 begin
   Result := 5;
 end;
-
-{$ENDIF}
 
 end.

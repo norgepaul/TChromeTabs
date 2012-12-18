@@ -145,6 +145,7 @@ type
     property DisplayCaption: String read GetDisplayCaption;
 
     property TabControl: TObject read FTabControl write FTabControl;
+    property MarkedForDeletion: Boolean read GetMarkedForDeletion;
   published
     property Caption: TCaption read GetCaption write SetCaption;
     property Active: boolean read GetActive write SetActive;
@@ -154,7 +155,6 @@ type
     property Pinned: Boolean read GetPinned write SetPinned;
     property Visible: Boolean read GetVisible write SetVisible;
     property Modified: Boolean read GetModified write SetModified;
-    property MarkedForDeletion: Boolean read GetMarkedForDeletion;
   end;
 
   TChromeTabClass = class of TChromeTab;
@@ -805,6 +805,7 @@ type
   private
     FBackgroundDblClickMaximiseRestoreForm: Boolean;
     FBackgroundDragMovesForm: Boolean;
+    FIgnoreDoubleClicksWhileAnimatingMovement: Boolean;
     FTabSmartDeleteResizing: Boolean;
     FTabSmartDeleteResizeCancelDelay: Integer;
     FUseBuiltInPopupMenu: Boolean;
@@ -820,6 +821,7 @@ type
     procedure SetActivateNewTab(const Value: Boolean);
     procedure SetDebugMode(const Value: Boolean);
     procedure SetBackgroundDragMovesForm(const Value: Boolean);
+    procedure SetIgnoreDoubleClicksWhileAnimatingMovement(const Value: Boolean);
   public
     constructor Create(AOwner: TPersistent); override;
   published
@@ -831,6 +833,7 @@ type
     property TabRightClickSelect: Boolean read FTabRightClickSelect write SetTabRightClickSelect;
     property ActivateNewTab: Boolean read FActivateNewTab write SetActivateNewTab;
     property DebugMode: Boolean read FDebugMode write SetDebugMode;
+    property IgnoreDoubleClicksWhileAnimatingMovement: Boolean read FIgnoreDoubleClicksWhileAnimatingMovement write SetIgnoreDoubleClicksWhileAnimatingMovement;
   end;
 
   TChromeTabsOptions = class(TChromeTabsPersistent)
@@ -1157,7 +1160,7 @@ begin
   if (not Value) and (Active) then
     Active := FALSE;
 
-  DoChanged;
+  DoChanged(tcVisibility);
 end;
 
 function TChromeTab._AddRef: Integer;
@@ -2547,6 +2550,7 @@ begin
   FUseBuiltInPopupMenu := TRUE;
   FTabRightClickSelect := TRUE;
   FActivateNewTab := TRUE;
+  FIgnoreDoubleClicksWhileAnimatingMovement := TRUE;
 end;
 
 procedure TChromeTabsBehaviourOptions.SetActivateNewTab(const Value: Boolean);
@@ -2557,6 +2561,12 @@ end;
 procedure TChromeTabsBehaviourOptions.SetDebugMode(const Value: Boolean);
 begin
   FDebugMode := Value;
+end;
+
+procedure TChromeTabsBehaviourOptions.SetIgnoreDoubleClicksWhileAnimatingMovement(
+  const Value: Boolean);
+begin
+  FIgnoreDoubleClicksWhileAnimatingMovement := Value;
 end;
 
 procedure TChromeTabsBehaviourOptions.SetTabRightClickSelect(

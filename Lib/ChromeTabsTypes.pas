@@ -77,7 +77,8 @@ type
     tcActivated,
     tcDeactivated,
     tcPinned,
-    tcControlState
+    tcControlState,
+    tcVisibility
   );
 
   TTabOrientation = (
@@ -157,7 +158,8 @@ type
   TChromeTabsAnimationMovementTypes = set of TChromeTabsAnimationMovementType;
 
   TChromeTabState = (
-    stsAnimating,
+    stsAnimatingMovement,
+    stsAnimatingStyle,
     stsDragging,
     stsDragStarted,
     stsDragFinished,
@@ -232,7 +234,8 @@ const
     'Activated',
     'Deactivated',
     'Pinned',
-    'Control State'
+    'Control State',
+    'Visibility'
   );
 
   TabDrawStateDescriptions: Array[TDrawState] of String = (
@@ -245,7 +248,8 @@ const
   );
 
   ChromeTabStateDescriptions: Array[TChromeTabState] of String = (
-    'Animating',
+    'Animating Movement',
+    'Animating Style',
     'Dragging',
     'Drag Started',
     'Drag Finished',

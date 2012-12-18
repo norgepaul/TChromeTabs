@@ -8,9 +8,7 @@ uses
   SysUtils, Controls, ActnList,
   Classes,
 
-  {$IFDEF DELPHI2006_UP}
-    DesignIntf, DesignEditors,
-  {$ENDIF}
+  DesignIntf, DesignEditors,
 
   ChromeTabs,
   ChromeTabsDesign;
@@ -27,9 +25,7 @@ begin
   RegisterComponents(PropertySection, [TChromeTabs]);;
 
   // Property Editors
-  {$IFDEF DELPHI2006_UP}
-    RegisterComponentEditor(TChromeTabs, TChromeTabEditor);
-  {$ENDIF}
+  RegisterComponentEditor(TChromeTabs, TChromeTabEditor);
 end;
 
 end.
