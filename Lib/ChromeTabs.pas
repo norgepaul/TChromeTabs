@@ -698,8 +698,8 @@ var
   AnimationSteps: Integer;
   Animate: Boolean;
 begin
-  Animate := (ChromeTabsControl.DrawState = dsHot) or
-             (NewDrawState = dsHot);
+  Animate := ((ChromeTabsControl.DrawState = dsHot) and (NewDrawState <> dsActive)) or
+             ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive));
 (*
   // Disable style animation for new tabs
   if ((ChromeTabsControl.ControlType = itTab) and
@@ -711,7 +711,7 @@ begin
       (NewDrawState = dsDown))) then
     Animate := FALSE;    *)
 
-  AnimationSteps := FOptions.Animation.AnimationStyleIncrement;
+  AnimationSteps := FOptions.Animation.AnimationStyleMS;
 
   if ChromeTabsControl.DrawState <> NewDrawState then
     DoOnAnimateStyleTransisiton(ChromeTabsControl, NewDrawState, Animate, AnimationSteps);
@@ -2219,7 +2219,7 @@ begin
 
           AddState(stsDeletingUnPinnedTabs);
 
-          FClosedTabRect := TabControls[HitTestResult.TabIndex].ControlRect;
+          FClosedTabRect := TabControls[HitTestResult.TabIndex].EndRect;
           FClosedTabIndex := HitTestResult.TabIndex;
         end;
 

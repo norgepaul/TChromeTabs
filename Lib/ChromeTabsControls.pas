@@ -45,7 +45,6 @@ type
     FPositionInitialised: Boolean;
     FScrollableControl: Boolean;
     FOverrideBidi: Boolean;
-    //FMovementTransformPercent: Integer;
 
     function GetBidiControlRect: TRect;
   protected
@@ -109,20 +108,25 @@ type
 
   TChromeTabControlPropertyItems = class
   private
-    FTransformPercent: Integer;
-    FAnimationSteps: Integer;
+    FStartTickCount: Cardinal;
+    FEndTickCount: Cardinal;
+    FCurrentTickCount: Cardinal;
     FStartTabProperties: TChromeTabControlProperties;
     FStopTabProperties: TChromeTabControlProperties;
     FCurrentTabProperties: TChromeTabControlProperties;
+    FEaseType: TChromeTabsEaseType;
   public
-    procedure SetProperties(Style: TChromeTabsLookAndFeelStyle; StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont; AnimationSteps: Integer; Animate: Boolean);
-    function TransformColors: Boolean;
+    procedure SetProperties(Style: TChromeTabsLookAndFeelStyle; StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont;
+      EndTickCount: Cardinal; EaseType: TChromeTabsEaseType; Animate: Boolean);
+    function TransformColors(ForceUpdate: Boolean = FALSE): Boolean;
+    procedure EndAnimation;
 
     property StartTabProperties: TChromeTabControlProperties read FStartTabProperties write FStartTabProperties;
     property StopTabProperties: TChromeTabControlProperties read FStopTabProperties write FStopTabProperties;
     property CurrentTabProperties: TChromeTabControlProperties read FCurrentTabProperties write FCurrentTabProperties;
-    property TransformPercent: Integer read FTransformPercent write FTransformPercent;
-    property AnimationSteps: Integer read FAnimationSteps write FAnimationSteps;
+    property StartTickCount: Cardinal read FStartTickCount;
+    property EndTickCount: Cardinal read FEndTickCount;
+    property CurrentTickCount: Cardinal read FCurrentTickCount;
   end;
 
   TBaseChromeButtonControl = class(TBaseChromeTabsControl)
@@ -285,7 +289,7 @@ begin
                                   FEndRect,
                                   FCurrentTickCount,
                                   ChromeTabs.GetOptions.Animation.AnimationMovementMS,
-                                  ChromeTabs.GetOptions.Animation.EaseType);
+                                  ChromeTabs.GetOptions.Animation.EaseTypeMovement);
   end;
 end;
 
@@ -1224,7 +1228,7 @@ end;
 
 procedure TChromeTabControl.EndAnimation;
 begin
-  FChromeTabControlPropertyItems.TransformPercent := -1;
+  FChromeTabControlPropertyItems.EndAnimation;
 
   AnimateStyle;
 end;
@@ -1261,7 +1265,14 @@ begin
     else
       DefaultFont := nil;
 
-    FChromeTabControlPropertyItems.SetProperties(FTabProperties.Style, FTabProperties.Font, DefaultFont, AnimationSteps, Animate);
+    FChromeTabControlPropertyItems.SetProperties(FTabProperties.Style,
+                                                 FTabProperties.Font,
+                                                 DefaultFont,
+                                                 AnimationSteps,
+                                                 ChromeTabs.GetOptions.Animation.EaseTypeStyle,
+                                                 Animate);
+
+    Invalidate;
   end;
 
   inherited;
@@ -1410,11 +1421,20 @@ end;
 
 { TChromeTabControlPropertyItems }
 
-procedure TChromeTabControlPropertyItems.SetProperties(Style: TChromeTabsLookAndFeelStyle; StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont; AnimationSteps: Integer; Animate: Boolean);
+procedure TChromeTabControlPropertyItems.EndAnimation;
+begin
+  FCurrentTickCount := FEndTickCount;
+end;
+
+procedure TChromeTabControlPropertyItems.SetProperties(Style: TChromeTabsLookAndFeelStyle;
+  StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont;
+  EndTickCount: Cardinal; EaseType: TChromeTabsEaseType; Animate: Boolean);
 var
   Dst: TChromeTabControlProperties;
   Font: TChromeTabsLookAndFeelBaseFont;
 begin
+  FEaseType := EaseType;
+
   if DefaultFont <> nil then
     Font := DefaultFont
   else
@@ -1438,53 +1458,60 @@ begin
   Dst.StartAlpha := Style.StartAlpha;
   Dst.StopAlpha := Style.StopAlpha;
 
-  if Animate then
-  begin
-    FStopTabProperties := Dst;
-    FStartTabProperties := CurrentTabProperties;
+  FStopTabProperties := Dst;
+  FStartTabProperties := CurrentTabProperties;
 
-    // then start the animation sequence
-    FTransformPercent := 1;
-  end
+  // then start the animation sequence
+  FStartTickCount := GetTickCount;
+  FCurrentTickCount := 0;
+
+  if Animate then
+    FEndTickCount := EndTickCount
   else
   begin
-    // If we're not animating, set the values now
-    CurrentTabProperties := Dst;
-    FStartTabProperties := Dst;
-    FStopTabProperties := Dst;
+    FEndTickCount := 1;
 
-    // Make sure we don't animate
-    FTransformPercent := 101;
+    TransformColors;
   end;
-
-  FAnimationSteps := AnimationSteps;
 end;
 
-function TChromeTabControlPropertyItems.TransformColors: Boolean;
+function TChromeTabControlPropertyItems.TransformColors(ForceUpdate: Boolean): Boolean;
+var
+  TransformPct: Integer;
 begin
   Result := FALSE;
 
-  if (FTransformPercent <> 100) or (FTransformPercent = -1) then
+  if (ForceUpdate) or
+     ((FStartTickCount > 0) and
+      (FCurrentTickCount < FEndTickCount)) then
   begin
     Result := TRUE;
 
-    if (FTransformPercent >= 100) or (FTransformPercent = -1) then
-      FTransformPercent := 100;
+    if ForceUpdate then
+    begin
+      TransformPct := 100;
+    end
+    else
+    begin
+      FCurrentTickCount := GetTickCount - FStartTickCount;
 
-    FCurrentTabProperties.FontColor := ColorBetween(FStartTabProperties.FontColor, FStopTabProperties.FontColor, FTransformPercent);
-    FCurrentTabProperties.FontAlpha := IntegerBetween(FStartTabProperties.FontAlpha, FStopTabProperties.FontAlpha, FTransformPercent);
-    FCurrentTabProperties.FontSize := IntegerBetween(FStartTabProperties.FontSize, FStopTabProperties.FontSize, FTransformPercent);
+      if FCurrentTickCount > FEndTickCount then
+        FCurrentTickCount := FEndTickCount;
 
-    FCurrentTabProperties.StartColor := ColorBetween(FStartTabProperties.StartColor, FStopTabProperties.StartColor, FTransformPercent);
-    FCurrentTabProperties.StopColor := ColorBetween(FStartTabProperties.StopColor, FStopTabProperties.StopColor, FTransformPercent);
-    FCurrentTabProperties.OutlineColor := ColorBetween(FStartTabProperties.OutlineColor, FStopTabProperties.OutlineColor, FTransformPercent);
-    FCurrentTabProperties.OutlineSize := SingleBetween(FStartTabProperties.OutlineSize, FStopTabProperties.OutlineSize, FTransformPercent);
-    FCurrentTabProperties.StartAlpha := IntegerBetween(FStartTabProperties.StartAlpha, FStopTabProperties.StartAlpha, FTransformPercent);
-    FCurrentTabProperties.StopAlpha := IntegerBetween(FStartTabProperties.StopAlpha, FStopTabProperties.StopAlpha, FTransformPercent);
-    FCurrentTabProperties.OutlineAlpha := IntegerBetween(FStartTabProperties.OutlineAlpha, FStopTabProperties.OutlineAlpha, FTransformPercent);
+      TransformPct := Round(CalculateEase(FCurrentTickCount, 0, 100, FEndTickCount, FEaseType));
+    end;
 
-    if FTransformPercent < 100 then
-      Inc(FTransformPercent, FAnimationSteps);
+    FCurrentTabProperties.FontColor := ColorBetween(FStartTabProperties.FontColor, FStopTabProperties.FontColor, TransformPct);
+    FCurrentTabProperties.FontAlpha := IntegerBetween(FStartTabProperties.FontAlpha, FStopTabProperties.FontAlpha, TransformPct);
+    FCurrentTabProperties.FontSize := IntegerBetween(FStartTabProperties.FontSize, FStopTabProperties.FontSize, TransformPct);
+
+    FCurrentTabProperties.StartColor := ColorBetween(FStartTabProperties.StartColor, FStopTabProperties.StartColor, TransformPct);
+    FCurrentTabProperties.StopColor := ColorBetween(FStartTabProperties.StopColor, FStopTabProperties.StopColor, TransformPct);
+    FCurrentTabProperties.OutlineColor := ColorBetween(FStartTabProperties.OutlineColor, FStopTabProperties.OutlineColor, TransformPct);
+    FCurrentTabProperties.OutlineSize := SingleBetween(FStartTabProperties.OutlineSize, FStopTabProperties.OutlineSize, TransformPct);
+    FCurrentTabProperties.StartAlpha := IntegerBetween(FStartTabProperties.StartAlpha, FStopTabProperties.StartAlpha, TransformPct);
+    FCurrentTabProperties.StopAlpha := IntegerBetween(FStartTabProperties.StopAlpha, FStopTabProperties.StopAlpha, TransformPct);
+    FCurrentTabProperties.OutlineAlpha := IntegerBetween(FStartTabProperties.OutlineAlpha, FStopTabProperties.OutlineAlpha, TransformPct);
   end;
 end;
 
@@ -1594,8 +1621,8 @@ begin
 
     SetStylePropertyClasses;
 
-    FButtonControlPropertyItems.SetProperties(FButtonStyle, nil, nil, AnimationSteps, Animate);
-    FSymbolControlPropertyItems.SetProperties(FSymbolStyle, nil, nil, AnimationSteps, Animate);
+    FButtonControlPropertyItems.SetProperties(FButtonStyle, nil, nil, AnimationSteps, ChromeTabs.GetOptions.Animation.EaseTypeStyle, Animate);
+    FSymbolControlPropertyItems.SetProperties(FSymbolStyle, nil, nil, AnimationSteps, ChromeTabs.GetOptions.Animation.EaseTypeStyle, Animate);
 
     Invalidate;
   end;

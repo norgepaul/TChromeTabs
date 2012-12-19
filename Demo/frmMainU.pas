@@ -294,9 +294,11 @@ type
     chkAnimationDeleteTab: TCheckBox;
     Button1: TButton;
     Label70: TLabel;
-    cbEaseType: TComboBox;
+    cbMovementEaseType: TComboBox;
     edtTabOverlap: TSpinEdit;
     Label71: TLabel;
+    cbStyleEaseType: TComboBox;
+    Label72: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -1219,9 +1221,10 @@ begin
     chkRightClickSelect.Checked := ChromeTabs.Options.Behaviour.TabRightClickSelect;
 
     edtAnimationStepsMovement.Value := ChromeTabs.Options.Animation.AnimationMovementMS;
-    edtAnimationStepsStyle.Value := ChromeTabs.Options.Animation.AnimationStyleIncrement;
+    edtAnimationStepsStyle.Value := ChromeTabs.Options.Animation.AnimationStyleMS;
     edtAnimationUpdate.Value := ChromeTabs.Options.Animation.AnimationTimerInterval;
-    cbEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.EaseType);
+    cbMovementEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.EaseTypeMovement);
+    cbStyleEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.EaseTypeStyle);
 
     chkScrolling.Checked := ChromeTabs.Options.Scrolling.Enabled;
     cbScrollButtons.ItemIndex := Integer(ChromeTabs.Options.Scrolling.ScrollButtons);
@@ -1339,9 +1342,10 @@ begin
       ChromeTabs.Options.Behaviour.TabRightClickSelect := chkRightClickSelect.Checked;
 
       ChromeTabs.Options.Animation.AnimationMovementMS := edtAnimationStepsMovement.Value;
-      ChromeTabs.Options.Animation.AnimationStyleIncrement := edtAnimationStepsStyle.Value;
+      ChromeTabs.Options.Animation.AnimationStyleMS := edtAnimationStepsStyle.Value;
       ChromeTabs.Options.Animation.AnimationTimerInterval := edtAnimationUpdate.Value;
-      ChromeTabs.Options.Animation.EaseType := TChromeTabsEaseType(cbEaseType.ItemIndex);
+      ChromeTabs.Options.Animation.EaseTypeMovement := TChromeTabsEaseType(cbMovementEaseType.ItemIndex);
+      ChromeTabs.Options.Animation.EaseTypeStyle := TChromeTabsEaseType(cbStyleEaseType.ItemIndex);
 
       ChromeTabs.Options.Scrolling.Enabled := chkScrolling.Checked;
       ChromeTabs.Options.Scrolling.ScrollButtons := TChromeTabScrollButtons(cbScrollButtons.ItemIndex);
