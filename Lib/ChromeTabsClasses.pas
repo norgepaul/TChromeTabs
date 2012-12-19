@@ -781,24 +781,27 @@ type
   TChromeTabsAnimationOptions = class(TChromeTabsPersistent)
   private
     FAnimationMovement: TChromeTabsAnimationMovementTypes;
-    FAnimationMovementIncrement: Integer;
+    FAnimationMovementMS: Integer;
     FAnimationStyleIncrement: Integer;
     FAnimationTimerInterval: Integer;
     FMinimumTabAnimationWidth: Integer;
+    FEaseType: TChromeTabsEaseType;
   private
-    procedure SetAnimationMovementIncrement(const Value: Integer);
+    procedure SetFAnimationMovementMS(const Value: Integer);
     procedure SetAnimationStyleIncrement(const Value: Integer);
     procedure SetAnimationTimerInterval(const Value: Integer);
     procedure SetAnimationMovement(const Value: TChromeTabsAnimationMovementTypes);
     procedure SetMinimumTabAnimationWidth(const Value: Integer);
+    procedure SetEaseType(const Value: TChromeTabsEaseType);
   public
     constructor Create(AOwner: TPersistent); override;
   published
     property AnimationMovement: TChromeTabsAnimationMovementTypes read FAnimationMovement write SetAnimationMovement;
-    property AnimationMovementIncrement: Integer read FAnimationMovementIncrement write SetAnimationMovementIncrement;
+    property AnimationMovementMS: Integer read FAnimationMovementMS write SetFAnimationMovementMS;
     property AnimationStyleIncrement: Integer read FAnimationStyleIncrement write SetAnimationStyleIncrement;
     property AnimationTimerInterval: Integer read FAnimationTimerInterval write SetAnimationTimerInterval;
     property MinimumTabAnimationWidth: Integer read FMinimumTabAnimationWidth write SetMinimumTabAnimationWidth;
+    property EaseType: TChromeTabsEaseType read FEaseType write SetEaseType;
   end;
 
   TChromeTabsBehaviourOptions = class(TChromeTabsPersistent)
@@ -1477,9 +1480,9 @@ begin
   inherited;
 
   FSeeThroughTabs := FALSE;
-  FTabOverlap := 12;
-  FContentOffsetLeft := 13;
-  FContentOffsetRight := 13;
+  FTabOverlap := 15;
+  FContentOffsetLeft := 18;
+  FContentOffsetRight := 16;
   FOffsetLeft := 0;
   FOffsetTop := 0;
   FMinWidth := 20;
@@ -2219,15 +2222,16 @@ begin
                          aeTabDragCancelled,
                          aeAddButtonMove];
 
-  FAnimationMovementIncrement := 7;
+  FAnimationMovementMS := 500;
   FAnimationStyleIncrement := 10;
-  FAnimationTimerInterval := 15;
+  FAnimationTimerInterval := 25;
   FMinimumTabAnimationWidth := 40;
+  FEaseType := ttEaseOutExpo;
 end;
 
-procedure TChromeTabsAnimationOptions.SetAnimationMovementIncrement(const Value: Integer);
+procedure TChromeTabsAnimationOptions.SetFAnimationMovementMS(const Value: Integer);
 begin
-  FAnimationMovementIncrement := Value;
+  FAnimationMovementMS := Value;
 end;
 
 procedure TChromeTabsAnimationOptions.SetAnimationStyleIncrement(const Value: Integer);
@@ -2238,6 +2242,12 @@ end;
 procedure TChromeTabsAnimationOptions.SetAnimationTimerInterval(const Value: Integer);
 begin
   FAnimationTimerInterval := Value;
+end;
+
+procedure TChromeTabsAnimationOptions.SetEaseType(
+  const Value: TChromeTabsEaseType);
+begin
+  FEaseType := Value;
 end;
 
 procedure TChromeTabsAnimationOptions.SetMinimumTabAnimationWidth(

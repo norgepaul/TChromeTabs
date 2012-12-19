@@ -1,5 +1,10 @@
 TChromeTabs 1.0
 
+19/12/2012
+Improvement: Began overhaul of animation effects.
+Added: Animation Ease Type.
+Fixed: Form system buttons highlighted when dragging tab (http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390).
+
 18/12/2012
 Update: Changed default animation properties to make animation smoother.
 Update: Split animation procedure into two; movement and style.
