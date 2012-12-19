@@ -72,8 +72,6 @@ interface
 { TODO -cBug : Tab Alpha increases slightly when drag begins }
 { TODO -cBug : Drag docking not accurate. Some problem with the control detection }
 { TODO -cBug : Close button hit offset when close button is centered }
-{ TODO -cBug : Windows 7 - System buttons highlighted when dragging a tab }
-{ TODO -cBug : Designtime editor not working in Delphi 7 }
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 {$include versions.inc}
@@ -111,6 +109,19 @@ type
   TOnTabDragDrop = procedure(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions) of object;
   TOnTabDragDropped = procedure(Sender: TObject; DragTabObject: IDragTabObject; NewTab: TChromeTab) of object;
   TOnAnimateStyleTransisiton = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationSteps: Integer; var Animate: Boolean) of object;
+
+  // Why do we need this fix?
+  // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
+  TWindowFromPointFixThread = class(TThread)
+  private
+    FPoint: TPoint;
+    FRange: Integer;
+    FStep: Integer;
+  public
+    constructor Create(Pt: TPoint; Range, Step: Integer);
+
+    procedure Execute; override;
+  end;
 
   TCustomChromeTabs = class(TCustomControl, IChromeTabs, IChromeTabDockControl)
   private
@@ -226,7 +237,6 @@ type
     procedure ShowTabDragForm(X, Y: Integer; FormVisible: Boolean);
     function DraggingDockedTab: Boolean;
     function ActiveTabVisible: Boolean;
-    function FindChromeTabsControlAt(X, Y: Integer; var ChromeTabs: TCustomChromeTabs): Boolean;
     function FindChromeTabsControlWithinRange(Pt: TPoint; Range: Integer; Step: Integer = 5): TCustomChromeTabs;
     function DraggingInOwnContainer: Boolean;
     function GetVisiblePinnedTabCount: Integer;
@@ -462,50 +472,15 @@ resourcestring
 
 { TChromeTabs }
 
-function TCustomChromeTabs.FindChromeTabsControlAt(X, Y: Integer; var ChromeTabs: TCustomChromeTabs): Boolean;
-var
-  H: THandle;
-  WinControl: TWinControl;
-begin
-  H:= WindowFromPoint(Point(X, Y));
-
-  WinControl := FindControl(H);
-
-  Result := WinControl is TCustomChromeTabs;
-
-  if Result then
-    ChromeTabs := TCustomChromeTabs(WinControl)
-  else
-    ChromeTabs := nil;
-end;
-
 function TCustomChromeTabs.FindChromeTabsControlWithinRange(Pt: TPoint; Range: Integer; Step: Integer): TCustomChromeTabs;
 var
-  i: Integer;
+  WindowFromPointFixThread: TWindowFromPointFixThread;
 begin
-  i := Range;
-
-  while i >= 0 do
-  begin
-    if i = 0 then
-      FindChromeTabsControlAt(Pt.X, Pt.Y, Result)
-    else
-    begin
-      DoOnDebugLog('Range find X: %d, Y: %d - x1: %d, y1: %d - x2: %d, y2: %d - x3: %d, y3: %d - x4: %d, y4: %d',
-                   [Pt.X, Pt.Y,
-                    Pt.X - i, Pt.Y - i,
-                    Pt.X + i, Pt.Y - i,
-                    Pt.X + i, Pt.Y + i,
-                    Pt.X - i, Pt.Y + i]);
-
-      if (FindChromeTabsControlAt(Pt.X - i, Pt.Y - i, Result)) or
-         (FindChromeTabsControlAt(Pt.X + i, Pt.Y - i, Result)) or
-         (FindChromeTabsControlAt(Pt.X + i, Pt.Y + i, Result)) or
-         (FindChromeTabsControlAt(Pt.X - i, Pt.Y + i, Result)) then
-        Break;
-    end;
-
-    i := i - Step;
+  WindowFromPointFixThread := TWindowFromPointFixThread.Create(Pt, Range, Step);
+  try
+    Result := TCustomChromeTabs(WindowFromPointFixThread.WaitFor);
+  finally
+    FreeAndNil(WindowFromPointFixThread);
   end;
 end;
 
@@ -2843,7 +2818,7 @@ begin
              (not HasState(stsEndTabDeleted)) then
             AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].ControlRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating
           else
-            AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].DestinationRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating;
+            AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating;
 
           // Move the button to the first animation position
           FAddButtonControl.SetLeft(AddButtonLeft, FALSE);
@@ -2851,7 +2826,7 @@ begin
           // Set the end animation point
           if (aeAddButtonMove in FOptions.Animation.AnimationMovement) and
              (not HasState(stsEndTabDeleted)) then
-            FAddButtonControl.SetLeft(TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].DestinationRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating, TRUE);
+            FAddButtonControl.SetLeft(TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating, TRUE);
         end;
       end;
     end;
@@ -3555,11 +3530,11 @@ end;
 
 procedure TCustomChromeTabs.ScrollIntoView(Tab: TChromeTab);
 begin
-  if TabControls[Tab.Index].DestinationRect.Left < ScrollOffset then
-    ScrollOffset := TabControls[Tab.Index].DestinationRect.Left else
+  if TabControls[Tab.Index].EndRect.Left < ScrollOffset then
+    ScrollOffset := TabControls[Tab.Index].EndRect.Left else
 
-  if TabControls[Tab.Index].DestinationRect.Right > TabContainerRect.Right + ScrollOffset then
-    ScrollOffset := TabControls[Tab.Index].DestinationRect.Right - RectWidth(TabContainerRect) + FOptions.Display.Tabs.TabOverlap;
+  if TabControls[Tab.Index].EndRect.Right > TabContainerRect.Right + ScrollOffset then
+    ScrollOffset := TabControls[Tab.Index].EndRect.Right - RectWidth(TabContainerRect) + FOptions.Display.Tabs.TabOverlap;
 end;
 
 function TCustomChromeTabs.ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect;
@@ -3601,6 +3576,60 @@ begin
   finally
     FreeAndNil(MemStream);
   end;
+end;
+
+{ TWindowFromPointFixThread }
+
+constructor TWindowFromPointFixThread.Create(Pt: TPoint; Range, Step: Integer);
+begin
+  inherited Create;
+
+  FPoint := Pt;
+  FRange := Range;
+  FStep := Step;
+end;
+
+function FindChromeTabsControlAt(X, Y: Integer; var ChromeTabs: TCustomChromeTabs): Boolean;
+var
+  H: THandle;
+  WinControl: TWinControl;
+begin
+  H:= WindowFromPoint(Point(X, Y));
+
+  WinControl := FindControl(H);
+
+  Result := WinControl is TCustomChromeTabs;
+
+  if Result then
+    ChromeTabs := TCustomChromeTabs(WinControl)
+  else
+    ChromeTabs := nil;
+end;
+
+procedure TWindowFromPointFixThread.Execute;
+var
+  i: Integer;
+  ChromeTabs: TCustomChromeTabs;
+begin
+  i := FRange;
+
+  while i >= 0 do
+  begin
+    if i = 0 then
+      FindChromeTabsControlAt(FPoint.X, FPoint.Y, ChromeTabs)
+    else
+    begin
+      if (FindChromeTabsControlAt(FPoint.X - i, FPoint.Y - i, ChromeTabs)) or
+         (FindChromeTabsControlAt(FPoint.X + i, FPoint.Y - i, ChromeTabs)) or
+         (FindChromeTabsControlAt(FPoint.X + i, FPoint.Y + i, ChromeTabs)) or
+         (FindChromeTabsControlAt(FPoint.X - i, FPoint.Y + i, ChromeTabs)) then
+        Break;
+    end;
+
+    i := i - FStep;
+  end;
+
+  ReturnValue := Integer(ChromeTabs);
 end;
 
 end.

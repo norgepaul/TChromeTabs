@@ -186,6 +186,7 @@ csoDisabledRenderMethods=-2
 csoShowWindowsThreads=1
 Email Address=""
 Email Object=""
+Encrypt Password=""
 Errors Number=32
 Errors Terminate=3
 Foreground Tab=0

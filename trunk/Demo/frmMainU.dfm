@@ -64,9 +64,9 @@ object frmMain: TfrmMain
     Options.Display.TabModifiedGlow.Width = 50
     Options.Display.TabModifiedGlow.AnimationSteps = 150
     Options.Display.Tabs.SeeThroughTabs = False
-    Options.Display.Tabs.TabOverlap = 12
-    Options.Display.Tabs.ContentOffsetLeft = 12
-    Options.Display.Tabs.ContentOffsetRight = 12
+    Options.Display.Tabs.TabOverlap = 15
+    Options.Display.Tabs.ContentOffsetLeft = 18
+    Options.Display.Tabs.ContentOffsetRight = 16
     Options.Display.Tabs.OffsetLeft = 0
     Options.Display.Tabs.OffsetTop = 4
     Options.Display.Tabs.OffsetRight = 0
@@ -102,10 +102,11 @@ object frmMain: TfrmMain
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
     Options.Animation.AnimationMovement = [aeTabAdd, aeTabDelete, aeTabMove, aeTabDragCancelled, aeAddButtonMove]
-    Options.Animation.AnimationMovementIncrement = 7
+    Options.Animation.AnimationMovementMS = 500
     Options.Animation.AnimationStyleIncrement = 10
     Options.Animation.AnimationTimerInterval = 15
     Options.Animation.MinimumTabAnimationWidth = 40
+    Options.Animation.EaseType = ttEaseOutExpo
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -114,6 +115,7 @@ object frmMain: TfrmMain
     Options.Behaviour.TabRightClickSelect = True
     Options.Behaviour.ActivateNewTab = True
     Options.Behaviour.DebugMode = False
+    Options.Behaviour.IgnoreDoubleClicksWhileAnimatingMovement = True
     Options.Scrolling.Enabled = True
     Options.Scrolling.ScrollButtons = csbRight
     Options.Scrolling.ScrollStep = 20
@@ -381,9 +383,9 @@ object frmMain: TfrmMain
     Options.Display.TabModifiedGlow.Width = 50
     Options.Display.TabModifiedGlow.AnimationSteps = 150
     Options.Display.Tabs.SeeThroughTabs = False
-    Options.Display.Tabs.TabOverlap = 12
-    Options.Display.Tabs.ContentOffsetLeft = 12
-    Options.Display.Tabs.ContentOffsetRight = 12
+    Options.Display.Tabs.TabOverlap = 15
+    Options.Display.Tabs.ContentOffsetLeft = 18
+    Options.Display.Tabs.ContentOffsetRight = 16
     Options.Display.Tabs.OffsetLeft = 0
     Options.Display.Tabs.OffsetTop = 0
     Options.Display.Tabs.OffsetRight = 0
@@ -419,10 +421,11 @@ object frmMain: TfrmMain
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
     Options.Animation.AnimationMovement = [aeTabAdd, aeTabMove, aeTabDragCancelled, aeAddButtonMove]
-    Options.Animation.AnimationMovementIncrement = 7
+    Options.Animation.AnimationMovementMS = 500
     Options.Animation.AnimationStyleIncrement = 10
     Options.Animation.AnimationTimerInterval = 15
     Options.Animation.MinimumTabAnimationWidth = 40
+    Options.Animation.EaseType = ttEaseOutExpo
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -431,6 +434,7 @@ object frmMain: TfrmMain
     Options.Behaviour.TabRightClickSelect = True
     Options.Behaviour.ActivateNewTab = True
     Options.Behaviour.DebugMode = False
+    Options.Behaviour.IgnoreDoubleClicksWhileAnimatingMovement = True
     Options.Scrolling.Enabled = True
     Options.Scrolling.ScrollButtons = csbRight
     Options.Scrolling.ScrollStep = 20
@@ -797,7 +801,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 734
           Height = 444
-          ActivePage = Scrolling
+          ActivePage = TabSheet8
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -812,15 +816,15 @@ object frmMain: TfrmMain
               TabOrder = 0
               object Label6: TLabel
                 Left = 8
-                Top = 132
+                Top = 76
                 Width = 75
                 Height = 15
                 Caption = 'Pinned Width:'
                 FocusControl = edtPinnedWidth
               end
               object Label12: TLabel
-                Left = 8
-                Top = 77
+                Left = 108
+                Top = 20
                 Width = 83
                 Height = 15
                 Caption = 'Max Tab Width:'
@@ -835,7 +839,7 @@ object frmMain: TfrmMain
                 FocusControl = edtMinTabWidth
               end
               object Label17: TLabel
-                Left = 206
+                Left = 278
                 Top = 20
                 Width = 120
                 Height = 15
@@ -843,16 +847,24 @@ object frmMain: TfrmMain
                 FocusControl = edtTabOffsetTop
               end
               object Label51: TLabel
-                Left = 211
+                Left = 283
                 Top = 131
                 Width = 115
                 Height = 15
                 Caption = 'Tab Content Margins:'
                 FocusControl = edtTabOffsetTop
               end
+              object Label71: TLabel
+                Left = 108
+                Top = 76
+                Width = 67
+                Height = 15
+                Caption = 'Tab Overlap:'
+                FocusControl = edtTabOverlap
+              end
               object edtPinnedWidth: TSpinEdit
                 Left = 8
-                Top = 148
+                Top = 92
                 Width = 94
                 Height = 24
                 MaxValue = 65535
@@ -862,8 +874,8 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtMaxTabWidth: TSpinEdit
-                Left = 8
-                Top = 94
+                Left = 108
+                Top = 37
                 Width = 94
                 Height = 24
                 MaxValue = 65535
@@ -884,7 +896,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetTop: TSpinEdit
-                Left = 240
+                Left = 312
                 Top = 37
                 Width = 53
                 Height = 24
@@ -902,7 +914,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetLeft: TSpinEdit
-                Left = 208
+                Left = 280
                 Top = 67
                 Width = 53
                 Height = 24
@@ -920,7 +932,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetRight: TSpinEdit
-                Left = 280
+                Left = 352
                 Top = 67
                 Width = 53
                 Height = 24
@@ -938,7 +950,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetBottom: TSpinEdit
-                Left = 240
+                Left = 312
                 Top = 97
                 Width = 53
                 Height = 24
@@ -956,7 +968,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtContainerOffsetLeft: TSpinEdit
-                Left = 149
+                Left = 221
                 Top = 67
                 Width = 53
                 Height = 24
@@ -974,7 +986,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtContainerOffsetRight: TSpinEdit
-                Left = 339
+                Left = 411
                 Top = 67
                 Width = 53
                 Height = 24
@@ -992,7 +1004,7 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabContentMarginLeft: TSpinEdit
-                Left = 213
+                Left = 285
                 Top = 148
                 Width = 53
                 Height = 24
@@ -1005,11 +1017,11 @@ object frmMain: TfrmMain
                 MinValue = -65535
                 ParentFont = False
                 TabOrder = 9
-                Value = 12
+                Value = 18
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabContentMarginRight: TSpinEdit
-                Left = 272
+                Left = 344
                 Top = 148
                 Width = 53
                 Height = 24
@@ -1022,7 +1034,18 @@ object frmMain: TfrmMain
                 MinValue = -65535
                 ParentFont = False
                 TabOrder = 10
-                Value = 12
+                Value = 16
+                OnChange = OnCommonControlPropertyChange
+              end
+              object edtTabOverlap: TSpinEdit
+                Left = 108
+                Top = 92
+                Width = 94
+                Height = 24
+                MaxValue = 65535
+                MinValue = -65535
+                TabOrder = 11
+                Value = 15
                 OnChange = OnCommonControlPropertyChange
               end
             end
@@ -2259,9 +2282,9 @@ object frmMain: TfrmMain
               object Label21: TLabel
                 Left = 8
                 Top = 20
-                Width = 118
+                Width = 81
                 Height = 15
-                Caption = 'Movement Increment:'
+                Caption = 'Movement MS:'
                 FocusControl = edtAnimationStepsMovement
               end
               object Label22: TLabel
@@ -2280,6 +2303,14 @@ object frmMain: TfrmMain
                 Caption = 'Update Interval (ms):'
                 FocusControl = edtAnimationUpdate
               end
+              object Label70: TLabel
+                Left = 400
+                Top = 20
+                Width = 55
+                Height = 15
+                Caption = 'Ease Type:'
+                FocusControl = cbEaseType
+              end
               object edtAnimationStepsMovement: TSpinEdit
                 Left = 8
                 Top = 37
@@ -2288,7 +2319,7 @@ object frmMain: TfrmMain
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 0
-                Value = 8
+                Value = 500
                 OnChange = OnCommonControlPropertyChange
               end
               object edtAnimationStepsStyle: TSpinEdit
@@ -2312,6 +2343,40 @@ object frmMain: TfrmMain
                 TabOrder = 2
                 Value = 30
                 OnChange = OnCommonControlPropertyChange
+              end
+              object cbEaseType: TComboBox
+                Left = 400
+                Top = 37
+                Width = 129
+                Height = 23
+                Style = csDropDownList
+                ItemIndex = 0
+                TabOrder = 3
+                Text = 'Linear'
+                OnChange = OnCommonControlPropertyChange
+                Items.Strings = (
+                  'Linear'
+                  'In Quad'
+                  'Out Quad'
+                  'In Out Quad'
+                  'In Cubic'
+                  'Out Cubic'
+                  'In Out Cubic'
+                  'In Quart'
+                  'Out Quart'
+                  'In Out Quart'
+                  'In Quint'
+                  'Out Quint'
+                  'In Out Quint'
+                  'In Sine'
+                  'Out Sine'
+                  'In Out Sine'
+                  'In Expo'
+                  'Out Expo'
+                  'In Out Expo'
+                  'In Circ'
+                  'Out Circ'
+                  'In Out Circ')
               end
             end
             object GroupBox9: TGroupBox

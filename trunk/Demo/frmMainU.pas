@@ -293,6 +293,10 @@ type
     chkAnimationAddButtonMove: TCheckbox;
     chkAnimationDeleteTab: TCheckBox;
     Button1: TButton;
+    Label70: TLabel;
+    cbEaseType: TComboBox;
+    edtTabOverlap: TSpinEdit;
+    Label71: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -1199,6 +1203,7 @@ begin
     cbTextAlignment.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextAlignmentHorizontal);
     cbTextVerticalAlignment.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextAlignmentVertical);
     cbTextTrimming.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextTrimType);
+    edtTabOverlap.Value := ChromeTabs.Options.Display.Tabs.TabOverlap;
 
     cbFontHintMode.ItemIndex := Integer(ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode);
     cbCanvasSmoothingMode.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.CanvasSmoothingMode);
@@ -1213,9 +1218,10 @@ begin
     edtCloseButtonMouseLeaveDelay.Value := ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay;
     chkRightClickSelect.Checked := ChromeTabs.Options.Behaviour.TabRightClickSelect;
 
-    edtAnimationStepsMovement.Value := ChromeTabs.Options.Animation.AnimationMovementIncrement;
+    edtAnimationStepsMovement.Value := ChromeTabs.Options.Animation.AnimationMovementMS;
     edtAnimationStepsStyle.Value := ChromeTabs.Options.Animation.AnimationStyleIncrement;
     edtAnimationUpdate.Value := ChromeTabs.Options.Animation.AnimationTimerInterval;
+    cbEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.EaseType);
 
     chkScrolling.Checked := ChromeTabs.Options.Scrolling.Enabled;
     cbScrollButtons.ItemIndex := Integer(ChromeTabs.Options.Scrolling.ScrollButtons);
@@ -1315,6 +1321,7 @@ begin
       ChromeTabs.Options.Display.Tabs.TextAlignmentHorizontal := TAlignment(cbTextAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextAlignmentVertical := TVerticalAlignment(cbTextVerticalAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextTrimType := TTextTrimType(cbTextTrimming.ItemIndex);
+      ChromeTabs.Options.Display.Tabs.TabOverlap := edtTabOverlap.Value;
       ChromeTabs.BiDiMode := TBiDiMode(cbBidiMode.ItemIndex);
 
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
@@ -1331,9 +1338,10 @@ begin
       ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay := edtCloseButtonMouseLeaveDelay.Value;
       ChromeTabs.Options.Behaviour.TabRightClickSelect := chkRightClickSelect.Checked;
 
-      ChromeTabs.Options.Animation.AnimationMovementIncrement := edtAnimationStepsMovement.Value;
+      ChromeTabs.Options.Animation.AnimationMovementMS := edtAnimationStepsMovement.Value;
       ChromeTabs.Options.Animation.AnimationStyleIncrement := edtAnimationStepsStyle.Value;
       ChromeTabs.Options.Animation.AnimationTimerInterval := edtAnimationUpdate.Value;
+      ChromeTabs.Options.Animation.EaseType := TChromeTabsEaseType(cbEaseType.ItemIndex);
 
       ChromeTabs.Options.Scrolling.Enabled := chkScrolling.Checked;
       ChromeTabs.Options.Scrolling.ScrollButtons := TChromeTabScrollButtons(cbScrollButtons.ItemIndex);

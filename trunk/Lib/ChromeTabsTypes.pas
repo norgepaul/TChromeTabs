@@ -29,7 +29,7 @@ uses
   Windows, GDIPAPI;
 
 type
- {$IFNDEF DELPHI2006_UP}
+  {$IFNDEF DELPHI2006_UP}
   TVerticalAlignment = (
     taAlignTop,
     taAlignBottom,
@@ -180,6 +180,31 @@ type
     stsAnimatingCloseTab
   );
   TChromeTabStates = set of TChromeTabState;
+
+  TChromeTabsEaseType = (
+    ttLinearTween,
+    ttEaseInQuad,
+    ttEaseOutQuad,
+    ttEaseInOutQuad,
+    ttEaseInCubic,
+    ttEaseOutCubic,
+    ttEaseInOutCubic,
+    ttEaseInQuart,
+    ttEaseOutQuart,
+    ttEaseInOutQuart,
+    ttEaseInQuint,
+    ttEaseOutQuint,
+    ttEaseInOutQuint,
+    ttEaseInSine,
+    ttEaseOutSine,
+    ttEaseInOutSine,
+    ttEaseInExpo,
+    ttEaseOutExpo,
+    ttEaseInOutExpo,
+    ttEaseInCirc,
+    ttEaseOutCirc,
+    ttEaseInOutCirc
+  );
 
   TChromeTabScrollButtons = (
     csbNone,

@@ -38,11 +38,14 @@ type
     FControlRect: TRect;
     FChromeTabs: IChromeTabs;
     FDrawState: TDrawState;
-    FDestinationRect: TRect;
-    FAnimationIncrements: TRect;
+    FStartRect: TRect;
+    FStartTicks: Cardinal;
+    FCurrentTickCount: Cardinal;
+    FEndRect: TRect;
     FPositionInitialised: Boolean;
     FScrollableControl: Boolean;
     FOverrideBidi: Boolean;
+    //FMovementTransformPercent: Integer;
 
     function GetBidiControlRect: TRect;
   protected
@@ -51,7 +54,6 @@ type
 
     procedure DoChanged; virtual;
 
-    procedure SetAnimationIncrements(SourceRect, DestinationRect: TRect); virtual;
     procedure EndAnimation; virtual;
     function NewPolygon(ControlRect: TRect; const Polygon: array of TPoint; Orientation: TTabOrientation): TPolygon; virtual;
     procedure Invalidate; virtual;
@@ -73,7 +75,9 @@ type
 
     property ControlRect: TRect read FControlRect;
     property BiDiControlRect: TRect read GetBidiControlRect;
-    property DestinationRect: TRect read FDestinationRect;
+
+    property StartRect: TRect read FStartRect;
+    property EndRect: TRect read FEndRect;
 
     procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); virtual;
     procedure SetPosition(ARect: TRect; Animate: Boolean); virtual;
@@ -265,40 +269,23 @@ begin
 end;
 
 function TBaseChromeTabsControl.AnimateMovement: Boolean;
-
-  procedure TransformPoint(Current, Destination, AnimationStep: Integer; var Value: Integer);
-  begin
-    if Current = Destination then
-      Value := Current
-    else
-    begin
-      Result := TRUE;
-
-      Value := Current + AnimationStep;
-
-      if ((Current > Destination) and
-          (Value < Destination)) or
-         ((Current < Destination) and
-          (Value > Destination)) then
-      begin
-        Value := Destination;
-      end;
-    end;
-  end;
-
 var
   Right, Left, Top, Bottom: Integer;
 begin
-  Result := not SameRect(FControlRect, FDestinationRect);
+  Result := (FStartTicks > 0) and (FCurrentTickCount < ChromeTabs.GetOptions.Animation.AnimationMovementMS);
 
   if Result then
   begin
-    TransformPoint(ControlRect.Left, FDestinationRect.Left, FAnimationIncrements.Left, Left);
-    TransformPoint(ControlRect.Right, FDestinationRect.Right, FAnimationIncrements.Right, Right);
-    TransformPoint(ControlRect.Top, FDestinationRect.Top, FAnimationIncrements.Top, Top);
-    TransformPoint(ControlRect.Bottom, FDestinationRect.Bottom, FAnimationIncrements.Bottom, Bottom);
+    FCurrentTickCount := GetTickCount - FStartTicks;
 
-    FControlRect := Rect(Left, Top, Right, Bottom);
+    if FCurrentTickCount > ChromeTabs.GetOptions.Animation.AnimationMovementMS then
+      FCurrentTickCount := ChromeTabs.GetOptions.Animation.AnimationMovementMS;
+
+    FControlRect := TransformRect(FStartRect,
+                                  FEndRect,
+                                  FCurrentTickCount,
+                                  ChromeTabs.GetOptions.Animation.AnimationMovementMS,
+                                  ChromeTabs.GetOptions.Animation.EaseType);
   end;
 end;
 
@@ -421,11 +408,13 @@ begin
   begin
     // If we want to animate, or we are curently animating,
     // set the destination Rect and calculate the animation increments
-    if not SameRect(FDestinationRect, ARect) then
+    if not SameRect(FEndRect, ARect) then
     begin
-      FDestinationRect := ARect;
+      FEndRect := ARect;
+      FStartRect := FControlRect;
 
-      SetAnimationIncrements(FControlRect, FDestinationRect);
+      FStartTicks := GetTickCount;
+      FCurrentTickCount := 0;
     end;
   end
   else
@@ -437,41 +426,12 @@ begin
 
     // Otherwise, set the destination Rect
     FControlRect := ARect;
-    FDestinationRect := ARect;
+    FStartRect := ARect;
+    FEndRect := ARect;
 
-    SetAnimationIncrements(FControlRect, FDestinationRect);
+    FStartTicks := ChromeTabs.GetOptions.Animation.AnimationMovementMS;
+    FCurrentTickCount := FStartTicks;
   end;
-end;
-
-procedure TBaseChromeTabsControl.SetAnimationIncrements(SourceRect, DestinationRect: TRect);
-
-  function GetIncrement(Source, Destination: Integer): Integer;
-  var
-    Distance: Integer;
-  begin
-    Distance := Destination - Source;
-
-    if Distance = 0 then
-      Result := 0
-    else
-    begin
-      Result := Distance div ChromeTabs.GetOptions.Animation.AnimationMovementIncrement;
-
-      if Abs(Result) < 5 then
-      begin
-        if Distance < 0 then
-          Result := -5
-        else
-          Result := 5;
-      end;
-    end;
-  end;
-
-begin
-  FAnimationIncrements := Rect(GetIncrement(SourceRect.Left, DestinationRect.Left),
-                               GetIncrement(SourceRect.Top, DestinationRect.Top),
-                               GetIncrement(SourceRect.Right, DestinationRect.Right),
-                               GetIncrement(SourceRect.Bottom, DestinationRect.Bottom));
 end;
 
 
@@ -1183,6 +1143,7 @@ begin
 
         // Reset the clip region
         TabCanvas.SetClip(OriginalClipRegion);
+//        TabCanvas.SetClip(RectToGpRect(Rect(ControlRect.Left, ControlRect.Top, 80, ControlRect.Bottom)), CombineModeExclude);
 
         // Draw the text
         if (not ChromeTab.GetPinned) and (TextVisible) then

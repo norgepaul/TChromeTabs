@@ -27,7 +27,7 @@ interface
 
 uses
   Windows, SysUtils, Controls, Classes, Graphics, Messages, ExtCtrls, Forms,
-  GraphUtil,
+  GraphUtil, Math,
 
   GDIPObj, GDIPAPI,
 
@@ -67,8 +67,224 @@ function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
 procedure BitmapTo32BitBitmap(Bitmap: TBitmap);
 procedure SetColorAlpha(Bitmap: TBitmap; AColor: TColor; NewAlpha: Byte);
+function TransformRect(StartRect, EndRect: TRect; CurrentTicks, EndTicks: Cardinal; EaseType: TChromeTabsEaseType): TRect;
+function CalculateEase(CurrentTime, StartValue, ChangeInValue, Duration: Real; EaseType: TChromeTabsEaseType): Real; overload;
+function CalculateEase(StartPos, EndPos, PositionPct: Real; EaseType: TChromeTabsEaseType): Real; overload;
 
 implementation
+
+function CalculateEase(CurrentTime, StartValue, ChangeInValue, Duration: Real; EaseType: TChromeTabsEaseType): Real;
+begin
+  case EaseType of
+    ttLinearTween:
+      begin
+        Result := ChangeInValue * CurrentTime / Duration + StartValue;
+      end;
+
+    ttEaseInQuad:
+      begin
+        CurrentTime := CurrentTime / Duration;
+
+	      Result := ChangeInValue * CurrentTime * CurrentTime + StartValue;
+      end;
+
+    ttEaseOutQuad:
+      begin
+        CurrentTime := CurrentTime / Duration;
+
+	      Result := -ChangeInValue * CurrentTime * (CurrentTime-2) + StartValue;
+      end;
+
+    ttEaseInOutQuad:
+      begin
+        CurrentTime := CurrentTime / (Duration / 2);
+
+        if CurrentTime < 1 then
+          Result := ChangeInValue / 2 * CurrentTime * CurrentTime + StartValue
+        else
+        begin
+          CurrentTime := CurrentTime - 1;
+          Result := -ChangeInValue / 2 * (CurrentTime * (CurrentTime - 2) - 1) + StartValue;
+        end;
+      end;
+
+    ttEaseInCubic:
+      begin
+        CurrentTime := CurrentTime / Duration;
+
+        Result := ChangeInValue * CurrentTime * CurrentTime * CurrentTime + StartValue;
+      end;
+
+    ttEaseOutCubic:
+      begin
+        CurrentTime := (CurrentTime / Duration) - 1;
+
+        Result := ChangeInValue * ( CurrentTime * CurrentTime * CurrentTime + 1) + StartValue;
+      end;
+
+    ttEaseInOutCubic:
+      begin
+        CurrentTime := CurrentTime / (Duration/2);
+
+        if CurrentTime < 1 then
+          Result := ChangeInValue / 2 * CurrentTime * CurrentTime * CurrentTime + StartValue
+        else
+        begin
+          CurrentTime := CurrentTime - 2;
+
+          Result := ChangeInValue / 2 * (CurrentTime * CurrentTime * CurrentTime + 2) + StartValue;
+        end;
+      end;
+
+    ttEaseInQuart:
+      begin
+        CurrentTime := CurrentTime / Duration;
+
+        Result := ChangeInValue * CurrentTime * CurrentTime * CurrentTime * CurrentTime + StartValue;
+      end;
+
+    ttEaseOutQuart:
+      begin
+        CurrentTime := (CurrentTime / Duration) - 1;
+
+        Result := -ChangeInValue * (CurrentTime * CurrentTime * CurrentTime * CurrentTime - 1) + StartValue;
+      end;
+
+    ttEaseInOutQuart:
+      begin
+	      CurrentTime := CurrentTime / (Duration / 2);
+
+        if CurrentTime < 1 then
+          Result := ChangeInValue / 2 * CurrentTime * CurrentTime * CurrentTime * CurrentTime + StartValue
+        else
+        begin
+          CurrentTime := CurrentTime - 2;
+
+          Result := -ChangeInValue / 2 * (CurrentTime * CurrentTime * CurrentTime * CurrentTime - 2) + StartValue;
+        end;
+      end;
+
+    ttEaseInQuint:
+      begin
+        CurrentTime := CurrentTime / Duration;
+
+        Result := ChangeInValue * CurrentTime * CurrentTime * CurrentTime * CurrentTime * CurrentTime + StartValue;
+      end;
+
+    ttEaseOutQuint:
+      begin
+        CurrentTime := (CurrentTime / Duration) - 1;
+
+	      Result := ChangeInValue * (CurrentTime * CurrentTime * CurrentTime * CurrentTime * CurrentTime + 1) + StartValue;
+      end;
+
+    ttEaseInOutQuint:
+      begin
+      	CurrentTime := CurrentTime / (Duration / 2);
+        if CurrentTime < 1 then
+          Result := ChangeInValue / 2 * CurrentTime * CurrentTime * CurrentTime * CurrentTime * CurrentTime + StartValue
+        else
+        begin
+          CurrentTime := CurrentTime - 2;
+
+          Result := ChangeInValue / 2 * (CurrentTime * CurrentTime * CurrentTime * CurrentTime * CurrentTime + 2) + StartValue;
+        end;
+      end;
+
+    ttEaseInSine:
+      begin
+	      Result := -ChangeInValue * Cos(CurrentTime / Duration * (PI / 2)) + ChangeInValue + StartValue;
+      end;
+
+    ttEaseOutSine:
+      begin
+	      Result := ChangeInValue * Sin(CurrentTime / Duration * (PI / 2)) + StartValue;
+      end;
+
+    ttEaseInOutSine:
+      begin
+        Result := -ChangeInValue / 2 * (Cos(PI * CurrentTime / Duration) - 1) + StartValue;
+      end;
+
+    ttEaseInExpo:
+      begin
+        Result := ChangeInValue * Power(2, 10 * (CurrentTime/Duration - 1) ) + StartValue;
+      end;
+
+    ttEaseOutExpo:
+      begin
+        Result := ChangeInValue * (-Power(2, -10 * CurrentTime / Duration ) + 1 ) + StartValue;
+      end;
+
+    ttEaseInOutExpo:
+      begin
+        CurrentTime := CurrentTime / (Duration/2);
+
+	      if CurrentTime < 1 then
+          Result := ChangeInValue / 2 * Power(2, 10 * (CurrentTime - 1) ) + StartValue
+        else
+         begin
+           CurrentTime := CurrentTime - 1;
+
+	         Result := ChangeInValue / 2 * (-Power(2, -10 * CurrentTime) + 2 ) + StartValue;
+         end;
+      end;
+
+    ttEaseInCirc:
+      begin
+        CurrentTime := CurrentTime / Duration;
+
+	      Result := -ChangeInValue * (Sqrt(1 - CurrentTime * CurrentTime) - 1) + StartValue;
+      end;
+
+    ttEaseOutCirc:
+      begin
+        CurrentTime := (CurrentTime / Duration) - 1;
+
+        Result := ChangeInValue * Sqrt(1 - CurrentTime * CurrentTime) + StartValue;
+      end;
+
+    ttEaseInOutCirc:
+      begin
+        CurrentTime := CurrentTime / (Duration / 2);
+
+        if CurrentTime < 1 then
+          Result := -ChangeInValue / 2 * (Sqrt(1 - CurrentTime * CurrentTime) - 1) + StartValue
+        else
+        begin
+        	CurrentTime := CurrentTime - 2;
+
+	        Result := ChangeInValue / 2 * (Sqrt(1 - CurrentTime * CurrentTime) + 1) + StartValue;
+        end;
+      end;
+  end;
+end;
+
+function CalculateEase(StartPos, EndPos, PositionPct: Real; EaseType: TChromeTabsEaseType): Real;
+var
+  t, b, c, d: Real;
+begin
+  c := EndPos - StartPos;
+  d := 100;
+  t := PositionPct;
+  b := StartPos;
+
+  Result := CalculateEase(t, b, c, d, EaseType);
+end;
+
+function TransformRect(StartRect, EndRect: TRect; CurrentTicks, EndTicks: Cardinal; EaseType: TChromeTabsEaseType): TRect;
+
+  function TransformInteger(StartInt, EndInt: Integer): Integer;
+  begin
+    TransformInteger := Round(CalculateEase(CurrentTicks, StartInt, EndInt - StartInt, EndTicks, EaseType));
+  end;
+
+begin
+  Result.Left := TransformInteger(StartRect.Left, EndRect.Left);
+  Result.Top := TransformInteger(StartRect.Top, EndRect.Top);
+  Result.Right := TransformInteger(StartRect.Right, EndRect.Right);
+  Result.Bottom := TransformInteger(StartRect.Bottom, EndRect.Bottom);
+end;
 
 function HorzFlipRect(ParentRect, ChildRect: TRect): TRect;
 begin
