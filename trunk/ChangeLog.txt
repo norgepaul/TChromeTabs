@@ -4,6 +4,7 @@ TChromeTabs 1.0
 Improvement: Began overhaul of animation effects.
 Added: Animation Ease Type.
 Fixed: Form system buttons highlighted when dragging tab (http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390).
+Fixed: Tabs could become misaligned if the close button was pressed before a tab animation was finished.
 
 18/12/2012
 Update: Changed default animation properties to make animation smoother.
@@ -15,6 +16,9 @@ Fixed: Drag image tab background is now transparent
 Fixed: Add and scroll button initial draw states
 Fixed: Style transistions are now only active (by default) when moving from x to dsHot and vice versa
 Fixed: Left scroll and Add button not drawn at design time.
+
+
+TChromeTabs 0.9 BETA
 
 17/12/2012
 Fixed: All BiDi mode functionality implemented and working.

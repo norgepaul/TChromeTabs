@@ -782,26 +782,29 @@ type
   private
     FAnimationMovement: TChromeTabsAnimationMovementTypes;
     FAnimationMovementMS: Integer;
-    FAnimationStyleIncrement: Integer;
+    FAnimationStyleMS: Integer;
     FAnimationTimerInterval: Integer;
     FMinimumTabAnimationWidth: Integer;
-    FEaseType: TChromeTabsEaseType;
+    FEaseTypeMovement: TChromeTabsEaseType;
+    FEaseTypeStyle: TChromeTabsEaseType;
   private
     procedure SetFAnimationMovementMS(const Value: Integer);
-    procedure SetAnimationStyleIncrement(const Value: Integer);
+    procedure SetAnimationStyleMS(const Value: Integer);
     procedure SetAnimationTimerInterval(const Value: Integer);
     procedure SetAnimationMovement(const Value: TChromeTabsAnimationMovementTypes);
     procedure SetMinimumTabAnimationWidth(const Value: Integer);
-    procedure SetEaseType(const Value: TChromeTabsEaseType);
+    procedure SetEaseTypeMovement(const Value: TChromeTabsEaseType);
+    procedure SetEaseTypeStyle(const Value: TChromeTabsEaseType);
   public
     constructor Create(AOwner: TPersistent); override;
   published
     property AnimationMovement: TChromeTabsAnimationMovementTypes read FAnimationMovement write SetAnimationMovement;
     property AnimationMovementMS: Integer read FAnimationMovementMS write SetFAnimationMovementMS;
-    property AnimationStyleIncrement: Integer read FAnimationStyleIncrement write SetAnimationStyleIncrement;
+    property AnimationStyleMS: Integer read FAnimationStyleMS write SetAnimationStyleMS;
     property AnimationTimerInterval: Integer read FAnimationTimerInterval write SetAnimationTimerInterval;
     property MinimumTabAnimationWidth: Integer read FMinimumTabAnimationWidth write SetMinimumTabAnimationWidth;
-    property EaseType: TChromeTabsEaseType read FEaseType write SetEaseType;
+    property EaseTypeMovement: TChromeTabsEaseType read FEaseTypeMovement write SetEaseTypeMovement;
+    property EaseTypeStyle: TChromeTabsEaseType read FEaseTypeStyle write SetEaseTypeStyle;
   end;
 
   TChromeTabsBehaviourOptions = class(TChromeTabsPersistent)
@@ -2223,10 +2226,11 @@ begin
                          aeAddButtonMove];
 
   FAnimationMovementMS := 500;
-  FAnimationStyleIncrement := 10;
+  FAnimationStyleMS := 300;
   FAnimationTimerInterval := 25;
   FMinimumTabAnimationWidth := 40;
-  FEaseType := ttEaseOutExpo;
+  FEaseTypeMovement := ttEaseOutExpo;
+  FEaseTypeStyle := ttEaseOutExpo;
 end;
 
 procedure TChromeTabsAnimationOptions.SetFAnimationMovementMS(const Value: Integer);
@@ -2234,9 +2238,9 @@ begin
   FAnimationMovementMS := Value;
 end;
 
-procedure TChromeTabsAnimationOptions.SetAnimationStyleIncrement(const Value: Integer);
+procedure TChromeTabsAnimationOptions.SetAnimationStyleMS(const Value: Integer);
 begin
-  FAnimationStyleIncrement := Value;
+  FAnimationStyleMS := Value;
 end;
 
 procedure TChromeTabsAnimationOptions.SetAnimationTimerInterval(const Value: Integer);
@@ -2244,10 +2248,16 @@ begin
   FAnimationTimerInterval := Value;
 end;
 
-procedure TChromeTabsAnimationOptions.SetEaseType(
+procedure TChromeTabsAnimationOptions.SetEaseTypeMovement(
   const Value: TChromeTabsEaseType);
 begin
-  FEaseType := Value;
+  FEaseTypeMovement := Value;
+end;
+
+procedure TChromeTabsAnimationOptions.SetEaseTypeStyle(
+  const Value: TChromeTabsEaseType);
+begin
+  FEaseTypeStyle := Value;
 end;
 
 procedure TChromeTabsAnimationOptions.SetMinimumTabAnimationWidth(
