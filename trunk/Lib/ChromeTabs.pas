@@ -2497,17 +2497,18 @@ begin
   if (FOptions.Display.AddButton.Visibility = avRightFixed) or
      (FOptions.Display.AddButton.Visibility = avRightFloating) then //and (GetVisibleTabCount = 0)) then
   begin
-    SetControlPosition(FAddButtonControl,
-                       Rect(RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal,
-                            FOptions.Display.AddButton.Offsets.Vertical,
-                            RightOffset - FOptions.Display.AddButton.Offsets.Horizontal,
-                            FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
-                       FALSE);
+    if FOptions.Display.AddButton.Visibility <> avRightFloating then
+      SetControlPosition(FAddButtonControl,
+                         Rect(RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal,
+                              FOptions.Display.AddButton.Offsets.Vertical,
+                              RightOffset - FOptions.Display.AddButton.Offsets.Horizontal,
+                              FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
+                         FALSE);
 
-    if (FOptions.Display.AddButton.Visibility = avRightFloating) and (GetVisibleTabCount = 0) then
-      SetControlLeft(FAddButtonControl, 0, FALSE)
-    else
-      Dec(RightOffset, FOptions.Display.AddButton.Width + 1 + FOptions.Display.AddButton.Offsets.Horizontal);
+    //if (FOptions.Display.AddButton.Visibility = avRightFloating) and (GetVisibleTabCount = 0) then
+    //  SetControlLeft(FAddButtonControl, 0, FALSE)
+    //else
+    Dec(RightOffset, FOptions.Display.AddButton.Width + 1 + FOptions.Display.AddButton.Offsets.Horizontal);
   end;
 
   // Remaining space is the TabContainerRect
@@ -2896,33 +2897,23 @@ begin
       SetTabPositions(TabLeft, FAdjustedTabWidth, FTabEndSpace, FALSE);
     end;
 
-    if (not FOptions.Scrolling.Enabled) or
-       (not ScrollingActive) and
-       (FOptions.Display.AddButton.Visibility = avRightFloating) then
+    if (FOptions.Display.AddButton.Visibility = avRightFloating) then
     begin
-      // Reposition the add button to the end of the tabs
-      if GetLastVisibleTabIndex(Tabs.Count - 1) = -1 then
-        SetControlLeft(FAddButtonControl, 0, FALSE)
+      if GetVisibleTabCount = 0 then
+        AddButtonLeft := 0
       else
-      begin
-        if (TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].ControlRect.Right < FAddButtonControl.ControlRect.Left - FOptions.Display.AddButton.Offsets.Horizontal) or
-           (HasState(stsTabDeleted)) then
-        begin
-          if not HasState(stsEndTabDeleted) then
-            AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].ControlRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating
-          else
-            AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating;
+        AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
+                         FOptions.Display.AddButton.Offsets.HorizontalFloating;
 
-          // Move the button to the first animation position
-          SetControlLeft(FAddButtonControl, AddButtonLeft, FALSE);
+      if (GetTabDisplayState <> tdNormal) or (AddButtonLeft > TabContainerRect.Right + 1) then
+        AddButtonLeft := TabContainerRect.Right + 1;
 
-          // Set the end animation point
-          if not HasState(stsEndTabDeleted) then
-            SetControlLeft(FAddButtonControl,
-                           TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating,
-                           TRUE);
-        end;
-      end;
+      SetControlPosition(FAddButtonControl,
+                         Rect(AddButtonLeft,
+                              FOptions.Display.AddButton.Offsets.Vertical,
+                              AddButtonLeft +FOptions.Display.AddButton.Width,
+                              FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
+                         FALSE);
     end;
 
     if FScrollWidth <> FPreviousScrollWidth then
@@ -3463,7 +3454,8 @@ begin
   try
     DrawTicks := GetTickCount;
     try
-      if HasState(stsControlsPositionsInvalidated) then
+      if (HasState(stsControlsPositionsInvalidated)) or
+         ((HasState(stsAnimatingMovement)) and (GetTabDisplayState = tdNormal)) then
       begin
         RemoveState(stsControlsPositionsInvalidated);
 
