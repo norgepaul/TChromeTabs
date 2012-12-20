@@ -45,6 +45,8 @@ type
     FPositionInitialised: Boolean;
     FScrollableControl: Boolean;
     FOverrideBidi: Boolean;
+    FEaseType: TChromeTabsEaseType;
+    FAnimationTime: Cardinal;
 
     function GetBidiControlRect: TRect;
   protected
@@ -78,12 +80,12 @@ type
     property StartRect: TRect read FStartRect;
     property EndRect: TRect read FEndRect;
 
-    procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); virtual;
-    procedure SetPosition(ARect: TRect; Animate: Boolean); virtual;
-    procedure SetHeight(const Value: Integer; Animate: Boolean); virtual;
-    procedure SetWidth(const Value: Integer; Animate: Boolean); virtual;
-    procedure SetLeft(const Value: Integer; Animate: Boolean); virtual;
-    procedure SetTop(const Value: Integer; Animate: Boolean); virtual;
+    procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); virtual;
+    procedure SetPosition(ARect: TRect; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType); virtual;
+    procedure SetHeight(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType); virtual;
+    procedure SetWidth(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType); virtual;
+    procedure SetLeft(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType); virtual;
+    procedure SetTop(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType); virtual;
 
     property DrawState: TDrawState read FDrawState;
     property ControlType: TChromeTabItemType read FControlType;
@@ -117,8 +119,8 @@ type
     FEaseType: TChromeTabsEaseType;
   public
     procedure SetProperties(Style: TChromeTabsLookAndFeelStyle; StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont;
-      EndTickCount: Cardinal; EaseType: TChromeTabsEaseType; Animate: Boolean);
-    function TransformColors(ForceUpdate: Boolean = FALSE): Boolean;
+      EndTickCount: Cardinal; EaseType: TChromeTabsEaseType);
+    function TransformColors: Boolean;
     procedure EndAnimation;
 
     property StartTabProperties: TChromeTabControlProperties read FStartTabProperties write FStartTabProperties;
@@ -156,7 +158,7 @@ type
 
     procedure Invalidate; override;
 
-    procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); override;
+    procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
   end;
 
   TChromeTabControl = class(TBaseChromeTabsControl)
@@ -196,7 +198,7 @@ type
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
     function GetCloseButonRect: TRect;
     function GetCloseButtonCrossRect: TRect;
-    procedure SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean = FALSE); override;
+    procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
 
     property CloseButtonState: TDrawState read FCloseButtonState write SetCloseButtonState;
   end;
@@ -273,23 +275,21 @@ begin
 end;
 
 function TBaseChromeTabsControl.AnimateMovement: Boolean;
-var
-  Right, Left, Top, Bottom: Integer;
 begin
-  Result := (FStartTicks > 0) and (FCurrentTickCount < ChromeTabs.GetOptions.Animation.AnimationMovementMS);
+  Result := (FStartTicks > 0) and (FCurrentTickCount < FAnimationTime);
 
   if Result then
   begin
     FCurrentTickCount := GetTickCount - FStartTicks;
 
-    if FCurrentTickCount > ChromeTabs.GetOptions.Animation.AnimationMovementMS then
-      FCurrentTickCount := ChromeTabs.GetOptions.Animation.AnimationMovementMS;
+    if FCurrentTickCount > FAnimationTime then
+      FCurrentTickCount := FAnimationTime;
 
     FControlRect := TransformRect(FStartRect,
                                   FEndRect,
                                   FCurrentTickCount,
-                                  ChromeTabs.GetOptions.Animation.AnimationMovementMS,
-                                  ChromeTabs.GetOptions.Animation.EaseTypeMovement);
+                                  FAnimationTime,
+                                  FEaseType);
   end;
 end;
 
@@ -358,7 +358,7 @@ begin
   FInvalidated := TRUE;
 end;
 
-procedure TBaseChromeTabsControl.SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean);
+procedure TBaseChromeTabsControl.SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean);
 begin
   // Override in descendants if animation is required
   if (ForceUpdate) or (FDrawState <> Value) then
@@ -369,46 +369,53 @@ begin
   end;
 end;
 
-procedure TBaseChromeTabsControl.SetHeight(const Value: Integer; Animate: Boolean);
+procedure TBaseChromeTabsControl.SetHeight(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType);
 begin
   SetPosition(Rect(FControlRect.Left,
                    FControlRect.Top,
                    FControlRect.Right,
                    FControlRect.Top + Value),
-              Animate);
+              AnimationTime,
+              EaseType);
 end;
 
-procedure TBaseChromeTabsControl.SetLeft(const Value: Integer; Animate: Boolean);
+procedure TBaseChromeTabsControl.SetLeft(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType);
 begin
   SetPosition(Rect(Value,
                    FControlRect.Top,
                    RectWidth(FControlRect) + Value,
                    FControlRect.Bottom),
-              Animate);
+              AnimationTime,
+              EaseType);
 end;
 
-procedure TBaseChromeTabsControl.SetWidth(const Value: Integer; Animate: Boolean);
+procedure TBaseChromeTabsControl.SetWidth(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType);
 begin
   SetPosition(Rect(FControlRect.Left,
                    FControlRect.Top,
                    FControlRect.Left + Value,
                    FControlRect.Bottom),
-              Animate);
+              AnimationTime,
+              EaseType);
 end;
 
-procedure TBaseChromeTabsControl.SetTop(const Value: Integer; Animate: Boolean);
+procedure TBaseChromeTabsControl.SetTop(const Value: Integer; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType);
 begin
   SetPosition(Rect(FControlRect.Left,
                    Value,
                    FControlRect.Right,
                    RectHeight(FControlRect) + Value),
-              Animate);
+              AnimationTime,
+              EaseType);
 end;
 
-procedure TBaseChromeTabsControl.SetPosition(ARect: TRect; Animate: Boolean);
+procedure TBaseChromeTabsControl.SetPosition(ARect: TRect; AnimationTime: Cardinal; EaseType: TChromeTabsEaseType);
 begin
+  FEaseType := EaseType;
+  FAnimationTime := AnimationTime;
+
   if (FPositionInitialised) and
-     (Animate) then
+     (EaseType <> ttNone) then
   begin
     // If we want to animate, or we are curently animating,
     // set the destination Rect and calculate the animation increments
@@ -433,7 +440,7 @@ begin
     FStartRect := ARect;
     FEndRect := ARect;
 
-    FStartTicks := ChromeTabs.GetOptions.Animation.AnimationMovementMS;
+    FStartTicks := FAnimationTime;
     FCurrentTickCount := FStartTicks;
   end;
 end;
@@ -1245,7 +1252,7 @@ begin
   end;
 end;
 
-procedure TChromeTabControl.SetDrawState(const Value: TDrawState; Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean);
+procedure TChromeTabControl.SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean);
 var
   DefaultFont: TChromeTabsLookAndFeelBaseFont;
 begin
@@ -1268,9 +1275,8 @@ begin
     FChromeTabControlPropertyItems.SetProperties(FTabProperties.Style,
                                                  FTabProperties.Font,
                                                  DefaultFont,
-                                                 AnimationSteps,
-                                                 ChromeTabs.GetOptions.Animation.EaseTypeStyle,
-                                                 Animate);
+                                                 AnimationTimeMS,
+                                                 EaseType);
 
     Invalidate;
   end;
@@ -1428,7 +1434,7 @@ end;
 
 procedure TChromeTabControlPropertyItems.SetProperties(Style: TChromeTabsLookAndFeelStyle;
   StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont;
-  EndTickCount: Cardinal; EaseType: TChromeTabsEaseType; Animate: Boolean);
+  EndTickCount: Cardinal; EaseType: TChromeTabsEaseType);
 var
   Dst: TChromeTabControlProperties;
   Font: TChromeTabsLookAndFeelBaseFont;
@@ -1465,29 +1471,29 @@ begin
   FStartTickCount := GetTickCount;
   FCurrentTickCount := 0;
 
-  if Animate then
-    FEndTickCount := EndTickCount
-  else
+  if EaseType = ttNone then
   begin
-    FEndTickCount := 1;
+    FEndTickCount := 0;
 
     TransformColors;
-  end;
+  end
+  else
+    FEndTickCount := EndTickCount;
 end;
 
-function TChromeTabControlPropertyItems.TransformColors(ForceUpdate: Boolean): Boolean;
+function TChromeTabControlPropertyItems.TransformColors: Boolean;
 var
   TransformPct: Integer;
 begin
   Result := FALSE;
 
-  if (ForceUpdate) or
+  if (FEndTickCount = 0) or
      ((FStartTickCount > 0) and
       (FCurrentTickCount < FEndTickCount)) then
   begin
     Result := TRUE;
 
-    if ForceUpdate then
+    if FEndTickCount = 0 then
     begin
       TransformPct := 100;
     end
@@ -1612,7 +1618,7 @@ begin
 end;
 
 procedure TBaseChromeButtonControl.SetDrawState(const Value: TDrawState;
-  Animate: Boolean; AnimationSteps: Integer; ForceUpdate: Boolean);
+  AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean);
 begin
   // Only update if the state has changed
   if (ForceUpdate) or (Value <> FDrawState) then
@@ -1621,8 +1627,8 @@ begin
 
     SetStylePropertyClasses;
 
-    FButtonControlPropertyItems.SetProperties(FButtonStyle, nil, nil, AnimationSteps, ChromeTabs.GetOptions.Animation.EaseTypeStyle, Animate);
-    FSymbolControlPropertyItems.SetProperties(FSymbolStyle, nil, nil, AnimationSteps, ChromeTabs.GetOptions.Animation.EaseTypeStyle, Animate);
+    FButtonControlPropertyItems.SetProperties(FButtonStyle, nil, nil, AnimationTimeMS, EaseType);
+    FSymbolControlPropertyItems.SetProperties(FSymbolStyle, nil, nil, AnimationTimeMS, EaseType);
 
     Invalidate;
   end;

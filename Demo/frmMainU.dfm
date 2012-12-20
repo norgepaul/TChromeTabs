@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 187
   Caption = 'Chrome Tabs Demo'
   ClientHeight = 596
-  ClientWidth = 1008
+  ClientWidth = 1021
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -17,7 +17,7 @@ object frmMain: TfrmMain
   object ChromeTabs1: TChromeTabs
     Left = 0
     Top = 0
-    Width = 1008
+    Width = 1021
     Height = 29
     OnChange = ChromeTabs1Change
     OnActiveTabChanged = ChromeTabs1ActiveTabChanged
@@ -101,13 +101,32 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
-    Options.Animation.AnimationMovement = [aeTabAdd, aeTabDelete, aeTabMove, aeTabDragCancelled, aeAddButtonMove]
-    Options.Animation.AnimationMovementMS = 500
-    Options.Animation.AnimationStyleMS = 300
+    Options.Animation.DefaultMovementAnimationTimeMS = 300
+    Options.Animation.DefaultStyleAnimationTimeMS = 300
     Options.Animation.AnimationTimerInterval = 15
     Options.Animation.MinimumTabAnimationWidth = 40
-    Options.Animation.EaseTypeMovement = ttEaseOutExpo
-    Options.Animation.EaseTypeStyle = ttEaseOutExpo
+    Options.Animation.DefaultMovementEaseType = ttLinearTween
+    Options.Animation.DefaultStyleEaseType = ttLinearTween
+    Options.Animation.MovementAnimations.TabAdd.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.TabAdd.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.TabAdd.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabAdd.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabDelete.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.TabDelete.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.TabDelete.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabDelete.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabMove.UseDefaultEaseType = False
+    Options.Animation.MovementAnimations.TabMove.UseDefaultAnimationTime = False
+    Options.Animation.MovementAnimations.TabMove.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultEaseType = False
+    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultAnimationTime = False
+    Options.Animation.MovementAnimations.TabDragCancelled.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabDragCancelled.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.AddButtonMove.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.AddButtonMove.AnimationTimeMS = 800
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -146,7 +165,6 @@ object frmMain: TfrmMain
         Visible = True
         Modified = False
       end>
-    LookAndFeel.Skin = isChrome
     LookAndFeel.TabsContainer.StartColor = 14586466
     LookAndFeel.TabsContainer.StopColor = 13201730
     LookAndFeel.TabsContainer.StartAlpha = 255
@@ -339,12 +357,11 @@ object frmMain: TfrmMain
     Align = alTop
     OnResize = ChromeTabs1Resize
     TabOrder = 1
-    ExplicitWidth = 1012
   end
   object ChromeTabs2: TChromeTabs
     Left = 0
     Top = 565
-    Width = 1008
+    Width = 1021
     Height = 31
     OnDebugLog = ChromeTabs1DebugLog
     OnButtonAddClick = ChromeTabs1ButtonAddClick
@@ -422,13 +439,32 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
-    Options.Animation.AnimationMovement = [aeTabAdd, aeTabMove, aeTabDragCancelled, aeAddButtonMove]
-    Options.Animation.AnimationMovementMS = 500
-    Options.Animation.AnimationStyleMS = 300
+    Options.Animation.DefaultMovementAnimationTimeMS = 500
+    Options.Animation.DefaultStyleAnimationTimeMS = 300
     Options.Animation.AnimationTimerInterval = 15
     Options.Animation.MinimumTabAnimationWidth = 40
-    Options.Animation.EaseTypeMovement = ttEaseOutExpo
-    Options.Animation.EaseTypeStyle = ttEaseOutExpo
+    Options.Animation.DefaultMovementEaseType = ttEaseOutExpo
+    Options.Animation.DefaultStyleEaseType = ttLinearTween
+    Options.Animation.MovementAnimations.TabAdd.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.TabAdd.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.TabAdd.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabAdd.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabDelete.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.TabDelete.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.TabDelete.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabDelete.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabMove.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.TabMove.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.TabMove.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.TabDragCancelled.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.TabDragCancelled.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultEaseType = True
+    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultAnimationTime = True
+    Options.Animation.MovementAnimations.AddButtonMove.EaseType = ttEaseOutExpo
+    Options.Animation.MovementAnimations.AddButtonMove.AnimationTimeMS = 800
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -447,7 +483,6 @@ object frmMain: TfrmMain
     Options.Scrolling.DragScrollOffset = 50
     Options.Scrolling.MouseWheelScroll = True
     Tabs = <>
-    LookAndFeel.Skin = isChrome
     LookAndFeel.TabsContainer.StartColor = 14586466
     LookAndFeel.TabsContainer.StopColor = 13201730
     LookAndFeel.TabsContainer.StartAlpha = 255
@@ -639,28 +674,25 @@ object frmMain: TfrmMain
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alBottom
     TabOrder = 2
-    ExplicitWidth = 1012
   end
   object Panel1: TPanel
     Left = 0
     Top = 29
-    Width = 1008
+    Width = 1021
     Height = 536
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1012
     object pnlTop: TPanel
       Left = 0
       Top = 0
-      Width = 1008
+      Width = 1021
       Height = 29
       Align = alTop
       BevelOuter = bvNone
       Color = clMoneyGreen
       ParentBackground = False
       TabOrder = 0
-      ExplicitWidth = 1012
       object Label19: TLabel
         Left = 7
         Top = 7
@@ -695,15 +727,13 @@ object frmMain: TfrmMain
     object pcMain: TPageControl
       Left = 0
       Top = 29
-      Width = 1008
+      Width = 1021
       Height = 507
       ActivePage = TabSheet1
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 1012
       object TabSheet1: TTabSheet
         Caption = 'Options'
-        ExplicitWidth = 1004
         object GroupBox1: TGroupBox
           Left = 0
           Top = 0
@@ -807,12 +837,11 @@ object frmMain: TfrmMain
         object pcOptions: TPageControl
           Left = 270
           Top = 0
-          Width = 730
+          Width = 743
           Height = 444
           ActivePage = TabSheet8
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 734
           object TabSheet5: TTabSheet
             Caption = 'Tabs'
             ExplicitLeft = 0
@@ -822,7 +851,7 @@ object frmMain: TfrmMain
             object GroupBox3: TGroupBox
               Left = 0
               Top = 0
-              Width = 726
+              Width = 735
               Height = 185
               Align = alTop
               Caption = 'Tabs'
@@ -1065,7 +1094,7 @@ object frmMain: TfrmMain
             object GroupBox5: TGroupBox
               Left = 0
               Top = 185
-              Width = 726
+              Width = 735
               Height = 118
               Align = alTop
               Caption = 'Modified Glow'
@@ -1174,12 +1203,11 @@ object frmMain: TfrmMain
             object GroupBox6: TGroupBox
               Left = 0
               Top = 303
-              Width = 722
+              Width = 735
               Height = 90
               Align = alTop
               Caption = 'Mouse Glow'
               TabOrder = 2
-              ExplicitWidth = 726
               object pnlMouseGlow: TPanel
                 Left = 3
                 Top = 43
@@ -1287,7 +1315,7 @@ object frmMain: TfrmMain
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
-              Width = 726
+              Width = 735
               Height = 172
               Align = alTop
               Caption = 'Default Font'
@@ -1394,12 +1422,11 @@ object frmMain: TfrmMain
             object GroupBox10: TGroupBox
               Left = 0
               Top = 172
-              Width = 722
+              Width = 735
               Height = 151
               Align = alTop
               Caption = 'Display'
               TabOrder = 1
-              ExplicitWidth = 726
               object Label67: TLabel
                 Left = 13
                 Top = 99
@@ -1495,7 +1522,7 @@ object frmMain: TfrmMain
             object pcButtons: TPageControl
               Left = 0
               Top = 19
-              Width = 726
+              Width = 735
               Height = 395
               ActivePage = TabSheet11
               Align = alClient
@@ -2007,12 +2034,11 @@ object frmMain: TfrmMain
             object Panel8: TPanel
               Left = 0
               Top = 0
-              Width = 722
+              Width = 735
               Height = 19
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 1
-              ExplicitWidth = 726
               object chkScrollOverlayButtons: TCheckBox
                 Left = 0
                 Top = 0
@@ -2077,7 +2103,7 @@ object frmMain: TfrmMain
             object pnlScroll: TPanel
               Left = 0
               Top = 0
-              Width = 726
+              Width = 735
               Height = 414
               Align = alClient
               BevelOuter = bvNone
@@ -2323,16 +2349,14 @@ object frmMain: TfrmMain
           object TabSheet8: TTabSheet
             Caption = 'Animation'
             ImageIndex = 3
-            ExplicitWidth = 726
             object GroupBox8: TGroupBox
               Left = 0
               Top = 0
-              Width = 722
+              Width = 735
               Height = 185
               Align = alTop
               Caption = 'Properties'
               TabOrder = 0
-              ExplicitWidth = 726
               object Label21: TLabel
                 Left = 8
                 Top = 76
@@ -2414,9 +2438,10 @@ object frmMain: TfrmMain
                 Style = csDropDownList
                 ItemIndex = 0
                 TabOrder = 3
-                Text = 'Linear'
+                Text = 'None'
                 OnChange = OnCommonControlPropertyChange
                 Items.Strings = (
+                  'None'
                   'Linear'
                   'In Quad'
                   'Out Quad'
@@ -2448,9 +2473,10 @@ object frmMain: TfrmMain
                 Style = csDropDownList
                 ItemIndex = 0
                 TabOrder = 4
-                Text = 'Linear'
+                Text = 'None'
                 OnChange = OnCommonControlPropertyChange
                 Items.Strings = (
+                  'None'
                   'Linear'
                   'In Quad'
                   'Out Quad'
@@ -2478,12 +2504,11 @@ object frmMain: TfrmMain
             object GroupBox9: TGroupBox
               Left = 0
               Top = 185
-              Width = 722
+              Width = 735
               Height = 127
               Align = alTop
               Caption = 'Movement Animation'
               TabOrder = 1
-              ExplicitWidth = 726
               object Label30: TLabel
                 Left = 11
                 Top = 91
@@ -2589,12 +2614,11 @@ object frmMain: TfrmMain
             object pnlDragDrop: TPanel
               Left = 0
               Top = 0
-              Width = 722
+              Width = 735
               Height = 414
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitWidth = 726
               object Label31: TLabel
                 Left = 6
                 Top = 6
@@ -2729,12 +2753,11 @@ object frmMain: TfrmMain
         object Panel7: TPanel
           Left = 0
           Top = 444
-          Width = 1000
+          Width = 1013
           Height = 33
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
-          ExplicitWidth = 1004
           object btnSaveOptions: TButton
             Left = 133
             Top = 0
@@ -2784,16 +2807,15 @@ object frmMain: TfrmMain
         object Panel5: TPanel
           Left = 169
           Top = 0
-          Width = 831
+          Width = 844
           Height = 444
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitWidth = 835
           object pnlLookAndFeelPath: TPanel
             Left = 0
             Top = 0
-            Width = 835
+            Width = 844
             Height = 25
             Align = alTop
             Alignment = taLeftJustify
@@ -2810,7 +2832,7 @@ object frmMain: TfrmMain
           object ScrollBox1: TScrollBox
             Left = 0
             Top = 25
-            Width = 835
+            Width = 844
             Height = 419
             HorzScrollBar.Smooth = True
             HorzScrollBar.Style = ssHotTrack
@@ -2827,12 +2849,11 @@ object frmMain: TfrmMain
         object Panel6: TPanel
           Left = 0
           Top = 444
-          Width = 1000
+          Width = 1013
           Height = 33
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
-          ExplicitWidth = 1004
           object btnSaveLookAndFeel: TButton
             Left = 133
             Top = 0
@@ -2947,7 +2968,7 @@ object frmMain: TfrmMain
         object Panel2: TPanel
           Left = 0
           Top = 63
-          Width = 1004
+          Width = 1013
           Height = 414
           Align = alClient
           BevelOuter = bvNone
@@ -2955,7 +2976,7 @@ object frmMain: TfrmMain
           object gbOtherEvents: TGroupBox
             Left = 685
             Top = 0
-            Width = 319
+            Width = 328
             Height = 414
             Align = alClient
             Caption = 'Other Events'
@@ -3039,14 +3060,13 @@ object frmMain: TfrmMain
         object Panel4: TPanel
           Left = 0
           Top = 0
-          Width = 1000
+          Width = 1013
           Height = 63
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitWidth = 1004
           DesignSize = (
-            1000
+            1013
             63)
           object Label13: TLabel
             Left = 1
@@ -3067,12 +3087,11 @@ object frmMain: TfrmMain
           object edtStates: TEdit
             Left = 1
             Top = 36
-            Width = 997
+            Width = 1010
             Height = 23
             Anchors = [akLeft, akTop, akRight]
             ReadOnly = True
             TabOrder = 1
-            ExplicitWidth = 1001
           end
         end
       end
@@ -3086,7 +3105,7 @@ object frmMain: TfrmMain
         object Panel10: TPanel
           Left = 0
           Top = 0
-          Width = 1004
+          Width = 1013
           Height = 19
           Align = alTop
           BevelOuter = bvNone

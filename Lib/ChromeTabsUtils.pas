@@ -76,6 +76,11 @@ implementation
 function CalculateEase(CurrentTime, StartValue, ChangeInValue, Duration: Real; EaseType: TChromeTabsEaseType): Real;
 begin
   case EaseType of
+    ttNone:
+      begin
+        Result := 0;
+      end;
+
     ttLinearTween:
       begin
         Result := ChangeInValue * CurrentTime / Duration + StartValue;

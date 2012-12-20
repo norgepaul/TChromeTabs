@@ -108,7 +108,7 @@ type
   TOnTabDragOver = procedure(Sender: TObject; X, Y: Integer; State: TDragState; DragTabObject: IDragTabObject; var Accept: Boolean) of object;
   TOnTabDragDrop = procedure(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions) of object;
   TOnTabDragDropped = procedure(Sender: TObject; DragTabObject: IDragTabObject; NewTab: TChromeTab) of object;
-  TOnAnimateStyleTransisiton = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationSteps: Integer; var Animate: Boolean) of object;
+  TOnAnimateStyleTransisiton = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Integer; var EaseType: TChromeTabsEaseType) of object;
 
   // Why do we need this fix?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -260,6 +260,9 @@ type
     function GetBidiScrollOffset: Integer;
     function BidiXPos(X: Integer): Integer;
     function SameBidiMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
+    function AnimationEnabled(AnimationTypes: TChromeTabsMovementAnimationTypes): Boolean;
+    procedure SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; MovementAnimationTypes: TChromeTabsMovementAnimationTypes = nil);
+    procedure SetControlLeft(ChromeTabsControl: TBaseChromeTabsControl; ALeft: Integer; MovementAnimationTypes: TChromeTabsMovementAnimationTypes = nil);
   protected
     // ** Important, often called procedures ** //
     procedure RepositionTabs; virtual;
@@ -312,7 +315,7 @@ type
     procedure DoOnScrollWidthChanged; virtual;
     procedure DoPopup(Sender: TObject; APoint: TPoint); virtual;
     procedure DoPopupClick(Sender: TObject); virtual;
-    procedure DoOnAnimateStyleTransisiton(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var Animate: Boolean; var AnimationSteps: Integer); virtual;
+    procedure DoOnAnimateStyleTransisiton(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Integer; var EaseType: TChromeTabsEaseType); virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -645,7 +648,8 @@ begin
       Tabs.Move(Result.Index, FActiveDragTabObject.DropTabIndex);
 
       // Move the dropped tab to a new position
-      TabControls[FActiveDragTabObject.DropTabIndex].SetPosition(FDragTabControl.ControlRect, FALSE);
+      SetControlPosition(TabControls[FActiveDragTabObject.DropTabIndex],
+                         FDragTabControl.ControlRect);
 
       Result.Active := TRUE;
     finally
@@ -687,39 +691,32 @@ begin
   Result := State in FState;
 end;
 
-procedure TCustomChromeTabs.DoOnAnimateStyleTransisiton(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var Animate: Boolean; var AnimationSteps: Integer);
+procedure TCustomChromeTabs.DoOnAnimateStyleTransisiton(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Integer; var EaseType: TChromeTabsEaseType);
 begin
   if Assigned(FOnAnimateStyleTransisiton) then
-    FOnAnimateStyleTransisiton(Self, ChromeTabsControl, NewDrawState, AnimationSteps, Animate);
+    FOnAnimateStyleTransisiton(Self, ChromeTabsControl, NewDrawState, AnimationTimeMS, EaseType);
 end;
 
 procedure TCustomChromeTabs.SetControlDrawState(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; ForceUpdate: Boolean);
 var
-  AnimationSteps: Integer;
-  Animate: Boolean;
+  AnimationTimeMS: Integer;
+  EaseType: TChromeTabsEaseType;
 begin
-  Animate := ((ChromeTabsControl.DrawState = dsHot) and (NewDrawState <> dsActive)) or
-             ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive));
-(*
-  // Disable style animation for new tabs
-  if ((ChromeTabsControl.ControlType = itTab) and
-      ((ChromeTabsControl.DrawState in [dsUnknown, dsActive, dsDisabled, dsDown])) or
-       (NewDrawState = dsActive)) or
+  if (ChromeTabsControl.DrawState <> NewDrawState) or (ForceUpdate) then
+  begin
+    if ((ChromeTabsControl.DrawState = dsHot) and (NewDrawState <> dsActive)) or
+        ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive)) then
+      EaseType := FOptions.Animation.DefaultMovementEaseType
+    else
+      EaseType := ttNone;
 
-    ((ChromeTabsControl.ControlType = itAddButton) and
-     ((ChromeTabsControl.DrawState = dsDown) or
-      (NewDrawState = dsDown))) then
-    Animate := FALSE;    *)
+    AnimationTimeMS := FOptions.Animation.DefaultStyleAnimationTimeMS;
 
-  AnimationSteps := FOptions.Animation.AnimationStyleMS;
+    if ChromeTabsControl.DrawState <> NewDrawState then
+      DoOnAnimateStyleTransisiton(ChromeTabsControl, NewDrawState, AnimationTimeMS, EaseType);
 
-  if ChromeTabsControl.DrawState <> NewDrawState then
-    DoOnAnimateStyleTransisiton(ChromeTabsControl, NewDrawState, Animate, AnimationSteps);
-
-  if AnimationSteps = 0 then
-    AnimationSteps := 1;
-
-  ChromeTabsControl.SetDrawState(NewDrawState, Animate, AnimationSteps, ForceUpdate);
+    ChromeTabsControl.SetDrawState(NewDrawState, AnimationTimeMS, EaseType, ForceUpdate);
+  end;
 end;
 
 procedure TCustomChromeTabs.SetControlDrawStates(ForceUpdate: Boolean);
@@ -1065,7 +1062,7 @@ begin
 
     NewTabControl := TabControls[ATab.Index];
 
-    if (not HasState(stsLoading)) and (aeTabAdd in FOptions.Animation.AnimationMovement) then
+    if (not HasState(stsLoading)) and (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabAdd) <> ttNone) then
     begin
       LastVisibleTabIndex := GetLastVisibleTabIndex(Tabs.Count - 2); // Skip the new tab
 
@@ -1074,11 +1071,11 @@ begin
       else
         NewTabLeft := FOptions.Display.Tabs.OffsetLeft;
 
-      NewTabControl.SetPosition(Rect(NewTabLeft,
-                                     FOptions.Display.Tabs.OffsetTop,
-                                     NewTabLeft + FOptions.Animation.MinimumTabAnimationWidth,
-                                     ClientHeight - FOptions.Display.Tabs.OffsetBottom),
-                                FALSE);
+      SetControlPosition(NewTabControl,
+                         Rect(NewTabLeft,
+                              FOptions.Display.Tabs.OffsetTop,
+                              NewTabLeft + FOptions.Animation.MinimumTabAnimationWidth,
+                              ClientHeight - FOptions.Display.Tabs.OffsetBottom));
     end;
 
     // Fire the added event here before we activate the tab
@@ -1159,7 +1156,7 @@ begin
     tcDeleted:
       begin
         // We're deleting the tab but we need to animate it first
-        if (aeTabDelete in FOptions.Animation.AnimationMovement) and
+        if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
            (ATab <> nil) then
         begin
           // If the tabs are compressed and this is the last tab, don't animate
@@ -1171,7 +1168,9 @@ begin
           begin
             AddState(stsAnimatingCloseTab);
 
-            TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth, TRUE);
+            TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
+                                             FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
+                                             FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
           end;
         end;
       end;
@@ -1817,7 +1816,8 @@ begin
 
         // Note that we only set the position of the tab, the index doesn't change.
         // We will move the tab to a new index when the MouseUp event
-        DragTabControl.SetLeft(BidiXPos(X - FDragTabObject.DragCursorOffset.X), FALSE); // Never animate beacause we're dragging
+        SetControlLeft(DragTabControl,
+                       BidiXPos(X - FDragTabObject.DragCursorOffset.X)); // Never animate beacause we're dragging
 
         if FOptions.DragDrop.DragType = dtWithinContainer then
         begin
@@ -2007,15 +2007,20 @@ begin
             TempRect := TabControls[ATab.Index].ControlRect;
             try
               if (ActualDragDisplay in [ddControl, ddTabAndControl]) and (RectWidth(TabControls[ATab.Index].ControlRect) > DragControl.Width - 10) then
-                TabControls[ATab.Index].SetWidth(DragControl.Width - 10, FALSE);
+                TabControls[ATab.Index].SetWidth(DragControl.Width - 10, 0, ttNone);
 
-              TabControls[ATab.Index].SetLeft(0, FALSE);
-              TabControls[ATab.Index].SetTop(TabTop, FALSE);
+              SetControlPosition(TabControls[ATab.Index],
+                                 Rect(0,
+                                      0,
+                                      TabControls[ATab.Index].ControlRect.Right,
+                                      TabControls[ATab.Index].ControlRect.Bottom));
 
               TabControls[ATab.Index].DrawTo(DragCanvas, Bitmap, Bitmap, FLastMouseX, FLastMouseY);
             finally
               TabControls[ATab.Index].ScrollableControl := TRUE;
-              TabControls[ATab.Index].SetPosition(TempRect, FALSE);
+
+              SetControlPosition(TabControls[ATab.Index],
+                                 TempRect);
             end;
           end;
 
@@ -2392,19 +2397,19 @@ begin
   RightOffset := CorrectedClientWidth - FOptions.Display.TabContainer.PaddingRight;
 
   // Clear Rects
-  FScrollButtonLeftControl.SetPosition(Rect(0,0,0,0), FALSE);
-  FScrollButtonRightControl.SetPosition(Rect(0,0,0,0), FALSE);
-  FAddButtonControl.SetPosition(Rect(0,0,0,0), FALSE);
+  SetControlPosition(FScrollButtonLeftControl, Rect(0,0,0,0));
+  SetControlPosition(FScrollButtonRightControl, Rect(0,0,0,0));
+  SetControlPosition(FAddButtonControl, Rect(0,0,0,0));
 
   // Calculate the left offset
   if (ScrollButtonLeftVisible) and
      (FOptions.Scrolling.ScrollButtons in [csbLeft, csbLeftAndRight]) then
   begin
-    FScrollButtonLeftControl.SetPosition(Rect(LeftOffset + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
-                                              FOptions.Display.ScrollButtonLeft.Offsets.Vertical,
-                                              LeftOffset + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + FOptions.Display.ScrollButtonLeft.Width,
-                                              FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height),
-                                         FALSE);
+    SetControlPosition(FScrollButtonLeftControl,
+                       Rect(LeftOffset + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
+                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical,
+                            LeftOffset + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + FOptions.Display.ScrollButtonLeft.Width,
+                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height));
 
     Inc(LeftOffset, RectWidth(FScrollButtonLeftControl.ControlRect) + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + 1);
   end;
@@ -2413,22 +2418,22 @@ begin
   if (ScrollButtonRightVisible) and
      (FOptions.Scrolling.ScrollButtons in [csbLeft]) then
   begin
-    FScrollButtonRightControl.SetPosition(Rect(LeftOffset + FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
-                                               FOptions.Display.ScrollButtonRight.Offsets.Vertical,
-                                               LeftOffset + FOptions.Display.ScrollButtonRight.Offsets.Horizontal + FOptions.Display.ScrollButtonRight.Width,
-                                               FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height),
-                                          FALSE);
+    SetControlPosition(FScrollButtonRightControl,
+                       Rect(LeftOffset + FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
+                            FOptions.Display.ScrollButtonRight.Offsets.Vertical,
+                            LeftOffset + FOptions.Display.ScrollButtonRight.Offsets.Horizontal + FOptions.Display.ScrollButtonRight.Width,
+                            FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height));
 
     Inc(LeftOffset, RectWidth(FScrollButtonRightControl.ControlRect) + FOptions.Display.ScrollButtonRight.Offsets.Horizontal + 1);
   end;
 
   if FOptions.Display.AddButton.Visibility in [avLeft] then
   begin
-    FAddButtonControl.SetPosition(Rect(LeftOffset + FOptions.Display.AddButton.Offsets.Horizontal,
-                                       FOptions.Display.AddButton.Offsets.Vertical,
-                                       LeftOffset + FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.AddButton.Width,
-                                       FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
-                                       FALSE);
+    SetControlPosition(FAddButtonControl,
+                       Rect(LeftOffset + FOptions.Display.AddButton.Offsets.Horizontal,
+                            FOptions.Display.AddButton.Offsets.Vertical,
+                            LeftOffset + FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.AddButton.Width,
+                            FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical));
 
     Inc(LeftOffset, FOptions.Display.AddButton.Width + FOptions.Display.AddButton.Offsets.Horizontal + 1);
   end;
@@ -2437,11 +2442,11 @@ begin
   if (ScrollButtonRightVisible) and
      (FOptions.Scrolling.ScrollButtons in [csbRight, csbLeftAndRight]) then
   begin
-    FScrollButtonRightControl.SetPosition(Rect(RightOffset - FOptions.Display.ScrollButtonRight.Width - FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
-                                               FOptions.Display.ScrollButtonRight.Offsets.Vertical,
-                                               RightOffset - FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
-                                               FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height),
-                                          FALSE);
+    SetControlPosition(FScrollButtonRightControl,
+                       Rect(RightOffset - FOptions.Display.ScrollButtonRight.Width - FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
+                       FOptions.Display.ScrollButtonRight.Offsets.Vertical,
+                       RightOffset - FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
+                       FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height));
 
     Dec(RightOffset, RectWidth(FScrollButtonRightControl.ControlRect) + 1 + FOptions.Display.ScrollButtonRight.Offsets.Horizontal);
   end;
@@ -2449,11 +2454,11 @@ begin
   if (ScrollButtonLeftVisible) and
      (FOptions.Scrolling.ScrollButtons in [csbRight]) then
   begin
-    FScrollButtonLeftControl.SetPosition(Rect(RightOffset - FOptions.Display.ScrollButtonLeft.Width - FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
-                                              FOptions.Display.ScrollButtonLeft.Offsets.Vertical,
-                                              RightOffset - FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
-                                              FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height),
-                                         FALSE);
+    SetControlPosition(FScrollButtonLeftControl,
+                       Rect(RightOffset - FOptions.Display.ScrollButtonLeft.Width - FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
+                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical,
+                            RightOffset - FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
+                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height));
 
     Dec(RightOffset, RectWidth(FScrollButtonLeftControl.ControlRect) + 1 + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal);
   end;
@@ -2461,14 +2466,14 @@ begin
   if (FOptions.Display.AddButton.Visibility = avRightFixed) or
      (FOptions.Display.AddButton.Visibility = avRightFloating) then //and (GetVisibleTabCount = 0)) then
   begin
-    FAddButtonControl.SetPosition(Rect(RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal,
-                                       FOptions.Display.AddButton.Offsets.Vertical,
-                                       RightOffset - FOptions.Display.AddButton.Offsets.Horizontal,
-                                       FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
-                                   FALSE);
+    SetControlPosition(FAddButtonControl,
+                       Rect(RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal,
+                            FOptions.Display.AddButton.Offsets.Vertical,
+                            RightOffset - FOptions.Display.AddButton.Offsets.Horizontal,
+                            FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical));
 
     if (FOptions.Display.AddButton.Visibility = avRightFloating) and (GetVisibleTabCount = 0) then
-      FAddButtonControl.SetLeft(0, aeAddButtonMove in FOptions.Animation.AnimationMovement)
+      SetControlLeft(FAddButtonControl, 0, FOptions.Animation.MovementAnimations.AddButtonMove)
     else
       Dec(RightOffset, FOptions.Display.AddButton.Width + 1 + FOptions.Display.AddButton.Offsets.Horizontal);
   end;
@@ -2510,6 +2515,43 @@ function TCustomChromeTabs.SameBidiMode(BidiMode1, BiDiMode2: TBidiMode): Boolea
 begin
   Result := ((BidiMode1 in [bdLeftToRight, bdRightToLeft]) and (BidiMode2 in [bdLeftToRight, bdRightToLeft])) or
             ((BidiMode1 in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]) and (BidiMode2 in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]))
+end;
+
+function TCustomChromeTabs.AnimationEnabled(AnimationTypes: TChromeTabsMovementAnimationTypes): Boolean;
+begin
+  Result := FOptions.Animation.GetMovementAnimationEaseType(AnimationTypes) <> ttNone;
+end;
+
+
+procedure TCustomChromeTabs.SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
+var
+  EaseType: TChromeTabsEaseType;
+  AnimationTime: Cardinal;
+begin
+  if MovementAnimationTypes = nil then
+  begin
+    EaseType := ttNone;
+    AnimationTime := 0;
+  end
+  else
+  begin
+    EaseType := FOptions.Animation.GetMovementAnimationEaseType(MovementAnimationTypes);
+    AnimationTime := FOptions.Animation.GetMovementAnimationTime(MovementAnimationTypes);
+  end;
+
+  ChromeTabsControl.SetPosition(ControlRect,
+                                AnimationTime,
+                                EaseType);
+end;
+
+procedure TCustomChromeTabs.SetControlLeft(ChromeTabsControl: TBaseChromeTabsControl; ALeft: Integer; MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
+begin
+  SetControlPosition(ChromeTabsControl,
+                     Rect(ALeft,
+                          ChromeTabsControl.ControlRect.Top,
+                          RectWidth(ChromeTabsControl.ControlRect) + ALeft,
+                          ChromeTabsControl.ControlRect.Bottom),
+                     MovementAnimationTypes);
 end;
 
 procedure TCustomChromeTabs.RepositionTabs;
@@ -2585,7 +2627,7 @@ procedure TCustomChromeTabs.RepositionTabs;
       RealClosedTabIndex := FClosedTabIndex;
 
       // If we're animating, the deleted tab still exists
-      if (aeTabDelete in FOptions.Animation.AnimationMovement) and
+      if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
          (HasState(stsAnimatingCloseTab)) then
         Inc(RealClosedTabIndex);
 
@@ -2602,11 +2644,12 @@ procedure TCustomChromeTabs.RepositionTabs;
       if not Tabs[i].MarkedForDeletion then
       begin
         // Set the position of the tabs
-        TabControl.SetPosition(Rect(TabLeft,
-                                    FOptions.Display.Tabs.OffsetTop,
-                                    TabLeft + TabWidth,
-                                    ClientHeight - FOptions.Display.Tabs.OffsetBottom),
-                               aeTabMove in FOptions.Animation.AnimationMovement);
+        SetControlPosition(TabControl,
+                           Rect(TabLeft,
+                                FOptions.Display.Tabs.OffsetTop,
+                                TabLeft + TabWidth,
+                                ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                           FOptions.Animation.MovementAnimations.TabMove);
       end;
 
       TabLeft := TabLeft + TabWidth - FOptions.Display.Tabs.TabOverlap;
@@ -2624,6 +2667,7 @@ procedure TCustomChromeTabs.RepositionTabs;
     CursorPos: TPoint;
     BiDiX: Integer;
     ExtraTabWidth: Integer;
+    EaseType: TChromeTabsEaseType;
   begin
     // Set the start and end tab indices
     if PinnedTabs then
@@ -2653,11 +2697,11 @@ procedure TCustomChromeTabs.RepositionTabs;
       if not SameBidiMode(BiDiMode, FActiveDragTabObject.SourceControl.GetBidiMode) then
         BiDiX := -BidiX;
 
-      DragTabControl.SetPosition(Rect(BidiXPos(CursorPos.X - BiDiX),
-                                      ControlRect.Top + FOptions.Display.Tabs.OffsetTop,
-                                      BidiXPos(CursorPos.X - BiDiX) + TabWidth,
-                                      ControlRect.Bottom - FOptions.Display.Tabs.OffsetBottom),
-                                      FALSE);
+      SetControlPosition(DragTabControl,
+                         Rect(BidiXPos(CursorPos.X - BiDiX),
+                              ControlRect.Top + FOptions.Display.Tabs.OffsetTop,
+                              BidiXPos(CursorPos.X - BiDiX) + TabWidth,
+                              ControlRect.Bottom - FOptions.Display.Tabs.OffsetBottom));
     end;
 
     // Step through the tabs
@@ -2734,12 +2778,18 @@ procedure TCustomChromeTabs.RepositionTabs;
           else       *)
           ExtraTabWidth := 0;
 
-          TabControl.SetPosition(Rect(TabLeft - ExtraTabWidth,
-                                      FOptions.Display.Tabs.OffsetTop,
-                                      TabLeft + TabWidth + FOptions.Display.Tabs.TabOverlap + ExtraTabWidth,
-                                      ClientHeight - FOptions.Display.Tabs.OffsetBottom),
-                                 (aeTabMove in FOptions.Animation.AnimationMovement) and
-                                 (not HasState(stsResizing) and (ExtraTabWidth = 0)));
+          if (HasState(stsResizing)) or
+             (ExtraTabWidth <> 0) then
+            EaseType := ttNone
+          else
+            EaseType := FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabMove);
+
+          SetControlPosition(TabControl,
+                             Rect(TabLeft - ExtraTabWidth,
+                                  FOptions.Display.Tabs.OffsetTop,
+                                  TabLeft + TabWidth + FOptions.Display.Tabs.TabOverlap + ExtraTabWidth,
+                                  ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                             FOptions.Animation.MovementAnimations.TabMove);
 
           TabLeft := TabLeft + TabWidth + TabWidthAddition;
           FScrollWidth := FScrollWidth + TabWidth + TabWidthAddition;
@@ -2808,25 +2858,27 @@ begin
     begin
       // Reposition the add button to the end of the tabs
       if GetLastVisibleTabIndex(Tabs.Count - 1) = -1 then
-        FAddButtonControl.SetLeft(0, FALSE)
+        SetControlLeft(FAddButtonControl, 0)
       else
       begin
         if (TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].ControlRect.Right < FAddButtonControl.ControlRect.Left - FOptions.Display.AddButton.Offsets.Horizontal) or
            (HasState(stsTabDeleted)) then
         begin
-          if (aeAddButtonMove in FOptions.Animation.AnimationMovement) and
+          if (AnimationEnabled(FOptions.Animation.MovementAnimations.AddButtonMove)) and
              (not HasState(stsEndTabDeleted)) then
             AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].ControlRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating
           else
             AddButtonLeft := TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating;
 
           // Move the button to the first animation position
-          FAddButtonControl.SetLeft(AddButtonLeft, FALSE);
+          SetControlLeft(FAddButtonControl, AddButtonLeft);
 
           // Set the end animation point
-          if (aeAddButtonMove in FOptions.Animation.AnimationMovement) and
+          if (AnimationEnabled(FOptions.Animation.MovementAnimations.AddButtonMove)) and
              (not HasState(stsEndTabDeleted)) then
-            FAddButtonControl.SetLeft(TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating, TRUE);
+            SetControlLeft(FAddButtonControl,
+                           TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right + 1 + FOptions.Display.AddButton.Offsets.HorizontalFloating,
+                           FOptions.Animation.MovementAnimations.AddButtonMove);
         end;
       end;
     end;
@@ -2973,9 +3025,9 @@ begin
   ScrollOffset := 0;
 
   // Fix the draw states
-  FAddButtonControl.SetDrawState(dsNotActive, FALSE, 1, TRUE);
-  FScrollButtonLeftControl.SetDrawState(dsNotActive, FALSE, 1, TRUE);
-  FScrollButtonRightControl.SetDrawState(dsNotActive, FALSE, 1, TRUE);
+  FAddButtonControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+  FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+  FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
   SetControlDrawStates(TRUE);
 
   AddState(stsFirstPaint);
@@ -3115,7 +3167,7 @@ begin
 
   // Reset the position of the drag tab
   if FDragTabControl <> nil then
-    FDragTabControl.SetLeft(FDragTabControl.ControlRect.Left + ScrollOffset, FALSE);
+    SetControlLeft(FDragTabControl, FDragTabControl.ControlRect.Left + ScrollOffset);
 
   DoOnTabDragDrop(X, Y, DragTabObject, Cancelled, TabDropOptions);
 end;
