@@ -799,13 +799,9 @@ type
     FTabAdd: TChromeTabsMovementAnimationTypes;
     FTabDelete: TChromeTabsMovementAnimationTypes;
     FTabMove: TChromeTabsMovementAnimationTypes;
-    FTabDragCancelled: TChromeTabsMovementAnimationTypes;
-    FAddButtonMove: TChromeTabsMovementAnimationTypes;
 
-    procedure SetAddButtonMove(const Value: TChromeTabsMovementAnimationTypes);
     procedure SetTabAdd(const Value: TChromeTabsMovementAnimationTypes);
     procedure SetTabDelete(const Value: TChromeTabsMovementAnimationTypes);
-    procedure SetTabDragCancelled(const Value: TChromeTabsMovementAnimationTypes);
     procedure SetTabMove(const Value: TChromeTabsMovementAnimationTypes);
   public
     constructor Create(AOwner: TPersistent); override;
@@ -814,8 +810,6 @@ type
     property TabAdd: TChromeTabsMovementAnimationTypes read FTabAdd write SetTabAdd;
     property TabDelete: TChromeTabsMovementAnimationTypes read FTabDelete write SetTabDelete;
     property TabMove: TChromeTabsMovementAnimationTypes read FTabMove write SetTabMove;
-    property TabDragCancelled: TChromeTabsMovementAnimationTypes read FTabDragCancelled write SetTabDragCancelled;
-    property AddButtonMove: TChromeTabsMovementAnimationTypes read FAddButtonMove write SetAddButtonMove;
   end;
 
   TChromeTabsAnimationOptions = class(TChromeTabsPersistent)
@@ -2165,7 +2159,7 @@ begin
 
   FMovementEasing := TChromeTabsMovementAnimations.Create(Self);
 
-  FDefaultMovementAnimationTimeMS := 300;
+  FDefaultMovementAnimationTimeMS := 100;
   FDefaultStyleAnimationTimeMS := 300;
   FAnimationTimerInterval := 25;
   FMinimumTabAnimationWidth := 40;
@@ -2230,7 +2224,7 @@ end;
 function TChromeTabsAnimationOptions.GetMovementAnimationTime(AnimationTypes: TChromeTabsMovementAnimationTypes): Cardinal;
 begin
   if AnimationTypes.UseDefaultEaseType then
-    Result := FDefaultStyleAnimationTimeMS
+    Result := FDefaultMovementAnimationTimeMS
   else
     Result := AnimationTypes.FAnimationTimeMS;
 end;
@@ -3452,18 +3446,11 @@ begin
   FTabAdd := TChromeTabsMovementAnimationTypes.Create(Self);
   FTabDelete := TChromeTabsMovementAnimationTypes.Create(Self);
   FTabMove := TChromeTabsMovementAnimationTypes.Create(Self);
-  FTabDragCancelled := TChromeTabsMovementAnimationTypes.Create(Self);
-  FAddButtonMove := TChromeTabsMovementAnimationTypes.Create(Self);
 
   FTabMove.FUseDefaultEaseType := FALSE;
   FTabMove.FUseDefaultAnimationTime := FALSE;
   FTabMove.EaseType := ttEaseOutExpo;
   FTabMove.AnimationTimeMS := 800;
-
-  FTabDragCancelled.FUseDefaultEaseType := FALSE;
-  FTabDragCancelled.FUseDefaultAnimationTime := FALSE;
-  FTabDragCancelled.EaseType := ttEaseOutExpo;
-  FTabDragCancelled.AnimationTimeMS := 800;
 end;
 
 destructor TChromeTabsMovementAnimations.Destroy;
@@ -3471,18 +3458,8 @@ begin
   FreeAndNil(FTabAdd);
   FreeAndNil(FTabDelete);
   FreeAndNil(FTabMove);
-  FreeAndNil(FTabDragCancelled);
-  FreeAndNil(FAddButtonMove);
 
   inherited;
-end;
-
-procedure TChromeTabsMovementAnimations.SetAddButtonMove(
-  const Value: TChromeTabsMovementAnimationTypes);
-begin
-  FAddButtonMove.Assign(Value);
-
-  DoChanged;
 end;
 
 procedure TChromeTabsMovementAnimations.SetTabAdd(
@@ -3497,14 +3474,6 @@ procedure TChromeTabsMovementAnimations.SetTabDelete(
   const Value: TChromeTabsMovementAnimationTypes);
 begin
   FTabDelete.Assign(Value);
-
-  DoChanged;
-end;
-
-procedure TChromeTabsMovementAnimations.SetTabDragCancelled(
-  const Value: TChromeTabsMovementAnimationTypes);
-begin
-  FTabDragCancelled.Assign(Value);
 
   DoChanged;
 end;

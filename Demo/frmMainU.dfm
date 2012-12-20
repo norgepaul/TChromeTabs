@@ -28,7 +28,6 @@ object frmMain: TfrmMain
     OnGetControlPolygons = ChromeTabs1GetControlPolygons
     OnScroll = ChromeTabs1Scroll
     OnScrollWidthChanged = ChromeTabs1ScrollWidthChanged
-    OnAnimateStyleTransisiton = ChromeTabs1AnimateStyleTransisiton
     ActiveTabIndex = 0
     Images = ImageList1
     ImagesOverlay = ImageList2
@@ -101,7 +100,7 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
-    Options.Animation.DefaultMovementAnimationTimeMS = 300
+    Options.Animation.DefaultMovementAnimationTimeMS = 100
     Options.Animation.DefaultStyleAnimationTimeMS = 300
     Options.Animation.AnimationTimerInterval = 15
     Options.Animation.MinimumTabAnimationWidth = 40
@@ -119,14 +118,6 @@ object frmMain: TfrmMain
     Options.Animation.MovementAnimations.TabMove.UseDefaultAnimationTime = False
     Options.Animation.MovementAnimations.TabMove.EaseType = ttEaseOutExpo
     Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 800
-    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultEaseType = False
-    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultAnimationTime = False
-    Options.Animation.MovementAnimations.TabDragCancelled.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabDragCancelled.AnimationTimeMS = 800
-    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultEaseType = True
-    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultAnimationTime = True
-    Options.Animation.MovementAnimations.AddButtonMove.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.AddButtonMove.AnimationTimeMS = 800
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -439,11 +430,11 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
-    Options.Animation.DefaultMovementAnimationTimeMS = 500
+    Options.Animation.DefaultMovementAnimationTimeMS = 100
     Options.Animation.DefaultStyleAnimationTimeMS = 300
     Options.Animation.AnimationTimerInterval = 15
     Options.Animation.MinimumTabAnimationWidth = 40
-    Options.Animation.DefaultMovementEaseType = ttEaseOutExpo
+    Options.Animation.DefaultMovementEaseType = ttLinearTween
     Options.Animation.DefaultStyleEaseType = ttLinearTween
     Options.Animation.MovementAnimations.TabAdd.UseDefaultEaseType = True
     Options.Animation.MovementAnimations.TabAdd.UseDefaultAnimationTime = True
@@ -457,14 +448,6 @@ object frmMain: TfrmMain
     Options.Animation.MovementAnimations.TabMove.UseDefaultAnimationTime = True
     Options.Animation.MovementAnimations.TabMove.EaseType = ttEaseOutExpo
     Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 800
-    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultEaseType = True
-    Options.Animation.MovementAnimations.TabDragCancelled.UseDefaultAnimationTime = True
-    Options.Animation.MovementAnimations.TabDragCancelled.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabDragCancelled.AnimationTimeMS = 800
-    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultEaseType = True
-    Options.Animation.MovementAnimations.AddButtonMove.UseDefaultAnimationTime = True
-    Options.Animation.MovementAnimations.AddButtonMove.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.AddButtonMove.AnimationTimeMS = 800
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -844,10 +827,6 @@ object frmMain: TfrmMain
           TabOrder = 1
           object TabSheet5: TTabSheet
             Caption = 'Tabs'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object GroupBox3: TGroupBox
               Left = 0
               Top = 0
@@ -1308,10 +1287,6 @@ object frmMain: TfrmMain
           object TabSheet7: TTabSheet
             Caption = 'Text'
             ImageIndex = 6
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
@@ -1515,10 +1490,6 @@ object frmMain: TfrmMain
           object TabSheet4: TTabSheet
             Caption = 'Buttons'
             ImageIndex = 5
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object pcButtons: TPageControl
               Left = 0
               Top = 19
@@ -1530,10 +1501,6 @@ object frmMain: TfrmMain
               object TabSheet11: TTabSheet
                 Caption = 'Close Buttons'
                 ImageIndex = 1
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label4: TLabel
                   Left = 11
                   Top = 6
@@ -1684,10 +1651,6 @@ object frmMain: TfrmMain
               object TabSheet12: TTabSheet
                 Caption = 'Add Button'
                 ImageIndex = 2
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label29: TLabel
                   Left = 11
                   Top = 6
@@ -1822,10 +1785,6 @@ object frmMain: TfrmMain
               object TabSheet13: TTabSheet
                 Caption = 'Scroll Buttons'
                 ImageIndex = 3
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label25: TLabel
                   Left = 11
                   Top = 7
@@ -2053,10 +2012,6 @@ object frmMain: TfrmMain
           object TabSheet10: TTabSheet
             Caption = 'Internationlization'
             ImageIndex = 8
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label69: TLabel
               Left = 3
               Top = 6
@@ -2085,10 +2040,6 @@ object frmMain: TfrmMain
           object Scrolling: TTabSheet
             Caption = 'Scrolling'
             ImageIndex = 4
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object chkScrolling: TCheckBox
               Left = 3
               Top = 3
@@ -2225,10 +2176,6 @@ object frmMain: TfrmMain
           object TabSheet6: TTabSheet
             Caption = 'Tab Container'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label20: TLabel
               Left = 3
               Top = 4
@@ -2269,10 +2216,6 @@ object frmMain: TfrmMain
           object TabSheet2: TTabSheet
             Caption = 'Behaviour'
             ImageIndex = 2
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label53: TLabel
               Left = 24
               Top = 118
@@ -2353,24 +2296,24 @@ object frmMain: TfrmMain
               Left = 0
               Top = 0
               Width = 735
-              Height = 185
+              Height = 177
               Align = alTop
-              Caption = 'Properties'
+              Caption = 'Default Animation Properties'
               TabOrder = 0
               object Label21: TLabel
                 Left = 8
                 Top = 76
-                Width = 81
+                Width = 122
                 Height = 15
-                Caption = 'Movement MS:'
+                Caption = 'Default Movement MS:'
                 FocusControl = edtAnimationStepsMovement
               end
               object Label22: TLabel
                 Left = 8
-                Top = 135
-                Width = 48
+                Top = 127
+                Width = 89
                 Height = 15
-                Caption = 'Style MS:'
+                Caption = 'Default Style MS:'
                 FocusControl = edtAnimationStepsStyle
               end
               object Label23: TLabel
@@ -2382,25 +2325,25 @@ object frmMain: TfrmMain
                 FocusControl = edtAnimationUpdate
               end
               object Label70: TLabel
-                Left = 132
+                Left = 164
                 Top = 76
-                Width = 116
+                Width = 157
                 Height = 15
-                Caption = 'Movement Ease Type:'
+                Caption = 'Default Movement Ease Type:'
                 FocusControl = cbMovementEaseType
               end
               object Label72: TLabel
-                Left = 132
-                Top = 135
-                Width = 83
+                Left = 164
+                Top = 127
+                Width = 124
                 Height = 15
-                Caption = 'Style Ease Type:'
+                Caption = 'Default Style Ease Type:'
                 FocusControl = cbStyleEaseType
               end
               object edtAnimationStepsMovement: TSpinEdit
                 Left = 8
                 Top = 93
-                Width = 118
+                Width = 148
                 Height = 24
                 MaxValue = 65535
                 MinValue = 1
@@ -2410,8 +2353,8 @@ object frmMain: TfrmMain
               end
               object edtAnimationStepsStyle: TSpinEdit
                 Left = 8
-                Top = 152
-                Width = 118
+                Top = 144
+                Width = 148
                 Height = 24
                 MaxValue = 65535
                 MinValue = 1
@@ -2422,7 +2365,7 @@ object frmMain: TfrmMain
               object edtAnimationUpdate: TSpinEdit
                 Left = 8
                 Top = 40
-                Width = 118
+                Width = 148
                 Height = 24
                 MaxValue = 65535
                 MinValue = 1
@@ -2431,9 +2374,9 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object cbMovementEaseType: TComboBox
-                Left = 132
+                Left = 164
                 Top = 93
-                Width = 129
+                Width = 165
                 Height = 23
                 Style = csDropDownList
                 ItemIndex = 0
@@ -2466,9 +2409,9 @@ object frmMain: TfrmMain
                   'In Out Circ')
               end
               object cbStyleEaseType: TComboBox
-                Left = 132
-                Top = 152
-                Width = 129
+                Left = 164
+                Top = 144
+                Width = 165
                 Height = 23
                 Style = csDropDownList
                 ItemIndex = 0
@@ -2503,97 +2446,257 @@ object frmMain: TfrmMain
             end
             object GroupBox9: TGroupBox
               Left = 0
-              Top = 185
+              Top = 177
               Width = 735
-              Height = 127
+              Height = 177
               Align = alTop
-              Caption = 'Movement Animation'
+              Caption = 'Specific Animations'
               TabOrder = 1
-              object Label30: TLabel
-                Left = 11
-                Top = 91
-                Width = 377
-                Height = 33
-                AutoSize = False
-                Caption = 
-                  'Style transition animation properties can be set in the OnAnimat' +
-                  'eStyleTransisiton event'
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clGray
-                Font.Height = -12
-                Font.Name = 'Segoe UI'
-                Font.Style = []
-                ParentFont = False
-                WordWrap = True
-              end
-              object chkAnimationAddTab: TCheckBox
-                Left = 11
-                Top = 21
-                Width = 151
-                Height = 17
-                Caption = 'Add Tab'
-                Checked = True
-                State = cbChecked
+              object GroupBox11: TGroupBox
+                Left = 337
+                Top = 17
+                Width = 168
+                Height = 158
+                Align = alLeft
+                Caption = 'Move Tab'
                 TabOrder = 0
-                OnClick = OnCommonMovementAnimationClick
+                object Label30: TLabel
+                  Left = 24
+                  Top = 52
+                  Width = 81
+                  Height = 15
+                  Caption = 'Movement MS:'
+                  FocusControl = edtMoveTabTime
+                end
+                object Label73: TLabel
+                  Left = 24
+                  Top = 103
+                  Width = 116
+                  Height = 15
+                  Caption = 'Movement Ease Type:'
+                  FocusControl = cbMoveTabEase
+                end
+                object chkMoveTabDefaults: TCheckBox
+                  Left = 8
+                  Top = 24
+                  Width = 97
+                  Height = 17
+                  Caption = 'Use defaults'
+                  TabOrder = 0
+                  OnClick = OnCommonControlPropertyChange
+                end
+                object edtMoveTabTime: TSpinEdit
+                  Left = 24
+                  Top = 69
+                  Width = 118
+                  Height = 24
+                  MaxValue = 65535
+                  MinValue = 1
+                  TabOrder = 1
+                  Value = 500
+                  OnChange = OnCommonControlPropertyChange
+                end
+                object cbMoveTabEase: TComboBox
+                  Left = 24
+                  Top = 120
+                  Width = 129
+                  Height = 23
+                  Style = csDropDownList
+                  ItemIndex = 0
+                  TabOrder = 2
+                  Text = 'None'
+                  OnChange = OnCommonControlPropertyChange
+                  Items.Strings = (
+                    'None'
+                    'Linear'
+                    'In Quad'
+                    'Out Quad'
+                    'In Out Quad'
+                    'In Cubic'
+                    'Out Cubic'
+                    'In Out Cubic'
+                    'In Quart'
+                    'Out Quart'
+                    'In Out Quart'
+                    'In Quint'
+                    'Out Quint'
+                    'In Out Quint'
+                    'In Sine'
+                    'Out Sine'
+                    'In Out Sine'
+                    'In Expo'
+                    'Out Expo'
+                    'In Out Expo'
+                    'In Circ'
+                    'Out Circ'
+                    'In Out Circ')
+                end
               end
-              object chkAnimationTabMovements: TCheckBox
-                Tag = 2
-                Left = 11
-                Top = 44
-                Width = 162
-                Height = 17
-                Caption = 'Tab Movements'
-                Checked = True
-                State = cbChecked
-                TabOrder = 2
-                OnClick = OnCommonMovementAnimationClick
-              end
-              object chkAnimationDragCancelled: TCheckBox
-                Tag = 3
-                Left = 179
-                Top = 44
-                Width = 180
-                Height = 17
-                Caption = 'Tab Drag Cancelled'
-                Checked = True
-                State = cbChecked
-                TabOrder = 3
-                OnClick = OnCommonMovementAnimationClick
-              end
-              object chkAnimationAddButtonMove: TCheckBox
-                Tag = 4
-                Left = 11
-                Top = 68
-                Width = 158
-                Height = 17
-                Caption = 'Add Button Move'
-                Checked = True
-                State = cbChecked
-                TabOrder = 4
-                OnClick = OnCommonMovementAnimationClick
-              end
-              object chkAnimationDeleteTab: TCheckBox
-                Tag = 1
-                Left = 179
-                Top = 21
-                Width = 158
-                Height = 17
+              object GroupBox12: TGroupBox
+                Left = 169
+                Top = 17
+                Width = 168
+                Height = 158
+                Align = alLeft
                 Caption = 'Delete Tab'
-                Checked = True
-                State = cbChecked
                 TabOrder = 1
-                OnClick = OnCommonMovementAnimationClick
+                object Label74: TLabel
+                  Left = 24
+                  Top = 52
+                  Width = 81
+                  Height = 15
+                  Caption = 'Movement MS:'
+                  FocusControl = edtDeleteTabTime
+                end
+                object Label75: TLabel
+                  Left = 24
+                  Top = 103
+                  Width = 116
+                  Height = 15
+                  Caption = 'Movement Ease Type:'
+                  FocusControl = cbDeleteTabEase
+                end
+                object chkDeleteTabDefaults: TCheckBox
+                  Left = 8
+                  Top = 24
+                  Width = 97
+                  Height = 17
+                  Caption = 'Use defaults'
+                  TabOrder = 0
+                  OnClick = OnCommonControlPropertyChange
+                end
+                object edtDeleteTabTime: TSpinEdit
+                  Left = 24
+                  Top = 69
+                  Width = 118
+                  Height = 24
+                  MaxValue = 65535
+                  MinValue = 1
+                  TabOrder = 1
+                  Value = 500
+                  OnChange = OnCommonControlPropertyChange
+                end
+                object cbDeleteTabEase: TComboBox
+                  Left = 24
+                  Top = 120
+                  Width = 129
+                  Height = 23
+                  Style = csDropDownList
+                  ItemIndex = 0
+                  TabOrder = 2
+                  Text = 'None'
+                  OnChange = OnCommonControlPropertyChange
+                  Items.Strings = (
+                    'None'
+                    'Linear'
+                    'In Quad'
+                    'Out Quad'
+                    'In Out Quad'
+                    'In Cubic'
+                    'Out Cubic'
+                    'In Out Cubic'
+                    'In Quart'
+                    'Out Quart'
+                    'In Out Quart'
+                    'In Quint'
+                    'Out Quint'
+                    'In Out Quint'
+                    'In Sine'
+                    'Out Sine'
+                    'In Out Sine'
+                    'In Expo'
+                    'Out Expo'
+                    'In Out Expo'
+                    'In Circ'
+                    'Out Circ'
+                    'In Out Circ')
+                end
+              end
+              object GroupBox13: TGroupBox
+                Left = 2
+                Top = 17
+                Width = 167
+                Height = 158
+                Align = alLeft
+                Caption = 'Add Tab'
+                TabOrder = 2
+                object Label76: TLabel
+                  Left = 24
+                  Top = 52
+                  Width = 81
+                  Height = 15
+                  Caption = 'Movement MS:'
+                  FocusControl = edtAddTabTime
+                end
+                object Label77: TLabel
+                  Left = 24
+                  Top = 103
+                  Width = 116
+                  Height = 15
+                  Caption = 'Movement Ease Type:'
+                  FocusControl = cbAddTabEase
+                end
+                object chkAddTabDefaults: TCheckBox
+                  Left = 8
+                  Top = 24
+                  Width = 97
+                  Height = 17
+                  Caption = 'Use defaults'
+                  TabOrder = 0
+                  OnClick = OnCommonControlPropertyChange
+                end
+                object edtAddTabTime: TSpinEdit
+                  Left = 24
+                  Top = 69
+                  Width = 118
+                  Height = 24
+                  MaxValue = 65535
+                  MinValue = 1
+                  TabOrder = 1
+                  Value = 500
+                  OnChange = OnCommonControlPropertyChange
+                end
+                object cbAddTabEase: TComboBox
+                  Left = 24
+                  Top = 120
+                  Width = 129
+                  Height = 23
+                  Style = csDropDownList
+                  ItemIndex = 0
+                  TabOrder = 2
+                  Text = 'None'
+                  OnChange = OnCommonControlPropertyChange
+                  Items.Strings = (
+                    'None'
+                    'Linear'
+                    'In Quad'
+                    'Out Quad'
+                    'In Out Quad'
+                    'In Cubic'
+                    'Out Cubic'
+                    'In Out Cubic'
+                    'In Quart'
+                    'Out Quart'
+                    'In Out Quart'
+                    'In Quint'
+                    'Out Quint'
+                    'In Out Quint'
+                    'In Sine'
+                    'Out Sine'
+                    'In Out Sine'
+                    'In Expo'
+                    'Out Expo'
+                    'In Out Expo'
+                    'In Circ'
+                    'Out Circ'
+                    'In Out Circ')
+                end
               end
             end
           end
           object TabSheet9: TTabSheet
             Caption = 'Drag Drop'
             ImageIndex = 7
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cbDragType: TComboBox
               Left = 3
               Top = 21
@@ -2787,10 +2890,6 @@ object frmMain: TfrmMain
       object TabSheet14: TTabSheet
         Caption = 'Look and Feel'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object tvLookAndFeelItems: TTreeView
           Left = 0
           Top = 0
@@ -2883,10 +2982,6 @@ object frmMain: TfrmMain
       object TabSheet15: TTabSheet
         Caption = 'General'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label7: TLabel
           Left = 16
           Top = 8
@@ -2961,10 +3056,6 @@ object frmMain: TfrmMain
       object TabSheet3: TTabSheet
         Caption = 'Events'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel2: TPanel
           Left = 0
           Top = 63
@@ -3098,10 +3189,6 @@ object frmMain: TfrmMain
       object tabDebug: TTabSheet
         Caption = 'Debug'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel10: TPanel
           Left = 0
           Top = 0

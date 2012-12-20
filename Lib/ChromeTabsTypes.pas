@@ -295,6 +295,32 @@ const
     'Scroll Right Button'
   );
 
+  ChromeTabsEaseTypeDestriptions: Array[TChromeTabsEaseType] of String = (
+    'None',
+    'LinearTween',
+    'In Quad',
+    'Out Quad',
+    'In Out Quad',
+    'In Cubic',
+    'Out Cubic',
+    'In Out Cubic',
+    'In Quart',
+    'Out Quart',
+    'In Out Quart',
+    'In Quint',
+    'Out Quint',
+    'In Out Quint',
+    'In Sine',
+    'Out Sine',
+    'In Out Sine',
+    'In Expo',
+    'Out Expo',
+    'In Out Expo',
+    'In Circ',
+    'Out Circ',
+    'In Out Circ'
+  );
+
 implementation
 
 end.

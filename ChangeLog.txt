@@ -1,5 +1,12 @@
 TChromeTabs 1.0
 
+20/12/2012
+Improvement: Major improvements in animation visuals and update times.
+Update: Animation overhaul 90% finished and stable.
+Update: Added OnAnimateMovement event.
+Update: Removed redundant Skin property.
+Update: Changed several animation property names to bring them in line with the new Ease functionality.
+
 19/12/2012
 Improvement: Began overhaul of animation effects.
 Added: Animation Ease Type.
