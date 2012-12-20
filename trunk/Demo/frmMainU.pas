@@ -374,8 +374,10 @@ type
     procedure actCopyOptionsAsCodeExecute(Sender: TObject);
     procedure actCopyLookAndFeelAsCodeExecute(Sender: TObject);
     procedure ChromeTabs1TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
-    procedure ChromeTabs1AnimateStyleTransisiton(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationIncrement: Integer; var Animate: Boolean);
     procedure Button1Click(Sender: TObject);
+    procedure ChromeTabs1AnimateStyleTransisiton(Sender: TObject;
+      ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState;
+      var AnimationTimeMS: Integer; var EaseType: TChromeTabsEaseType);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -1032,10 +1034,10 @@ begin
   begin
     CheckBox := (Sender as TCheckBox);
 
-    if CheckBox.Checked then
-      FCurrentTabs.Options.Animation.AnimationMovement := FCurrentTabs.Options.Animation.AnimationMovement + [TChromeTabsAnimationMovementType(CheckBox.Tag)]
+ (*   if CheckBox.Checked then
+      FCurrentTabs.Options.Animation.MovementAnimations := FCurrentTabs.Options.Animation.MovementAnimations + [TChromeTabsAnimationMovementType(CheckBox.Tag)]
     else
-      FCurrentTabs.Options.Animation.AnimationMovement := FCurrentTabs.Options.Animation.AnimationMovement - [TChromeTabsAnimationMovementType(CheckBox.Tag)]
+      FCurrentTabs.Options.Animation.MovementAnimations := FCurrentTabs.Options.Animation.MovementAnimations - [TChromeTabsAnimationMovementType(CheckBox.Tag)]*)
   end;
 
   UpdateControls;
@@ -1220,11 +1222,11 @@ begin
     edtCloseButtonMouseLeaveDelay.Value := ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay;
     chkRightClickSelect.Checked := ChromeTabs.Options.Behaviour.TabRightClickSelect;
 
-    edtAnimationStepsMovement.Value := ChromeTabs.Options.Animation.AnimationMovementMS;
-    edtAnimationStepsStyle.Value := ChromeTabs.Options.Animation.AnimationStyleMS;
+    edtAnimationStepsMovement.Value := ChromeTabs.Options.Animation.DefaultMovementAnimationTimeMS;
+    edtAnimationStepsStyle.Value := ChromeTabs.Options.Animation.DefaultStyleAnimationTimeMS;
     edtAnimationUpdate.Value := ChromeTabs.Options.Animation.AnimationTimerInterval;
-    cbMovementEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.EaseTypeMovement);
-    cbStyleEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.EaseTypeStyle);
+    cbMovementEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.DefaultMovementEaseType);
+    cbStyleEaseType.ItemIndex := Integer(ChromeTabs.Options.Animation.DefaultStyleEaseType);
 
     chkScrolling.Checked := ChromeTabs.Options.Scrolling.Enabled;
     cbScrollButtons.ItemIndex := Integer(ChromeTabs.Options.Scrolling.ScrollButtons);
@@ -1242,11 +1244,11 @@ begin
     edtDragImageResize.Text := FloatToStr(ChromeTabs.Options.DragDrop.DragControlImageResizeFactor);
     cbExternalDragDisplay.ItemIndex := Integer(ChromeTabs.Options.DragDrop.DragDisplay);
 
-    chkAnimationTabMovements.Checked := aeTabMove in ChromeTabs.Options.Animation.AnimationMovement;
-    chkAnimationAddTab.Checked := aeTabAdd in ChromeTabs.Options.Animation.AnimationMovement;
-    chkAnimationDragCancelled.Checked := aeTabDragCancelled in ChromeTabs.Options.Animation.AnimationMovement;
-    chkAnimationAddButtonMove.Checked := aeAddButtonMove in ChromeTabs.Options.Animation.AnimationMovement;
-    chkAnimationDeleteTab.Checked := aeTabDelete in ChromeTabs.Options.Animation.AnimationMovement;
+   (* chkAnimationTabMovements.Checked := aeTabMove in ChromeTabs.Options.Animation.MovementAnimations;
+    chkAnimationAddTab.Checked := aeTabAdd in ChromeTabs.Options.Animation.MovementAnimations;
+    chkAnimationDragCancelled.Checked := aeTabDragCancelled in ChromeTabs.Options.Animation.MovementAnimations;
+    chkAnimationAddButtonMove.Checked := aeAddButtonMove in ChromeTabs.Options.Animation.MovementAnimations;
+    chkAnimationDeleteTab.Checked := aeTabDelete in ChromeTabs.Options.Animation.MovementAnimations;*)
 
     if ChromeTabs.Options.DragDrop.DragCursor = crDrag then
       cbDragCursor.ItemIndex := 1
@@ -1341,11 +1343,11 @@ begin
       ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay := edtCloseButtonMouseLeaveDelay.Value;
       ChromeTabs.Options.Behaviour.TabRightClickSelect := chkRightClickSelect.Checked;
 
-      ChromeTabs.Options.Animation.AnimationMovementMS := edtAnimationStepsMovement.Value;
-      ChromeTabs.Options.Animation.AnimationStyleMS := edtAnimationStepsStyle.Value;
+      ChromeTabs.Options.Animation.DefaultMovementAnimationTimeMS := edtAnimationStepsMovement.Value;
+      ChromeTabs.Options.Animation.DefaultStyleAnimationTimeMS := edtAnimationStepsStyle.Value;
       ChromeTabs.Options.Animation.AnimationTimerInterval := edtAnimationUpdate.Value;
-      ChromeTabs.Options.Animation.EaseTypeMovement := TChromeTabsEaseType(cbMovementEaseType.ItemIndex);
-      ChromeTabs.Options.Animation.EaseTypeStyle := TChromeTabsEaseType(cbStyleEaseType.ItemIndex);
+      ChromeTabs.Options.Animation.DefaultMovementEaseType := TChromeTabsEaseType(cbMovementEaseType.ItemIndex);
+      ChromeTabs.Options.Animation.DefaultStyleEaseType := TChromeTabsEaseType(cbStyleEaseType.ItemIndex);
 
       ChromeTabs.Options.Scrolling.Enabled := chkScrolling.Checked;
       ChromeTabs.Options.Scrolling.ScrollButtons := TChromeTabScrollButtons(cbScrollButtons.ItemIndex);
@@ -1427,7 +1429,7 @@ end;
 
 procedure TfrmMain.ChromeTabs1AnimateStyleTransisiton(Sender: TObject;
   ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState;
-  var AnimationIncrement: Integer; var Animate: Boolean);
+  var AnimationTimeMS: Integer; var EaseType: TChromeTabsEaseType);
 begin
   if (FLogOtherEvents <> nil) and (chkEnableEvents.Checked) then
     FLogOtherEvents.Log('OnAnimateStyleTransisiton [Control = %s, OldState = %s, NewState = %s]', [ChromeTabsControlTypeDescriptions[ChromeTabsControl.ControlType],
@@ -1435,7 +1437,7 @@ begin
                                                                                                    TabDrawStateDescriptions[NewDrawState]]);
 
   if ChromeTabsControl.ControlType = itAddButton then
-    AnimationIncrement := 30;
+    AnimationTimeMS := 100;
 end;
 
 procedure TfrmMain.ChromeTabs1BeforeDrawItem(Sender: TObject;

@@ -96,12 +96,6 @@ type
     tttFade
   );
 
-  TTabSkin = (
-    isCustom,
-    isDefault,
-    isChrome
-  );
-
   THitTestArea = (
     htNowhere,
     htBackground,
@@ -148,15 +142,6 @@ type
   );
   TTabDropOptions = set of TTabDropOption;
 
-  TChromeTabsAnimationMovementType = (
-    aeTabAdd,
-    aeTabDelete,
-    aeTabMove,
-    aeTabDragCancelled,
-    aeAddButtonMove
-  );
-  TChromeTabsAnimationMovementTypes = set of TChromeTabsAnimationMovementType;
-
   TChromeTabState = (
     stsAnimatingMovement,
     stsAnimatingStyle,
@@ -182,6 +167,7 @@ type
   TChromeTabStates = set of TChromeTabState;
 
   TChromeTabsEaseType = (
+    ttNone,
     ttLinearTween,
     ttEaseInQuad,
     ttEaseOutQuad,
