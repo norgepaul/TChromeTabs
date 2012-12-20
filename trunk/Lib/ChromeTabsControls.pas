@@ -1474,6 +1474,7 @@ begin
   if EaseType = ttNone then
   begin
     FEndTickCount := 0;
+    FCurrentTickCount := FEndTickCount;
 
     TransformColors;
   end
