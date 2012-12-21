@@ -24,7 +24,7 @@ unit ChromeTabsClasses;
 interface
 
 uses
-  Windows, Classes, SysUtils, ImgList, Controls, Graphics, Forms, Contnrs,
+  Windows, Classes, SysUtils, ImgList, Controls, Graphics, Forms, Contnrs, Messages,
 
   GDIPObj, GDIPAPI,
 
@@ -135,6 +135,7 @@ type
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
     function GetChromeTabInterface: IChromeTabs;
+    procedure SetCollection(Value: TCollection); override;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -1325,6 +1326,19 @@ begin
   end;
 end;
 
+procedure TChromeTab.SetCollection(Value: TCollection);
+var
+  OldCollection: TOwnedCollection;
+begin
+  OldCollection := Collection as TOwnedCollection;
+
+  inherited;
+
+  if (OldCollection <> Value) and
+     (Assigned(OldCollection)) then
+    DoChanged(tcPropertyUpdated);
+end;
+
 procedure TChromeTab.SetImageIndex(Value: TImageIndex);
 begin
   if FImageIndex <> Value then
@@ -1508,6 +1522,9 @@ procedure TChromeTabsList.Notify(Item: TCollectionItem;
   Action: TCollectionNotification);
 begin
   inherited;
+
+  if (Action = cnDeleting) and (Owner is TWinControl) then
+    PostMessage(TWinControl(Owner).Handle, WM_PAINT, 0, 0);
 
   if (Action in [cnAdded]) and
      (GetChromeTabInterface <> nil) then
