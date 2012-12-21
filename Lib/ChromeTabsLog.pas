@@ -2,7 +2,7 @@ unit ChromeTabsLog;
 
 interface
 
-{.$DEFINE USE_VIRTUALTREES}
+{$DEFINE USE_VIRTUALTREES}
 
 uses
   {$IFDEF USE_VIRTUALTREES}

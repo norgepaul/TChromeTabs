@@ -109,15 +109,15 @@ object frmMain: TfrmMain
     Options.Animation.MovementAnimations.TabAdd.UseDefaultEaseType = True
     Options.Animation.MovementAnimations.TabAdd.UseDefaultAnimationTime = True
     Options.Animation.MovementAnimations.TabAdd.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabAdd.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabAdd.AnimationTimeMS = 500
     Options.Animation.MovementAnimations.TabDelete.UseDefaultEaseType = True
     Options.Animation.MovementAnimations.TabDelete.UseDefaultAnimationTime = True
     Options.Animation.MovementAnimations.TabDelete.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabDelete.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabDelete.AnimationTimeMS = 500
     Options.Animation.MovementAnimations.TabMove.UseDefaultEaseType = False
     Options.Animation.MovementAnimations.TabMove.UseDefaultAnimationTime = False
     Options.Animation.MovementAnimations.TabMove.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 500
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -186,8 +186,8 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Active.Font.UseDefaultFont = True
     LookAndFeel.Tabs.Active.Style.StartColor = clWhite
     LookAndFeel.Tabs.Active.Style.StopColor = 16316920
-    LookAndFeel.Tabs.Active.Style.StartAlpha = 255
-    LookAndFeel.Tabs.Active.Style.StopAlpha = 255
+    LookAndFeel.Tabs.Active.Style.StartAlpha = 100
+    LookAndFeel.Tabs.Active.Style.StopAlpha = 100
     LookAndFeel.Tabs.Active.Style.OutlineColor = 10189918
     LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
@@ -439,15 +439,15 @@ object frmMain: TfrmMain
     Options.Animation.MovementAnimations.TabAdd.UseDefaultEaseType = True
     Options.Animation.MovementAnimations.TabAdd.UseDefaultAnimationTime = True
     Options.Animation.MovementAnimations.TabAdd.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabAdd.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabAdd.AnimationTimeMS = 500
     Options.Animation.MovementAnimations.TabDelete.UseDefaultEaseType = True
     Options.Animation.MovementAnimations.TabDelete.UseDefaultAnimationTime = True
     Options.Animation.MovementAnimations.TabDelete.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabDelete.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabDelete.AnimationTimeMS = 500
     Options.Animation.MovementAnimations.TabMove.UseDefaultEaseType = True
     Options.Animation.MovementAnimations.TabMove.UseDefaultAnimationTime = True
     Options.Animation.MovementAnimations.TabMove.EaseType = ttEaseOutExpo
-    Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 800
+    Options.Animation.MovementAnimations.TabMove.AnimationTimeMS = 500
     Options.Behaviour.BackgroundDblClickMaximiseRestoreForm = True
     Options.Behaviour.BackgroundDragMovesForm = True
     Options.Behaviour.TabSmartDeleteResizing = True
@@ -822,7 +822,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 743
           Height = 444
-          ActivePage = TabSheet8
+          ActivePage = TabSheet5
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -889,7 +889,7 @@ object frmMain: TfrmMain
                 Width = 94
                 Height = 24
                 MaxValue = 65535
-                MinValue = 4
+                MinValue = -65535
                 TabOrder = 8
                 Value = 39
                 OnChange = OnCommonControlPropertyChange
@@ -928,7 +928,7 @@ object frmMain: TfrmMain
                 Font.Style = []
                 Increment = 2
                 MaxValue = 65535
-                MinValue = 0
+                MinValue = -65535
                 ParentFont = False
                 TabOrder = 1
                 Value = 4
@@ -946,7 +946,7 @@ object frmMain: TfrmMain
                 Font.Style = []
                 Increment = 10
                 MaxValue = 65535
-                MinValue = 0
+                MinValue = -65535
                 ParentFont = False
                 TabOrder = 3
                 Value = 0
@@ -964,7 +964,7 @@ object frmMain: TfrmMain
                 Font.Style = []
                 Increment = 10
                 MaxValue = 65535
-                MinValue = 0
+                MinValue = -65535
                 ParentFont = False
                 TabOrder = 4
                 Value = 0
@@ -982,7 +982,7 @@ object frmMain: TfrmMain
                 Font.Style = []
                 Increment = 2
                 MaxValue = 65535
-                MinValue = 0
+                MinValue = -65535
                 ParentFont = False
                 TabOrder = 7
                 Value = 0
@@ -1000,7 +1000,7 @@ object frmMain: TfrmMain
                 Font.Style = []
                 Increment = 10
                 MaxValue = 65535
-                MinValue = 0
+                MinValue = -65535
                 ParentFont = False
                 TabOrder = 2
                 Value = 0
@@ -1018,7 +1018,7 @@ object frmMain: TfrmMain
                 Font.Style = []
                 Increment = 10
                 MaxValue = 65535
-                MinValue = 0
+                MinValue = -65535
                 ParentFont = False
                 TabOrder = 5
                 Value = 0
@@ -1068,6 +1068,15 @@ object frmMain: TfrmMain
                 TabOrder = 11
                 Value = 15
                 OnChange = OnCommonControlPropertyChange
+              end
+              object chkSeeThroughTabs: TCheckBox
+                Left = 8
+                Top = 125
+                Width = 129
+                Height = 17
+                Caption = 'See through tabs'
+                TabOrder = 12
+                OnClick = OnCommonControlPropertyChange
               end
             end
             object GroupBox5: TGroupBox
