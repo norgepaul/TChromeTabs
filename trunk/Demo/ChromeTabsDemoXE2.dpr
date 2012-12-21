@@ -1,15 +1,6 @@
 program ChromeTabsDemoXE2;
 
 uses
-  EMemLeaks,
-  EResLeaks,
-  EDialogWinAPIMSClassic,
-  EDialogWinAPIEurekaLogDetailed,
-  EDialogWinAPIStepsToReproduce,
-  EDebugExports,
-  EDebugJCL,
-  EAppVCL,
-  ExceptionLog7,
   Forms,
   frmMainU in 'frmMainU.pas' {frmMain},
   ChromeTabsLog in '..\Lib\ChromeTabsLog.pas',
