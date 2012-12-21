@@ -262,7 +262,7 @@ type
     function GetBiDiMode: TBiDiMode;
     function GetBidiScrollOffset: Integer;
     function BidiXPos(X: Integer): Integer;
-    function SameBidiMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
+    function SameBidiTabMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
     procedure SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; Animate: Boolean);
     procedure SetControlLeft(ChromeTabsControl: TBaseChromeTabsControl; ALeft: Integer; Animate: Boolean);
     procedure SetMovementAnimation(MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
@@ -770,14 +770,14 @@ begin
       begin
         FLastHitTestResult := HitTestResult;
 
-        if (BiDiMode in [bdLeftToRight, bdRightToLeft]) and (ScrollOffset = 0) or
-           (BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]) and (ScrollOffset = GetMaxScrollOffset) then
+        if (BiDiMode in BidiLeftToRightTabModes) and (ScrollOffset = 0) or
+           (BiDiMode in BidiRightToLeftTabModes) and (ScrollOffset = GetMaxScrollOffset) then
           SetControlDrawState(FScrollButtonLeftControl, dsDisabled)
         else
           SetControlDrawState(FScrollButtonLeftControl, dsActive);
 
-        if (BiDiMode in [bdLeftToRight, bdRightToLeft]) and (ScrollOffset = GetMaxScrollOffset) or
-           (BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]) and (ScrollOffset = 0) then
+        if (BiDiMode in BidiLeftToRightTabModes) and (ScrollOffset = GetMaxScrollOffset) or
+           (BiDiMode in BidiRightToLeftTabModes) and (ScrollOffset = 0) then
           SetControlDrawState(FScrollButtonRightControl, dsDisabled)
         else
           SetControlDrawState(FScrollButtonRightControl, dsActive);
@@ -1432,7 +1432,7 @@ begin
 
   IncValue := FOptions.Scrolling.ScrollStep;
 
-  if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+  if BiDiMode in BidiRightToLeftTabModes then
     IncValue := -IncValue;
 
   case FScrollDirection of
@@ -1563,7 +1563,7 @@ end;
 
 function TCustomChromeTabs.GetBidiScrollOffset: Integer;
 begin
-  if BiDiMode in [bdLeftToRight, bdRightToLeft] then
+  if BiDiMode in BidiLeftToRightTabModes then
     Result := FScrollOffset
   else
     Result := -FScrollOffset;
@@ -1801,7 +1801,7 @@ end;
 
 function TCustomChromeTabs.BidiRect(ARect: TRect): TRect;
 begin
-  if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+  if BiDiMode in BidiRightToLeftTabModes then
     Result := HorzFlipRect(ControlRect, ARect)
   else
     Result := ARect;
@@ -1809,7 +1809,7 @@ end;
 
 function TCustomChromeTabs.BidiXPos(X: Integer): Integer;
 begin
-  if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+  if BiDiMode in BidiRightToLeftTextModes then
     Result := ClientWidth - X
   else
     Result := X;
@@ -1988,7 +1988,7 @@ begin
           ActualDragDisplay := ddTab;
       end;
 
-      if BiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+      if BiDiMode in BidiRightToLeftTabModes then
         BiDiX := ControlRect.Right + FDragTabObject.DragCursorOffset.X
       else
         BiDiX := FDragTabObject.DragCursorOffset.X;
@@ -2572,10 +2572,10 @@ begin
   Result := FScrollWidth - FTabEndSpace > CorrectedClientWidth
 end;
 
-function TCustomChromeTabs.SameBidiMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
+function TCustomChromeTabs.SameBidiTabMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
 begin
-  Result := ((BidiMode1 in [bdLeftToRight, bdRightToLeft]) and (BidiMode2 in [bdLeftToRight, bdRightToLeft])) or
-            ((BidiMode1 in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]) and (BidiMode2 in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly]))
+  Result := ((BidiMode1 in BidiRightToLeftTabModes)) and
+            ((BidiMode2 in BidiRightToLeftTabModes))
 end;
 
 procedure TCustomChromeTabs.SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; Animate: Boolean);
@@ -2767,7 +2767,7 @@ procedure TCustomChromeTabs.RepositionTabs;
 
       BiDiX := FActiveDragTabObject.DragCursorOffset.X;
 
-      if not SameBidiMode(BiDiMode, FActiveDragTabObject.SourceControl.GetBidiMode) then
+      if not SameBidiTabMode(BiDiMode, FActiveDragTabObject.SourceControl.GetBidiMode) then
         BiDiX := -BidiX;
 
       SetControlPosition(DragTabControl,

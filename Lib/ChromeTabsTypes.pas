@@ -26,7 +26,9 @@ interface
 {$include versions.inc}
 
 uses
-  Windows, GDIPAPI;
+  Windows, Classes,
+
+  GDIPAPI;
 
 type
   {$IFNDEF DELPHI2006_UP}
@@ -218,6 +220,8 @@ type
     avRightFixed
   );
 
+  TBiDiModes = set of TBiDiMode;
+
   THitTestResult = record
     TabIndex: Integer;
     HitTestArea: THitTestArea;
@@ -226,6 +230,11 @@ type
   TPolygon = packed Array of TPoint;
 
 const
+  BidiLeftToRightTabModes: TBiDiModes = [bdLeftToRight, bdRightToLeftReadingOnly];
+  BidiLeftToRightTextModes: TBiDiModes = [bdLeftToRight, bdRightToLeftReadingOnly];
+  BidiRightToLeftTabModes: TBiDiModes = [bdRightToLeft, bdRightToLeftNoAlign];
+  BidiRightToLeftTextModes: TBiDiModes = [bdRightToLeft, bdRightToLeftReadingOnly];
+
   HitTestDescriptions: Array[THitTestArea] of String = (
     'Nowhere',
     'Background',

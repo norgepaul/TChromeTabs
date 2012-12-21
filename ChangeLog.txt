@@ -1,6 +1,12 @@
+TChromeTabs 1.2 BETA
+
+21/12/2012
+Fixed: Bidi modes did not match the display.
+
+
 TChromeTabs 1.1
 
-21/12/2010
+21/12/2012
 Update: Improved design time drawing.
 Update: See through tab overlap area now rendered correctly when see through tabs is disabled.
 Update: All animation now working correctly.

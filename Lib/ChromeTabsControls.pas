@@ -250,7 +250,7 @@ end;
 
 function TBaseChromeTabsControl.BidiPolygon(Polygon: TPolygon): TPolygon;
 begin
-  if ChromeTabs.GetBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+  if ChromeTabs.GetBiDiMode in BidiRightToLeftTabModes then
     Result := HorzFlipPolygon(BidiControlRect, Polygon)
   else
     Result := Polygon;
@@ -258,7 +258,7 @@ end;
 
 function TBaseChromeTabsControl.BidiRect(ARect: TRect): TRect;
 begin
-  if ChromeTabs.GetBiDiMode in [bdRightToLeftNoAlign, bdRightToLeftReadingOnly] then
+  if ChromeTabs.GetBiDiMode in BidiRightToLeftTabModes then
     Result := HorzFlipRect(BidiControlRect, HorzFlipRect(BidiControlRect, ChromeTabs.BidiRect(ARect)))
   else
     Result := ARect;
@@ -342,7 +342,7 @@ end;
 function TBaseChromeTabsControl.GetBidiControlRect: TRect;
 begin
   if FOverrideBidi then
-    REsult := FControlRect
+    Result := FControlRect
   else
     Result := ChromeTabs.BidiRect(FControlRect);
 end;
@@ -856,17 +856,17 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
             // Set the fade blend factors to fade the end of the text
             TxtFormat.SetTrimming(StringTrimmingNone);
 
-            if ChromeTabs.GetBiDiMode in [bdLeftToRight, bdRightToLeftNoAlign] then
-            begin
-              BlendFactorsFade[0] := 0.0;
-              BlendFactorsFade[2] := 1.0;
-            end
-            else
+            if ChromeTabs.GetBiDiMode in BidiRightToLeftTextModes then
             begin
               BlendFactorsFade[0] := 1.0;
               BlendFactorsFade[2] := 0.0;
 
               BlendPositions[1] := 1 - BlendPositions[1];
+            end
+            else
+            begin
+              BlendFactorsFade[0] := 0.0;
+              BlendFactorsFade[2] := 1.0;
             end;
 
             TabsTxtBrush.SetBlend(@BlendFactorsFade[0], @BlendPositions[0], Length(BlendFactorsFade));
@@ -894,7 +894,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
             if not ChromeTabs.GetOptions.Display.Tabs.WordWrap then
               TextFormatFlags := TextFormatFlags + StringFormatFlagsNoWrap;
 
-            if ChromeTabs.GetBiDiMode in [bdRightToLeft, bdRightToLeftReadingOnly] then
+            if ChromeTabs.GetBiDiMode in BidiRightToLeftTextModes then
               TextFormatFlags := TextFormatFlags + StringFormatFlagsDirectionRightToLeft;
           end;
 
