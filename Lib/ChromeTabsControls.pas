@@ -614,18 +614,14 @@ function TChromeTabControl.GetModifiedGlowX: Integer;
 var
   LowX, HighX: Integer;
   ScrolledRect: TRect;
-  //SinValue: Extended;
 begin
+  { TODO : This needs to use the Ease effects }
   ScrolledRect := ScrollRect(ControlRect);
 
   LowX := ScrolledRect.Left - ChromeTabs.GetOptions.Display.TabModifiedGlow.Width;
   HighX := ScrolledRect.Right;
 
   Result := Round((((HighX - LowX) / ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationSteps) * FModifiedPosition) + LowX);
-
-  //SinValue := Sin(Pi / (ChromeTabs.GetOptions.Display.ModifiedTabGlow.AnimationSteps * 2)) * FModifiedPosition;
-
-  //Result := Round(LowX + (((HighX - LowX) * SinValue)));
 end;
 
 function TChromeTabControl.AnimateModified: Boolean;
@@ -735,7 +731,9 @@ begin
                                  ChromeTabs.GetOptions.Display.Tabs.Orientation),
                       GetTabBrush,
                       GetTabPen);
-  end;
+  end
+  else
+  sleep(1);
 end;
 
 function TChromeTabControl.GetCloseButonRect: TRect;
@@ -1106,7 +1104,6 @@ var
   ChromeTabPolygons, PreviousChromeTabPolygons: IChromeTabPolygons;
   OriginalClipRegion: TGPRegion;
   PreviousPolygons: IChromeTabPolygons;
-  ActivePolygons: IChromeTabPolygons;
   i: Integer;
 begin
   if (FTabProperties <> nil) and (ChromeTabs <> nil) then
@@ -1114,23 +1111,9 @@ begin
     OriginalClipRegion := TGPRegion.Create;
     try
       // Save the current clip region of the GPGraphics
-      if (not ChromeTabs.GetOptions.Display.Tabs.SeeThroughTabs) and
-         (not ChromeTab.GetActive) then
-      begin
-        PreviousChromeTabPolygons := ChromeTabs.GetPreviousTabPolygons(ChromeTab.GetIndex);
-
-        if PreviousChromeTabPolygons <> nil then
-          SetTabClipRegionFromPolygon(TabCanvas, PreviousChromeTabPolygons.Polygons[0].Polygon, CombineModeExclude);
-
-        if (ChromeTabs.GetActiveTab <> nil) and
-           (ChromeTab.GetIndex + 1 = ChromeTabs.GetActiveTab.Index) then
-        begin
-          PreviousChromeTabPolygons := TChromeTabControl(ChromeTabs.GetActiveTab.TabControl).GetPolygons;
-
-          if PreviousChromeTabPolygons <> nil then
-            SetTabClipRegionFromPolygon(TabCanvas, PreviousChromeTabPolygons.Polygons[0].Polygon, CombineModeExclude);
-        end;
-      end;
+      if ClipPolygons <> nil then
+        for i := 0 to pred(ClipPolygons.PolygonCount) do
+          SetTabClipRegionFromPolygon(TabCanvas, ClipPolygons.Polygons[i].Polygon, CombineModeExclude);
 
       TabCanvas.GetClip(OriginalClipRegion);
 

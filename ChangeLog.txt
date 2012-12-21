@@ -1,8 +1,10 @@
 TChromeTabs 1.1
 
 21/12/2010
+Update: Improved design time drawing.
 Update: See through tab overlap area now rendered correctly when see through tabs is disabled.
 Update: All animation now working correctly.
+Fixed: Drag image tab position when using bottom tabs.
 Fixed: All edge case "Add Button" issues that I could find are fixed.
 Fixed: Small TTimerThread memory leak.
 

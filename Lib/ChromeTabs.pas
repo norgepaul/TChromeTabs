@@ -62,11 +62,9 @@ unit ChromeTabs;
 
 interface
 
-{ TODO -cImprovement : Design Time invalidation needs improving e.g. Add/Delete tabs }
 { TODO -cImprovement : Selective invalidation of tabs }
 { TODO -cImprovement : Better handling of GDI text alpha on Vista Glass - How? }
 
-{ TODO -cFeature : Non see through tab clipping }
 { TODO -cFeature : Tab busy spinners }
 
 { TODO -cBug : Tab Alpha increases slightly when drag begins }
@@ -268,6 +266,7 @@ type
     procedure SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; Animate: Boolean);
     procedure SetControlLeft(ChromeTabsControl: TBaseChromeTabsControl; ALeft: Integer; Animate: Boolean);
     procedure SetMovementAnimation(MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
+    procedure DeleteTab(Index: Integer);
   protected
     // ** Important, often called procedures ** //
     procedure RepositionTabs; virtual;
@@ -736,15 +735,16 @@ var
 begin
   if (ChromeTabsControl.DrawState <> NewDrawState) or (ForceUpdate) then
   begin
-    if ((ChromeTabsControl.DrawState = dsHot) and (NewDrawState <> dsActive)) or
-        ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive)) then
+    if (not (csDesigning in ComponentState)) and
+       (((ChromeTabsControl.DrawState = dsHot) and (NewDrawState <> dsActive)) or
+        ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive))) then
       EaseType := FOptions.Animation.DefaultMovementEaseType
     else
       EaseType := ttNone;
 
     AnimationTimeMS := FOptions.Animation.DefaultStyleAnimationTimeMS;
 
-    if ChromeTabsControl.DrawState <> NewDrawState then
+    if (ChromeTabsControl.DrawState <> NewDrawState) and (not (csDesigning in ComponentState)) then
       DoOnAnimateStyle(ChromeTabsControl, NewDrawState, AnimationTimeMS, EaseType);
 
     ChromeTabsControl.SetDrawState(NewDrawState, AnimationTimeMS, EaseType, ForceUpdate);
@@ -914,6 +914,14 @@ begin
   Redraw;
 end;
 
+procedure TCustomChromeTabs.DeleteTab(Index: Integer);
+begin
+  if csDesigning in ComponentState then
+    FTabs.DeleteNow(Index)
+  else
+    FTabs.Delete(Index);
+end;
+
 procedure TCustomChromeTabs.DoPopupClick(Sender: TObject);
 var
   OperationID: Integer;
@@ -929,7 +937,7 @@ begin
       Tabs[FMouseDownHitTest.TabIndex].Pinned := FALSE;
 
     if OperationID = 2 then
-      Tabs.Delete(FMouseDownHitTest.TabIndex);
+      DeleteTab(FMouseDownHitTest.TabIndex);
   end;
 
   if OperationID = 3 then
@@ -1085,155 +1093,158 @@ var
   NewTabControl: TChromeTabControl;
   NewTabLeft, LastVisibleTabIndex: Integer;
 begin
-  if (TabChangeType = tcAdded) and
-     (ATab.TabControl = nil) then
+  if not (csDestroying in ComponentState) then
   begin
-    // If we are adding a new tab, we also need to create the corresponding
-    // TabControl. The TabControl will be freed by the Tab
-    ATab.TabControl := TChromeTabControl.Create(Self, ATab);
-
-    NewTabControl := TabControls[ATab.Index];
-
-    if (not HasState(stsLoading)) and (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabAdd) <> ttNone) then
+    if (TabChangeType = tcAdded) and
+       (ATab.TabControl = nil) then
     begin
-      LastVisibleTabIndex := GetLastVisibleTabIndex(Tabs.Count - 2); // Skip the new tab
+      // If we are adding a new tab, we also need to create the corresponding
+      // TabControl. The TabControl will be freed by the Tab
+      ATab.TabControl := TChromeTabControl.Create(Self, ATab);
 
-      if LastVisibleTabIndex <> -1 then
-        NewTabLeft := TabControls[LastVisibleTabIndex].ControlRect.Right - FOptions.Display.Tabs.TabOverlap
-      else
-        NewTabLeft := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
+      NewTabControl := TabControls[ATab.Index];
 
-      SetMovementAnimation(FOptions.Animation.MovementAnimations.TabAdd);
-
-      SetControlPosition(NewTabControl,
-                         Rect(NewTabLeft,
-                              FOptions.Display.Tabs.OffsetTop,
-                              NewTabLeft + FOptions.Animation.MinimumTabAnimationWidth,
-                              ClientHeight - FOptions.Display.Tabs.OffsetBottom),
-                              FALSE);
-    end;
-
-    // Fire the added event here before we activate the tab
-    if Assigned(FOnChange) then
-      FOnChange(Self, ATab, TabChangeType);
-
-    // If no tabs are active, activate this one
-    if (FOptions.Behaviour.ActivateNewTab) and
-       ((ActiveTabIndex = -1) or
-        ((not HasState(stsLoading) and
-         (not HasState(stsAddingDroppedTab))))) then
-    begin
-      ATab.Active := TRUE;
-
-      AddState(stsAnimatingNewTab);
-    end
-    else
-    begin
-      SetControlDrawState(TabControls[ATab.Index], dsNotActive);
-    end;
-  end;
-
-  case TabChangeType of
-    tcActivated:
+      if (not HasState(stsLoading)) and (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabAdd) <> ttNone) then
       begin
-        SetControlDrawState(TabControls[ATab.Index], dsActive);
+        LastVisibleTabIndex := GetLastVisibleTabIndex(Tabs.Count - 2); // Skip the new tab
 
-        if FOptions.Scrolling.Enabled then
-          ScrollIntoView(ATab);
+        if LastVisibleTabIndex <> -1 then
+          NewTabLeft := TabControls[LastVisibleTabIndex].ControlRect.Right - FOptions.Display.Tabs.TabOverlap
+        else
+          NewTabLeft := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
 
-        DoOnActiveTabChanged(ATab);
+        SetMovementAnimation(FOptions.Animation.MovementAnimations.TabAdd);
+
+        SetControlPosition(NewTabControl,
+                           Rect(NewTabLeft,
+                                FOptions.Display.Tabs.OffsetTop,
+                                NewTabLeft + FOptions.Animation.MinimumTabAnimationWidth,
+                                ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                                FALSE);
       end;
 
-    tcDeactivated:
+      // Fire the added event here before we activate the tab
+      if Assigned(FOnChange) then
+        FOnChange(Self, ATab, TabChangeType);
+
+      // If no tabs are active, activate this one
+      if (FOptions.Behaviour.ActivateNewTab) and
+         ((ActiveTabIndex = -1) or
+          ((not HasState(stsLoading) and
+           (not HasState(stsAddingDroppedTab))))) then
+      begin
+        ATab.Active := TRUE;
+
+        AddState(stsAnimatingNewTab);
+      end
+      else
       begin
         SetControlDrawState(TabControls[ATab.Index], dsNotActive);
+      end;
+    end;
 
-        // Is there an active tab?
-        if ActiveTab = nil then
+    case TabChangeType of
+      tcActivated:
         begin
-          // Make sure a tab is active
-          for i := ATab.Index + 1 to pred(Tabs.Count) do
-            if Tabs[i].Visible then
-            begin
-              Tabs[i].Active := TRUE;
+          SetControlDrawState(TabControls[ATab.Index], dsActive);
 
-              Break;
-            end;
+          if FOptions.Scrolling.Enabled then
+            ScrollIntoView(ATab);
+
+          DoOnActiveTabChanged(ATab);
         end;
 
-        // Still no active tab?
-        if ActiveTab = nil then
+      tcDeactivated:
         begin
-          // Make sure a tab is active
-          for i := pred(ATab.Index) downto 0 do
-            if Tabs[i].Visible then
-            begin
-              Tabs[i].Active := TRUE;
+          SetControlDrawState(TabControls[ATab.Index], dsNotActive);
 
-              Break;
-            end;
-        end;
-      end;
-
-    tcPinned: AddState(stsControlsPositionsInvalidated);
-
-    tcPropertyUpdated:
-      begin
-        UpdateProperties;
-
-        InvalidateAllControls;
-      end;
-
-    tcAdded: ClearTabClosingStates;
-
-    tcVisibility: AddState(stsControlsPositionsInvalidated);
-
-    tcDeleted:
-      begin
-        SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
-
-        // We're deleting the tab but we need to animate it first
-        if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
-           (ATab <> nil) then
-        begin
-          // If the tabs are compressed and this is the last tab, don't animate
-          if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
+          // Is there an active tab?
+          if ActiveTab = nil then
           begin
-            Tabs.DeleteNow(ATab.Index);
-          end
-          else
-          begin
-            AddState(stsAnimatingCloseTab);
+            // Make sure a tab is active
+            for i := ATab.Index + 1 to pred(Tabs.Count) do
+              if Tabs[i].Visible then
+              begin
+                Tabs[i].Active := TRUE;
 
-            TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
-                                             FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
-                                             FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
+                Break;
+              end;
+          end;
+
+          // Still no active tab?
+          if ActiveTab = nil then
+          begin
+            // Make sure a tab is active
+            for i := pred(ATab.Index) downto 0 do
+              if Tabs[i].Visible then
+              begin
+                Tabs[i].Active := TRUE;
+
+                Break;
+              end;
           end;
         end;
-      end;
 
-    tcDeleting:
-      begin
-        if FOptions.Behaviour.TabSmartDeleteResizing then
+      tcPinned: AddState(stsControlsPositionsInvalidated);
+
+      tcPropertyUpdated:
         begin
-          if ATab.Index = Tabs.Count - 1 then
-            AddState(stsEndTabDeleted)
-          else
-            AddState(stsTabDeleted);
+          UpdateProperties;
+
+          InvalidateAllControls;
         end;
-      end;
 
-    tcControlState:
-      begin
-        if ATab <> nil then
-          TabControls[ATab.Index].Invalidate;
-      end;
+      tcAdded: ClearTabClosingStates;
+
+      tcVisibility: AddState(stsControlsPositionsInvalidated);
+
+      tcDeleted:
+        begin
+          SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
+
+          // We're deleting the tab but we need to animate it first
+          if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
+             (ATab <> nil) then
+          begin
+            // If the tabs are compressed and this is the last tab, don't animate
+            if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
+            begin
+              Tabs.DeleteNow(ATab.Index);
+            end
+            else
+            begin
+              AddState(stsAnimatingCloseTab);
+
+              TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
+                                               FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
+                                               FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
+            end;
+          end;
+        end;
+
+      tcDeleting:
+        begin
+          if FOptions.Behaviour.TabSmartDeleteResizing then
+          begin
+            if ATab.Index = Tabs.Count - 1 then
+              AddState(stsEndTabDeleted)
+            else
+              AddState(stsTabDeleted);
+          end;
+        end;
+
+      tcControlState:
+        begin
+          if ATab <> nil then
+            TabControls[ATab.Index].Invalidate;
+        end;
+    end;
+
+    Redraw;
+
+    if (Assigned(FOnChange)) and (TabChangeType <> tcAdded) then
+      FOnChange(Self, ATab, TabChangeType);
   end;
-
-  Redraw;
-
-  if (Assigned(FOnChange)) and (TabChangeType <> tcAdded) then
-    FOnChange(Self, ATab, TabChangeType);
 end;
 
 procedure TCustomChromeTabs.UpdateProperties;
@@ -1484,7 +1495,7 @@ begin
 
         if RectWidth(TabControls[i].ControlRect) <= FOptions.Animation.MinimumTabAnimationWidth then
         begin
-          Tabs.Delete(i);
+          DeleteTab(i);
 
           RemoveState(stsAnimatingCloseTab);
         end;
@@ -2053,9 +2064,9 @@ begin
 
               SetControlPosition(TabControls[ATab.Index],
                                  Rect(0,
-                                      0,
+                                      TabTop,
                                       TabControls[ATab.Index].ControlRect.Right,
-                                      TabControls[ATab.Index].ControlRect.Bottom),
+                                      TabTop + RectHeight(TabControls[ATab.Index].ControlRect)),
                                       FALSE);
 
               TabControls[ATab.Index].DrawTo(DragCanvas, FLastMouseX, FLastMouseY);
@@ -2272,7 +2283,7 @@ begin
           FClosedTabIndex := HitTestResult.TabIndex;
         end;
 
-        Tabs.Delete(HitTestResult.TabIndex);
+        DeleteTab(HitTestResult.TabIndex);
 
         AddState(stsControlsPositionsInvalidated);
       end;
@@ -2572,7 +2583,7 @@ var
   EaseType: TChromeTabsEaseType;
   AnimationTime: Cardinal;
 begin
-  if Animate then
+  if (Animate) and (not (csDesigning in ComponentState)) then
   begin
     EaseType := FMovementEaseType;
     AnimationTime := FMovementAnimationTime;
@@ -2583,7 +2594,8 @@ begin
     AnimationTime := 0;
   end;
 
-  DoOnAnimateMovement(ChromeTabsControl, AnimationTime, EaseType);
+  if not (csDesigning in ComponentState) then
+    DoOnAnimateMovement(ChromeTabsControl, AnimationTime, EaseType);
 
   ChromeTabsControl.SetPosition(ControlRect,
                                 AnimationTime,
@@ -3463,6 +3475,8 @@ var
   Targets: Array of TGPGraphics;
   DrawTicks: Cardinal;
   Pen: TGPPen;
+  PrevVisibleIndex: Integer;
+  ClipPolygons: IChromeTabPolygons;
 begin
   // Don't draw while we're loading
   if (not HasState(stsLoading)) and
@@ -3543,7 +3557,27 @@ begin
           begin
             SetTabClipRegion;
 
-            TabControls[i].DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
+            ClipPolygons := nil;
+
+            // Save the current clip region of the GPGraphics
+            if (not FOptions.Display.Tabs.SeeThroughTabs) and
+               (FDragTabObject = nil) then
+            begin
+              ClipPolygons := TChromeTabPolygons.Create;
+
+              PrevVisibleIndex := GetLastVisibleTabIndex(i - 1);
+
+              if PrevVisibleIndex <> -1 then
+                ClipPolygons.AddPolygon(TabControls[PrevVisibleIndex].GetPolygons.Polygons[0].Polygon, nil, nil);
+
+              if (ActiveTab <> nil) and
+                 (i + 1 = ActiveTabIndex) then
+              begin
+                ClipPolygons.AddPolygon(TabControls[ActiveTabIndex].GetPolygons.Polygons[0].Polygon, nil, nil);
+              end;
+            end;
+
+            TabControls[i].DrawTo(TabCanvas, FLastMouseX, FLastMouseY, ClipPolygons);
           end;
 
         // Clear the clipping region while we draw the base line
@@ -3680,7 +3714,7 @@ end;
 
 constructor TWindowFromPointFixThread.Create(Pt: TPoint; Range, Step: Integer);
 begin
-  inherited Create;
+  inherited Create(FALSE);
 
   FPoint := Pt;
   FRange := Range;
