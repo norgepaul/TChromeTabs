@@ -75,7 +75,6 @@ begin
   inherited Create(TRUE);
 
   FTimer := Timer;
-  FreeOnTerminate := True;
 end;
 
 procedure TTimerThread.Execute;
@@ -118,8 +117,7 @@ end;
 
 destructor TThreadTimer.Destroy;
 begin
-  if FTimerThread <> nil  then
-    StopTimer;
+  StopTimer;
 
   inherited;
 end;
@@ -147,7 +145,7 @@ begin
   if not (csDesigning in ComponentState) then
   begin
     FTimerThread := TTimerThread.CreateTimerThread(Self);
-    FTimerThread.FreeOnTerminate := TRUE;
+    FTimerThread.FreeOnTerminate := FALSE;
 
     {$IFDEF DELPHI2006_UP}
       FTimerThread.Start;
@@ -161,8 +159,15 @@ end;
 
 procedure TThreadTimer.StopTimer;
 begin
-  FContinue := FALSE;
-  FRunning := FALSE;
+  if FTimerThread <> nil then
+  begin
+    FContinue := FALSE;
+    FRunning := FALSE;
+
+    FTimerThread.WaitFor;
+
+    FreeAndNil(FTimerThread);
+  end;
 end;
 
 end.

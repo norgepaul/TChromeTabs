@@ -1067,6 +1067,7 @@ type
     ['{7392951B-B33C-4ECD-8255-9A746F5E0901}']
     function GetLastPinnedIndex: Integer;
     function GetActiveTab: TChromeTab;
+    function GetPreviousTabPolygons(Index: Integer): IChromeTabPolygons;
 
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean);
     procedure DoOnAfterDrawItem(const TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer);
@@ -3450,7 +3451,7 @@ begin
   FTabMove.FUseDefaultEaseType := FALSE;
   FTabMove.FUseDefaultAnimationTime := FALSE;
   FTabMove.EaseType := ttEaseOutExpo;
-  FTabMove.AnimationTimeMS := 800;
+  FTabMove.AnimationTimeMS := 500;
 end;
 
 destructor TChromeTabsMovementAnimations.Destroy;

@@ -311,6 +311,7 @@ type
     chkAddTabDefaults: TCheckBox;
     edtAddTabTime: TSpinEdit;
     cbAddTabEase: TComboBox;
+    chkSeeThroughTabs: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -791,7 +792,7 @@ procedure TfrmMain.UpdateLookAndFeelEditors(ChromeTabs: TChromeTabs; Index: Inte
     GroupBox.Align := alLeft;
     GroupBox.Caption := Caption;
 
-    Result := TframeChromeTabStyle.Create(GroupBox);
+    Result := TframeChromeTabStyle.Create(GroupBox, ChromeTabs);
     Result.Parent := GroupBox;
     Result.Align := alClient;
     Result.OnStartColorPicking := OnFrameSelectColorClick;
@@ -1202,6 +1203,7 @@ begin
     cbTextAlignment.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextAlignmentHorizontal);
     cbTextVerticalAlignment.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextAlignmentVertical);
     cbTextTrimming.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextTrimType);
+    chkSeeThroughTabs.Checked := ChromeTabs.Options.Display.Tabs.SeeThroughTabs;
     edtTabOverlap.Value := ChromeTabs.Options.Display.Tabs.TabOverlap;
 
     cbFontHintMode.ItemIndex := Integer(ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode);
@@ -1328,6 +1330,7 @@ begin
       ChromeTabs.Options.Display.Tabs.TextAlignmentVertical := TVerticalAlignment(cbTextVerticalAlignment.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TextTrimType := TTextTrimType(cbTextTrimming.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TabOverlap := edtTabOverlap.Value;
+      ChromeTabs.Options.Display.Tabs.SeeThroughTabs := chkSeeThroughTabs.Checked;
       ChromeTabs.BiDiMode := TBiDiMode(cbBidiMode.ItemIndex);
 
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);

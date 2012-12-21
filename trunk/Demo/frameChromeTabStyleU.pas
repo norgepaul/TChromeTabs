@@ -9,6 +9,7 @@ uses
 
   GDIPAPI,
 
+  ChromeTabs,
   ChromeTabsUtils,
   ChromeTabsClasses;
 
@@ -92,6 +93,7 @@ type
     FChromeTabsLookAndFeelTabModified: TChromeTabsLookAndFeelGlow;
     FPreviousColor: TColor;
     FColorPickPanel: TPanel;
+    FChromeTabs: TChromeTabs;
 
     procedure SetColor(ColorPanel: TPanel; Color: TColor; UpdateChromeTabs: Boolean);
     function SelectColor(ColorBox: TPanel): Boolean;
@@ -104,7 +106,7 @@ type
     procedure SetChromeTabsLookAndFeelTabModified(const Value: TChromeTabsLookAndFeelGlow);
     procedure StartColourPicking(Panel: TPanel);
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; ChromeTabs: TChromeTabs); reintroduce; virtual;
 
     procedure StopColorPicking(Cancelled: Boolean);
 
@@ -220,9 +222,11 @@ begin
     FOnStartColorPicking(Self);
 end;
 
-constructor TframeChromeTabStyle.Create(AOwner: TComponent);
+constructor TframeChromeTabStyle.Create(AOwner: TComponent; ChromeTabs: TChromeTabs);
 begin
   inherited Create(AOwner);
+
+  FChromeTabs := ChromeTabs;
 
   cbFontName.Items.Assign(Screen.Fonts);
 end;
@@ -298,43 +302,48 @@ procedure TframeChromeTabStyle.GUIToChromeTabLookAndFeelStyle;
 begin
   if not FUpdating then
   begin
-    if FChromeTabLookAndFeelStyle <> nil then
-    begin
-      FChromeTabLookAndFeelStyle.StartColor := colStart.Color;
-      FChromeTabLookAndFeelStyle.StopColor := colStop.Color;
-      FChromeTabLookAndFeelStyle.StartAlpha := edtAlphaStart.Value;
-      FChromeTabLookAndFeelStyle.StopAlpha := edtAlphaStop.Value;
-      FChromeTabLookAndFeelStyle.OutlineColor := colOutline.Color;
-      FChromeTabLookAndFeelStyle.OutlineSize := edtOutlineWidth.Value;
-      FChromeTabLookAndFeelStyle.OutlineAlpha := edtOutlineAlpha.Value;
-    end;
+    FChromeTabs.BeginUpdate;
+    try
+      if FChromeTabLookAndFeelStyle <> nil then
+      begin
+        FChromeTabLookAndFeelStyle.StartColor := colStart.Color;
+        FChromeTabLookAndFeelStyle.StopColor := colStop.Color;
+        FChromeTabLookAndFeelStyle.StartAlpha := edtAlphaStart.Value;
+        FChromeTabLookAndFeelStyle.StopAlpha := edtAlphaStop.Value;
+        FChromeTabLookAndFeelStyle.OutlineColor := colOutline.Color;
+        FChromeTabLookAndFeelStyle.OutlineSize := edtOutlineWidth.Value;
+        FChromeTabLookAndFeelStyle.OutlineAlpha := edtOutlineAlpha.Value;
+      end;
 
-    if FChromeTabLookAndFeelPen <> nil then
-    begin
-      FChromeTabLookAndFeelPen.Color := colOutline.Color;
-      FChromeTabLookAndFeelPen.Thickness := edtOutlineWidth.Value;
-      FChromeTabLookAndFeelPen.Alpha := edtOutlineAlpha.Value;
-    end;
+      if FChromeTabLookAndFeelPen <> nil then
+      begin
+        FChromeTabLookAndFeelPen.Color := colOutline.Color;
+        FChromeTabLookAndFeelPen.Thickness := edtOutlineWidth.Value;
+        FChromeTabLookAndFeelPen.Alpha := edtOutlineAlpha.Value;
+      end;
 
-    if FChromeTabFont <> nil then
-    begin
-      FChromeTabFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
-      FChromeTabFont.Name := cbFontName.Text;
-      FChromeTabFont.Alpha := edtFontAlpha.Value;
-      FChromeTabFont.Size := edtFontSize.Value;
-      FChromeTabFont.Name := cbFontName.Text;
-      FChromeTabFont.Color := colFont.Color;
+      if FChromeTabFont <> nil then
+      begin
+        FChromeTabFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
+        FChromeTabFont.Name := cbFontName.Text;
+        FChromeTabFont.Alpha := edtFontAlpha.Value;
+        FChromeTabFont.Size := edtFontSize.Value;
+        FChromeTabFont.Name := cbFontName.Text;
+        FChromeTabFont.Color := colFont.Color;
 
-      if FChromeTabFont is TChromeTabsLookAndFeelFont then
-        TChromeTabsLookAndFeelFont(FChromeTabFont).UseDefaultFont := chkUseDefaultFont.Checked;
-    end;
+        if FChromeTabFont is TChromeTabsLookAndFeelFont then
+          TChromeTabsLookAndFeelFont(FChromeTabFont).UseDefaultFont := chkUseDefaultFont.Checked;
+      end;
 
-    if FChromeTabsLookAndFeelTabModified <> nil then
-    begin
-      FChromeTabsLookAndFeelTabModified.CentreColor := colCentre.Color;
-      FChromeTabsLookAndFeelTabModified.OutsideColor := colOutside.Color;
-      FChromeTabsLookAndFeelTabModified.CentreAlpha := edtCentreAlpha.Value;
-      FChromeTabsLookAndFeelTabModified.OutsideAlpha := edtOutsideAlpha.Value;
+      if FChromeTabsLookAndFeelTabModified <> nil then
+      begin
+        FChromeTabsLookAndFeelTabModified.CentreColor := colCentre.Color;
+        FChromeTabsLookAndFeelTabModified.OutsideColor := colOutside.Color;
+        FChromeTabsLookAndFeelTabModified.CentreAlpha := edtCentreAlpha.Value;
+        FChromeTabsLookAndFeelTabModified.OutsideAlpha := edtOutsideAlpha.Value;
+      end;
+    finally
+      FChromeTabs.EndUpdate;
     end;
   end;
 end;

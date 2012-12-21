@@ -63,7 +63,7 @@ unit ChromeTabs;
 interface
 
 { TODO -cImprovement : Design Time invalidation needs improving e.g. Add/Delete tabs }
-{ TODO -cImprovement : Animation speed - Selective invalidation of tabs }
+{ TODO -cImprovement : Selective invalidation of tabs }
 { TODO -cImprovement : Better handling of GDI text alpha on Vista Glass - How? }
 
 { TODO -cFeature : Non see through tab clipping }
@@ -71,7 +71,6 @@ interface
 
 { TODO -cBug : Tab Alpha increases slightly when drag begins }
 { TODO -cBug : Drag docking not accurate. Some problem with the control detection }
-{ TODO -cBug : Close button hit offset when close button is centered }
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 {$include versions.inc}
@@ -111,7 +110,7 @@ type
   TOnAnimateStyle = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
 
-  // Why do we need this fix?
+  // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
   TWindowFromPointFixThread = class(TThread)
   private
@@ -129,6 +128,7 @@ type
     // IChromeTabInterface
     function GetLastPinnedIndex: Integer;
     function GetActiveTab: TChromeTab;
+    function GetPreviousTabPolygons(Index: Integer): IChromeTabPolygons;
 
     // ITabDockControl
     function GetControl: TWinControl;
@@ -206,6 +206,7 @@ type
     FLastHitTestResult: THitTestResult;
     FMovementEaseType: TChromeTabsEaseType;
     FMovementAnimationTime: Cardinal;
+    FMaxAddButtonRight: Integer;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -243,8 +244,8 @@ type
     function ActiveTabVisible: Boolean;
     function FindChromeTabsControlWithinRange(Pt: TPoint; Range: Integer; Step: Integer = 5): TCustomChromeTabs;
     function DraggingInOwnContainer: Boolean;
-    function GetVisiblePinnedTabCount: Integer;
-    function GetVisibleNonPinnedTabCount: Integer;
+    function GetVisiblePinnedTabCount(IncludeMarkedForDelete: Boolean = FALSE): Integer;
+    function GetVisibleNonPinnedTabCount(IncludeMarkedForDelete: Boolean = FALSE): Integer;
     function GetLastVisibleTabIndex(StartIndex: Integer): Integer;
     procedure SetScrollOffset(const Value: Integer);
     procedure SetScrollOffsetEx(const Value: Integer; IgnoreContraints: Boolean);
@@ -256,7 +257,7 @@ type
     function ScrollButtonRightVisible: Boolean;
     procedure ScrollTabs(ScrollDirection: TScrollDirection; StartTimer: Boolean = TRUE);
     function CorrectedClientWidth: Integer;
-    function GetVisibleTabCount: Integer;
+    function GetVisibleTabCount(IncludeMarkedForDelete: Boolean = FALSE): Integer;
     function ScrollingActive: Boolean;
     procedure SetControlDrawState(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; ForceUpdate: Boolean = FALSE);
     function BidiRect(ARect: TRect): TRect;
@@ -499,30 +500,43 @@ begin
   Result := GetLastPinnedTabIndex + 1;
 end;
 
-function TCustomChromeTabs.GetVisiblePinnedTabCount: Integer;
+function TCustomChromeTabs.GetPreviousTabPolygons(
+  Index: Integer): IChromeTabPolygons;
+var
+  PreviousIndex: Integer;
+begin
+  PreviousIndex := GetLastVisibleTabIndex(Index - 1);
+
+  if PreviousIndex = -1 then
+    Result := nil
+  else
+    Result := TabControls[PreviousIndex].GetPolygons;
+end;
+
+function TCustomChromeTabs.GetVisiblePinnedTabCount(IncludeMarkedForDelete: Boolean): Integer;
 var
   i: Integer;
 begin
   Result := 0;
 
   for i := 0 to pred(GetPinnedTabCount) do
-    if (Tabs[i].Visible) and (not Tabs[i].MarkedForDeletion) then
+    if (Tabs[i].Visible) and ((IncludeMarkedForDelete) or (not Tabs[i].MarkedForDeletion)) then
       Inc(Result);
 end;
 
-function TCustomChromeTabs.GetVisibleTabCount: Integer;
+function TCustomChromeTabs.GetVisibleTabCount(IncludeMarkedForDelete: Boolean): Integer;
 begin
-  Result := GetVisiblePinnedTabCount + GetVisibleNonPinnedTabCount;
+  Result := GetVisiblePinnedTabCount(IncludeMarkedForDelete) + GetVisibleNonPinnedTabCount(IncludeMarkedForDelete);
 end;
 
-function TCustomChromeTabs.GetVisibleNonPinnedTabCount: Integer;
+function TCustomChromeTabs.GetVisibleNonPinnedTabCount(IncludeMarkedForDelete: Boolean): Integer;
 var
   i: Integer;
 begin
   Result := 0;
 
   for i := GetLastPinnedIndex + 1 to pred(Tabs.Count) do
-    if (Tabs[i].Visible) and (not Tabs[i].MarkedForDeletion) then
+    if (Tabs[i].Visible) and ((IncludeMarkedForDelete) or (not Tabs[i].MarkedForDeletion)) then
       Inc(Result);
 end;
 
@@ -606,7 +620,7 @@ end;
 
 function TCustomChromeTabs.GetTabDisplayState: TTabDisplayState;
 begin
-  if FAdjustedTabWidth = FOptions.Display.Tabs.MaxWidth then
+  if (GetVisibleTabCount = 0) or (FAdjustedTabWidth = FOptions.Display.Tabs.MaxWidth) then
     Result := tdNormal else
   if ScrollingActive then
     Result := tdScrolling
@@ -1087,7 +1101,7 @@ begin
       if LastVisibleTabIndex <> -1 then
         NewTabLeft := TabControls[LastVisibleTabIndex].ControlRect.Right - FOptions.Display.Tabs.TabOverlap
       else
-        NewTabLeft := FOptions.Display.Tabs.OffsetLeft;
+        NewTabLeft := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
 
       SetMovementAnimation(FOptions.Animation.MovementAnimations.TabAdd);
 
@@ -1176,6 +1190,8 @@ begin
 
     tcDeleted:
       begin
+        SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
+
         // We're deleting the tab but we need to animate it first
         if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
            (ATab <> nil) then
@@ -1187,8 +1203,6 @@ begin
           end
           else
           begin
-            SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
-
             AddState(stsAnimatingCloseTab);
 
             TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
@@ -1614,11 +1628,15 @@ begin
   Result.HitTestArea := htBackground;
   Result.TabIndex := -1;
 
+  // Are we even in the container rect?
   if not PtInRect(ControlRect, pt) then
     Result.HitTestArea := htNoWhere else
+
+  // Add button?
   if FAddButtonControl.ContainsPoint(Pt) then
     Result.HitTestArea := htAddButton else
   begin
+    // Scroll buttons?
     if (ScrollButtonLeftVisible) and
        ((not IgnoreDisabledControls) or (FScrollButtonLeftControl.DrawState <> dsDisabled)) and
        (FScrollButtonLeftControl.ContainsPoint(pt)) then
@@ -1630,7 +1648,7 @@ begin
         Result.HitTestArea := htScrollButtonRight
       else
       begin
-        // If we|re not overlaying buttons, we need to make sure
+        // If we're not overlaying buttons, we need to make sure
         // we're in the tab container
         if (FOptions.Display.TabContainer.OverlayButtons) or
            (PtInRect(TabContainerRect, Pt)) then
@@ -2040,7 +2058,7 @@ begin
                                       TabControls[ATab.Index].ControlRect.Bottom),
                                       FALSE);
 
-              TabControls[ATab.Index].DrawTo(DragCanvas, Bitmap, Bitmap, FLastMouseX, FLastMouseY);
+              TabControls[ATab.Index].DrawTo(DragCanvas, FLastMouseX, FLastMouseY);
             finally
               TabControls[ATab.Index].ScrollableControl := TRUE;
 
@@ -2497,17 +2515,16 @@ begin
   if (FOptions.Display.AddButton.Visibility = avRightFixed) or
      (FOptions.Display.AddButton.Visibility = avRightFloating) then //and (GetVisibleTabCount = 0)) then
   begin
+    FMaxAddButtonRight := RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal;
+
     if FOptions.Display.AddButton.Visibility <> avRightFloating then
       SetControlPosition(FAddButtonControl,
-                         Rect(RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal,
+                         Rect(FMaxAddButtonRight,
                               FOptions.Display.AddButton.Offsets.Vertical,
                               RightOffset - FOptions.Display.AddButton.Offsets.Horizontal,
                               FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
                          FALSE);
 
-    //if (FOptions.Display.AddButton.Visibility = avRightFloating) and (GetVisibleTabCount = 0) then
-    //  SetControlLeft(FAddButtonControl, 0, FALSE)
-    //else
     Dec(RightOffset, FOptions.Display.AddButton.Width + 1 + FOptions.Display.AddButton.Offsets.Horizontal);
   end;
 
@@ -2687,7 +2704,7 @@ procedure TCustomChromeTabs.RepositionTabs;
       if not Tabs[i].MarkedForDeletion then
       begin
         // Set the position of the tabs
-        SetMovementAnimation(FOptions.Animation.MovementAnimations.TabMove);
+        //SetMovementAnimation(FOptions.Animation.MovementAnimations.TabMove);
 
         SetControlPosition(TabControl,
                            Rect(TabLeft,
@@ -2768,8 +2785,8 @@ procedure TCustomChromeTabs.RepositionTabs;
       if (DragTabControl <> nil) and
          (DragTabControl.ControlRect.Left +
           ScrollOffset +
-          (RectWidth(DragTabControl.ControlRect) div 2) -
-          FOptions.Display.Tabs.TabOverlap < TabLeft + RectWidth(DragTabControl.ControlRect)) then
+          (RectWidth(DragTabControl.ControlRect) div 2) +
+          (FOptions.Display.Tabs.TabOverlap div 2) < TabLeft + RectWidth(DragTabControl.ControlRect)) then
       begin
         // If the Dock control is this tab set, insert the drag tab into the control
         if (ActiveDragTabObject.DockControl <> nil) and
@@ -2899,14 +2916,14 @@ begin
 
     if (FOptions.Display.AddButton.Visibility = avRightFloating) then
     begin
-      if GetVisibleTabCount = 0 then
-        AddButtonLeft := 0
+      if GetVisibleTabCount(TRUE) = 0 then
+        AddButtonLeft := FOptions.Display.TabContainer.PaddingLeft
       else
         AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
                          FOptions.Display.AddButton.Offsets.HorizontalFloating;
 
-      if (GetTabDisplayState <> tdNormal) or (AddButtonLeft > TabContainerRect.Right + 1) then
-        AddButtonLeft := TabContainerRect.Right + 1;
+      if (GetTabDisplayState <> tdNormal) or (AddButtonLeft > FMaxAddButtonRight) then
+        AddButtonLeft := FMaxAddButtonRight;
 
       SetControlPosition(FAddButtonControl,
                          Rect(AddButtonLeft,
@@ -3200,7 +3217,7 @@ begin
 
   // Reset the position of the drag tab
   if FDragTabControl <> nil then
-    SetControlLeft(FDragTabControl, FDragTabControl.ControlRect.Left + ScrollOffset, TRUE);
+    SetControlLeft(FDragTabControl, FDragTabControl.ControlRect.Left + ScrollOffset, FALSE);
 
   DoOnTabDragDrop(X, Y, DragTabObject, Cancelled, TabDropOptions);
 end;
@@ -3323,7 +3340,7 @@ begin
   begin
     RemoveState(stsPendingUpdates);
 
-    Repaint; // Invalidate
+    Repaint;
   end
   else
   begin
@@ -3526,13 +3543,7 @@ begin
           begin
             SetTabClipRegion;
 
-            { TODO : Fix - Odd things happen when trying to clip the tab overlap }
-
-            //if (i > 0) and
-            //   (Tabs[i - 1].Visible) then
-            //  SetTabClipRegionFromPolygon(TabCanvas, TabControls[i - 1].GetPolygons.Polygons[0].Polygon, CombineModeExclude);
-
-            TabControls[i].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+            TabControls[i].DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
           end;
 
         // Clear the clipping region while we draw the base line
@@ -3557,14 +3568,14 @@ begin
            (ActiveTabVisible) and
            (TabControls[ActiveTabIndex].ControlRect.Right >= ScrollOffset) and
            (TabControls[ActiveTabIndex].ControlRect.Left <= CorrectedClientWidth + ScrollOffset) then
-          TabControls[ActiveTabIndex].DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+          TabControls[ActiveTabIndex].DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
 
         // Clear the clip region
         TabCanvas.ResetClip;
 
         // Draw the drag tab if required
         if FDragTabControl <> nil then
-          FDragTabControl.DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+          FDragTabControl.DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
 
         // Draw the new button
         if (FOptions.Display.AddButton.Visibility <> avNone) and
@@ -3572,16 +3583,16 @@ begin
             (not FActiveDragTabObject.HideAddButton)) and
            ((FDragTabObject = nil) or (not FDragTabObject.HideAddButton)) and
            (RectWidth(FAddButtonControl.ControlRect) <= ClientWidth) then
-          FAddButtonControl.DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+          FAddButtonControl.DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
 
         // Draw the left and right scroll buttons
         if FOptions.Scrolling.Enabled then
         begin
           if ScrollButtonLeftVisible then
-            FScrollButtonLeftControl.DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+            FScrollButtonLeftControl.DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
 
           if ScrollButtonRightVisible then
-            FScrollButtonRightControl.DrawTo(TabCanvas, FCanvasBmp, FBackgroundBmp, FLastMouseX, FLastMouseY);
+            FScrollButtonRightControl.DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
         end;
 
         // After control draw event
@@ -3638,6 +3649,7 @@ var
   MemStream: TMemoryStream;
 begin
   PaintControlToCanvas(Self, FCanvasBmp.Canvas);
+  PaintControlToCanvas(Self, FBackgroundBmp.Canvas);
 
   MemStream := TMemoryStream.Create;
   try

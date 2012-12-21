@@ -66,7 +66,7 @@ type
   public
     constructor Create(ChromeTabs: IChromeTabs); virtual;
 
-    procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); virtual; abstract;
+    procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); virtual; abstract;
 
     function GetPolygons: IChromeTabPolygons; virtual;
     function AnimateMovement: Boolean; virtual;
@@ -118,9 +118,8 @@ type
     FCurrentTabProperties: TChromeTabControlProperties;
     FEaseType: TChromeTabsEaseType;
   public
-    procedure SetProperties(Style: TChromeTabsLookAndFeelStyle; StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont;
-      EndTickCount: Cardinal; EaseType: TChromeTabsEaseType);
-    function TransformColors: Boolean;
+    procedure SetProperties(Style: TChromeTabsLookAndFeelStyle; StyleFont: TChromeTabsLookAndFeelFont; DefaultFont: TChromeTabsLookAndFeelBaseFont; EndTickCount: Cardinal; EaseType: TChromeTabsEaseType);
+    function TransformColors(ForceUpdate: Boolean): Boolean;
     procedure EndAnimation;
 
     property StartTabProperties: TChromeTabControlProperties read FStartTabProperties write FStartTabProperties;
@@ -129,36 +128,6 @@ type
     property StartTickCount: Cardinal read FStartTickCount;
     property EndTickCount: Cardinal read FEndTickCount;
     property CurrentTickCount: Cardinal read FCurrentTickCount;
-  end;
-
-  TBaseChromeButtonControl = class(TBaseChromeTabsControl)
-  private
-    FButtonBrush: TGPLinearGradientBrush;
-    FButtonPen: TGPPen;
-    FSymbolBrush: TGPLinearGradientBrush;
-    FSymbolPen: TGPPen;
-  protected
-    FButtonControlPropertyItems: TChromeTabControlPropertyItems;
-    FSymbolControlPropertyItems: TChromeTabControlPropertyItems;
-
-    FButtonStyle: TChromeTabsLookAndFeelStyle;
-    FSymbolStyle: TChromeTabsLookAndFeelStyle;
-
-    function GetButtonBrush: TGPLinearGradientBrush; virtual;
-    function GetButtonPen: TGPPen; virtual;
-    function GetSymbolBrush: TGPLinearGradientBrush; virtual;
-    function GetSymbolPen: TGPPen; virtual;
-
-    procedure SetStylePropertyClasses; virtual;
-  public
-    constructor Create(ChromeTabs: IChromeTabs); override;
-    destructor Destroy; override;
-
-    function AnimateStyle: Boolean; override;
-
-    procedure Invalidate; override;
-
-    procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
   end;
 
   TChromeTabControl = class(TBaseChromeTabsControl)
@@ -193,7 +162,7 @@ type
 
     procedure Invalidate; override;
     function AnimateStyle: Boolean; override;
-    procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
+    procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
     function GetCloseButonRect: TRect;
@@ -203,13 +172,43 @@ type
     property CloseButtonState: TDrawState read FCloseButtonState write SetCloseButtonState;
   end;
 
+  TBaseChromeButtonControl = class(TBaseChromeTabsControl)
+  private
+    FButtonBrush: TGPLinearGradientBrush;
+    FButtonPen: TGPPen;
+    FSymbolBrush: TGPLinearGradientBrush;
+    FSymbolPen: TGPPen;
+  protected
+    FButtonControlPropertyItems: TChromeTabControlPropertyItems;
+    FSymbolControlPropertyItems: TChromeTabControlPropertyItems;
+
+    FButtonStyle: TChromeTabsLookAndFeelStyle;
+    FSymbolStyle: TChromeTabsLookAndFeelStyle;
+
+    function GetButtonBrush: TGPLinearGradientBrush; virtual;
+    function GetButtonPen: TGPPen; virtual;
+    function GetSymbolBrush: TGPLinearGradientBrush; virtual;
+    function GetSymbolPen: TGPPen; virtual;
+
+    procedure SetStylePropertyClasses; virtual;
+  public
+    constructor Create(ChromeTabs: IChromeTabs); override;
+    destructor Destroy; override;
+
+    function AnimateStyle: Boolean; override;
+
+    procedure Invalidate; override;
+
+    procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
+  end;
+
   TAddButtonControl = class(TBaseChromeButtonControl)
   protected
     procedure SetStylePropertyClasses; override;
   public
     constructor Create(ChromeTabs: IChromeTabs); override;
 
-    procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
+    procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
   end;
 
@@ -218,14 +217,14 @@ type
     procedure SetStylePropertyClasses; override;
     function GetArrowPolygons(Direction: TChromeTabDirection): IChromeTabPolygons;
   public
-    procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
+    procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
   end;
 
   TScrollButtonLeftControl = class(TScrollButtonControl)
   public
     constructor Create(ChromeTabs: IChromeTabs); override;
 
-    procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
+    procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
   end;
 
@@ -233,7 +232,7 @@ type
   public
     constructor Create(ChromeTabs: IChromeTabs); override;
 
-    procedure DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer); override;
+    procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
   end;
 
@@ -350,6 +349,8 @@ end;
 
 function TBaseChromeTabsControl.GetPolygons: IChromeTabPolygons;
 begin
+  Result := nil;
+
   ChromeTabs.DoOnGetControlPolygons(ControlRect, FControlType, ChromeTabs.GetOptions.Display.Tabs.Orientation, Result);
 end;
 
@@ -537,7 +538,7 @@ begin
   FSymbolStyle := ChromeTabs.GetLookAndFeel.AddButton.PlusSign.Normal;
 end;
 
-procedure TAddButtonControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer);
+procedure TAddButtonControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 var
   Handled: Boolean;
 begin
@@ -668,7 +669,7 @@ end;
 
 function TChromeTabControl.AnimateStyle: Boolean;
 begin
-  Result := FChromeTabControlPropertyItems.TransformColors;
+  Result := FChromeTabControlPropertyItems.TransformColors(FALSE);
 
   Result := AnimateModified or Result;
 
@@ -796,7 +797,7 @@ begin
   Result := FTabPen;
 end;
 
-procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer);
+procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 
   procedure DrawGDITextWithOffset(const Text: String; TextRect: TRect; OffsetX, OffsetY: Integer; FontColor: TColor);
   const
@@ -1102,14 +1103,35 @@ var
   ImageRect, TextRect, ButtonRect, CrossRect: TRect;
   NormalImageVisible, OverlayImageVisible, TextVisible: Boolean;
   Handled: Boolean;
-  ChromeTabPolygons: IChromeTabPolygons;
+  ChromeTabPolygons, PreviousChromeTabPolygons: IChromeTabPolygons;
   OriginalClipRegion: TGPRegion;
+  PreviousPolygons: IChromeTabPolygons;
+  ActivePolygons: IChromeTabPolygons;
+  i: Integer;
 begin
   if (FTabProperties <> nil) and (ChromeTabs <> nil) then
   begin
     OriginalClipRegion := TGPRegion.Create;
     try
       // Save the current clip region of the GPGraphics
+      if (not ChromeTabs.GetOptions.Display.Tabs.SeeThroughTabs) and
+         (not ChromeTab.GetActive) then
+      begin
+        PreviousChromeTabPolygons := ChromeTabs.GetPreviousTabPolygons(ChromeTab.GetIndex);
+
+        if PreviousChromeTabPolygons <> nil then
+          SetTabClipRegionFromPolygon(TabCanvas, PreviousChromeTabPolygons.Polygons[0].Polygon, CombineModeExclude);
+
+        if (ChromeTabs.GetActiveTab <> nil) and
+           (ChromeTab.GetIndex + 1 = ChromeTabs.GetActiveTab.Index) then
+        begin
+          PreviousChromeTabPolygons := TChromeTabControl(ChromeTabs.GetActiveTab.TabControl).GetPolygons;
+
+          if PreviousChromeTabPolygons <> nil then
+            SetTabClipRegionFromPolygon(TabCanvas, PreviousChromeTabPolygons.Polygons[0].Polygon, CombineModeExclude);
+        end;
+      end;
+
       TabCanvas.GetClip(OriginalClipRegion);
 
       // Fire the before draw event
@@ -1287,7 +1309,7 @@ end;
 
 { TScrollButtonControl }
 
-procedure TScrollButtonControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer);
+procedure TScrollButtonControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 begin
   GetPolygons.DrawTo(TabCanvas);
 end;
@@ -1373,7 +1395,7 @@ begin
   FControlType := itScrollLeftButton;
 end;
 
-procedure TScrollButtonLeftControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer);
+procedure TScrollButtonLeftControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 var
   Handled: Boolean;
 begin
@@ -1404,7 +1426,7 @@ begin
   FControlType := itScrollRightButton;
 end;
 
-procedure TScrollButtonRightControl.DrawTo(TabCanvas: TGPGraphics; CanvasBmp, BackgroundBmp: TBitmap; MouseX, MouseY: Integer);
+procedure TScrollButtonRightControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 var
   Handled: Boolean;
 begin
@@ -1476,25 +1498,25 @@ begin
     FEndTickCount := 0;
     FCurrentTickCount := FEndTickCount;
 
-    TransformColors;
+    TransformColors(TRUE);
   end
   else
     FEndTickCount := EndTickCount;
 end;
 
-function TChromeTabControlPropertyItems.TransformColors: Boolean;
+function TChromeTabControlPropertyItems.TransformColors(ForceUpdate: Boolean): Boolean;
 var
   TransformPct: Integer;
 begin
   Result := FALSE;
 
-  if (FEndTickCount = 0) or
+  if (ForceUpdate) or
      ((FStartTickCount > 0) and
       (FCurrentTickCount < FEndTickCount)) then
   begin
     Result := TRUE;
 
-    if FEndTickCount = 0 then
+    if ForceUpdate then
     begin
       TransformPct := 100;
     end
@@ -1528,14 +1550,14 @@ function TBaseChromeButtonControl.AnimateStyle: Boolean;
 var
   SymbolResult: Boolean;
 begin
-  Result := FButtonControlPropertyItems.TransformColors;
+  Result := FButtonControlPropertyItems.TransformColors(FALSE);
 
   if Result then
   begin
     FreeAndNil(FButtonBrush);
     FreeAndNil(FButtonPen);
 
-    SymbolResult := FSymbolControlPropertyItems.TransformColors;
+    SymbolResult := FSymbolControlPropertyItems.TransformColors(FALSE);
 
     if SymbolResult then
     begin
