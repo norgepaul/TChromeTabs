@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 187
   Caption = 'Chrome Tabs Demo'
   ClientHeight = 596
-  ClientWidth = 997
+  ClientWidth = 999
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -17,7 +17,7 @@ object frmMain: TfrmMain
   object ChromeTabs1: TChromeTabs
     Left = 0
     Top = 0
-    Width = 997
+    Width = 999
     Height = 29
     OnChange = ChromeTabs1Change
     OnActiveTabChanged = ChromeTabs1ActiveTabChanged
@@ -186,8 +186,8 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Active.Font.UseDefaultFont = True
     LookAndFeel.Tabs.Active.Style.StartColor = clWhite
     LookAndFeel.Tabs.Active.Style.StopColor = 16316920
-    LookAndFeel.Tabs.Active.Style.StartAlpha = 100
-    LookAndFeel.Tabs.Active.Style.StopAlpha = 100
+    LookAndFeel.Tabs.Active.Style.StartAlpha = 255
+    LookAndFeel.Tabs.Active.Style.StopAlpha = 255
     LookAndFeel.Tabs.Active.Style.OutlineColor = 10189918
     LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
@@ -348,11 +348,12 @@ object frmMain: TfrmMain
     Align = alTop
     OnResize = ChromeTabs1Resize
     TabOrder = 1
+    ExplicitWidth = 997
   end
   object ChromeTabs2: TChromeTabs
     Left = 0
     Top = 565
-    Width = 997
+    Width = 999
     Height = 31
     OnDebugLog = ChromeTabs1DebugLog
     OnButtonAddClick = ChromeTabs1ButtonAddClick
@@ -657,25 +658,28 @@ object frmMain: TfrmMain
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alBottom
     TabOrder = 2
+    ExplicitWidth = 997
   end
   object Panel1: TPanel
     Left = 0
     Top = 29
-    Width = 997
+    Width = 999
     Height = 536
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 997
     object pnlTop: TPanel
       Left = 0
       Top = 0
-      Width = 997
+      Width = 999
       Height = 29
       Align = alTop
       BevelOuter = bvNone
       Color = clMoneyGreen
       ParentBackground = False
       TabOrder = 0
+      ExplicitWidth = 997
       object Label19: TLabel
         Left = 7
         Top = 7
@@ -710,17 +714,15 @@ object frmMain: TfrmMain
     object pcMain: TPageControl
       Left = 0
       Top = 29
-      Width = 997
+      Width = 999
       Height = 507
       ActivePage = TabSheet1
       Align = alClient
       TabOrder = 1
+      ExplicitWidth = 997
       object TabSheet1: TTabSheet
         Caption = 'Options'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 989
         object GroupBox1: TGroupBox
           Left = 0
           Top = 0
@@ -824,25 +826,24 @@ object frmMain: TfrmMain
         object pcOptions: TPageControl
           Left = 270
           Top = 0
-          Width = 719
+          Width = 721
           Height = 444
           ActivePage = TabSheet5
           Align = alClient
           TabOrder = 1
+          ExplicitWidth = 719
           object TabSheet5: TTabSheet
             Caption = 'Tabs'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object GroupBox3: TGroupBox
               Left = 0
               Top = 0
-              Width = 711
+              Width = 713
               Height = 185
               Align = alTop
               Caption = 'Tabs'
               TabOrder = 0
+              ExplicitWidth = 711
               object Label6: TLabel
                 Left = 8
                 Top = 76
@@ -1090,11 +1091,12 @@ object frmMain: TfrmMain
             object GroupBox5: TGroupBox
               Left = 0
               Top = 185
-              Width = 711
+              Width = 713
               Height = 118
               Align = alTop
               Caption = 'Modified Glow'
               TabOrder = 1
+              ExplicitWidth = 711
               object Label15: TLabel
                 Left = 11
                 Top = 20
@@ -1199,11 +1201,12 @@ object frmMain: TfrmMain
             object GroupBox6: TGroupBox
               Left = 0
               Top = 303
-              Width = 711
+              Width = 713
               Height = 90
               Align = alTop
               Caption = 'Mouse Glow'
               TabOrder = 2
+              ExplicitWidth = 711
               object pnlMouseGlow: TPanel
                 Left = 3
                 Top = 43
@@ -1304,18 +1307,16 @@ object frmMain: TfrmMain
           object TabSheet7: TTabSheet
             Caption = 'Text'
             ImageIndex = 6
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
-              Width = 711
+              Width = 713
               Height = 172
               Align = alTop
               Caption = 'Default Font'
               TabOrder = 0
+              ExplicitWidth = 711
               object Label14: TLabel
                 Left = 8
                 Top = 20
@@ -1418,11 +1419,12 @@ object frmMain: TfrmMain
             object GroupBox10: TGroupBox
               Left = 0
               Top = 172
-              Width = 711
+              Width = 713
               Height = 151
               Align = alTop
               Caption = 'Display'
               TabOrder = 1
+              ExplicitWidth = 711
               object Label67: TLabel
                 Left = 13
                 Top = 99
@@ -1511,25 +1513,20 @@ object frmMain: TfrmMain
           object TabSheet4: TTabSheet
             Caption = 'Buttons'
             ImageIndex = 5
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object pcButtons: TPageControl
               Left = 0
               Top = 19
-              Width = 711
+              Width = 713
               Height = 395
               ActivePage = TabSheet11
               Align = alClient
               TabOrder = 0
+              ExplicitWidth = 711
               object TabSheet11: TTabSheet
                 Caption = 'Close Buttons'
                 ImageIndex = 1
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
+                ExplicitWidth = 703
                 object Label4: TLabel
                   Left = 11
                   Top = 6
@@ -1680,10 +1677,7 @@ object frmMain: TfrmMain
               object TabSheet12: TTabSheet
                 Caption = 'Add Button'
                 ImageIndex = 2
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
+                ExplicitWidth = 703
                 object Label29: TLabel
                   Left = 11
                   Top = 6
@@ -1818,10 +1812,7 @@ object frmMain: TfrmMain
               object TabSheet13: TTabSheet
                 Caption = 'Scroll Buttons'
                 ImageIndex = 3
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
+                ExplicitWidth = 703
                 object Label25: TLabel
                   Left = 11
                   Top = 7
@@ -2030,11 +2021,12 @@ object frmMain: TfrmMain
             object Panel8: TPanel
               Left = 0
               Top = 0
-              Width = 711
+              Width = 713
               Height = 19
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 1
+              ExplicitWidth = 711
               object chkScrollOverlayButtons: TCheckBox
                 Left = 0
                 Top = 0
@@ -2049,10 +2041,7 @@ object frmMain: TfrmMain
           object TabSheet10: TTabSheet
             Caption = 'Internationlization'
             ImageIndex = 8
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object Label69: TLabel
               Left = 3
               Top = 6
@@ -2081,10 +2070,7 @@ object frmMain: TfrmMain
           object Scrolling: TTabSheet
             Caption = 'Scrolling'
             ImageIndex = 4
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object chkScrolling: TCheckBox
               Left = 3
               Top = 3
@@ -2099,11 +2085,12 @@ object frmMain: TfrmMain
             object pnlScroll: TPanel
               Left = 0
               Top = 0
-              Width = 711
+              Width = 713
               Height = 414
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
+              ExplicitWidth = 711
               object Label26: TLabel
                 Left = 17
                 Top = 60
@@ -2221,10 +2208,7 @@ object frmMain: TfrmMain
           object TabSheet6: TTabSheet
             Caption = 'Tab Container'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object Label20: TLabel
               Left = 3
               Top = 4
@@ -2265,10 +2249,7 @@ object frmMain: TfrmMain
           object TabSheet2: TTabSheet
             Caption = 'Behaviour'
             ImageIndex = 2
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object Label53: TLabel
               Left = 24
               Top = 118
@@ -2345,18 +2326,16 @@ object frmMain: TfrmMain
           object TabSheet8: TTabSheet
             Caption = 'Animation'
             ImageIndex = 3
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object GroupBox8: TGroupBox
               Left = 0
               Top = 0
-              Width = 711
+              Width = 713
               Height = 177
               Align = alTop
               Caption = 'Default Animation Properties'
               TabOrder = 0
+              ExplicitWidth = 711
               object Label21: TLabel
                 Left = 8
                 Top = 76
@@ -2504,11 +2483,12 @@ object frmMain: TfrmMain
             object GroupBox9: TGroupBox
               Left = 0
               Top = 177
-              Width = 711
+              Width = 713
               Height = 177
               Align = alTop
               Caption = 'Specific Animations'
               TabOrder = 1
+              ExplicitWidth = 711
               object GroupBox11: TGroupBox
                 Left = 337
                 Top = 17
@@ -2754,10 +2734,7 @@ object frmMain: TfrmMain
           object TabSheet9: TTabSheet
             Caption = 'Drag Drop'
             ImageIndex = 7
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 711
             object cbDragType: TComboBox
               Left = 3
               Top = 21
@@ -2778,11 +2755,12 @@ object frmMain: TfrmMain
             object pnlDragDrop: TPanel
               Left = 0
               Top = 0
-              Width = 711
+              Width = 713
               Height = 414
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
+              ExplicitWidth = 711
               object Label31: TLabel
                 Left = 6
                 Top = 6
@@ -2917,11 +2895,12 @@ object frmMain: TfrmMain
         object Panel7: TPanel
           Left = 0
           Top = 444
-          Width = 989
+          Width = 991
           Height = 33
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
+          ExplicitWidth = 989
           object btnSaveOptions: TButton
             Left = 133
             Top = 0
@@ -2951,10 +2930,7 @@ object frmMain: TfrmMain
       object TabSheet14: TTabSheet
         Caption = 'Look and Feel'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 989
         object tvLookAndFeelItems: TTreeView
           Left = 0
           Top = 0
@@ -2971,15 +2947,16 @@ object frmMain: TfrmMain
         object Panel5: TPanel
           Left = 169
           Top = 0
-          Width = 820
+          Width = 822
           Height = 444
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitWidth = 820
           object pnlLookAndFeelPath: TPanel
             Left = 0
             Top = 0
-            Width = 820
+            Width = 822
             Height = 25
             Align = alTop
             Alignment = taLeftJustify
@@ -2992,11 +2969,12 @@ object frmMain: TfrmMain
             Font.Style = []
             ParentFont = False
             TabOrder = 0
+            ExplicitWidth = 820
           end
           object ScrollBox1: TScrollBox
             Left = 0
             Top = 25
-            Width = 820
+            Width = 822
             Height = 419
             HorzScrollBar.Smooth = True
             HorzScrollBar.Style = ssHotTrack
@@ -3008,16 +2986,18 @@ object frmMain: TfrmMain
             Color = clWindow
             ParentColor = False
             TabOrder = 1
+            ExplicitWidth = 820
           end
         end
         object Panel6: TPanel
           Left = 0
           Top = 444
-          Width = 989
+          Width = 991
           Height = 33
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
+          ExplicitWidth = 989
           object btnSaveLookAndFeel: TButton
             Left = 133
             Top = 0
@@ -3047,10 +3027,7 @@ object frmMain: TfrmMain
       object TabSheet15: TTabSheet
         Caption = 'General'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 989
         object Label7: TLabel
           Left = 16
           Top = 8
@@ -3125,26 +3102,25 @@ object frmMain: TfrmMain
       object TabSheet3: TTabSheet
         Caption = 'Events'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 989
         object Panel2: TPanel
           Left = 0
           Top = 63
-          Width = 989
+          Width = 991
           Height = 414
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
+          ExplicitWidth = 989
           object gbOtherEvents: TGroupBox
             Left = 685
             Top = 0
-            Width = 304
+            Width = 306
             Height = 414
             Align = alClient
             Caption = 'Other Events'
             TabOrder = 3
+            ExplicitWidth = 304
           end
           object gbChange: TGroupBox
             Left = 241
@@ -3224,13 +3200,14 @@ object frmMain: TfrmMain
         object Panel4: TPanel
           Left = 0
           Top = 0
-          Width = 989
+          Width = 991
           Height = 63
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitWidth = 989
           DesignSize = (
-            989
+            991
             63)
           object Label13: TLabel
             Left = 1
@@ -3251,29 +3228,28 @@ object frmMain: TfrmMain
           object edtStates: TEdit
             Left = 1
             Top = 36
-            Width = 986
+            Width = 988
             Height = 23
             Anchors = [akLeft, akTop, akRight]
             ReadOnly = True
             TabOrder = 1
+            ExplicitWidth = 986
           end
         end
       end
       object tabDebug: TTabSheet
         Caption = 'Debug'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 989
         object Panel10: TPanel
           Left = 0
           Top = 0
-          Width = 989
+          Width = 991
           Height = 19
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
+          ExplicitWidth = 989
           object chkDebugLog: TCheckBox
             Left = 0
             Top = 0
