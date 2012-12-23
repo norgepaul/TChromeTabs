@@ -2065,7 +2065,7 @@ begin
               SetControlPosition(TabControls[ATab.Index],
                                  Rect(0,
                                       TabTop,
-                                      TabControls[ATab.Index].ControlRect.Right,
+                                      TabControls[ATab.Index].ControlRect.Right - TabControls[ATab.Index].ControlRect.Left,
                                       TabTop + RectHeight(TabControls[ATab.Index].ControlRect)),
                                       FALSE);
 

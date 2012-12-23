@@ -1523,9 +1523,6 @@ procedure TChromeTabsList.Notify(Item: TCollectionItem;
 begin
   inherited;
 
-  if (Action = cnDeleting) and (Owner is TWinControl) then
-    PostMessage(TWinControl(Owner).Handle, WM_PAINT, 0, 0);
-
   if (Action in [cnAdded]) and
      (GetChromeTabInterface <> nil) then
     GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcAdded);
