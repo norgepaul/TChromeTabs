@@ -1,5 +1,8 @@
 TChromeTabs 1.2 BETA
 
+23/12/2012
+Fixed: Drag form tab width.
+
 21/12/2012
 Fixed: Bidi modes did not match the display.
 
