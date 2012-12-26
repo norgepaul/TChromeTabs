@@ -127,6 +127,7 @@ type
     function GetLastPinnedIndex: Integer;
     function GetActiveTab: TChromeTab;
     function GetPreviousTabPolygons(Index: Integer): IChromeTabPolygons;
+    function GetComponentState: TComponentState;
 
     // ITabDockControl
     function GetControl: TWinControl;
@@ -1567,6 +1568,11 @@ begin
     Result := FScrollOffset
   else
     Result := -FScrollOffset;
+end;
+
+function TCustomChromeTabs.GetComponentState: TComponentState;
+begin
+  Result := ComponentState;
 end;
 
 function TCustomChromeTabs.GetControl: TWinControl;

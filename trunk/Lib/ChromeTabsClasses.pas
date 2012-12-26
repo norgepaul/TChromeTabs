@@ -135,7 +135,7 @@ type
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
     function GetChromeTabInterface: IChromeTabs;
-    procedure SetCollection(Value: TCollection); override;
+   // procedure SetCollection(Value: TCollection); override;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -1080,6 +1080,8 @@ type
     function ScrollRect(ARect: TRect): TRect; overload;
     function BidiRect(ARect: TRect): TRect;
     function GetBiDiMode: TBiDiMode;
+    procedure Invalidate;
+    function GetComponentState: TComponentState;
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;
@@ -1300,6 +1302,25 @@ begin
     Result := nil;
 end;
 
+(*procedure TChromeTab.SetCollection(Value: TCollection);
+var
+  OldCollection: TOwnedCollection;
+begin
+  if (GetChromeTabInterface <> nil) and
+     (not (csDesigning in GetChromeTabInterface.GetComponentState)) then
+  begin
+    OldCollection := Collection as TOwnedCollection;
+
+    inherited;
+
+    if (OldCollection <> Value) and
+       (Assigned(OldCollection)) then
+      GetChromeTabInterface.DoOnChange(nil, tcPropertyUpdated);
+  end
+  else
+    inherited;
+end; *)
+
 function TChromeTab.ImageIsVisible: Boolean;
 begin
   Result := (FImageIndex <> -1) or (FImageIndexOverlay <> -1);
@@ -1324,19 +1345,6 @@ begin
 
     DoChanged;
   end;
-end;
-
-procedure TChromeTab.SetCollection(Value: TCollection);
-var
-  OldCollection: TOwnedCollection;
-begin
-  OldCollection := Collection as TOwnedCollection;
-
-  inherited;
-
-  if (OldCollection <> Value) and
-     (Assigned(OldCollection)) then
-    DoChanged(tcPropertyUpdated);
 end;
 
 procedure TChromeTab.SetImageIndex(Value: TImageIndex);
@@ -1523,9 +1531,11 @@ procedure TChromeTabsList.Notify(Item: TCollectionItem;
 begin
   inherited;
 
-  if (Action in [cnAdded]) and
-     (GetChromeTabInterface <> nil) then
-    GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcAdded);
+  if GetChromeTabInterface <> nil then
+    case Action of
+      //cnDeleting: GetChromeTabInterface.Invalidate;
+      cnAdded: GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcAdded);
+    end;
 end;
 
 
