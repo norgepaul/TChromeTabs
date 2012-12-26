@@ -1101,9 +1101,8 @@ var
   ImageRect, TextRect, ButtonRect, CrossRect: TRect;
   NormalImageVisible, OverlayImageVisible, TextVisible: Boolean;
   Handled: Boolean;
-  ChromeTabPolygons, PreviousChromeTabPolygons: IChromeTabPolygons;
+  ChromeTabPolygons: IChromeTabPolygons;
   OriginalClipRegion: TGPRegion;
-  PreviousPolygons: IChromeTabPolygons;
   i: Integer;
 begin
   if (FTabProperties <> nil) and (ChromeTabs <> nil) then
