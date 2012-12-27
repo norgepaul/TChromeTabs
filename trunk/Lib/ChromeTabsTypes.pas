@@ -231,9 +231,10 @@ type
 
 const
   BidiLeftToRightTabModes: TBiDiModes = [bdLeftToRight, bdRightToLeftReadingOnly];
-  BidiLeftToRightTextModes: TBiDiModes = [bdLeftToRight, bdRightToLeftReadingOnly];
   BidiRightToLeftTabModes: TBiDiModes = [bdRightToLeft, bdRightToLeftNoAlign];
-  BidiRightToLeftTextModes: TBiDiModes = [bdRightToLeft, bdRightToLeftReadingOnly];
+  BidiLeftToRightTextModes: TBiDiModes = [bdLeftToRight];
+  BidiRightToLeftTextModes: TBiDiModes = [bdRightToLeft, bdRightToLeftNoAlign, bdRightToLeftReadingOnly];
+  BidiRightToLeftTextAlignmentModes: TBiDiModes = [bdLeftToRight, bdRightToLeft];
 
   HitTestDescriptions: Array[THitTestArea] of String = (
     'Nowhere',
