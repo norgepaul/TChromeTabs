@@ -872,17 +872,23 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
             TabsTxtBrush.SetBlend(@BlendFactorsFade[0], @BlendPositions[0], Length(BlendFactorsFade));
           end;
 
-          // Set the horizontal alignment
+          // Set the verrtical alignment
           case ChromeTabs.GetOptions.Display.Tabs.TextAlignmentVertical of
             taAlignTop: TxtFormat.SetLineAlignment(StringAlignmentNear);
             taAlignBottom: TxtFormat.SetLineAlignment(StringAlignmentFar);
             taVerticalCenter: TxtFormat.SetLineAlignment(StringAlignmentCenter);
           end;
 
-          // Set the vertical alignment
+          // Set the horizontal alignment
           case ChromeTabs.GetOptions.Display.Tabs.TextAlignmentHorizontal of
-            taLeftJustify: TxtFormat.SetAlignment(StringAlignmentNear);
-            taRightJustify: TxtFormat.SetAlignment(StringAlignmentFar);
+            taLeftJustify: if ChromeTabs.GetBidiMode in BidiRightToLeftTextAlignmentModes then
+                             TxtFormat.SetAlignment(StringAlignmentNear)
+                           else
+                             TxtFormat.SetAlignment(StringAlignmentFar);
+            taRightJustify: if ChromeTabs.GetBidiMode in BidiRightToLeftTextAlignmentModes then
+                             TxtFormat.SetAlignment(StringAlignmentFar)
+                           else
+                             TxtFormat.SetAlignment(StringAlignmentNear);
             taCenter: TxtFormat.SetAlignment(StringAlignmentCenter);
           end;
 
