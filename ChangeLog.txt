@@ -1,5 +1,10 @@
 TChromeTabs 1.2 BETA
 
+28/12/2012
+Fixed: All BiDi modes should now display correctly.
+Fixed: Regression bug - odd behaviour when closing a tab.
+Fixed: Tab delete at design time now correctly updates the control.
+
 23/12/2012
 Fixed: Drag form tab width.
 

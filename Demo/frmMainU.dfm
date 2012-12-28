@@ -28,7 +28,7 @@ object frmMain: TfrmMain
     OnGetControlPolygons = ChromeTabs1GetControlPolygons
     OnScroll = ChromeTabs1Scroll
     OnScrollWidthChanged = ChromeTabs1ScrollWidthChanged
-    ActiveTabIndex = 0
+    ActiveTabIndex = 1
     Images = ImageList1
     ImagesOverlay = ImageList2
     Options.Display.CloseButton.Offsets.Vertical = 6
@@ -138,7 +138,7 @@ object frmMain: TfrmMain
     Tabs = <
       item
         Caption = 'Tab 1'
-        Active = True
+        Active = False
         Tag = 0
         ImageIndex = 4
         ImageIndexOverlay = 0
@@ -148,7 +148,7 @@ object frmMain: TfrmMain
       end
       item
         Caption = 'Tab 2'
-        Active = False
+        Active = True
         Tag = 0
         ImageIndex = -1
         ImageIndexOverlay = -1
