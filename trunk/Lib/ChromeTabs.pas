@@ -917,10 +917,7 @@ end;
 
 procedure TCustomChromeTabs.DeleteTab(Index: Integer);
 begin
-  if csDesigning in ComponentState then
-    FTabs.DeleteNow(Index)
-  else
-    FTabs.Delete(Index);
+  FTabs.DeleteTab(Index, csDesigning in ComponentState);
 end;
 
 procedure TCustomChromeTabs.DoPopupClick(Sender: TObject);
@@ -1030,7 +1027,7 @@ begin
     FDragCancelled := FALSE;
 
     if (tdDeleteDraggedTab in TabDropOptions) and (ActiveTabIndex <> -1) then
-      FTabs.DeleteNow(ActiveTabIndex);
+      FTabs.DeleteTab(ActiveTabIndex, TRUE);
 
     RemoveState(stsDragging);
 
@@ -1210,7 +1207,7 @@ begin
             // If the tabs are compressed and this is the last tab, don't animate
             if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
             begin
-              Tabs.DeleteNow(ATab.Index);
+              Tabs.DeleteTab(ATab.Index, TRUE);
             end
             else
             begin
@@ -1240,6 +1237,9 @@ begin
             TabControls[ATab.Index].Invalidate;
         end;
     end;
+
+    if (FTabs <> nil) and (ActiveTabIndex = -1) and (GetVisibleTabCount > 0) then
+      ActiveTabIndex := GetLastVisibleTabIndex(FTabs.Count - 1);
 
     Redraw;
 

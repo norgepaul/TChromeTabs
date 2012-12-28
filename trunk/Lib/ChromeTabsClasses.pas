@@ -24,7 +24,8 @@ unit ChromeTabsClasses;
 interface
 
 uses
-  Windows, Classes, SysUtils, ImgList, Controls, Graphics, Forms, Contnrs, Messages,
+  Windows, Classes, SysUtils, ImgList, Controls, Graphics,
+  Forms, Contnrs, Messages, Dialogs,
 
   GDIPObj, GDIPAPI,
 
@@ -135,7 +136,7 @@ type
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
     function GetChromeTabInterface: IChromeTabs;
-   // procedure SetCollection(Value: TCollection); override;
+    procedure SetCollection(Value: TCollection); override;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -167,7 +168,6 @@ type
   protected
     procedure SetItem(Index: Integer; Value: TChromeTab);
     function GetItem(Index: Integer): TChromeTab;
-    procedure InternalDelete(Index: Integer; DeleteNow: Boolean);
 
     procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
 
@@ -177,10 +177,9 @@ type
 
     function IndexOf(ATab: TChromeTab): integer;
     property Items[Index: Integer]: TChromeTab read GetItem write SetItem; default;
-    procedure Delete(Index: Integer);
-    procedure DeleteNow(Index: Integer);
     procedure Move(OldIndex, NewIndex: Integer);
     procedure Assign(Source: TPersistent); override;
+    procedure DeleteTab(Index: Integer; DeleteNow: Boolean);
     function Add: TChromeTab; virtual;
 
     property ActiveTab: TChromeTab read GetActiveTab write SetActiveTab;
@@ -1302,12 +1301,12 @@ begin
     Result := nil;
 end;
 
-(*procedure TChromeTab.SetCollection(Value: TCollection);
+procedure TChromeTab.SetCollection(Value: TCollection);
 var
   OldCollection: TOwnedCollection;
 begin
   if (GetChromeTabInterface <> nil) and
-     (not (csDesigning in GetChromeTabInterface.GetComponentState)) then
+     (csDesigning in GetChromeTabInterface.GetComponentState) then
   begin
     OldCollection := Collection as TOwnedCollection;
 
@@ -1315,11 +1314,11 @@ begin
 
     if (OldCollection <> Value) and
        (Assigned(OldCollection)) then
-      GetChromeTabInterface.DoOnChange(nil, tcPropertyUpdated);
+      DoChanged(tcPropertyUpdated);
   end
   else
     inherited;
-end; *)
+end;
 
 function TChromeTab.ImageIsVisible: Boolean;
 begin
@@ -1401,23 +1400,17 @@ begin
   inherited Create(AOwner, ChromeTabClass);
 end;
 
-procedure TChromeTabsList.Delete(Index: Integer);
-begin
-  InternalDelete(Index, FALSE);
-end;
-
-procedure TChromeTabsList.DeleteNow(Index: Integer);
-begin
-  InternalDelete(Index, TRUE);
-end;
-
-procedure TChromeTabsList.InternalDelete(Index: Integer; DeleteNow: Boolean);
+procedure TChromeTabsList.DeleteTab(Index: Integer; DeleteNow: Boolean);
 var
   NewIdx: Integer;
 begin
   // Has this tab already been marked for deletion? If so, remove it now
-  if (DeleteNow) or (Items[Index].FMarkedForDeletion) then
-    inherited Delete(Index)
+  if Items[Index].FMarkedForDeletion then
+  begin
+    inherited Delete(Index);
+
+    //GetChromeTabInterface.DoOnChange(nil, tcDeleted);
+  end
   else
   begin
     if not Items[Index].Active then
@@ -1443,7 +1436,8 @@ begin
 
     GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
 
-    if GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) <> ttNone then
+    if (not DeleteNow) and
+       (GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) <> ttNone) then
     begin
       Items[Index].FMarkedForDeletion := TRUE;
 

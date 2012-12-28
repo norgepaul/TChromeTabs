@@ -856,7 +856,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
             // Set the fade blend factors to fade the end of the text
             TxtFormat.SetTrimming(StringTrimmingNone);
 
-            if ChromeTabs.GetBiDiMode in BidiRightToLeftTextModes then
+            if ChromeTabs.GetBiDiMode in BidiRightTextAlignmentModes then
             begin
               BlendFactorsFade[0] := 1.0;
               BlendFactorsFade[2] := 0.0;
@@ -875,20 +875,26 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
           // Set the verrtical alignment
           case ChromeTabs.GetOptions.Display.Tabs.TextAlignmentVertical of
             taAlignTop: TxtFormat.SetLineAlignment(StringAlignmentNear);
+
             taAlignBottom: TxtFormat.SetLineAlignment(StringAlignmentFar);
+
             taVerticalCenter: TxtFormat.SetLineAlignment(StringAlignmentCenter);
           end;
 
           // Set the horizontal alignment
           case ChromeTabs.GetOptions.Display.Tabs.TextAlignmentHorizontal of
-            taLeftJustify: if ChromeTabs.GetBidiMode in BidiRightToLeftTextAlignmentModes then
+            taLeftJustify: if (ChromeTabs.GetBidiMode in BidiLeftToRightTextModes) or
+                              (ChromeTabs.GetBidiMode in BidiRightTextAlignmentModes) then
                              TxtFormat.SetAlignment(StringAlignmentNear)
                            else
                              TxtFormat.SetAlignment(StringAlignmentFar);
-            taRightJustify: if ChromeTabs.GetBidiMode in BidiRightToLeftTextAlignmentModes then
-                             TxtFormat.SetAlignment(StringAlignmentFar)
-                           else
-                             TxtFormat.SetAlignment(StringAlignmentNear);
+
+            taRightJustify: if (ChromeTabs.GetBidiMode in BidiLeftToRightTextModes) or
+                               (ChromeTabs.GetBidiMode in BidiRightTextAlignmentModes) then
+                              TxtFormat.SetAlignment(StringAlignmentFar)
+                            else
+                              TxtFormat.SetAlignment(StringAlignmentNear);
+
             taCenter: TxtFormat.SetAlignment(StringAlignmentCenter);
           end;
 
