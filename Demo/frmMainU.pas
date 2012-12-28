@@ -361,10 +361,8 @@ type
     procedure SpinButton1DownClick(Sender: TObject);
     procedure SpinButton1UpClick(Sender: TObject);
     procedure sbScrollOffsetChange(Sender: TObject);
-    procedure ChromeTabs1Scroll(Sender: TObject);
     procedure ChromeTabs1TabClientRectChanged(Sender: TObject);
     procedure ChromeTabs1ScrollWidthChanged(Sender: TObject);
-    procedure ChromeTabs1Resize(Sender: TObject);
     procedure ChromeTabs1GetControlPolygons(Sender: TObject; ItemRect: TRect;
       ItemType: TChromeTabItemType; Orientation: TTabOrientation;
       var Polygons: IChromeTabPolygons);
@@ -1093,8 +1091,7 @@ begin
   FCurrentTabs.OnGetControlPolygons := ChromeTabs1GetControlPolygons;
   FCurrentTabs.OnMouseDown := ChromeTabs1MouseDown;
   FCurrentTabs.OnMouseUp := ChromeTabs1MouseUp;
-  FCurrentTabs.OnResize := ChromeTabs1Resize;
-  FCurrentTabs.OnScroll := ChromeTabs1Scroll;
+  FCurrentTabs.OnScroll := ChromeTabs1ScrollWidthChanged;
   FCurrentTabs.OnScrollWidthChanged := ChromeTabs1ScrollWidthChanged;
   FCurrentTabs.OnStateChange := ChromeTabs1StateChange;
   FCurrentTabs.OnTabDblClick := ChromeTabs1TabDblClick;
@@ -1675,16 +1672,6 @@ begin
     FLogOtherEvents.Log('OnNeedDragImageControl [TabIndex = %d]', [ATab.Index]);
 
   DragControl := pcMain;
-end;
-
-procedure TfrmMain.ChromeTabs1Resize(Sender: TObject);
-begin
-  UpdateScrollBar;
-end;
-
-procedure TfrmMain.ChromeTabs1Scroll(Sender: TObject);
-begin
-  UpdateScrollBar;
 end;
 
 procedure TfrmMain.ChromeTabs1ScrollWidthChanged(Sender: TObject);

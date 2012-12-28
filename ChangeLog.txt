@@ -1,6 +1,7 @@
 TChromeTabs 1.2 BETA
 
 28/12/2012
+Fixed: Modified glow incorrectly positioned for bottom tabs.
 Fixed: All BiDi modes should now display correctly.
 Fixed: Regression bug - odd behaviour when closing a tab.
 Fixed: Tab delete at design time now correctly updates the control.
