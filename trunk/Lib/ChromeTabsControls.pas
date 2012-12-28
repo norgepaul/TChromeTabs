@@ -1116,6 +1116,7 @@ var
   ChromeTabPolygons: IChromeTabPolygons;
   OriginalClipRegion: TGPRegion;
   i: Integer;
+  ModifiedTop: Integer;
 begin
   if (FTabProperties <> nil) and (ChromeTabs <> nil) then
   begin
@@ -1147,14 +1148,21 @@ begin
 
         // Draw the modified glow
         if FChromeTab.GetModified then
+        begin
+          case ChromeTabs.GetOptions.Display.Tabs.Orientation of
+            toTop: ModifiedTop := ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
+            toBottom: ModifiedTop := ControlRect.Bottom - ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
+          end;
+
           DrawGlow(BidiRect(Rect(GetModifiedGlowX,
-                        ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset,
+                        ModifiedTop,
                         ChromeTabs.GetOptions.Display.TabModifiedGlow.Width + GetModifiedGlowX,
                         ChromeTabs.GetOptions.Display.TabModifiedGlow.Height + ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset)),
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreColor,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.OutsideColor,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreAlpha,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.OutsideAlpha);
+        end;
 
         // Draw the mouse glow
         if (ChromeTabs.GetOptions.Display.TabMouseGlow.Visible) and

@@ -19,16 +19,12 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1007
     Height = 29
-    OnChange = ChromeTabs1Change
-    OnActiveTabChanged = ChromeTabs1ActiveTabChanged
-    OnDebugLog = ChromeTabs1DebugLog
     OnButtonAddClick = ChromeTabs1ButtonAddClick
     OnNeedDragImageControl = ChromeTabs1NeedDragImageControl
-    OnCreateDragForm = ChromeTabs1CreateDragForm
     OnGetControlPolygons = ChromeTabs1GetControlPolygons
-    OnScroll = ChromeTabs1Scroll
+    OnScroll = ChromeTabs1ScrollWidthChanged
     OnScrollWidthChanged = ChromeTabs1ScrollWidthChanged
-    ActiveTabIndex = 1
+    ActiveTabIndex = 0
     Images = ImageList1
     ImagesOverlay = ImageList2
     Options.Display.CloseButton.Offsets.Vertical = 6
@@ -137,21 +133,21 @@ object frmMain: TfrmMain
     Options.Scrolling.MouseWheelScroll = True
     Tabs = <
       item
-        Caption = 'Tab 1'
-        Active = False
+        Caption = 'Chrome Tab 1'
+        Active = True
         Tag = 0
-        ImageIndex = 4
-        ImageIndexOverlay = 0
+        ImageIndex = 3
+        ImageIndexOverlay = -1
         Pinned = False
         Visible = True
         Modified = False
       end
       item
-        Caption = 'Tab 2'
-        Active = True
+        Caption = 'Chrome Tab 2'
+        Active = False
         Tag = 0
-        ImageIndex = -1
-        ImageIndexOverlay = -1
+        ImageIndex = 3
+        ImageIndexOverlay = 0
         Pinned = False
         Visible = True
         Modified = False
@@ -346,7 +342,6 @@ object frmMain: TfrmMain
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alTop
-    OnResize = ChromeTabs1Resize
     TabOrder = 1
   end
   object ChromeTabs2: TChromeTabs
@@ -822,7 +817,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 729
           Height = 444
-          ActivePage = TabSheet10
+          ActivePage = TabSheet5
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
