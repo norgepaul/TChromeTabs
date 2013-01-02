@@ -1,5 +1,11 @@
 TChromeTabs 1.2 BETA
 
+02/01/2013
+Breaking Update: Rewrote modified tab glow to use Easing. Several properties removed and several added.  
+Fixed: Tab overlaps not drawn correctly when dragging tab.
+Fixed: Small issues with BiDi and dragging.
+Fixed: All design time updates should now work correctly.
+
 28/12/2012
 Fixed: Modified glow incorrectly positioned for bottom tabs.
 Fixed: All BiDi modes should now display correctly.

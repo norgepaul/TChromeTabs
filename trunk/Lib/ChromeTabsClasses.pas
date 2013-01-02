@@ -722,13 +722,17 @@ type
     FVerticalOffset: Integer;
     FHeight: Integer;
     FWidth: Integer;
-    FAnimationSteps: Integer;
+    FAnimationPeriodMS: Integer;
+    FAnimationUpdateMS: Integer;
+    FEaseType: TChromeTabsEaseType;
 
     procedure SetHeight(const Value: Integer);
     procedure SetStyle(const Value: TChromeTabModifiedStyle);
     procedure SetVerticalOffset(const Value: Integer);
     procedure SetWidth(const Value: Integer);
-    procedure SetAnimationSteps(const Value: Integer);
+    procedure SetAnimationPeriodMS(const Value: Integer);
+    procedure SetAnimationUpdateMS(const Value: Integer);
+    procedure SetEaseType(const Value: TChromeTabsEaseType);
   public
     constructor Create(AOwner: TPersistent); override;
   published
@@ -736,7 +740,9 @@ type
     property VerticalOffset: Integer read FVerticalOffset write SetVerticalOffset;
     property Height: Integer read FHeight write SetHeight;
     property Width: Integer read FWidth write SetWidth;
-    property AnimationSteps: Integer read FAnimationSteps write SetAnimationSteps;
+    property AnimationPeriodMS: Integer read FAnimationPeriodMS write SetAnimationPeriodMS;
+    property EaseType: TChromeTabsEaseType read FEaseType write SetEaseType;
+    property AnimationUpdateMS: Integer read FAnimationUpdateMS write SetAnimationUpdateMS;
   end;
 
   TChromeTabsDragOptions = class(TChromeTabsPersistent)
@@ -1081,6 +1087,7 @@ type
     function GetBiDiMode: TBiDiMode;
     procedure Invalidate;
     function GetComponentState: TComponentState;
+    function IsDragging: Boolean;
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;
@@ -1433,6 +1440,9 @@ begin
       NewIdx := Index - 1
     else
       NewIdx := -1;
+
+    if NewIdx > Count - 1 then
+      NewIdx := Count - 1;
 
     GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
 
@@ -3255,10 +3265,12 @@ begin
   inherited;
 
   FStyle := msRightToLeft;
-  FVerticalOffset := -2;
-  FHeight := 20;
-  FWidth := 50;
-  FAnimationSteps := 150;
+  FVerticalOffset := -6;
+  FHeight := 30;
+  FWidth := 100;
+  FAnimationPeriodMS := 4000;
+  FAnimationUpdateMS := 50;
+  FEaseType := ttEaseInOutQuad;
 end;
 
 procedure TChromeTabModifiedDisplayOptions.SetHeight(const Value: Integer);
@@ -3268,9 +3280,25 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabModifiedDisplayOptions.SetAnimationSteps(const Value: Integer);
+procedure TChromeTabModifiedDisplayOptions.SetAnimationPeriodMS(const Value: Integer);
 begin
-  FAnimationSteps := Value;
+  FAnimationPeriodMS := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabModifiedDisplayOptions.SetAnimationUpdateMS(
+  const Value: Integer);
+begin
+  FAnimationUpdateMS := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabModifiedDisplayOptions.SetEaseType(
+  const Value: TChromeTabsEaseType);
+begin
+  FEaseType := Value;
 
   DoChanged;
 end;

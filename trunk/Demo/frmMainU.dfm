@@ -54,10 +54,12 @@ object frmMain: TfrmMain
     Options.Display.ScrollButtonRight.Height = 15
     Options.Display.ScrollButtonRight.Width = 15
     Options.Display.TabModifiedGlow.Style = msRightToLeft
-    Options.Display.TabModifiedGlow.VerticalOffset = -2
-    Options.Display.TabModifiedGlow.Height = 20
-    Options.Display.TabModifiedGlow.Width = 50
-    Options.Display.TabModifiedGlow.AnimationSteps = 150
+    Options.Display.TabModifiedGlow.VerticalOffset = -6
+    Options.Display.TabModifiedGlow.Height = 30
+    Options.Display.TabModifiedGlow.Width = 100
+    Options.Display.TabModifiedGlow.AnimationPeriodMS = 4000
+    Options.Display.TabModifiedGlow.EaseType = ttEaseInOutQuad
+    Options.Display.TabModifiedGlow.AnimationUpdateMS = 50
     Options.Display.Tabs.SeeThroughTabs = False
     Options.Display.Tabs.TabOverlap = 15
     Options.Display.Tabs.ContentOffsetLeft = 18
@@ -383,10 +385,12 @@ object frmMain: TfrmMain
     Options.Display.ScrollButtonRight.Height = 15
     Options.Display.ScrollButtonRight.Width = 15
     Options.Display.TabModifiedGlow.Style = msRightToLeft
-    Options.Display.TabModifiedGlow.VerticalOffset = -2
-    Options.Display.TabModifiedGlow.Height = 20
-    Options.Display.TabModifiedGlow.Width = 50
-    Options.Display.TabModifiedGlow.AnimationSteps = 150
+    Options.Display.TabModifiedGlow.VerticalOffset = -6
+    Options.Display.TabModifiedGlow.Height = 30
+    Options.Display.TabModifiedGlow.Width = 100
+    Options.Display.TabModifiedGlow.AnimationPeriodMS = 4000
+    Options.Display.TabModifiedGlow.EaseType = ttEaseInOutQuad
+    Options.Display.TabModifiedGlow.AnimationUpdateMS = 50
     Options.Display.Tabs.SeeThroughTabs = False
     Options.Display.Tabs.TabOverlap = 15
     Options.Display.Tabs.ContentOffsetLeft = 18
@@ -1101,10 +1105,10 @@ object frmMain: TfrmMain
               object Label55: TLabel
                 Left = 343
                 Top = 66
-                Width = 90
+                Width = 96
                 Height = 15
-                Caption = 'Animation Steps:'
-                FocusControl = edtModifiedGlowAnimationSteps
+                Caption = 'Animation Period:'
+                FocusControl = edtModifiedGlowAnimationPeriod
               end
               object Label56: TLabel
                 Left = 11
@@ -1121,6 +1125,22 @@ object frmMain: TfrmMain
                 Height = 15
                 Caption = 'Width:'
                 FocusControl = edtModifiedGlowWidth
+              end
+              object Label78: TLabel
+                Left = 171
+                Top = 18
+                Width = 114
+                Height = 15
+                Caption = 'Animation Ease Type:'
+                FocusControl = cbModifiedGlowEaseType
+              end
+              object Label79: TLabel
+                Left = 455
+                Top = 66
+                Width = 100
+                Height = 15
+                Caption = 'Animation Update:'
+                FocusControl = edtModifiedGlowAnimationUpdate
               end
               object cbModifiedGlowStyle: TComboBox
                 Left = 11
@@ -1149,15 +1169,15 @@ object frmMain: TfrmMain
                 Value = -2
                 OnChange = OnCommonControlPropertyChange
               end
-              object edtModifiedGlowAnimationSteps: TSpinEdit
+              object edtModifiedGlowAnimationPeriod: TSpinEdit
                 Left = 343
                 Top = 83
-                Width = 94
+                Width = 106
                 Height = 24
                 MaxValue = 65535
-                MinValue = -65535
+                MinValue = 1
                 TabOrder = 4
-                Value = 100
+                Value = 4000
                 OnChange = OnCommonControlPropertyChange
               end
               object edtModifiedGlowHeight: TSpinEdit
@@ -1179,6 +1199,52 @@ object frmMain: TfrmMain
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 2
+                Value = 50
+                OnChange = OnCommonControlPropertyChange
+              end
+              object cbModifiedGlowEaseType: TComboBox
+                Left = 171
+                Top = 35
+                Width = 165
+                Height = 23
+                Style = csDropDownList
+                ItemIndex = 0
+                TabOrder = 5
+                Text = 'None'
+                OnChange = OnCommonControlPropertyChange
+                Items.Strings = (
+                  'None'
+                  'Linear'
+                  'In Quad'
+                  'Out Quad'
+                  'In Out Quad'
+                  'In Cubic'
+                  'Out Cubic'
+                  'In Out Cubic'
+                  'In Quart'
+                  'Out Quart'
+                  'In Out Quart'
+                  'In Quint'
+                  'Out Quint'
+                  'In Out Quint'
+                  'In Sine'
+                  'Out Sine'
+                  'In Out Sine'
+                  'In Expo'
+                  'Out Expo'
+                  'In Out Expo'
+                  'In Circ'
+                  'Out Circ'
+                  'In Out Circ')
+              end
+              object edtModifiedGlowAnimationUpdate: TSpinEdit
+                Left = 455
+                Top = 83
+                Width = 106
+                Height = 24
+                MaxValue = 65535
+                MinValue = 1
+                TabOrder = 6
                 Value = 50
                 OnChange = OnCommonControlPropertyChange
               end

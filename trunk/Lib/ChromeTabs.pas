@@ -128,6 +128,7 @@ type
     function GetActiveTab: TChromeTab;
     function GetPreviousTabPolygons(Index: Integer): IChromeTabPolygons;
     function GetComponentState: TComponentState;
+    function IsDragging: Boolean;
 
     // ITabDockControl
     function GetControl: TWinControl;
@@ -206,6 +207,7 @@ type
     FMovementEaseType: TChromeTabsEaseType;
     FMovementAnimationTime: Cardinal;
     FMaxAddButtonRight: Integer;
+    FNextModifiedGlowAnimateTickCount: Cardinal;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -1458,14 +1460,27 @@ procedure TCustomChromeTabs.OnAnimateTimer(Sender: TObject);
 
 var
   i: Integer;
+  TickCount: Cardinal;
+  AnimateModified: Boolean;
 begin
   if not (csDestroying in ComponentState) then
   begin
     RemoveState(stsAnimatingMovement);
     RemoveState(stsAnimatingStyle);
 
+    TickCount := GetTickCount;
+
+    AnimateModified := FNextModifiedGlowAnimateTickCount < TickCount;
+
+    if AnimateModified then
+      FNextModifiedGlowAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabModifiedGlow.AnimationUpdateMS);
+
     for i := pred(Tabs.Count) downto 0 do
     begin
+      if (AnimateModified) and
+         (TabControls[i].AnimateModified) then
+        AddState(stsAnimatingStyle);
+
       if TabControls[i].AnimateStyle then
         AddState(stsAnimatingStyle);
 
@@ -2530,7 +2545,7 @@ begin
   end;
 
   if (FOptions.Display.AddButton.Visibility = avRightFixed) or
-     (FOptions.Display.AddButton.Visibility = avRightFloating) then //and (GetVisibleTabCount = 0)) then
+     (FOptions.Display.AddButton.Visibility = avRightFloating) then
   begin
     FMaxAddButtonRight := RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal;
 
@@ -2580,8 +2595,10 @@ end;
 
 function TCustomChromeTabs.SameBidiTabMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
 begin
-  Result := ((BidiMode1 in BidiRightToLeftTabModes)) and
-            ((BidiMode2 in BidiRightToLeftTabModes))
+  Result := ((BidiMode1 in BidiRightToLeftTabModes) and
+             (BidiMode2 in BidiRightToLeftTabModes)) or
+             ((BidiMode1 in BidiLeftToRightTabModes) and
+             (BidiMode2 in BidiLeftToRightTabModes));
 end;
 
 procedure TCustomChromeTabs.SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; Animate: Boolean);
@@ -3073,6 +3090,11 @@ begin
   end;
 end;
 
+function TCustomChromeTabs.IsDragging: Boolean;
+begin
+  Result := FActiveDragTabObject <> nil;
+end;
+
 function TCustomChromeTabs.IsValidTabIndex(Index: Integer): Boolean;
 begin
   Result := (Index >= -1) and (Index < FTabs.Count);
@@ -3556,6 +3578,7 @@ begin
 
         // Draw the inactive tabs
         for i := pred(FTabs.Count) downto 0 do
+        begin
           if (Tabs[i].Visible) and
              (i <> ActiveTabIndex) and
              (TabControls[i].ControlRect.Right >= ScrollOffset) and
@@ -3567,24 +3590,25 @@ begin
 
             // Save the current clip region of the GPGraphics
             if (not FOptions.Display.Tabs.SeeThroughTabs) and
-               (FDragTabObject = nil) then
+               ((FDragTabObject = nil) or (ActiveTabIndex <> i)) then
             begin
               ClipPolygons := TChromeTabPolygons.Create;
 
               PrevVisibleIndex := GetLastVisibleTabIndex(i - 1);
 
-              if PrevVisibleIndex <> -1 then
+              if (PrevVisibleIndex <> -1) and
+                 ((FDragTabObject = nil) or (PrevVisibleIndex <> ActiveTabIndex)) then
                 ClipPolygons.AddPolygon(TabControls[PrevVisibleIndex].GetPolygons.Polygons[0].Polygon, nil, nil);
 
               if (ActiveTab <> nil) and
-                 (i + 1 = ActiveTabIndex) then
-              begin
+                 (i + 1 = ActiveTabIndex) and
+                 (FDragTabObject = nil) then
                 ClipPolygons.AddPolygon(TabControls[ActiveTabIndex].GetPolygons.Polygons[0].Polygon, nil, nil);
-              end;
             end;
 
             TabControls[i].DrawTo(TabCanvas, FLastMouseX, FLastMouseY, ClipPolygons);
           end;
+        end;
 
         // Clear the clipping region while we draw the base line
         if FOptions.Display.Tabs.BaseLineTabRegionOnly then

@@ -75,7 +75,7 @@
 			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
 			<DCC_Optimize>false</DCC_Optimize>
 			<DCC_DebugDCUs>true</DCC_DebugDCUs>
-			<DCC_Define>_VER7;_VER7;$(DCC_Define)</DCC_Define>
+			<DCC_Define>_VER7;_VER7;EUREKALOG;EUREKALOG_VER6;$(DCC_Define)</DCC_Define>
 			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
 			<DCC_MapFile>3</DCC_MapFile>
 		</PropertyGroup>
@@ -174,7 +174,7 @@
 <!-- EurekaLog First Line
 [Exception Log]
 EurekaLog Version=6104
-Activate=0
+Activate=1
 Activate Handle=1
 Save Log File=1
 Foreground Tab=0
@@ -192,8 +192,8 @@ Errors Terminate=3
 Email Address=""
 Email Object=""
 Email Send Options=0
-Output Path=""
-Encrypt Password=""
+Output Path=
+Encrypt Password=
 AutoCloseDialogSecs=0
 WebSendMode=0
 SupportULR=

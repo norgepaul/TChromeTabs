@@ -144,13 +144,12 @@ type
     FPenInvalidated: Boolean;
     FBrushInvalidated: Boolean;
     FCloseButtonInvalidate: Boolean;
+    FModifiedStartTicks: Cardinal;
 
     function CloseButtonVisible: Boolean;
     function GetTabBrush: TGPLinearGradientBrush;
     function GetTabPen: TGPPen;
     function ImageVisible(ImageList: TCustomImageList; ImageIndex: Integer): Boolean;
-    function AnimateModified: Boolean;
-    function GetModifiedGlowX: Integer;
   protected
     procedure SetCloseButtonState(const Value: TDrawState); virtual;
     procedure EndAnimation; override;
@@ -162,6 +161,7 @@ type
 
     procedure Invalidate; override;
     function AnimateStyle: Boolean; override;
+    function AnimateModified: Boolean;
     procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
@@ -610,64 +610,53 @@ begin
   end;
 end;
 
-function TChromeTabControl.GetModifiedGlowX: Integer;
+function TChromeTabControl.AnimateModified: Boolean;
 var
+  TickCount: Cardinal;
   LowX, HighX: Integer;
   ScrolledRect: TRect;
-begin
-  { TODO : This needs to use the Ease effects }
-  ScrolledRect := ScrollRect(ControlRect);
-
-  LowX := ScrolledRect.Left - ChromeTabs.GetOptions.Display.TabModifiedGlow.Width;
-  HighX := ScrolledRect.Right;
-
-  Result := Round((((HighX - LowX) / ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationSteps) * FModifiedPosition) + LowX);
-end;
-
-function TChromeTabControl.AnimateModified: Boolean;
+  Distance: Integer;
 begin
   Result := (FChromeTab.GetModified) and
             (ChromeTabs.GetOptions.Display.TabModifiedGlow.Style <> msNone);
 
   if Result then
   begin
-    case ChromeTabs.GetOptions.Display.TabModifiedGlow.Style of
-      msLeftToRight:
-        begin
-          Inc(FModifiedPosition);
+    TickCount := GetTickCount;
 
-          if FModifiedPosition > ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationSteps then
-            FModifiedPosition := 0;
-        end;
+    if (FModifiedStartTicks = 0) or
+       (TickCount - FModifiedStartTicks > Cardinal(ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationPeriodMS)) then
+    begin
+      if TickCount - FModifiedStartTicks > Cardinal(ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationPeriodMS) then
+        FModifiedMovingLeft := not FModifiedMovingLeft;
 
-      msRightToLeft:
-        begin
-          Dec(FModifiedPosition);
-
-          if FModifiedPosition < 0 then
-            FModifiedPosition := ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationSteps;
-        end;
-
-      msKnightRider:
-        begin
-          if FModifiedMovingLeft then
-            Dec(FModifiedPosition)
-          else
-            Inc(FModifiedPosition);
-
-          if (FModifiedPosition < 0) or
-             (FModifiedPosition > ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationSteps) then
-            FModifiedMovingLeft := not FModifiedMovingLeft;
-        end;
+      FModifiedStartTicks := TickCount;
     end;
-  end;
+
+    ScrolledRect := ScrollRect(ControlRect);
+
+    LowX := ScrolledRect.Left - (ChromeTabs.GetOptions.Display.TabModifiedGlow.Width);
+    HighX := ScrolledRect.Right;
+
+    Distance := Round(CalculateEase(TickCount - FModifiedStartTicks,
+                                    0,
+                                    HighX - LowX,
+                                    ChromeTabs.GetOptions.Display.TabModifiedGlow.AnimationPeriodMS,
+                                    ChromeTabs.GetOptions.Display.TabModifiedGlow.EaseType));
+
+    if (ChromeTabs.GetOptions.Display.TabModifiedGlow.Style = msRightToLeft) or
+       ((ChromeTabs.GetOptions.Display.TabModifiedGlow.Style = msKnightRider) and (FModifiedMovingLeft)) then
+      FModifiedPosition := LowX + (HighX - LowX) - Distance
+    else
+      FModifiedPosition := LowX + Distance;
+  end
+  else
+    FModifiedStartTicks := 0;
 end;
 
 function TChromeTabControl.AnimateStyle: Boolean;
 begin
   Result := FChromeTabControlPropertyItems.TransformColors(FALSE);
-
-  Result := AnimateModified or Result;
 
   if Result then
     Invalidate;
@@ -1147,16 +1136,18 @@ begin
         SetTabClipRegionFromPolygon(TabCanvas, ChromeTabPolygons.Polygons[0].Polygon, CombineModeIntersect);
 
         // Draw the modified glow
-        if FChromeTab.GetModified then
+        if (FChromeTab.GetModified) and
+           (ChromeTabs.GetOptions.Display.TabModifiedGlow.Style <> msNone) then
         begin
           case ChromeTabs.GetOptions.Display.Tabs.Orientation of
             toTop: ModifiedTop := ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
-            toBottom: ModifiedTop := ControlRect.Bottom - ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
+          else
+            ModifiedTop := ControlRect.Bottom - ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
           end;
 
-          DrawGlow(BidiRect(Rect(GetModifiedGlowX,
+          DrawGlow(BidiRect(Rect(FModifiedPosition,
                         ModifiedTop,
-                        ChromeTabs.GetOptions.Display.TabModifiedGlow.Width + GetModifiedGlowX,
+                        ChromeTabs.GetOptions.Display.TabModifiedGlow.Width + FModifiedPosition,
                         ChromeTabs.GetOptions.Display.TabModifiedGlow.Height + ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset)),
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreColor,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.OutsideColor,
@@ -1166,6 +1157,7 @@ begin
 
         // Draw the mouse glow
         if (ChromeTabs.GetOptions.Display.TabMouseGlow.Visible) and
+           (not ChromeTabs.IsDragging) and
            (PointInPolygon(ChromeTabPolygons.Polygons[0].Polygon, MouseX, MouseY)) then
           DrawGlow(Rect(MouseX - (ChromeTabs.GetOptions.Display.TabMouseGlow.Width div 2),
                         MouseY - (ChromeTabs.GetOptions.Display.TabMouseGlow.Height div 2),
@@ -1178,7 +1170,6 @@ begin
 
         // Reset the clip region
         TabCanvas.SetClip(OriginalClipRegion);
-//        TabCanvas.SetClip(RectToGpRect(Rect(ControlRect.Left, ControlRect.Top, 80, ControlRect.Bottom)), CombineModeExclude);
 
         // Draw the text
         if (not ChromeTab.GetPinned) and (TextVisible) then
