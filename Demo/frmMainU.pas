@@ -89,7 +89,7 @@ type
     Label57: TLabel;
     cbModifiedGlowStyle: TComboBox;
     edtModifiedGlowVerticalOffset: TSpinEdit;
-    edtModifiedGlowAnimationSteps: TSpinEdit;
+    edtModifiedGlowAnimationPeriod: TSpinEdit;
     edtModifiedGlowHeight: TSpinEdit;
     edtModifiedGlowWidth: TSpinEdit;
     TabSheet4: TTabSheet;
@@ -312,6 +312,10 @@ type
     edtAddTabTime: TSpinEdit;
     cbAddTabEase: TComboBox;
     chkSeeThroughTabs: TCheckBox;
+    Label78: TLabel;
+    cbModifiedGlowEaseType: TComboBox;
+    Label79: TLabel;
+    edtModifiedGlowAnimationUpdate: TSpinEdit;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -1176,7 +1180,9 @@ begin
     edtModifiedGlowVerticalOffset.Value := ChromeTabs.Options.Display.TabModifiedGlow.VerticalOffset;
     edtModifiedGlowHeight.Value := ChromeTabs.Options.Display.TabModifiedGlow.Height;
     edtModifiedGlowWidth.Value := ChromeTabs.Options.Display.TabModifiedGlow.Width;
-    edtModifiedGlowAnimationSteps.Value := ChromeTabs.Options.Display.TabModifiedGlow.AnimationSteps;
+    edtModifiedGlowAnimationPeriod.Value := ChromeTabs.Options.Display.TabModifiedGlow.AnimationPeriodMS;
+    edtModifiedGlowAnimationUpdate.Value := ChromeTabs.Options.Display.TabModifiedGlow.AnimationUpdateMS;
+    cbModifiedGlowEaseType.ItemIndex := Integer(ChromeTabs.Options.Display.TabModifiedGlow.EaseType);
 
     chkMouseGlowVisible.Checked := ChromeTabs.Options.Display.TabMouseGlow.Visible;
     edtMouseGlowVerticalOffset.Value := ChromeTabs.Options.Display.TabMouseGlow.Offsets.Vertical;
@@ -1303,7 +1309,9 @@ begin
       ChromeTabs.Options.Display.TabModifiedGlow.VerticalOffset := edtModifiedGlowVerticalOffset.Value;
       ChromeTabs.Options.Display.TabModifiedGlow.Height := edtModifiedGlowHeight.Value;
       ChromeTabs.Options.Display.TabModifiedGlow.Width := edtModifiedGlowWidth.Value;
-      ChromeTabs.Options.Display.TabModifiedGlow.AnimationSteps := edtModifiedGlowAnimationSteps.Value;
+      ChromeTabs.Options.Display.TabModifiedGlow.AnimationPeriodMS := edtModifiedGlowAnimationPeriod.Value;
+      ChromeTabs.Options.Display.TabModifiedGlow.AnimationUpdateMS := edtModifiedGlowAnimationUpdate.Value;
+      ChromeTabs.Options.Display.TabModifiedGlow.EaseType := TChromeTabsEaseType(cbModifiedGlowEaseType.ItemIndex);
 
       ChromeTabs.Options.Display.TabMouseGlow.Visible := chkMouseGlowVisible.Checked;
       ChromeTabs.Options.Display.TabMouseGlow.Offsets.Vertical := edtMouseGlowVerticalOffset.Value;

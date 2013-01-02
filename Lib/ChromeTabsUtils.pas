@@ -186,6 +186,7 @@ begin
     ttEaseInOutQuint:
       begin
       	CurrentTime := CurrentTime / (Duration / 2);
+
         if CurrentTime < 1 then
           Result := ChangeInValue / 2 * CurrentTime * CurrentTime * CurrentTime * CurrentTime * CurrentTime + StartValue
         else
