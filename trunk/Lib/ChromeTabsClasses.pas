@@ -1415,8 +1415,6 @@ begin
   if Items[Index].FMarkedForDeletion then
   begin
     inherited Delete(Index);
-
-    //GetChromeTabInterface.DoOnChange(nil, tcDeleted);
   end
   else
   begin
@@ -1427,7 +1425,8 @@ begin
     begin
       NewIdx := Index;
 
-      if GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) <> ttNone then
+      if (GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
+         (not DeleteNow) then
       begin
         if NewIdx < pred(Count) then
           Inc(NewIdx)
@@ -1435,14 +1434,10 @@ begin
           Dec(NewIdx);
       end;
     end else
-
     if Index > 0 then
       NewIdx := Index - 1
     else
       NewIdx := -1;
-
-    if NewIdx > Count - 1 then
-      NewIdx := Count - 1;
 
     GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
 
@@ -1459,6 +1454,9 @@ begin
 
       GetChromeTabInterface.DoOnChange(nil, tcDeleted);
     end;
+
+    if NewIdx > Count - 1 then
+      NewIdx := Count - 1;
 
     if NewIdx <> -1 then
       Items[NewIdx].Active := TRUE;

@@ -162,7 +162,7 @@ type
     stsLoading,
     stsAnimatingNewTab,
     stsFirstPaint,
-    stsControlsPositionsInvalidated,
+    stsControlPositionsInvalidated,
     stsDebug,
     stsAnimatingCloseTab
   );
