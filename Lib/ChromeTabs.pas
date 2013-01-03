@@ -614,7 +614,7 @@ begin
   // Remove the closing state so the frozen tabs get resized and
   // redraw if required
   FCancelTabSmartResizeTimer.Enabled := TRUE;
-
+  
   Redraw;
 
   DoOnMouseLeave;
@@ -641,7 +641,7 @@ end;
 
 procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
-  SetControlDrawStates(TRUE);
+  //SetControlDrawStates(TRUE);
 
   if Assigned(FOnMouseLeave) then
     FOnMouseLeave(Self);
@@ -739,8 +739,8 @@ begin
   if (ChromeTabsControl.DrawState <> NewDrawState) or (ForceUpdate) then
   begin
     if (not (csDesigning in ComponentState)) and
-       (((ChromeTabsControl.DrawState = dsHot) and (NewDrawState <> dsActive)) or
-        ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive))) then
+       (((ChromeTabsControl.DrawState = dsHot) and ((NewDrawState <> dsActive)) or (not (ChromeTabsControl is TChromeTabControl))) or
+        ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive)) or (not (ChromeTabsControl is TChromeTabControl))) then
       EaseType := FOptions.Animation.DefaultMovementEaseType
     else
       EaseType := ttNone;
@@ -775,25 +775,25 @@ begin
 
         if (BiDiMode in BidiLeftToRightTabModes) and (ScrollOffset = 0) or
            (BiDiMode in BidiRightToLeftTabModes) and (ScrollOffset = GetMaxScrollOffset) then
-          SetControlDrawState(FScrollButtonLeftControl, dsDisabled)
+          SetControlDrawState(FScrollButtonLeftControl, dsDisabled, ForceUpdate)
         else
-          SetControlDrawState(FScrollButtonLeftControl, dsActive);
+          SetControlDrawState(FScrollButtonLeftControl, dsActive, ForceUpdate);
 
         if (BiDiMode in BidiLeftToRightTabModes) and (ScrollOffset = GetMaxScrollOffset) or
            (BiDiMode in BidiRightToLeftTabModes) and (ScrollOffset = 0) then
-          SetControlDrawState(FScrollButtonRightControl, dsDisabled)
+          SetControlDrawState(FScrollButtonRightControl, dsDisabled, ForceUpdate)
         else
-          SetControlDrawState(FScrollButtonRightControl, dsActive);
+          SetControlDrawState(FScrollButtonRightControl, dsActive, ForceUpdate);
 
         // Clear new button hot state
-        SetControlDrawState(FAddButtonControl, dsNotActive);
+        SetControlDrawState(FAddButtonControl, dsNotActive, ForceUpdate);
 
         if HitTestResult.HitTestArea = htAddButton then
         begin
           if HasState(stsMouseDown) then
-            SetControlDrawState(FAddButtonControl, dsDown)
+            SetControlDrawState(FAddButtonControl, dsDown, ForceUpdate)
           else
-            SetControlDrawState(FAddButtonControl, dsHot);
+            SetControlDrawState(FAddButtonControl, dsHot, ForceUpdate);
         end else
 
         if HitTestResult.HitTestArea = htScrollButtonLeft then
@@ -801,9 +801,9 @@ begin
           if ScrollOffset > 0 then
           begin
             if HasState(stsMouseDown) then
-              SetControlDrawState(FScrollButtonLeftControl, dsDown)
+              SetControlDrawState(FScrollButtonLeftControl, dsDown, ForceUpdate)
             else
-              SetControlDrawState(FScrollButtonLeftControl, dsHot);
+              SetControlDrawState(FScrollButtonLeftControl, dsHot, ForceUpdate);
           end;
         end else
 
@@ -812,9 +812,9 @@ begin
           if ScrollOffset < GetMaxScrollOffset then
           begin
             if HasState(stsMouseDown) then
-              SetControlDrawState(FScrollButtonRightControl, dsDown)
+              SetControlDrawState(FScrollButtonRightControl, dsDown, ForceUpdate)
             else
-              SetControlDrawState(FScrollButtonRightControl, dsHot);
+              SetControlDrawState(FScrollButtonRightControl, dsHot, ForceUpdate);
           end;
         end
         else
@@ -825,7 +825,7 @@ begin
             if (HitTestResult.TabIndex = i) and (not HasState(stsDragging)) then
             begin
               if not Tabs[i].Active then
-                SetControlDrawState(TabControls[i], dsHot);
+                SetControlDrawState(TabControls[i], dsHot, ForceUpdate);
 
               if HitTestResult.HitTestArea = htCloseButton then
               begin
@@ -845,7 +845,7 @@ begin
             else
             begin
               if not Tabs[i].Active then
-                SetControlDrawState(TabControls[i], dsNotActive);
+                SetControlDrawState(TabControls[i], dsNotActive, ForceUpdate);
 
               TabControls[i].CloseButtonState := dsNotActive
             end;
@@ -900,7 +900,7 @@ begin
     if FScrollOffset < 0 then
       FScrollOffset := 0;
 
-    AddState(stsControlsPositionsInvalidated);
+    AddState(stsControlPositionsInvalidated);
 
     SetControlDrawStates(TRUE);
 
@@ -1185,7 +1185,7 @@ begin
           end;
         end;
 
-      tcPinned: AddState(stsControlsPositionsInvalidated);
+      tcPinned: AddState(stsControlPositionsInvalidated);
 
       tcPropertyUpdated:
         begin
@@ -1196,7 +1196,7 @@ begin
 
       tcAdded: ClearTabClosingStates;
 
-      tcVisibility: AddState(stsControlsPositionsInvalidated);
+      tcVisibility: AddState(stsControlPositionsInvalidated);
 
       tcDeleted:
         begin
@@ -1393,7 +1393,7 @@ begin
 
   ClearTabClosingStates;
 
-  AddState(stsControlsPositionsInvalidated);
+  AddState(stsControlPositionsInvalidated);
 
   // Force the tab correction
   FLastClientWidth := -1;
@@ -1431,20 +1431,23 @@ procedure TCustomChromeTabs.ScrollTabs(ScrollDirection: TScrollDirection; StartT
 var
   IncValue: Integer;
 begin
-  FScrollDirection := ScrollDirection;
+  if GetTabDisplayState = tdScrolling then
+  begin
+    FScrollDirection := ScrollDirection;
 
-  IncValue := FOptions.Scrolling.ScrollStep;
+    IncValue := FOptions.Scrolling.ScrollStep;
 
-  if BiDiMode in BidiRightToLeftTabModes then
-    IncValue := -IncValue;
+    if BiDiMode in BidiRightToLeftTabModes then
+      IncValue := -IncValue;
 
-  case FScrollDirection of
-    mdsLeft: ScrollOffset := ScrollOffset - IncValue;
-    mdsRight: ScrollOffset := ScrollOffset + IncValue;
+    case FScrollDirection of
+      mdsLeft: ScrollOffset := ScrollOffset - IncValue;
+      mdsRight: ScrollOffset := ScrollOffset + IncValue;
+    end;
+
+    if StartTimer then
+      FScrollTimer.Enabled := TRUE;
   end;
-
-  if StartTimer then
-    FScrollTimer.Enabled := TRUE;
 end;
 
 procedure TCustomChromeTabs.OnAnimateTimer(Sender: TObject);
@@ -1506,7 +1509,7 @@ begin
       // We've finshed the delete tab animation. Delete the tab now.
       if Tabs[i].MarkedForDeletion then
       begin
-        AddState(stsControlsPositionsInvalidated);
+        AddState(stsControlPositionsInvalidated);
         AddState(stsAnimatingMovement);
 
         if RectWidth(TabControls[i].ControlRect) <= FOptions.Animation.MinimumTabAnimationWidth then
@@ -2275,7 +2278,7 @@ begin
     begin
       DoOnButtonAddClick;
 
-      AddState(stsControlsPositionsInvalidated);
+      AddState(stsControlPositionsInvalidated);
     end else
 
     // Have we clicked the Close button?
@@ -2306,7 +2309,7 @@ begin
 
         DeleteTab(HitTestResult.TabIndex);
 
-        AddState(stsControlsPositionsInvalidated);
+        AddState(stsControlPositionsInvalidated);
       end;
     end;
 
@@ -2762,8 +2765,8 @@ procedure TCustomChromeTabs.RepositionTabs;
     TabWidthAddition: Integer;
     DragTabControl: TChromeTabControl;
     CursorPos: TPoint;
-    BiDiX: Integer;
     ExtraTabWidth: Integer;
+    DragTabWidth, DragCursorXOffset: Integer;
   begin
     // Set the start and end tab indices
     if PinnedTabs then
@@ -2779,24 +2782,37 @@ procedure TCustomChromeTabs.RepositionTabs;
 
     if (FActiveDragTabObject <> nil) and
        (FActiveDragTabObject.DragTab.Pinned = PinnedTabs) then
-      DragTabControl := FDragTabControl
+    begin
+      DragTabWidth := TabWidth + FOptions.Display.Tabs.TabOverlap;
+    
+      if DragTabWidth < FOptions.Display.Tabs.MinWidth then
+        DragTabWidth := FOptions.Display.Tabs.MinWidth;
+
+      DragTabControl := FDragTabControl;
+    end
     else
+    begin
+      DragTabWidth := 0;
       DragTabControl := nil;
+    end;
 
     if (DragTabControl <> nil) and
        (FActiveDragTabObject.SourceControl.GetControl <> Self) then
     begin
-      CursorPos := ScreenToClient(Mouse.CursorPos);
+      DragCursorXOffset := FActiveDragTabObject.DragCursorOffset.X;
 
-      BiDiX := FActiveDragTabObject.DragCursorOffset.X;
+      if DragCursorXOffset > DragTabWidth - FOptions.Display.Tabs.TabOverlap then
+        DragCursorXOffset := DragTabWidth - FOptions.Display.Tabs.TabOverlap;      
 
       if not SameBidiTabMode(BiDiMode, FActiveDragTabObject.SourceControl.GetBidiMode) then
-        BiDiX := -BidiX;
+        DragCursorXOffset := -DragCursorXOffset;
 
+      CursorPos := ScreenToClient(Mouse.CursorPos);
+        
       SetControlPosition(DragTabControl,
-                         Rect(BidiXPos(CursorPos.X - BiDiX),
+                         Rect(BidiXPos(CursorPos.X - DragCursorXOffset),
                               ControlRect.Top + FOptions.Display.Tabs.OffsetTop,
-                              BidiXPos(CursorPos.X - BiDiX) + TabWidth,
+                              BidiXPos(CursorPos.X - DragCursorXOffset) + DragTabWidth,
                               ControlRect.Bottom - FOptions.Display.Tabs.OffsetBottom),
                          FALSE);
     end;
@@ -3081,7 +3097,7 @@ begin
       FScrollButtonRightControl.Invalidate;
       FAddButtonControl.Invalidate;
 
-      AddState(stsControlsPositionsInvalidated);
+      AddState(stsControlPositionsInvalidated);
 
       Redraw;
     finally
@@ -3118,13 +3134,14 @@ begin
   FAddButtonControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
   FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
   FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
-  SetControlDrawStates(TRUE);
-
-  AddState(stsFirstPaint);
 
   // Make sure we reset all the control positions
-  AddState(stsControlsPositionsInvalidated);
+  AddState(stsControlPositionsInvalidated);
 
+  SetControlDrawStates(TRUE);
+  
+  AddState(stsFirstPaint);
+  
   // Force a redraw
   Redraw;
 end;
@@ -3253,7 +3270,7 @@ end;
 procedure TCustomChromeTabs.TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
 begin
   // Process the drop event
-  AddState(stsControlsPositionsInvalidated);
+  AddState(stsControlPositionsInvalidated);
 
   // Reset the position of the drag tab
   if FDragTabControl <> nil then
@@ -3269,7 +3286,7 @@ begin
 
   DoOnTabDragOver(X, Y, State, DragTabObject, Accept);
 
-  AddState(stsControlsPositionsInvalidated);
+  AddState(stsControlPositionsInvalidated);
 
   if (Accept) or (State = dsDragLeave) then
   begin
@@ -3331,7 +3348,7 @@ begin
           end
           else
           begin
-            if (ActiveTabIndex >=0) and (ActiveTabIndex < Tabs.Count) then
+            if (ActiveTabIndex >= 0) and (ActiveTabIndex < Tabs.Count) then
               SetControlDrawState(TabControls[ActiveTabIndex], dsActive, TRUE);
 
             // Free the temporary drag tab control
@@ -3344,6 +3361,8 @@ begin
           // Clear the drag object reference
           FActiveDragTabObject := nil;
 
+          AddState(stsControlPositionsInvalidated);
+          
           Redraw;
         end;
 
@@ -3440,7 +3459,7 @@ end;
 
 procedure TCustomChromeTabs.DragCompleted;
 begin
-  AddState(stsControlsPositionsInvalidated);
+  AddState(stsControlPositionsInvalidated);
 
   Redraw;
 end;
@@ -3513,10 +3532,10 @@ begin
   try
     DrawTicks := GetTickCount;
     try
-      if (HasState(stsControlsPositionsInvalidated)) or
+      if (HasState(stsControlPositionsInvalidated)) or
          ((HasState(stsAnimatingMovement)) and (GetTabDisplayState = tdNormal)) then
       begin
-        RemoveState(stsControlsPositionsInvalidated);
+        RemoveState(stsControlPositionsInvalidated);
 
         CalculateRects;
 
@@ -3594,18 +3613,22 @@ begin
             begin
               ClipPolygons := TChromeTabPolygons.Create;
 
+              // Find the index of the previous visible tab
               PrevVisibleIndex := GetLastVisibleTabIndex(i - 1);
 
+              // Excluse the clip region of the previous tab as long as we're not dragging in this container
               if (PrevVisibleIndex <> -1) and
                  ((FDragTabObject = nil) or (PrevVisibleIndex <> ActiveTabIndex)) then
                 ClipPolygons.AddPolygon(TabControls[PrevVisibleIndex].GetPolygons.Polygons[0].Polygon, nil, nil);
 
+              // Exclude the clip region of the next tab
               if (ActiveTab <> nil) and
                  (i + 1 = ActiveTabIndex) and
                  (FDragTabObject = nil) then
                 ClipPolygons.AddPolygon(TabControls[ActiveTabIndex].GetPolygons.Polygons[0].Polygon, nil, nil);
             end;
 
+            // Draw the tab
             TabControls[i].DrawTo(TabCanvas, FLastMouseX, FLastMouseY, ClipPolygons);
           end;
         end;

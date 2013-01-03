@@ -1,27 +1,22 @@
-TChromeTabs 1.2 BETA
+TChromeTabs 1.2 - 03/01/2013
 
-02/01/2013
-Breaking Update: Rewrote modified tab glow to use Easing. Several properties removed and several added.  
+Breaking Update: Rewrote modified tab glow to use Easing. Several properties removed and several added. 
+Update: BiDi fully implemented.
+Fixed: Tab space left in container after dragging tab to then from a container.
+Fixed: Tab glow performance improvements.
+Fixed: Drag tab width was incorrect when dragging to a container with a different tab width average.
+Fixed: Drag tab incorrectly positioned if a tab was dragged to a new container with smaller average tab size.
+Fixed: Scroll buttons not drawn hot.
 Fixed: Tab overlaps not drawn correctly when dragging tab.
-Fixed: Small issues with BiDi and dragging.
 Fixed: All design time updates should now work correctly.
-
-28/12/2012
 Fixed: Modified glow incorrectly positioned for bottom tabs.
-Fixed: All BiDi modes should now display correctly.
 Fixed: Regression bug - odd behaviour when closing a tab.
 Fixed: Tab delete at design time now correctly updates the control.
-
-23/12/2012
 Fixed: Drag form tab width.
 
-21/12/2012
-Fixed: Bidi modes did not match the display.
 
+TChromeTabs 1.1 - 21/12/2012
 
-TChromeTabs 1.1
-
-21/12/2012
 Update: Improved design time drawing.
 Update: See through tab overlap area now rendered correctly when see through tabs is disabled.
 Update: All animation now working correctly.
@@ -30,59 +25,43 @@ Fixed: All edge case "Add Button" issues that I could find are fixed.
 Fixed: Small TTimerThread memory leak.
 
 
-TChromeTabs 1.0
+TChromeTabs 1.0 - 20/12/2012
 
-20/12/2012
 Improvement: Major improvements in animation visuals and update times.
+Improvement: Began overhaul of animation effects.
 Update: Animation overhaul 90% finished and stable.
 Update: Added OnAnimateMovement event.
 Update: Removed redundant Skin property.
 Update: Changed several animation property names to bring them in line with the new Ease functionality.
-
-19/12/2012
-Improvement: Began overhaul of animation effects.
-Added: Animation Ease Type.
-Fixed: Form system buttons highlighted when dragging tab (http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390).
-Fixed: Tabs could become misaligned if the close button was pressed before a tab animation was finished.
-
-18/12/2012
 Update: Changed default animation properties to make animation smoother.
 Update: Split animation procedure into two; movement and style.
-Updates: Added Options.Behabiour.IgnoreDoubleClicksWhileAnimatingMovement.
+Update: Added Options.Behabiour.IgnoreDoubleClicksWhileAnimatingMovement.
+Update: Added Animation Ease Type.
 Fixed: Delphi 7 Design Time editor (right click/double click tab control).
 Fixed: Changing tab visibility didn't update the tab positions.
 Fixed: Drag image tab background is now transparent
 Fixed: Add and scroll button initial draw states
 Fixed: Style transistions are now only active (by default) when moving from x to dsHot and vice versa
 Fixed: Left scroll and Add button not drawn at design time.
+Fixed: Form system buttons highlighted when dragging tab (http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390).
+Fixed: Tabs could become misaligned if the close button was pressed before a tab animation was finished.
 
 
-TChromeTabs 0.9 BETA
+TChromeTabs 0.9 - 17/12/2012
 
-17/12/2012
+Update: More work on Bidi. Working except for scrolling and some drag outside container issues.
+Update: Added Close tab animation.
 Fixed: All BiDi mode functionality implemented and working.
 Fixed: Tab close active tab selection broken.
 Fixed: Scroll/Add button clip rect.
 Fixed: Bidi Tab dragging.
 Fixed: Scroll into view.
-
-16/12/2012
-Bidi scrolling working. Still some issues with bidi though. Hopefully fixed soon.
-
-15/12/2012
-Update: More work on Bidi. Working except for scrolling and some drag outside container issues.
 Fixed: Style transition was animated by default for tab <-> active.
 Fixed: Demo didn't update animation type checkboxes from control.
 Fixed: BitmapToGPImage stream free issue.
-Added: Close tab animation.
-
-14/12/2012
-Experimental: BiDi support.
 Fixed: Changed border/pen thickness properties from Integer to Single (although it doesn't seem to make any difference to the lines)
 Fixed: Erroneous hit test result if point wasn't in control. Caused tabs to stay hot when mouse left.
-
-13/12/2012
 Fixed: GDI+ error under Windows 8
 Fixed: "Cannot focus window" error after opening then closing additional form.
 Fixed: Better handling of add button animation when adding/deleting tabs (still not 100% perfect).
-Fixed: Added TabOrder property
+Fixed: Added TabOrder property.

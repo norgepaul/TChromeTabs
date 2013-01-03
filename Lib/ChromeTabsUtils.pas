@@ -129,7 +129,7 @@ begin
 
     ttEaseInOutCubic:
       begin
-        CurrentTime := CurrentTime / (Duration/2);
+        CurrentTime := CurrentTime / (Duration / 2);
 
         if CurrentTime < 1 then
           Result := ChangeInValue / 2 * CurrentTime * CurrentTime * CurrentTime + StartValue
@@ -214,7 +214,7 @@ begin
 
     ttEaseInExpo:
       begin
-        Result := ChangeInValue * Power(2, 10 * (CurrentTime/Duration - 1) ) + StartValue;
+        Result := ChangeInValue * Power(2, 10 * (CurrentTime / Duration - 1) ) + StartValue;
       end;
 
     ttEaseOutExpo:
