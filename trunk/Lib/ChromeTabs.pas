@@ -208,6 +208,7 @@ type
     FMovementAnimationTime: Cardinal;
     FMaxAddButtonRight: Integer;
     FNextModifiedGlowAnimateTickCount: Cardinal;
+    FCreated: Boolean;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -269,6 +270,7 @@ type
     procedure SetControlLeft(ChromeTabsControl: TBaseChromeTabsControl; ALeft: Integer; Animate: Boolean);
     procedure SetMovementAnimation(MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
     procedure DeleteTab(Index: Integer);
+    function ControlReady: Boolean;
   protected
     // ** Important, often called procedures ** //
     procedure CalculateButtonRects; virtual;
@@ -300,7 +302,7 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure WndProc(var Message: TMessage); override;
     procedure SetBiDiMode(Value: TBiDiMode); override;
-    procedure Loaded; override;
+    procedure AfterConstruction; override;
 
     // Virtual
     procedure DoOnActiveTabChanged(ATab: TChromeTab); virtual;
@@ -1092,13 +1094,21 @@ begin
     end;
 end;
 
+function TCustomChromeTabs.ControlReady: Boolean;
+begin
+  Result := (FCreated) and
+            ([csDestroying, csLoading] * ComponentState = []) and
+            (not (csCreating in ControlState)) and
+            (HandleAllocated);
+end;
+
 procedure TCustomChromeTabs.DoOnChange(ATab: TChromeTab; TabChangeType: TTabChangeType);
 var
   i: Integer;
   NewTabControl: TChromeTabControl;
   NewTabLeft, LastVisibleTabIndex: Integer;
 begin
-  if not (csDestroying in ComponentState) then
+  //if ControlReady then
   begin
     if (TabChangeType = tcAdded) and
        (ATab.TabControl = nil) then
@@ -1109,7 +1119,7 @@ begin
 
       NewTabControl := TabControls[ATab.Index];
 
-      if (not HasState(stsLoading)) and (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabAdd) <> ttNone) then
+      if FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabAdd) <> ttNone then
       begin
         LastVisibleTabIndex := GetLastVisibleTabIndex(Tabs.Count - 2); // Skip the new tab
 
@@ -1135,8 +1145,8 @@ begin
       // If no tabs are active, activate this one
       if (FOptions.Behaviour.ActivateNewTab) and
          ((ActiveTabIndex = -1) or
-          ((not HasState(stsLoading) and
-           (not HasState(stsAddingDroppedTab))))) then
+          ((ControlReady) and
+           (not HasState(stsAddingDroppedTab)))) then
       begin
         ATab.Active := TRUE;
 
@@ -1257,7 +1267,7 @@ end;
 
 procedure TCustomChromeTabs.UpdateProperties;
 begin
-  if not HasState(stsLoading) then
+  if ControlReady then
   begin
     FAnimateTimer.Interval := FOptions.Animation.AnimationTimerInterval;
     FCancelTabSmartResizeTimer.Interval := FOptions.Behaviour.TabSmartDeleteResizeCancelDelay;
@@ -1338,10 +1348,6 @@ end;
 
 constructor TCustomChromeTabs.Create(AOwner: TComponent);
 begin
-  // Make sure that we don't try to draw anything until we're fully loaded
-  // State is removed in Loaded override
-  AddState(stsLoading);
-
   inherited;
 
   if AOwner is TWinControl then
@@ -1349,8 +1355,6 @@ begin
 
   ControlStyle := ControlStyle + [csReplicatable,
                                   csCaptureMouse];
-
-  BeginUpdate; // EndUpdate called in Loaded
 
   // Canvas Bitmaps
   FCanvasBmp := TBitmap.Create;
@@ -3133,7 +3137,7 @@ procedure TCustomChromeTabs.InvalidateAllControls;
 var
   i: Integer;
 begin
-  if (not HasState(stsLoading)) and
+  if (ControlReady) and
      (not FInvalidatingControls) then
   begin
     FInvalidatingControls := TRUE;
@@ -3166,16 +3170,11 @@ begin
   Result := (Index >= -1) and (Index < FTabs.Count);
 end;
 
-procedure TCustomChromeTabs.Loaded;
+procedure TCustomChromeTabs.AfterConstruction;
 begin
   inherited;
 
   UpdateTabControlProperties;
-
-  EndUpdate; // BeginUpdate called in Create
-
-  // No Longer loading, so we can start drawing
-  RemoveState(stsLoading);
 
   // Set the intial scroll position
   ScrollOffset := 0;
@@ -3187,10 +3186,11 @@ begin
 
   // Make sure we reset all the control positions
   AddState(stsControlPositionsInvalidated);
+  AddState(stsFirstPaint);
+
+  FCreated := TRUE;
 
   SetControlDrawStates(TRUE);
-  
-  AddState(stsFirstPaint);
   
   // Force a redraw
   Redraw;
@@ -3576,7 +3576,7 @@ var
   ClipPolygons: IChromeTabPolygons;
 begin
   // Don't draw while we're loading
-  if not HasState(stsLoading) then
+  if ControlReady then
   try
     DrawTicks := GetTickCount;
     try

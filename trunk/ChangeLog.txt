@@ -4,6 +4,7 @@ TChromeTabs 1.3 BETA
 Update: Added TChromeTabsGlassForm - Allows Chrome title bar tabs with one line of code.
 Update: Added ContrainDraggedTabWithinContainer property.
 Update: Added title bar tabs functionality to Demo.
+Fixed: Control was not painted when dropped on a form until the form was closed, then re-opened.
 Fixed: Floating Right Add button was position far right if only pinned tabs were displayed.
 Fixed: Drag tab image not scaled down or alpha blended if no control image displayed.
 Fixed: Drag tab background wasn't transparent when only dragging tab.

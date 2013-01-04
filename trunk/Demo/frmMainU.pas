@@ -319,6 +319,7 @@ type
     edtModifiedGlowAnimationUpdate: TSpinEdit;
     chkDisplayTopTabsInTitleBar: TCheckBox;
     chkContrainDraggedTab: TCheckBox;
+    Button2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -398,6 +399,7 @@ type
     procedure ChromeTabs1AnimateMovement(Sender: TObject;
       ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal;
       var EaseType: TChromeTabsEaseType);
+    procedure Button2Click(Sender: TObject);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -657,6 +659,11 @@ procedure TfrmMain.Button1Click(Sender: TObject);
 begin
   if FCurrentTabs.ActiveTab <> nil then
     FCurrentTabs.ScrollIntoView(FCurrentTabs.ActiveTab);
+end;
+
+procedure TfrmMain.Button2Click(Sender: TObject);
+begin
+  TChromeTabs.Create(Self);
 end;
 
 procedure TfrmMain.btnHideTabClick(Sender: TObject);
@@ -1527,8 +1534,7 @@ begin
   if not (csLoading in ComponentState) then
   begin
     if (TabChangeType = tcAdded) and
-       (FCurrentTabs <> nil) and
-       (not FCurrentTabs.HasState(stsLoading)) then
+       (FCurrentTabs <> nil) then
       GUIToTabProperties(ATab);
 
     if (chkEnableEvents.Checked) and
