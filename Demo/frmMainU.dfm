@@ -817,6 +817,15 @@ object frmMain: TfrmMain
             TabOrder = 5
             OnClick = btnHideTabClick
           end
+          object Button2: TButton
+            Left = 176
+            Top = 360
+            Width = 75
+            Height = 25
+            Caption = 'Button2'
+            TabOrder = 7
+            OnClick = Button2Click
+          end
         end
         object pcOptions: TPageControl
           Left = 270
@@ -2902,8 +2911,8 @@ object frmMain: TfrmMain
                   FocusControl = edtDragImageAapha
                 end
                 object edtDragImageAapha: TSpinEdit
-                  Left = 1
-                  Top = 20
+                  Left = 0
+                  Top = 19
                   Width = 128
                   Height = 24
                   MaxValue = 255
