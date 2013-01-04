@@ -41,6 +41,7 @@ contains
   ChromeTabsThreadTimer in '..\..\Lib\ChromeTabsThreadTimer.pas',
   ChromeTabs in '..\..\Lib\ChromeTabs.pas',
   ChromeTabsControls in '..\..\Lib\ChromeTabsControls.pas',
-  ChromeTabsClasses in '..\..\Lib\ChromeTabsClasses.pas';
+  ChromeTabsClasses in '..\..\Lib\ChromeTabsClasses.pas',
+  ChromeTabsGlassForm in '..\..\Lib\ChromeTabsGlassForm.pas';
 
 end.

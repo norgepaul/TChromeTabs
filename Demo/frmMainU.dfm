@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 187
   Caption = 'Chrome Tabs Demo'
   ClientHeight = 596
-  ClientWidth = 1007
+  ClientWidth = 1025
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -17,7 +17,7 @@ object frmMain: TfrmMain
   object ChromeTabs1: TChromeTabs
     Left = 0
     Top = 0
-    Width = 1007
+    Width = 1025
     Height = 29
     OnButtonAddClick = ChromeTabs1ButtonAddClick
     OnNeedDragImageControl = ChromeTabs1NeedDragImageControl
@@ -98,6 +98,7 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
+    Options.DragDrop.ContrainDraggedTabWithinContainer = True
     Options.Animation.DefaultMovementAnimationTimeMS = 100
     Options.Animation.DefaultStyleAnimationTimeMS = 300
     Options.Animation.AnimationTimerInterval = 15
@@ -129,7 +130,7 @@ object frmMain: TfrmMain
     Options.Scrolling.ScrollButtons = csbRight
     Options.Scrolling.ScrollStep = 20
     Options.Scrolling.ScrollRepeatDelay = 20
-    Options.Scrolling.AutoHideButtons = False
+    Options.Scrolling.AutoHideButtons = True
     Options.Scrolling.DragScroll = True
     Options.Scrolling.DragScrollOffset = 50
     Options.Scrolling.MouseWheelScroll = True
@@ -148,8 +149,8 @@ object frmMain: TfrmMain
         Caption = 'Chrome Tab 2'
         Active = False
         Tag = 0
-        ImageIndex = 3
-        ImageIndexOverlay = 0
+        ImageIndex = -1
+        ImageIndexOverlay = -1
         Pinned = False
         Visible = True
         Modified = False
@@ -349,7 +350,7 @@ object frmMain: TfrmMain
   object ChromeTabs2: TChromeTabs
     Left = 0
     Top = 565
-    Width = 1007
+    Width = 1025
     Height = 31
     OnDebugLog = ChromeTabs1DebugLog
     OnButtonAddClick = ChromeTabs1ButtonAddClick
@@ -429,6 +430,7 @@ object frmMain: TfrmMain
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
     Options.DragDrop.DragFormBorderColor = 8421504
+    Options.DragDrop.ContrainDraggedTabWithinContainer = True
     Options.Animation.DefaultMovementAnimationTimeMS = 100
     Options.Animation.DefaultStyleAnimationTimeMS = 300
     Options.Animation.AnimationTimerInterval = 15
@@ -660,7 +662,7 @@ object frmMain: TfrmMain
   object Panel1: TPanel
     Left = 0
     Top = 29
-    Width = 1007
+    Width = 1025
     Height = 536
     Align = alClient
     BevelOuter = bvNone
@@ -668,7 +670,7 @@ object frmMain: TfrmMain
     object pnlTop: TPanel
       Left = 0
       Top = 0
-      Width = 1007
+      Width = 1025
       Height = 29
       Align = alTop
       BevelOuter = bvNone
@@ -709,7 +711,7 @@ object frmMain: TfrmMain
     object pcMain: TPageControl
       Left = 0
       Top = 29
-      Width = 1007
+      Width = 1025
       Height = 507
       ActivePage = TabSheet1
       Align = alClient
@@ -819,9 +821,9 @@ object frmMain: TfrmMain
         object pcOptions: TPageControl
           Left = 270
           Top = 0
-          Width = 729
+          Width = 747
           Height = 444
-          ActivePage = TabSheet5
+          ActivePage = TabSheet9
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -829,7 +831,7 @@ object frmMain: TfrmMain
             object GroupBox3: TGroupBox
               Left = 0
               Top = 0
-              Width = 721
+              Width = 739
               Height = 185
               Align = alTop
               Caption = 'Tabs'
@@ -1081,7 +1083,7 @@ object frmMain: TfrmMain
             object GroupBox5: TGroupBox
               Left = 0
               Top = 185
-              Width = 721
+              Width = 739
               Height = 118
               Align = alTop
               Caption = 'Modified Glow'
@@ -1252,7 +1254,7 @@ object frmMain: TfrmMain
             object GroupBox6: TGroupBox
               Left = 0
               Top = 303
-              Width = 721
+              Width = 739
               Height = 90
               Align = alTop
               Caption = 'Mouse Glow'
@@ -1360,7 +1362,7 @@ object frmMain: TfrmMain
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
-              Width = 721
+              Width = 739
               Height = 172
               Align = alTop
               Caption = 'Default Font'
@@ -1467,7 +1469,7 @@ object frmMain: TfrmMain
             object GroupBox10: TGroupBox
               Left = 0
               Top = 172
-              Width = 721
+              Width = 739
               Height = 151
               Align = alTop
               Caption = 'Display'
@@ -1563,7 +1565,7 @@ object frmMain: TfrmMain
             object pcButtons: TPageControl
               Left = 0
               Top = 19
-              Width = 721
+              Width = 739
               Height = 395
               ActivePage = TabSheet11
               Align = alClient
@@ -2063,7 +2065,7 @@ object frmMain: TfrmMain
             object Panel8: TPanel
               Left = 0
               Top = 0
-              Width = 721
+              Width = 739
               Height = 19
               Align = alTop
               BevelOuter = bvNone
@@ -2124,7 +2126,7 @@ object frmMain: TfrmMain
             object pnlScroll: TPanel
               Left = 0
               Top = 0
-              Width = 721
+              Width = 739
               Height = 414
               Align = alClient
               BevelOuter = bvNone
@@ -2288,7 +2290,7 @@ object frmMain: TfrmMain
             ImageIndex = 2
             object Label53: TLabel
               Left = 24
-              Top = 118
+              Top = 150
               Width = 240
               Height = 15
               Alignment = taRightJustify
@@ -2297,65 +2299,76 @@ object frmMain: TfrmMain
             end
             object Label62: TLabel
               Left = 348
-              Top = 118
+              Top = 150
               Width = 16
               Height = 15
               Caption = 'ms'
             end
             object chkBackgroundDoubleClickMaxmise: TCheckBox
               Left = 3
-              Top = 6
+              Top = 38
               Width = 371
               Height = 17
               Caption = 'Double click background to minimise/maxmise form'
               Checked = True
               State = cbChecked
-              TabOrder = 0
+              TabOrder = 1
               OnClick = OnCommonControlPropertyChange
             end
             object chkDraggingBackgoundMovesForm: TCheckBox
               Left = 3
-              Top = 29
+              Top = 61
               Width = 371
               Height = 17
               Caption = 'Dragging background moves form'
               Checked = True
               State = cbChecked
-              TabOrder = 1
+              TabOrder = 2
               OnClick = OnCommonControlPropertyChange
             end
             object chkSmartResize: TCheckBox
               Left = 3
-              Top = 94
+              Top = 126
               Width = 371
               Height = 17
               Caption = 'Reposition tab close button under mouse after closing a tab'
               Checked = True
               State = cbChecked
-              TabOrder = 3
+              TabOrder = 4
               OnClick = OnCommonControlPropertyChange
             end
             object edtCloseButtonMouseLeaveDelay: TSpinEdit
               Left = 270
-              Top = 115
+              Top = 147
               Width = 75
               Height = 24
               Increment = 100
               MaxValue = 65535
               MinValue = 1
-              TabOrder = 4
+              TabOrder = 5
               Value = 700
               OnChange = OnCommonControlPropertyChange
             end
             object chkRightClickSelect: TCheckBox
               Left = 3
-              Top = 60
+              Top = 92
               Width = 371
               Height = 17
               Caption = 'Right Click Select'
               Checked = True
               State = cbChecked
-              TabOrder = 2
+              TabOrder = 3
+              OnClick = OnCommonControlPropertyChange
+            end
+            object chkDisplayTopTabsInTitleBar: TCheckBox
+              Left = 3
+              Top = 6
+              Width = 371
+              Height = 17
+              Caption = 'Display the top tabs in the Title Bar non client area'
+              Checked = True
+              State = cbChecked
+              TabOrder = 0
               OnClick = OnCommonControlPropertyChange
             end
           end
@@ -2365,7 +2378,7 @@ object frmMain: TfrmMain
             object GroupBox8: TGroupBox
               Left = 0
               Top = 0
-              Width = 721
+              Width = 739
               Height = 177
               Align = alTop
               Caption = 'Default Animation Properties'
@@ -2517,7 +2530,7 @@ object frmMain: TfrmMain
             object GroupBox9: TGroupBox
               Left = 0
               Top = 177
-              Width = 721
+              Width = 739
               Height = 177
               Align = alTop
               Caption = 'Specific Animations'
@@ -2787,7 +2800,7 @@ object frmMain: TfrmMain
             object pnlDragDrop: TPanel
               Left = 0
               Top = 0
-              Width = 721
+              Width = 739
               Height = 414
               Align = alClient
               BevelOuter = bvNone
@@ -2920,13 +2933,22 @@ object frmMain: TfrmMain
                 Value = 30
                 OnChange = OnCommonControlPropertyChange
               end
+              object chkContrainDraggedTab: TCheckBox
+                Left = 7
+                Top = 165
+                Width = 255
+                Height = 17
+                Caption = 'Contrain dragged tab within container'
+                TabOrder = 5
+                OnClick = OnCommonControlPropertyChange
+              end
             end
           end
         end
         object Panel7: TPanel
           Left = 0
           Top = 444
-          Width = 999
+          Width = 1017
           Height = 33
           Align = alBottom
           BevelOuter = bvNone
@@ -2976,7 +2998,7 @@ object frmMain: TfrmMain
         object Panel5: TPanel
           Left = 169
           Top = 0
-          Width = 830
+          Width = 848
           Height = 444
           Align = alClient
           BevelOuter = bvNone
@@ -2984,7 +3006,7 @@ object frmMain: TfrmMain
           object pnlLookAndFeelPath: TPanel
             Left = 0
             Top = 0
-            Width = 830
+            Width = 848
             Height = 25
             Align = alTop
             Alignment = taLeftJustify
@@ -3001,7 +3023,7 @@ object frmMain: TfrmMain
           object ScrollBox1: TScrollBox
             Left = 0
             Top = 25
-            Width = 830
+            Width = 848
             Height = 419
             HorzScrollBar.Smooth = True
             HorzScrollBar.Style = ssHotTrack
@@ -3018,7 +3040,7 @@ object frmMain: TfrmMain
         object Panel6: TPanel
           Left = 0
           Top = 444
-          Width = 999
+          Width = 1017
           Height = 33
           Align = alBottom
           BevelOuter = bvNone
@@ -3129,7 +3151,7 @@ object frmMain: TfrmMain
         object Panel2: TPanel
           Left = 0
           Top = 63
-          Width = 999
+          Width = 1017
           Height = 414
           Align = alClient
           BevelOuter = bvNone
@@ -3137,7 +3159,7 @@ object frmMain: TfrmMain
           object gbOtherEvents: TGroupBox
             Left = 685
             Top = 0
-            Width = 314
+            Width = 332
             Height = 414
             Align = alClient
             Caption = 'Other Events'
@@ -3221,13 +3243,13 @@ object frmMain: TfrmMain
         object Panel4: TPanel
           Left = 0
           Top = 0
-          Width = 999
+          Width = 1017
           Height = 63
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 1
           DesignSize = (
-            999
+            1017
             63)
           object Label13: TLabel
             Left = 1
@@ -3248,7 +3270,7 @@ object frmMain: TfrmMain
           object edtStates: TEdit
             Left = 1
             Top = 36
-            Width = 996
+            Width = 1014
             Height = 23
             Anchors = [akLeft, akTop, akRight]
             ReadOnly = True
@@ -3262,7 +3284,7 @@ object frmMain: TfrmMain
         object Panel10: TPanel
           Left = 0
           Top = 0
-          Width = 999
+          Width = 1017
           Height = 19
           Align = alTop
           BevelOuter = bvNone

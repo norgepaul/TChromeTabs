@@ -95,6 +95,7 @@
 			<DCCReference Include="..\..\Lib\ChromeTabs.pas"/>
 			<DCCReference Include="..\..\Lib\ChromeTabsControls.pas"/>
 			<DCCReference Include="..\..\Lib\ChromeTabsClasses.pas"/>
+			<DCCReference Include="..\..\Lib\ChromeTabsGlassForm.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
