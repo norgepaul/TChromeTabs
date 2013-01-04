@@ -756,6 +756,7 @@ type
     FDragDisplay: TChromeTabDragDisplay;
     FDragFormBorderWidth: Integer;
     FDragFormBorderColor: Integer;
+    FContrainDraggedTabWithinContainer: Boolean;
 
     procedure SetDragOutsideDistancePixels(const Value: Integer);
     procedure SetDragOutsideImageAlpha(const Value: Byte);
@@ -766,6 +767,7 @@ type
     procedure SetDragDisplay(const Value: TChromeTabDragDisplay);
     procedure SetDragFormBorderColor(const Value: Integer);
     procedure SetDragFormBorderWidth(const Value: Integer);
+    procedure SetContrainDraggedTabWithinContainer(const Value: Boolean);
   public
     constructor Create(AOwner: TPersistent); override;
   published
@@ -778,6 +780,7 @@ type
     property DragDisplay: TChromeTabDragDisplay read FDragDisplay write SetDragDisplay;
     property DragFormBorderWidth: Integer read FDragFormBorderWidth write SetDragFormBorderWidth;
     property DragFormBorderColor: Integer read FDragFormBorderColor write SetDragFormBorderColor;
+    property ContrainDraggedTabWithinContainer: Boolean read FContrainDraggedTabWithinContainer write SetContrainDraggedTabWithinContainer;
   end;
 
   TChromeTabsMovementAnimationTypes = class(TChromeTabsPersistent)
@@ -2272,12 +2275,19 @@ begin
   FDragDisplay := ddTabAndControl;
   FDragFormBorderWidth := 2;
   FDragFormBorderColor := clGray;
+  FContrainDraggedTabWithinContainer := TRUE;
 end;
 
 procedure TChromeTabsDragOptions.SetDragType(
   const Value: TChromeTabDragType);
 begin
   FDragType := Value;
+end;
+
+procedure TChromeTabsDragOptions.SetContrainDraggedTabWithinContainer(
+  const Value: Boolean);
+begin
+  FContrainDraggedTabWithinContainer := Value;
 end;
 
 procedure TChromeTabsDragOptions.SetDragControlImageResizeFactor(

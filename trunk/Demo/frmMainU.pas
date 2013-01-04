@@ -35,6 +35,7 @@ uses
   frameChromeTabStyleU,
 
   ChromeTabs,
+  ChromeTabsGlassForm,
   ChromeTabsTypes,
   ChromeTabsUtils,
   ChromeTabsControls,
@@ -42,7 +43,7 @@ uses
   ChromeTabsLog;
 
 type
-  TfrmMain = class(TForm)
+  TfrmMain = class(TChromeTabsGlassForm)
     ChromeTabs1: TChromeTabs;
     ChromeTabs2: TChromeTabs;
     ImageList1: TImageList;
@@ -316,6 +317,8 @@ type
     cbModifiedGlowEaseType: TComboBox;
     Label79: TLabel;
     edtModifiedGlowAnimationUpdate: TSpinEdit;
+    chkDisplayTopTabsInTitleBar: TCheckBox;
+    chkContrainDraggedTab: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject);
@@ -1019,6 +1022,8 @@ begin
   end;
 
   ChromeTabControlPropertiesToGUI(FCurrentTabs);
+
+  Self.ChromeTabs := ChromeTabs1;
 end;
 
 procedure TfrmMain.FixControls;
@@ -1254,6 +1259,7 @@ begin
     edtDragAwayDistance.Value := ChromeTabs.Options.DragDrop.DragOutsideDistancePixels;
     edtDragStartPixels.Value := ChromeTabs.Options.DragDrop.DragStartPixels;
     edtDragImageResize.Text := FloatToStr(ChromeTabs.Options.DragDrop.DragControlImageResizeFactor);
+    chkContrainDraggedTab.Checked := ChromeTabs.Options.DragDrop.ContrainDraggedTabWithinContainer;
     cbExternalDragDisplay.ItemIndex := Integer(ChromeTabs.Options.DragDrop.DragDisplay);
 
     if ChromeTabs.Options.DragDrop.DragCursor = crDrag then
@@ -1388,11 +1394,22 @@ begin
       ChromeTabs.Options.DragDrop.DragStartPixels := edtDragStartPixels.Value;
       ChromeTabs.Options.DragDrop.DragControlImageResizeFactor := StrToFloatDef(edtDragImageResize.Text, 0.5);
       ChromeTabs.Options.DragDrop.DragDisplay := TChromeTabDragDisplay(cbExternalDragDisplay.ItemIndex);
+      ChromeTabs.Options.DragDrop.ContrainDraggedTabWithinContainer := chkContrainDraggedTab.Checked;
 
       if cbDragCursor.ItemIndex = 0 then
         ChromeTabs.Options.DragDrop.DragCursor := crDefault
       else
         ChromeTabs.Options.DragDrop.DragCursor := crDrag;
+
+      if chkDisplayTopTabsInTitleBar.Checked then
+        Self.ChromeTabs := ChromeTabs1
+      else
+      begin
+        Self.ChromeTabs := nil;
+
+        ChromeTabs1.Align := alTop;
+        ChromeTabs1.Top := 0;
+      end;
 
       ChromeTabs.Options.Behaviour.DebugMode := chkDebugLog.Checked;
     finally
@@ -1405,8 +1422,12 @@ begin
   pnlTop.Color := ChromeTabs1.LookAndFeel.Tabs.Active.Style.StopColor;
 
   {$IFDEF DELPHI2007_UP}
-  GlassFrame.Enabled := chkUseGlass.Checked;
-  GlassFrame.Top := edtGlassHeightTop.Value;
+  if not chkDisplayTopTabsInTitleBar.Checked then
+  begin
+    GlassFrame.Enabled := chkUseGlass.Checked;
+    GlassFrame.Top := edtGlassHeightTop.Value;
+  end;
+
   GlassFrame.Bottom := edtGlassHeightBottom.Value;
   {$ENDIF}
 end;
