@@ -1,5 +1,13 @@
 TChromeTabs 1.3 BETA
 
+05/01/2013
+Breaking Update: Added Handled var to OnButtonAddClicked. If Handled is returned false, a new tab is automatically created.
+Update: Implemented variable width tabs. Width depends on caption but respects min and max tab widths.
+Fixed: Tab dragging broken in BiDi RightToLeftReadingOnly mode.
+Fixed: Constrained tab dragging now drags into the area that the add button occupied.
+Refactored: Tidied up some duplicate drag tab code.
+
+
 04/01/2013
 Update: Added TChromeTabsGlassForm - Allows Chrome title bar tabs with one line of code.
 Update: Added ContrainDraggedTabWithinContainer property.

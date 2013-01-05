@@ -899,6 +899,7 @@ type
     FOffsetBottom: Integer;
     FMinWidth: Integer;
     FMaxWidth: Integer;
+    FTabWidthFromContent: Boolean;
     FPinnedWidth: Integer;
     FImageOffsetLeft: Integer;
     FTextTrimType: TTextTrimType;
@@ -932,6 +933,7 @@ type
     procedure SetTextAlignmentHorizontal(const Value: TAlignment);
     procedure SetTextAlignmentVertical(const Value: TVerticalAlignment);
     procedure SetShowImages(const Value: Boolean);
+    procedure SetTabWidthFromContent(const Value: Boolean);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
@@ -946,6 +948,7 @@ type
     property OffsetBottom: Integer read FOffsetBottom write SetOffsetBottom;
     property MinWidth: Integer read FMinWidth write SetMinWidth;
     property MaxWidth: Integer read FMaxWidth write SetMaxWidth;
+    property TabWidthFromContent: Boolean read FTabWidthFromContent write SetTabWidthFromContent;
     property PinnedWidth: Integer read FPinnedWidth write SetPinnedWidth;
     property ImageOffsetLeft: Integer read FImageOffsetLeft write SetImageOffsetLeft;
     property TextTrimType: TTextTrimType read FTextTrimType write SetTextTrimType;
@@ -1687,6 +1690,13 @@ end;
 procedure TChromeTabsOptions.SetPinnedWidth(const Value: Integer);
 begin
   FPinnedWidth := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabsOptions.SetTabWidthFromContent(const Value: Boolean);
+begin
+  FTabWidthFromContent := Value;
 
   DoChanged;
 end;

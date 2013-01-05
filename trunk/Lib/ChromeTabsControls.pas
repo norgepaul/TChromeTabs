@@ -145,11 +145,16 @@ type
     FBrushInvalidated: Boolean;
     FCloseButtonInvalidate: Boolean;
     FModifiedStartTicks: Cardinal;
+    FLastCaption: String;
+    FLastCaptionLength: Integer;
 
     function CloseButtonVisible: Boolean;
     function GetTabBrush: TGPLinearGradientBrush;
     function GetTabPen: TGPPen;
     function ImageVisible(ImageList: TCustomImageList; ImageIndex: Integer): Boolean;
+    procedure CalculateRects(var ImageRect, TextRect, CloseButtonRect,
+      CloseButtonCrossRect: TRect; var NormalImageVisible, OverlayImageVisible,
+      TextVisible: Boolean);
   protected
     procedure SetCloseButtonState(const Value: TDrawState); virtual;
     procedure EndAnimation; override;
@@ -168,6 +173,7 @@ type
     function GetCloseButonRect: TRect;
     function GetCloseButtonCrossRect: TRect;
     procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
+    function GetTabWidthByContent: Integer;
 
     property CloseButtonState: TDrawState read FCloseButtonState write SetCloseButtonState;
   end;
@@ -784,6 +790,168 @@ begin
   Result := FTabPen;
 end;
 
+function TChromeTabControl.GetTabWidthByContent: Integer;
+var
+  TabCanvas: TGPGraphics;
+  TabsFont: TGPFont;
+  TxtFormat: TGPStringFormat;
+  GPRectF: TGPRectF;
+  Bitmap: TBitmap;
+  ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
+  NormalImageVisible, OverlayImageVisible, TextVisible: Boolean;
+  RightOffset: Integer;
+begin
+  { TODO : Fix }
+  if FALSE then //(FLastCaption = ChromeTab.GetCaption) and (FLastCaptionLength > 0) then
+    Result := FLastCaptionLength
+  else
+  begin
+    Bitmap := TBitmap.Create;
+    try
+      Bitmap.Width := ChromeTabs.GetOptions.Display.Tabs.MaxWidth;
+      Bitmap.Height := RectHeight(ControlRect);
+
+      TabCanvas := TGPGraphics.Create(Bitmap.Canvas.Handle);
+      TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName,
+                                 FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
+      TxtFormat := TGPStringFormat.Create;
+      try
+        TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
+        TxtFormat.SetTrimming(StringTrimmingNone);
+
+        TabCanvas.MeasureString(WideString(ChromeTab.GetCaption),
+                                length(ChromeTab.GetCaption),
+                                TabsFont,
+                                RectToGPRectF(Rect(0, 0, 1000, RectHeight(ControlRect))),
+                                TxtFormat,
+                                GPRectF);
+
+        CalculateRects(ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect,
+           NormalImageVisible, OverlayImageVisible, TextVisible);
+
+        if NormalImageVisible or OverlayImageVisible then
+          RightOffset := ImageRect.Right
+        else
+          RightOffset := ControlRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
+
+        Result := Round(GPRectF.Width) +
+                 (RightOffset - ControlRect.Left) +
+                 (ControlRect.Right - CloseButtonRect.Left) -
+                 (ChromeTabs.GetOptions.Display.Tabs.TabOverlap) + 2;
+
+        FLastCaption := ChromeTab.GetCaption;
+        FLastCaptionLength := Result;
+      finally
+        FreeAndNil(TabCanvas);
+        FreeAndNil(TabsFont);
+        FreeandNil(TxtFormat);
+      end;
+    finally
+      FreeAndNil(Bitmap);
+    end;
+  end;
+end;
+
+procedure TChromeTabControl.CalculateRects(var ImageRect, TextRect,
+  CloseButtonRect, CloseButtonCrossRect: TRect;
+  var NormalImageVisible, OverlayImageVisible, TextVisible: Boolean);
+var
+  LeftOffset, RightOffset, ImageWidth, ImageHeight: Integer;
+begin
+  // Get the close button rect
+  CloseButtonRect := GetCloseButonRect;
+  CloseButtonCrossRect := GetCloseButtonCrossRect;
+
+  if CloseButtonVisible then
+    RightOffset := CloseButtonRect.Left - 1
+  else
+    RightOffset := ControlRect.Right - ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight;
+
+  // Get image size
+  LeftOffset := ControlRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
+
+  NormalImageVisible := ImageVisible(ChromeTabs.GetImages, ChromeTab.GetImageIndex);
+  OverlayImageVisible := ImageVisible(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay);
+
+  ImageWidth := 0;
+  ImageHeight := 0;
+
+  if (NormalImageVisible) or
+     (OverlayImageVisible) then
+  begin
+    ImageWidth := ChromeTabs.GetImages.Width;
+    ImageHeight := ChromeTabs.GetImages.Height;
+  end;
+
+  if OverlayImageVisible then
+  begin
+    if ChromeTabs.GetImagesOverlay.Width > ChromeTabs.GetImagesOverlay.Width then
+      ImageWidth := ChromeTabs.GetImagesOverlay.Width;
+
+    if ChromeTabs.GetImagesOverlay.Height > ChromeTabs.GetImagesOverlay.Height then
+      ImageHeight := ChromeTabs.GetImagesOverlay.Height;
+  end;
+
+  // Does the image fit between the left margin and the close button?
+  if LeftOffset + ImageWidth > RightOffset then
+  begin
+    NormalImageVisible := FALSE;
+    OverlayImageVisible := FALSE;
+  end
+  else
+  begin
+    // Should we centre the image?
+    if ChromeTab.GetPinned then
+      ImageRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (ImageWidth div 2),
+                        ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2),
+                        ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2) + ImageHeight,
+                        (ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2)) + ImageHeight)
+    else
+    begin
+      ImageRect := Rect(LeftOffset,
+                        ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2),
+                        LeftOffset + ImageWidth,
+                        (ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2)) + ImageHeight);
+
+      LeftOffset := LeftOffset + ImageWidth + 1;
+    end;
+  end;
+
+  // Does the Text fit?
+  TextVisible := (not ChromeTab.GetPinned) and
+                 (RightOffset - LeftOffset >= 5);
+
+  if TextVisible then
+  begin
+    TextRect := Rect(LeftOffset,
+                     ControlRect.Top,
+                     RightOffset,
+                     ControlRect.Bottom);
+  end;
+
+  if (CloseButtonVisible) and
+     (not TextVisible) and
+     (not NormalImageVisible) and
+     (not OverlayImageVisible) then
+  begin
+    // If only the close button is visible, we need to centre it
+    CloseButtonRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2),
+                            CloseButtonRect.Top,
+                            ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2) + RectWidth(CloseButtonRect),
+                            CloseButtonRect.Bottom);
+
+    CloseButtonCrossRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonCrossRect) div 2),
+                                 CloseButtonCrossRect.Top,
+                                 ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonCrossRect) div 2) + RectWidth(CloseButtonCrossRect),
+                                 CloseButtonCrossRect.Bottom);
+  end;
+
+  ImageRect := ScrollRect(BidiRect(ImageRect));
+  TextRect := ScrollRect(BidiRect(TextRect));
+  CloseButtonRect := ScrollRect(BidiRect(CloseButtonRect));
+  CloseButtonCrossRect := ScrollRect(BidiRect(CloseButtonCrossRect));
+end;
+
 procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 
   procedure DrawGDITextWithOffset(const Text: String; TextRect: TRect; OffsetX, OffsetY: Integer; FontColor: TColor);
@@ -817,7 +985,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
         GPRect.Width := RectWidth(TextRect);
         GPRect.Height := RectHeight(TextRect);
 
-        TxtFormat := TGPStringFormat.Create();
+        TxtFormat := TGPStringFormat.Create;
         try
           TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
 
@@ -834,6 +1002,13 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
             BlendPositions[1] := 0.85 - ((80 - RectWidth(TextRect)) / 80);
 
           // Set the text trim mode
+          if (ChromeTabs.GetOptions.Display.Tabs.TabWidthFromContent) and
+             (RectWidth(ControlRect) < ChromeTabs.GetOptions.Display.Tabs.MaxWidth + ChromeTabs.GetOptions.Display.Tabs.TabOverlap) then
+          begin
+            TxtFormat.SetTrimming(StringTrimmingNone);
+
+            TabsTxtBrush.SetBlend(@BlendFactorsNormal[0], @BlendPositions[0], Length(BlendFactorsNormal));
+          end else
           if ChromeTabs.GetOptions.Display.Tabs.TextTrimType <> tttFade then
           begin
             TxtFormat.SetTrimming(TStringTrimming(ChromeTabs.GetOptions.Display.Tabs.TextTrimType));
@@ -954,105 +1129,6 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     end;
 
     ChromeTabs.DoOnAfterDrawItem(TabCanvas, ImageRect, ChromeTabItemType, ChromeTab.GetIndex);
-  end;
-
-  procedure CalculateRects(var ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
-                           var NormalImageVisible, OverlayImageVisible, TextVisible: Boolean);
-  var
-    LeftOffset, RightOffset, ImageWidth, ImageHeight: Integer;
-  begin
-    // Get the close button rect
-    CloseButtonRect := GetCloseButonRect;
-    CloseButtonCrossRect := GetCloseButtonCrossRect;
-
-    if CloseButtonVisible then
-      RightOffset := CloseButtonRect.Left - 1
-    else
-      RightOffset := ControlRect.Right - ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight;
-
-    // Get image size
-    LeftOffset := ControlRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
-
-    NormalImageVisible := ImageVisible(ChromeTabs.GetImages, ChromeTab.GetImageIndex);
-    OverlayImageVisible := ImageVisible(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay);
-
-    ImageWidth := 0;
-    ImageHeight := 0;
-
-    if (NormalImageVisible) or
-       (OverlayImageVisible) then
-    begin
-      ImageWidth := ChromeTabs.GetImages.Width;
-      ImageHeight := ChromeTabs.GetImages.Height;
-    end;
-
-    if OverlayImageVisible then
-    begin
-      if ChromeTabs.GetImagesOverlay.Width > ChromeTabs.GetImagesOverlay.Width then
-        ImageWidth := ChromeTabs.GetImagesOverlay.Width;
-
-      if ChromeTabs.GetImagesOverlay.Height > ChromeTabs.GetImagesOverlay.Height then
-        ImageHeight := ChromeTabs.GetImagesOverlay.Height;
-    end;
-
-    // Does the image fit between the left margin and the close button?
-    if LeftOffset + ImageWidth > RightOffset then
-    begin
-      NormalImageVisible := FALSE;
-      OverlayImageVisible := FALSE;
-    end
-    else
-    begin
-      // Should we centre the image?
-      if ChromeTab.GetPinned then
-        ImageRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (ImageWidth div 2),
-                          ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2),
-                          ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2) + ImageHeight,
-                          (ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2)) + ImageHeight)
-      else
-      begin
-        ImageRect := Rect(LeftOffset,
-                          ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2),
-                          LeftOffset + ImageWidth,
-                          (ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2)) + ImageHeight);
-
-        LeftOffset := LeftOffset + ImageWidth + 1;
-      end;
-    end;
-
-    // Does the Text fit?
-    TextVisible := (not ChromeTab.GetPinned) and
-                   (RightOffset - LeftOffset >= 5);
-
-    if TextVisible then
-    begin
-      TextRect := Rect(LeftOffset,
-                       ControlRect.Top,
-                       RightOffset,
-                       ControlRect.Bottom);
-    end;
-
-    if (CloseButtonVisible) and
-       (not TextVisible) and
-       (not NormalImageVisible) and
-       (not OverlayImageVisible) then
-    begin
-      // If only the close button is visible, we need to centre it
-      CloseButtonRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2),
-                              CloseButtonRect.Top,
-                              ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2) + RectWidth(CloseButtonRect),
-                              CloseButtonRect.Bottom);
-
-      CloseButtonCrossRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonCrossRect) div 2),
-                                   CloseButtonCrossRect.Top,
-                                   ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonCrossRect) div 2) + RectWidth(CloseButtonCrossRect),
-                                   CloseButtonCrossRect.Bottom);
-    end;
-
-    ImageRect := ScrollRect(BidiRect(ImageRect));
-    TextRect := ScrollRect(BidiRect(TextRect));
-    CloseButtonRect := ScrollRect(BidiRect(CloseButtonRect));
-    CloseButtonCrossRect := ScrollRect(BidiRect(CloseButtonCrossRect));
   end;
 
   procedure DrawGlow(GlowRect: TRect; CentreColor, OutsideColor: TColor; CentreAlpha, OutsideAlpha: Byte);
