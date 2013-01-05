@@ -322,7 +322,6 @@ type
     Button2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-    procedure ChromeTabs1ButtonAddClick(Sender: TObject);
     procedure CommonTabPropertyChange(Sender: TObject);
     procedure OnCommonControlPropertyChange(Sender: TObject);
     procedure ChromeTabs1DebugLog(Sender: TObject; const Text: string);
@@ -400,6 +399,7 @@ type
       ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal;
       var EaseType: TChromeTabsEaseType);
     procedure Button2Click(Sender: TObject);
+    procedure ChromeTabs1ButtonAddClick(Sender: TObject; var Handled: Boolean);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -1512,18 +1512,21 @@ begin
   FLogOtherEvents.Log('OnBeginTabDrag [TabIndex = %d]', [ATab.Index]);
 end;
 
-procedure TfrmMain.ChromeTabs1ButtonCloseTabClick(Sender: TObject;
-  ATab: TChromeTab; var Close: Boolean);
-begin
-  FLogOtherEvents.Log('OnButtonCloseTabClick [TabIndex = %d]', [ATab.Index]);
-end;
-
-procedure TfrmMain.ChromeTabs1ButtonAddClick(Sender: TObject);
+procedure TfrmMain.ChromeTabs1ButtonAddClick(Sender: TObject;
+  var Handled: Boolean);
 begin
   if chkEnableEvents.Checked then
     FLogOtherEvents.Log('OnButtonAddClick', []);
 
   GUIToTabProperties(AddTab(TChromeTabs(Sender), edtTabCaption.Text, edtImageIndex.Value));
+
+  Handled := TRUE;
+end;
+
+procedure TfrmMain.ChromeTabs1ButtonCloseTabClick(Sender: TObject;
+  ATab: TChromeTab; var Close: Boolean);
+begin
+  FLogOtherEvents.Log('OnButtonCloseTabClick [TabIndex = %d]', [ATab.Index]);
 end;
 
 procedure TfrmMain.ChromeTabs1Change(Sender: TObject; ATab: TChromeTab;
