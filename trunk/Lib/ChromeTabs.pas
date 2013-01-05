@@ -107,6 +107,7 @@ type
   TOnTabDragDropped = procedure(Sender: TObject; DragTabObject: IDragTabObject; NewTab: TChromeTab) of object;
   TOnAnimateStyle = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
+  TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
 
   // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -142,7 +143,7 @@ type
     FOnActiveTabChanged: TOnActiveTabChanged;
     FOnActiveTabChanging: TOnActiveTabChanging;
     FOnChange: TOnChange;
-    FOnButtonAddClick: TNotifyEvent;
+    FOnButtonAddClick: TOnButtonAddClick;
     FOnButtonCloseTabClick: TOnButtonCloseTabClick;
     FOnMouseEnter: TNotifyEvent;
     FOnMouseLeave: TNotifyEvent;
@@ -302,7 +303,6 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure WndProc(var Message: TMessage); override;
     procedure SetBiDiMode(Value: TBiDiMode); override;
-    procedure AfterConstruction; override;
 
     // Virtual
     procedure DoOnActiveTabChanged(ATab: TChromeTab); virtual;
@@ -344,7 +344,7 @@ type
     property OnActiveTabChanged: TOnActiveTabChanged read FOnActiveTabChanged write FOnActiveTabChanged;
     property OnChange: TOnChange read FOnChange write FOnChange;
     property OnButtonCloseTabClick: TOnButtonCloseTabClick read FOnButtonCloseTabClick write FOnButtonCloseTabClick;
-    property OnButtonAddClick: TNotifyEvent read FOnButtonAddClick write FOnButtonAddClick;
+    property OnButtonAddClick: TOnButtonAddClick read FOnButtonAddClick write FOnButtonAddClick;
     property OnDebugLog: TOnDebugLog read FOnDebugLog write FOnDebugLog;
     property OnNeedDragImageControl: TOnNeedDragImageControl read FOnNeedDragImageControl write FOnNeedDragImageControl;
     property OnCreateDragForm: TOnCreateDragForm read FOnCreateDragForm write FOnCreateDragForm;
@@ -388,6 +388,7 @@ type
     function GetTabUnderMouse: TChromeTab;
     function GetTabDisplayState: TTabDisplayState;
     procedure Invalidate; override;
+    procedure AfterConstruction; override;
 
     procedure SaveLookAndFeel(Stream: TStream); overload; virtual;
     procedure SaveLookAndFeel(const Filename: String); overload; virtual;
@@ -1848,7 +1849,7 @@ end;
 
 function TCustomChromeTabs.BidiXPos(X: Integer): Integer;
 begin
-  if BiDiMode in BidiRightToLeftTextModes then
+  if BiDiMode in BidiRightToLeftTabModes then
     Result := ClientWidth - X
   else
     Result := X;
@@ -1857,13 +1858,11 @@ end;
 procedure TCustomChromeTabs.MouseMove(Shift: TShiftState; x, y: Integer);
 var
   HitTestResult: THitTestResult;
-  DragTabControl: TChromeTabControl;
   AllowDrag: Boolean;
   CursorWinControl: TWinControl;
   TabDockControl, PreviousDockControl: IChromeTabDockControl;
   Accept, DummyAccept: Boolean;
   ScreenPoint, ControlPoint: TPoint;
-  DragTabX: Integer;
 begin
   inherited;
 
@@ -1900,28 +1899,10 @@ begin
       if FDragTabObject = nil then
         SetControlDrawStates;
 
-      // Are we dragging? Yes, move the drag tab
+      // Are we dragging?
       if (FDragTabObject <> nil) and
          (FDragTabObject.SourceControl.GetControl = Self) then
       begin
-        DragTabControl := TabControls[FDragTabObject.DragTab.Index];
-
-        DragTabX := BidiXPos(X - FDragTabObject.DragCursorOffset.X);
-
-        if FOptions.DragDrop.ContrainDraggedTabWithinContainer then
-        begin
-          if DragTabX + RectWidth(DragTabControl.ControlRect) > TabContainerRect.Right then
-            DragTabX := TabContainerRect.Right - RectWidth(DragTabControl.ControlRect) else
-          if DragTabX < FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft then
-            DragTabX := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
-        end;
-
-        // Note that we only set the position of the tab, the index doesn't change.
-        // We will move the tab to a new index when the MouseUp event
-        SetControlLeft(DragTabControl,
-                       DragTabX,
-                       FALSE); // Never animate beacause we're dragging
-
         if FOptions.DragDrop.DragType = dtWithinContainer then
         begin
           TabDragOver(Self, X, Y, dsDragMove, FDragTabObject, DummyAccept);
@@ -1959,12 +1940,7 @@ begin
               // Set the current dock control
               FDragTabObject.DockControl := TabDockControl;
 
-              // If the current drag object is nil we need to tell the new dock control
-              // that we're starting to drag over it.
-              if (PreviousDockControl <> nil) and
-                 (PreviousDockControl <> TabDockControl) then
-                TabDockControl.TabDragOver(Self, ControlPoint.X, ControlPoint.Y, dsDragLeave, FDragTabObject, DummyAccept);
-
+              // Call the drag over method
               TabDockControl.TabDragOver(Self, ControlPoint.X, ControlPoint.Y, dsDragMove, FDragTabObject, DummyAccept);
 
               // Redraw if we're dragging a tab over our container
@@ -2204,9 +2180,16 @@ begin
 end;
 
 procedure TCustomChromeTabs.DoOnButtonAddClick;
+var
+  Handled: Boolean;
 begin
+  Handled := FALSE;
+
   if Assigned(FOnButtonAddClick) then
-    FOnButtonAddClick(Self);
+    FOnButtonAddClick(Self, Handled);
+
+  if not Handled then
+    Tabs.Add;
 end;
 
 procedure TCustomChromeTabs.DoOnCreateDragForm(ATab: TChromeTab;
@@ -2809,7 +2792,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
     DragTabControl: TChromeTabControl;
     CursorPos: TPoint;
     ExtraTabWidth: Integer;
-    DragTabWidth, DragCursorXOffset, DragTabX: Integer;
+    DragTabWidth, DragCursorXOffset, DragTabX, MaxRight: Integer;
   begin
     // Set the start and end tab indices
     if PinnedTabs then
@@ -2839,8 +2822,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
       DragTabControl := nil;
     end;
 
-    if (DragTabControl <> nil) and
-       (FActiveDragTabObject.SourceControl.GetControl <> Self) then
+    if DragTabControl <> nil then
     begin
       DragCursorXOffset := FActiveDragTabObject.DragCursorOffset.X;
 
@@ -2856,8 +2838,13 @@ procedure TCustomChromeTabs.CalculateTabRects;
 
       if FOptions.DragDrop.ContrainDraggedTabWithinContainer then
       begin
-        if DragTabX + RectWidth(DragTabControl.ControlRect) > TabContainerRect.Right then
-          DragTabX := TabContainerRect.Right - RectWidth(DragTabControl.ControlRect) else
+        MaxRight := TabContainerRect.Right;
+
+        if FOptions.Display.AddButton.Visibility = avRightFloating then
+          MaxRight := MaxRight + FOptions.Display.AddButton.Width + FOptions.Display.AddButton.Offsets.Horizontal;
+
+        if DragTabX + RectWidth(DragTabControl.ControlRect) > MaxRight then
+          DragTabX := MaxRight - RectWidth(DragTabControl.ControlRect) else
         if DragTabX < FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft then
           DragTabX := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
       end;
@@ -2865,7 +2852,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
       SetControlPosition(DragTabControl,
                          Rect(DragTabX,
                               ControlRect.Top + FOptions.Display.Tabs.OffsetTop,
-                              BidiXPos(DragTabX) + DragTabWidth,
+                              DragTabX + DragTabWidth,
                               ControlRect.Bottom - FOptions.Display.Tabs.OffsetBottom),
                          FALSE);
     end;
