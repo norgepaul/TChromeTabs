@@ -108,6 +108,7 @@ type
   TOnAnimateStyle = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
+  TOnSetTabWidth = procedure(Sender: TObject; ATab: TChromeTab; var TabWidth: Integer) of object;
 
   // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -165,6 +166,7 @@ type
     FOnScrollWidthChanged: TNotifyEvent;
     FOnAnimateStyle: TOnAnimateStyle;
     FOnAnimateMovement: TOnAnimateMovement;
+    FOnSetTabWidth: TOnSetTabWidth;
 
     // Persistent Properties
     FOptions: TOptions;
@@ -272,6 +274,7 @@ type
     procedure SetMovementAnimation(MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
     procedure DeleteTab(Index: Integer);
     function ControlReady: Boolean;
+    function GetTabWidthByContent(TabControl: TChromeTabControl): Integer;
   protected
     // ** Important, often called procedures ** //
     procedure CalculateButtonRects; virtual;
@@ -325,6 +328,7 @@ type
     procedure DoPopupClick(Sender: TObject); virtual;
     procedure DoOnAnimateStyle(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnAnimateMovement(ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
+    procedure DoOnSetTabWidth(ATab: TChromeTab; var TabWidth: Integer); virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -362,6 +366,7 @@ type
     property OnScrollWidthChanged: TNotifyEvent read FOnScrollWidthChanged write FOnScrollWidthChanged;
     property OnAnimateStyle: TOnAnimateStyle read FOnAnimateStyle write FOnAnimateStyle;
     property OnAnimateMovement: TOnAnimateMovement read FOnAnimateMovement write FOnAnimateMovement;
+    property OnSetTabWidth: TOnSetTabWidth read FOnSetTabWidth write FOnSetTabWidth;
 
     property LookAndFeel: TChromeTabsLookAndFeel read GetLookAndFeel write SetLookAndFeel;
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
@@ -2245,6 +2250,13 @@ begin
     FOnScrollWidthChanged(Self);
 end;
 
+procedure TCustomChromeTabs.DoOnSetTabWidth(ATab: TChromeTab;
+  var TabWidth: Integer);
+begin
+  if Assigned(FOnSetTabWidth) then
+    FOnSetTabWidth(Self, ATab, TabWidth);
+end;
+
 procedure TCustomChromeTabs.DoOnTabDblClick(ATab: TChromeTab);
 begin
   if Assigned(FOnTabDblClick) then
@@ -2678,6 +2690,16 @@ begin
   end;
 end;
 
+function TCustomChromeTabs.GetTabWidthByContent(TabControl: TChromeTabControl): Integer;
+begin
+  Result := TabControl.GetTabWidthByContent;
+
+  if Result > FOptions.Display.Tabs.MaxWidth then
+    Result := FOptions.Display.Tabs.MaxWidth else
+  if Result < FOptions.Display.Tabs.MinWidth then
+    Result := FOptions.Display.Tabs.MinWidth;
+end;
+
 procedure TCustomChromeTabs.CalculateTabRects;
 
   procedure CalculateAverageTabWidth(var TabWidth, TabEndSpace: Integer);
@@ -2768,8 +2790,6 @@ procedure TCustomChromeTabs.CalculateTabRects;
       if not Tabs[i].MarkedForDeletion then
       begin
         // Set the position of the tabs
-        //SetMovementAnimation(FOptions.Animation.MovementAnimations.TabMove);
-
         SetControlPosition(TabControl,
                            Rect(TabLeft,
                                 FOptions.Display.Tabs.OffsetTop,
@@ -2809,10 +2829,15 @@ procedure TCustomChromeTabs.CalculateTabRects;
     if (FActiveDragTabObject <> nil) and
        (FActiveDragTabObject.DragTab.Pinned = PinnedTabs) then
     begin
-      DragTabWidth := TabWidth + FOptions.Display.Tabs.TabOverlap;
-    
-      if DragTabWidth < FOptions.Display.Tabs.MinWidth then
-        DragTabWidth := FOptions.Display.Tabs.MinWidth;
+      if FOptions.Display.Tabs.TabWidthFromContent then
+        DragTabWidth := GetTabWidthByContent(FDragTabControl)
+      else
+      begin
+        DragTabWidth := TabWidth + FOptions.Display.Tabs.TabOverlap;
+
+        if DragTabWidth < FOptions.Display.Tabs.MinWidth then
+          DragTabWidth := FOptions.Display.Tabs.MinWidth;
+      end;
 
       DragTabControl := FDragTabControl;
     end
@@ -2914,6 +2939,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
         // We add a sigle pixel to some of the tabs in order to align the
         // right hand side perfectly
         if (not PinnedTabs) and
+           (not FOptions.Display.Tabs.TabWidthFromContent) and
            (not Tabs[i].MarkedForDeletion) and
            (TabEndSpace > 0) then
           TabWidthAddition := 1
@@ -2929,6 +2955,9 @@ procedure TCustomChromeTabs.CalculateTabRects;
           if (HasState(stsResizing)) or
              (ExtraTabWidth <> 0) then
             SetMovementAnimation(nil);
+
+          if FOptions.Display.Tabs.TabWidthFromContent then
+            TabWidth := GetTabWidthByContent(TabControl);
 
           SetControlPosition(TabControl,
                              Rect(TabLeft - ExtraTabWidth,
@@ -2991,7 +3020,8 @@ begin
     end
     else
     begin
-      if not DraggingInOwnContainer then
+      if (not DraggingInOwnContainer) and
+         (not FOptions.Display.Tabs.TabWidthFromContent) then
         CalculateAverageTabWidth(FAdjustedTabWidth, FTabEndSpace);
 
       SetTabPositions(TabLeft, FOptions.Display.Tabs.PinnedWidth, 0, TRUE);

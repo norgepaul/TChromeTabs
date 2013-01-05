@@ -320,6 +320,7 @@ type
     chkDisplayTopTabsInTitleBar: TCheckBox;
     chkContrainDraggedTab: TCheckBox;
     Button2: TButton;
+    chkSetTabWidthsFromCaptions: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -1218,6 +1219,7 @@ begin
     cbTextAlignment.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextAlignmentHorizontal);
     cbTextVerticalAlignment.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextAlignmentVertical);
     cbTextTrimming.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.TextTrimType);
+    chkSetTabWidthsFromCaptions.Checked := ChromeTabs.Options.Display.Tabs.TabWidthFromContent;
     chkSeeThroughTabs.Checked := ChromeTabs.Options.Display.Tabs.SeeThroughTabs;
     edtTabOverlap.Value := ChromeTabs.Options.Display.Tabs.TabOverlap;
 
@@ -1349,6 +1351,7 @@ begin
       ChromeTabs.Options.Display.Tabs.TextTrimType := TTextTrimType(cbTextTrimming.ItemIndex);
       ChromeTabs.Options.Display.Tabs.TabOverlap := edtTabOverlap.Value;
       ChromeTabs.Options.Display.Tabs.SeeThroughTabs := chkSeeThroughTabs.Checked;
+      ChromeTabs.Options.Display.Tabs.TabWidthFromContent := chkSetTabWidthsFromCaptions.Checked;
       ChromeTabs.BiDiMode := TBiDiMode(cbBidiMode.ItemIndex);
 
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
