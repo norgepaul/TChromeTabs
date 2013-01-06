@@ -5,6 +5,7 @@ Update: Variable width tabs implementation complete.
 Fixed: Some events not hooked in demo.
 Fixed: Add button now working correctly for all scenarios.
 Fixed: OnBeforeDrawItem event caused unusual behaviour when applied to some items.
+Fixed: Tabs Modified flag reset when tab activated ignoring Allow value retruned from event.
 
 05/01/2013
 Breaking Update: Added Handled var to OnButtonAddClicked. If Handled is returned false, a new tab is automatically created.

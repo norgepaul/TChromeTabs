@@ -1174,7 +1174,8 @@ begin
     begin
       GetChromeTabInterface.DoOnActiveTabChanging(GetChromeTabInterface.GetActiveTab, Self, Allow);
 
-      FModified := FALSE;
+      if Allow then
+        FModified := FALSE;
     end;
 
     if Allow then
