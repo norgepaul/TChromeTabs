@@ -158,8 +158,6 @@ type
   protected
     procedure SetCloseButtonState(const Value: TDrawState); virtual;
     procedure EndAnimation; override;
-
-    property ChromeTab: IChromeTab read FChromeTab;
   public
     constructor Create(ChromeTabs: IChromeTabs; TabInterface: IChromeTab); reintroduce;
     destructor Destroy; override;
@@ -176,6 +174,7 @@ type
     function GetTabWidthByContent: Integer;
 
     property CloseButtonState: TDrawState read FCloseButtonState write SetCloseButtonState;
+    property ChromeTab: IChromeTab read FChromeTab;
   end;
 
   TBaseChromeButtonControl = class(TBaseChromeTabsControl)
@@ -800,9 +799,10 @@ var
   ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
   NormalImageVisible, OverlayImageVisible, TextVisible: Boolean;
   RightOffset: Integer;
+  ScrolledRect: TRect;
 begin
   { TODO : Fix }
-  if FALSE then //(FLastCaption = ChromeTab.GetCaption) and (FLastCaptionLength > 0) then
+  if (FLastCaption = ChromeTab.GetCaption) and (FLastCaptionLength > 0) then
     Result := FLastCaptionLength
   else
   begin
@@ -829,15 +829,17 @@ begin
         CalculateRects(ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect,
            NormalImageVisible, OverlayImageVisible, TextVisible);
 
+        ScrolledRect := ScrollRect(ControlRect);
+
         if NormalImageVisible or OverlayImageVisible then
           RightOffset := ImageRect.Right
         else
-          RightOffset := ControlRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
+          RightOffset := ScrolledRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
 
         Result := Round(GPRectF.Width) +
-                 (RightOffset - ControlRect.Left) +
-                 (ControlRect.Right - CloseButtonRect.Left) -
-                 (ChromeTabs.GetOptions.Display.Tabs.TabOverlap) + 2;
+                 (RightOffset - ScrolledRect.Left) +
+                 (ScrolledRect.Right - CloseButtonRect.Left) -
+                 (ChromeTabs.GetOptions.Display.Tabs.TabOverlap);
 
         FLastCaption := ChromeTab.GetCaption;
         FLastCaptionLength := Result;
@@ -1194,26 +1196,32 @@ begin
 
       TabCanvas.GetClip(OriginalClipRegion);
 
+      ChromeTabPolygons := GetPolygons;
+
+      // Calculate the positions and visibilty of the controls
+      CalculateRects(ImageRect, TextRect, ButtonRect, CrossRect, NormalImageVisible, OverlayImageVisible, TextVisible);
+
       // Fire the before draw event
       ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ControlRect, itTab, ChromeTab.GetIndex, Handled);
 
       // Only continue if the drawing hasn't already been handled
       if not Handled then
       begin
-        ChromeTabPolygons := GetPolygons;
-
-        // Calculate the positions and visibilty of the controls
-        CalculateRects(ImageRect, TextRect, ButtonRect, CrossRect, NormalImageVisible, OverlayImageVisible, TextVisible);
-
         // Draw the tab background
         ChromeTabPolygons.DrawTo(TabCanvas, dfBrush);
+      end;
 
-        // Set the clip region to that of the tab so the glows stay within the tab
-        SetTabClipRegionFromPolygon(TabCanvas, ChromeTabPolygons.Polygons[0].Polygon, CombineModeIntersect);
+      // Set the clip region to that the glows stay within the tab
+      SetTabClipRegionFromPolygon(TabCanvas, ChromeTabPolygons.Polygons[0].Polygon, CombineModeIntersect);
 
-        // Draw the modified glow
-        if (FChromeTab.GetModified) and
-           (ChromeTabs.GetOptions.Display.TabModifiedGlow.Style <> msNone) then
+      // Draw the modified glow
+      if (FChromeTab.GetModified) and
+         (ChromeTabs.GetOptions.Display.TabModifiedGlow.Style <> msNone) then
+      begin
+        // Fire before draw event
+        ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ControlRect, itTabModifiedGlow, ChromeTab.GetIndex, Handled);
+
+        if not Handled then
         begin
           case ChromeTabs.GetOptions.Display.Tabs.Orientation of
             toTop: ModifiedTop := ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
@@ -1230,11 +1238,18 @@ begin
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreAlpha,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.OutsideAlpha);
         end;
+      end;
 
-        // Draw the mouse glow
-        if (ChromeTabs.GetOptions.Display.TabMouseGlow.Visible) and
-           (not ChromeTabs.IsDragging) and
-           (PointInPolygon(ChromeTabPolygons.Polygons[0].Polygon, MouseX, MouseY)) then
+      // Draw the mouse glow
+      if (ChromeTabs.GetOptions.Display.TabMouseGlow.Visible) and
+         (not ChromeTabs.IsDragging) and
+         (PointInPolygon(ChromeTabPolygons.Polygons[0].Polygon, MouseX, MouseY)) then
+      begin
+        // Fire before draw event
+        ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ControlRect, itTabMouseGlow, ChromeTab.GetIndex, Handled);
+
+        if not Handled then
+        begin
           DrawGlow(Rect(MouseX - (ChromeTabs.GetOptions.Display.TabMouseGlow.Width div 2),
                         MouseY - (ChromeTabs.GetOptions.Display.TabMouseGlow.Height div 2),
                         MouseX + (ChromeTabs.GetOptions.Display.TabMouseGlow.Width div 2),
@@ -1243,79 +1258,86 @@ begin
                         ChromeTabs.GetLookAndFeel.Tabs.MouseGlow.OutsideColor,
                         ChromeTabs.GetLookAndFeel.Tabs.MouseGlow.CentreAlpha,
                         ChromeTabs.GetLookAndFeel.Tabs.MouseGlow.OutsideAlpha);
-
-        // Reset the clip region
-        TabCanvas.SetClip(OriginalClipRegion);
-
-        // Draw the text
-        if (not ChromeTab.GetPinned) and (TextVisible) then
-        begin
-          ChromeTabs.DoOnBeforeDrawItem(TabCanvas, TextRect, itTabText, ChromeTab.GetIndex, Handled);
-
-          if not Handled then
-            DrawGDIText(ChromeTab.GetCaption, TextRect);
-
-          ChromeTabs.DoOnAfterDrawItem(TabCanvas, TextRect, itTabText, ChromeTab.GetIndex);
         end;
+      end;
 
+      // Reset the clip region
+      TabCanvas.SetClip(OriginalClipRegion);
+
+      // Draw the text
+      if (not ChromeTab.GetPinned) and (TextVisible) then
+      begin
+        ChromeTabs.DoOnBeforeDrawItem(TabCanvas, TextRect, itTabText, ChromeTab.GetIndex, Handled);
+
+        if not Handled then
+          DrawGDIText(ChromeTab.GetCaption, TextRect);
+
+        ChromeTabs.DoOnAfterDrawItem(TabCanvas, TextRect, itTabText, ChromeTab.GetIndex);
+      end;
+
+      // Fire before draw event
+      ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ControlRect, itTabOutline, ChromeTab.GetIndex, Handled);
+
+      if not Handled then
+      begin
         // Draw the border after the modified glow and text
         ChromeTabPolygons.DrawTo(TabCanvas, dfPen);
+      end;
 
-        // Draw the close button
-        if CloseButtonVisible then
+      // Draw the close button
+      if CloseButtonVisible then
+      begin
+        ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ButtonRect, itTabCloseButton, ChromeTab.GetIndex, Handled);
+
+        if not Handled then
         begin
-          ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ButtonRect, itTabCloseButton, ChromeTab.GetIndex, Handled);
+          case FCloseButtonState of
+            dsDown:
+              begin
+                CloseButtonStyle := ChromeTabs.GetLookAndFeel.CloseButton.Circle.Down;
+                CloseButtonCrossPen := ChromeTabs.GetLookAndFeel.CloseButton.Cross.Down.GetPen;
+              end;
 
-          if not Handled then
-          begin
-            case FCloseButtonState of
-              dsDown:
-                begin
-                  CloseButtonStyle := ChromeTabs.GetLookAndFeel.CloseButton.Circle.Down;
-                  CloseButtonCrossPen := ChromeTabs.GetLookAndFeel.CloseButton.Cross.Down.GetPen;
-                end;
+            dsHot:
+              begin
+                CloseButtonStyle := ChromeTabs.GetLookAndFeel.CloseButton.Circle.Hot;
+                CloseButtonCrossPen := ChromeTabs.GetLookAndFeel.CloseButton.Cross.Hot.GetPen;
+              end;
 
-              dsHot:
-                begin
-                  CloseButtonStyle := ChromeTabs.GetLookAndFeel.CloseButton.Circle.Hot;
-                  CloseButtonCrossPen := ChromeTabs.GetLookAndFeel.CloseButton.Cross.Hot.GetPen;
-                end;
-
-              else
-                begin
-                  CloseButtonStyle := ChromeTabs.GetLookAndFeel.CloseButton.Circle.Normal;
-                  CloseButtonCrossPen := ChromeTabs.GetLookAndFeel.CloseButton.Cross.Normal.GetPen;
-                end;
-            end;
-
-            // Draw the circle
-            TabCanvas.FillEllipse(CloseButtonStyle.GetBrush(ButtonRect),
-                                                            ButtonRect.Left,
-                                                            ButtonRect.Top,
-                                                            RectWidth(ButtonRect),
-                                                            RectHeight(ButtonRect));
-
-            TabCanvas.DrawEllipse(CloseButtonStyle.GetPen,
-                                  ButtonRect.Left,
-                                  ButtonRect.Top,
-                                  RectWidth(ButtonRect),
-                                  RectHeight(ButtonRect));
-
-            // Draw the cross
-            TabCanvas.DrawLine(CloseButtonCrossPen, CrossRect.Left, CrossRect.Top, CrossRect.Right, CrossRect.Bottom);
-            TabCanvas.DrawLine(CloseButtonCrossPen, CrossRect.Left, CrossRect.Bottom, CrossRect.Right, CrossRect.Top);
+            else
+              begin
+                CloseButtonStyle := ChromeTabs.GetLookAndFeel.CloseButton.Circle.Normal;
+                CloseButtonCrossPen := ChromeTabs.GetLookAndFeel.CloseButton.Cross.Normal.GetPen;
+              end;
           end;
 
-          ChromeTabs.DoOnAfterDrawItem(TabCanvas, ButtonRect, itTabCloseButton, ChromeTab.GetIndex);
+          // Draw the circle
+          TabCanvas.FillEllipse(CloseButtonStyle.GetBrush(ButtonRect),
+                                                          ButtonRect.Left,
+                                                          ButtonRect.Top,
+                                                          RectWidth(ButtonRect),
+                                                          RectHeight(ButtonRect));
+
+          TabCanvas.DrawEllipse(CloseButtonStyle.GetPen,
+                                ButtonRect.Left,
+                                ButtonRect.Top,
+                                RectWidth(ButtonRect),
+                                RectHeight(ButtonRect));
+
+          // Draw the cross
+          TabCanvas.DrawLine(CloseButtonCrossPen, CrossRect.Left, CrossRect.Top, CrossRect.Right, CrossRect.Bottom);
+          TabCanvas.DrawLine(CloseButtonCrossPen, CrossRect.Left, CrossRect.Bottom, CrossRect.Right, CrossRect.Top);
         end;
 
-        // Draw the normal and overlay images
-        if NormalImageVisible then
-          DrawImage(ChromeTabs.GetImages, ChromeTab.GetImageIndex, ImageRect, itTabImage);
-
-        if OverlayImageVisible then
-          DrawImage(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
+        ChromeTabs.DoOnAfterDrawItem(TabCanvas, ButtonRect, itTabCloseButton, ChromeTab.GetIndex);
       end;
+
+      // Draw the normal and overlay images
+      if NormalImageVisible then
+        DrawImage(ChromeTabs.GetImages, ChromeTab.GetImageIndex, ImageRect, itTabImage);
+
+      if OverlayImageVisible then
+        DrawImage(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
     finally
       FreeAndNil(OriginalClipRegion);
     end;

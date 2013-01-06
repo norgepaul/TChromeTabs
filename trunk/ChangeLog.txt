@@ -1,5 +1,11 @@
 TChromeTabs 1.3 BETA
 
+06/01/2013
+Update: Variable width tabs implementation complete.
+Fixed: Some events not hooked in demo.
+Fixed: Add button now working correctly for all scenarios.
+Fixed: OnBeforeDrawItem event caused unusual behaviour when applied to some items.
+
 05/01/2013
 Breaking Update: Added Handled var to OnButtonAddClicked. If Handled is returned false, a new tab is automatically created.
 Update: Implemented variable width tabs. Width depends on caption but respects min and max tab widths.

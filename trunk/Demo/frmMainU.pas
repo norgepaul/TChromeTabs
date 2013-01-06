@@ -34,8 +34,11 @@ uses
 
   frameChromeTabStyleU,
 
-  ChromeTabs,
+  {$IFDEF DELPHI2010_UP}
   ChromeTabsGlassForm,
+  {$ENDIF}
+
+  ChromeTabs,
   ChromeTabsTypes,
   ChromeTabsUtils,
   ChromeTabsControls,
@@ -43,7 +46,13 @@ uses
   ChromeTabsLog;
 
 type
-  TfrmMain = class(TChromeTabsGlassForm)
+  TFormType = {$IFDEF DELPHI2010_UP}
+               TChromeTabsGlassForm;
+               {$ELSE}
+               TForm;
+               {$ENDIF}
+
+  TfrmMain = class(TFormType)
     ChromeTabs1: TChromeTabs;
     ChromeTabs2: TChromeTabs;
     ImageList1: TImageList;
@@ -319,8 +328,8 @@ type
     edtModifiedGlowAnimationUpdate: TSpinEdit;
     chkDisplayTopTabsInTitleBar: TCheckBox;
     chkContrainDraggedTab: TCheckBox;
-    Button2: TButton;
     chkSetTabWidthsFromCaptions: TCheckBox;
+    Label80: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -399,8 +408,9 @@ type
     procedure ChromeTabs1AnimateMovement(Sender: TObject;
       ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal;
       var EaseType: TChromeTabsEaseType);
-    procedure Button2Click(Sender: TObject);
     procedure ChromeTabs1ButtonAddClick(Sender: TObject; var Handled: Boolean);
+    procedure ChromeTabs1SetTabWidth(Sender: TObject;
+      ATabControl: TChromeTabControl; var TabWidth: Integer);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -660,11 +670,6 @@ procedure TfrmMain.Button1Click(Sender: TObject);
 begin
   if FCurrentTabs.ActiveTab <> nil then
     FCurrentTabs.ScrollIntoView(FCurrentTabs.ActiveTab);
-end;
-
-procedure TfrmMain.Button2Click(Sender: TObject);
-begin
-  TChromeTabs.Create(Self);
 end;
 
 procedure TfrmMain.btnHideTabClick(Sender: TObject);
@@ -995,6 +1000,11 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   CreateLogs;
 
+  {$IFNDEF DELPHI2010_UP}
+  chkDisplayTopTabsInTitleBar.Enabled := FALSE;
+  chkDisplayTopTabsInTitleBar.Checked := FALSE;
+  {$ENDIF}
+
   FUpdatingProperties := TRUE;
   try
     pcMain.ActivePageIndex := 0;
@@ -1031,7 +1041,9 @@ begin
 
   ChromeTabControlPropertiesToGUI(FCurrentTabs);
 
+  {$IFDEF DELPHI2010_UP}
   Self.ChromeTabs := ChromeTabs1;
+  {$ENDIF}
 end;
 
 procedure TfrmMain.FixControls;
@@ -1095,12 +1107,11 @@ end;
 
 procedure TfrmMain.HookEvents;
 begin
-  FCurrentTabs.OnActiveTabChanged := ChromeTabs1ActiveTabChanged;
+  //FCurrentTabs.OnActiveTabChanged := ChromeTabs1ActiveTabChanged;
   FCurrentTabs.OnActiveTabChanging := ChromeTabs1ActiveTabChanging;
   FCurrentTabs.OnAfterDrawItem := ChromeTabs1AfterDrawItem;
   FCurrentTabs.OnBeforeDrawItem := ChromeTabs1BeforeDrawItem;
   FCurrentTabs.OnButtonCloseTabClick := ChromeTabs1ButtonCloseTabClick;
-  FCurrentTabs.OnChange := ChromeTabs1Change;
   FCurrentTabs.OnCreateDragForm := ChromeTabs1CreateDragForm;
   FCurrentTabs.OnDebugLog := ChromeTabs1DebugLog;
   FCurrentTabs.OnEnter := ChromeTabs1Enter;
@@ -1123,7 +1134,7 @@ end;
 
 procedure TfrmMain.UnHookEvents;
 begin
-  FCurrentTabs.OnActiveTabChanged := nil;
+  //FCurrentTabs.OnActiveTabChanged := nil;
   FCurrentTabs.OnActiveTabChanging := nil;
   FCurrentTabs.OnAfterDrawItem := nil;
   FCurrentTabs.OnBeforeDrawItem := nil;
@@ -1411,6 +1422,7 @@ begin
       else
         ChromeTabs.Options.DragDrop.DragCursor := crDrag;
 
+      {$IFDEF DELPHI2010_UP}
       if chkDisplayTopTabsInTitleBar.Checked then
         Self.ChromeTabs := ChromeTabs1
       else
@@ -1420,6 +1432,7 @@ begin
         ChromeTabs1.Align := alTop;
         ChromeTabs1.Top := 0;
       end;
+      {$ENDIF}
 
       ChromeTabs.Options.Behaviour.DebugMode := chkDebugLog.Checked;
     finally
@@ -1454,7 +1467,7 @@ end;
 
 procedure TfrmMain.ChromeTabs1ActiveTabChanged(Sender: TObject; ATab: TChromeTab);
 begin
-  if FCurrentTabs <> nil then
+  if FCurrentTabs = Sender then
   begin
     TabPropertiesToGUI(FCurrentTabs.ActiveTab);
 
@@ -1506,7 +1519,7 @@ procedure TfrmMain.ChromeTabs1BeforeDrawItem(Sender: TObject;
   TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType;
   TabIndex: Integer; var Handled: Boolean);
 begin
-//  Handled := ItemType = itTabImage;
+  Handled := (not (ItemType in [itTabText, itTabMouseGlow, itTabOutline, itAddButton])) and (TabIndex <> 2);
 end;
 
 procedure TfrmMain.ChromeTabs1BeginTabDrag(Sender: TObject; ATab: TChromeTab;
@@ -1537,7 +1550,8 @@ procedure TfrmMain.ChromeTabs1Change(Sender: TObject; ATab: TChromeTab;
 var
   Text: String;
 begin
-  if not (csLoading in ComponentState) then
+  if (not (csLoading in ComponentState)) and
+     (Sender = FCurrentTabs) then
   begin
     if (TabChangeType = tcAdded) and
        (FCurrentTabs <> nil) then
@@ -1718,6 +1732,12 @@ end;
 procedure TfrmMain.ChromeTabs1ScrollWidthChanged(Sender: TObject);
 begin
   UpdateScrollBar;
+end;
+
+procedure TfrmMain.ChromeTabs1SetTabWidth(Sender: TObject;
+  ATabControl: TChromeTabControl; var TabWidth: Integer);
+begin
+  FLogOtherEvents.Log('OnSetTabWidth [TabIndex = %d, TabWidth= %d]', [ATabControl.ChromeTab.GetIndex, TabWidth]);
 end;
 
 procedure TfrmMain.ChromeTabs1ShowHint(Sender: TObject;
