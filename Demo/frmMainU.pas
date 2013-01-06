@@ -1519,7 +1519,7 @@ procedure TfrmMain.ChromeTabs1BeforeDrawItem(Sender: TObject;
   TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType;
   TabIndex: Integer; var Handled: Boolean);
 begin
-  Handled := (not (ItemType in [itTabText, itTabMouseGlow, itTabOutline, itAddButton])) and (TabIndex <> 2);
+  //Handled := (not (ItemType in [itTabText, itTabMouseGlow, itTabOutline, itAddButton])) and (TabIndex <> 2);
 end;
 
 procedure TfrmMain.ChromeTabs1BeginTabDrag(Sender: TObject; ATab: TChromeTab;
