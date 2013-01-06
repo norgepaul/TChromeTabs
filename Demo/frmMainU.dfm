@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 436
-  Top = 187
+  Left = 207
+  Top = 136
   Caption = 'Chrome Tabs Demo'
   ClientHeight = 596
   ClientWidth = 1025
@@ -19,11 +19,15 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1025
     Height = 29
+    OnChange = ChromeTabs1Change
+    OnActiveTabChanged = ChromeTabs1ActiveTabChanged
     OnButtonAddClick = ChromeTabs1ButtonAddClick
     OnNeedDragImageControl = ChromeTabs1NeedDragImageControl
+    OnBeforeDrawItem = ChromeTabs1BeforeDrawItem
     OnGetControlPolygons = ChromeTabs1GetControlPolygons
     OnScroll = ChromeTabs1ScrollWidthChanged
     OnScrollWidthChanged = ChromeTabs1ScrollWidthChanged
+    OnSetTabWidth = ChromeTabs1SetTabWidth
     ActiveTabIndex = 0
     Images = ImageList1
     ImagesOverlay = ImageList2
@@ -353,6 +357,8 @@ object frmMain: TfrmMain
     Top = 565
     Width = 1025
     Height = 31
+    OnChange = ChromeTabs1Change
+    OnActiveTabChanged = ChromeTabs1ActiveTabChanged
     OnDebugLog = ChromeTabs1DebugLog
     OnButtonAddClick = ChromeTabs1ButtonAddClick
     OnButtonCloseTabClick = ChromeTabs1ButtonCloseTabClick
@@ -819,22 +825,13 @@ object frmMain: TfrmMain
             TabOrder = 5
             OnClick = btnHideTabClick
           end
-          object Button2: TButton
-            Left = 176
-            Top = 360
-            Width = 75
-            Height = 25
-            Caption = 'Button2'
-            TabOrder = 7
-            OnClick = Button2Click
-          end
         end
         object pcOptions: TPageControl
           Left = 270
           Top = 0
           Width = 747
           Height = 444
-          ActivePage = TabSheet5
+          ActivePage = TabSheet9
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -1083,7 +1080,7 @@ object frmMain: TfrmMain
               end
               object chkSeeThroughTabs: TCheckBox
                 Left = 8
-                Top = 125
+                Top = 130
                 Width = 129
                 Height = 17
                 Caption = 'See through tabs'
@@ -1092,7 +1089,7 @@ object frmMain: TfrmMain
               end
               object chkSetTabWidthsFromCaptions: TCheckBox
                 Left = 9
-                Top = 144
+                Top = 151
                 Width = 182
                 Height = 17
                 Caption = 'Set tab widths from captions'
@@ -1379,10 +1376,6 @@ object frmMain: TfrmMain
           object TabSheet7: TTabSheet
             Caption = 'Text'
             ImageIndex = 6
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
@@ -1586,10 +1579,6 @@ object frmMain: TfrmMain
           object TabSheet4: TTabSheet
             Caption = 'Buttons'
             ImageIndex = 5
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object pcButtons: TPageControl
               Left = 0
               Top = 19
@@ -1601,10 +1590,6 @@ object frmMain: TfrmMain
               object TabSheet11: TTabSheet
                 Caption = 'Close Buttons'
                 ImageIndex = 1
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label4: TLabel
                   Left = 11
                   Top = 6
@@ -1615,7 +1600,7 @@ object frmMain: TfrmMain
                 end
                 object Label39: TLabel
                   Left = 207
-                  Top = 4
+                  Top = 6
                   Width = 108
                   Height = 15
                   Caption = 'Auto hide tab width:'
@@ -1687,7 +1672,7 @@ object frmMain: TfrmMain
                 end
                 object edtCloseButtonAutoHideWidth: TSpinEdit
                   Left = 206
-                  Top = 19
+                  Top = 21
                   Width = 114
                   Height = 24
                   MaxValue = 65535
@@ -1755,10 +1740,6 @@ object frmMain: TfrmMain
               object TabSheet12: TTabSheet
                 Caption = 'Add Button'
                 ImageIndex = 2
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label29: TLabel
                   Left = 11
                   Top = 6
@@ -1893,10 +1874,6 @@ object frmMain: TfrmMain
               object TabSheet13: TTabSheet
                 Caption = 'Scroll Buttons'
                 ImageIndex = 3
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label25: TLabel
                   Left = 11
                   Top = 7
@@ -2124,10 +2101,6 @@ object frmMain: TfrmMain
           object TabSheet10: TTabSheet
             Caption = 'Internationlization'
             ImageIndex = 8
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label69: TLabel
               Left = 3
               Top = 6
@@ -2156,10 +2129,6 @@ object frmMain: TfrmMain
           object Scrolling: TTabSheet
             Caption = 'Scrolling'
             ImageIndex = 4
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object chkScrolling: TCheckBox
               Left = 3
               Top = 3
@@ -2189,7 +2158,7 @@ object frmMain: TfrmMain
               end
               object Label27: TLabel
                 Left = 172
-                Top = 63
+                Top = 60
                 Width = 95
                 Height = 15
                 Caption = 'Repeat Delay (ms)'
@@ -2231,7 +2200,7 @@ object frmMain: TfrmMain
               end
               object edtScrollRepeatDelay: TSpinEdit
                 Left = 172
-                Top = 80
+                Top = 77
                 Width = 141
                 Height = 24
                 MaxValue = 65535
@@ -2296,10 +2265,6 @@ object frmMain: TfrmMain
           object TabSheet6: TTabSheet
             Caption = 'Tab Container'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label20: TLabel
               Left = 3
               Top = 4
@@ -2310,7 +2275,7 @@ object frmMain: TfrmMain
             end
             object chkTransparentBackground: TCheckBox
               Left = 3
-              Top = 49
+              Top = 50
               Width = 198
               Height = 17
               Caption = 'Transparent Background'
@@ -2321,7 +2286,7 @@ object frmMain: TfrmMain
             end
             object cbCanvasSmoothingMode: TComboBox
               Left = 3
-              Top = 20
+              Top = 21
               Width = 170
               Height = 23
               Style = csDropDownList
@@ -2340,13 +2305,9 @@ object frmMain: TfrmMain
           object TabSheet2: TTabSheet
             Caption = 'Behaviour'
             ImageIndex = 2
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label53: TLabel
               Left = 24
-              Top = 150
+              Top = 166
               Width = 240
               Height = 15
               Alignment = taRightJustify
@@ -2355,14 +2316,27 @@ object frmMain: TfrmMain
             end
             object Label62: TLabel
               Left = 348
-              Top = 150
+              Top = 166
               Width = 16
               Height = 15
               Caption = 'ms'
             end
+            object Label80: TLabel
+              Left = 16
+              Top = 26
+              Width = 308
+              Height = 15
+              Caption = 'This feature is only supported in Delphi versions from 2010'
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clSilver
+              Font.Height = -12
+              Font.Name = 'Segoe UI'
+              Font.Style = []
+              ParentFont = False
+            end
             object chkBackgroundDoubleClickMaxmise: TCheckBox
               Left = 3
-              Top = 38
+              Top = 54
               Width = 371
               Height = 17
               Caption = 'Double click background to minimise/maxmise form'
@@ -2373,7 +2347,7 @@ object frmMain: TfrmMain
             end
             object chkDraggingBackgoundMovesForm: TCheckBox
               Left = 3
-              Top = 61
+              Top = 77
               Width = 371
               Height = 17
               Caption = 'Dragging background moves form'
@@ -2384,7 +2358,7 @@ object frmMain: TfrmMain
             end
             object chkSmartResize: TCheckBox
               Left = 3
-              Top = 126
+              Top = 142
               Width = 371
               Height = 17
               Caption = 'Reposition tab close button under mouse after closing a tab'
@@ -2395,7 +2369,7 @@ object frmMain: TfrmMain
             end
             object edtCloseButtonMouseLeaveDelay: TSpinEdit
               Left = 270
-              Top = 147
+              Top = 163
               Width = 75
               Height = 24
               Increment = 100
@@ -2407,7 +2381,7 @@ object frmMain: TfrmMain
             end
             object chkRightClickSelect: TCheckBox
               Left = 3
-              Top = 92
+              Top = 108
               Width = 371
               Height = 17
               Caption = 'Right Click Select'
@@ -2431,10 +2405,6 @@ object frmMain: TfrmMain
           object TabSheet8: TTabSheet
             Caption = 'Animation'
             ImageIndex = 3
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object GroupBox8: TGroupBox
               Left = 0
               Top = 0
@@ -2840,10 +2810,6 @@ object frmMain: TfrmMain
           object TabSheet9: TTabSheet
             Caption = 'Drag Drop'
             ImageIndex = 7
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cbDragType: TComboBox
               Left = 3
               Top = 21
@@ -3000,9 +2966,11 @@ object frmMain: TfrmMain
               object chkContrainDraggedTab: TCheckBox
                 Left = 7
                 Top = 165
-                Width = 255
+                Width = 397
                 Height = 17
-                Caption = 'Contrain dragged tab within container'
+                Caption = 
+                  'Don'#39't allow dragged tab to move beyond the edges of the containe' +
+                  'r'
                 TabOrder = 5
                 OnClick = OnCommonControlPropertyChange
               end
@@ -3046,10 +3014,6 @@ object frmMain: TfrmMain
       object TabSheet14: TTabSheet
         Caption = 'Look and Feel'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object tvLookAndFeelItems: TTreeView
           Left = 0
           Top = 0
@@ -3142,10 +3106,6 @@ object frmMain: TfrmMain
       object TabSheet15: TTabSheet
         Caption = 'General'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label7: TLabel
           Left = 16
           Top = 8
@@ -3220,10 +3180,6 @@ object frmMain: TfrmMain
       object TabSheet3: TTabSheet
         Caption = 'Events'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel2: TPanel
           Left = 0
           Top = 63
@@ -3357,10 +3313,6 @@ object frmMain: TfrmMain
       object tabDebug: TTabSheet
         Caption = 'Debug'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel10: TPanel
           Left = 0
           Top = 0

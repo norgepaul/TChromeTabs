@@ -34,8 +34,12 @@ uses
   ChromeTabs;
 
 type
+  TOnAeroStatusChanged = procedure(Sender: TObject; AeroEnabled: Boolean) of object;
+
   TChromeTabsGlassForm = class(TForm)
   private
+    FOnAeroStatusChanged: TOnAeroStatusChanged;
+
     FDwmBorderIconsRect: TRect;
     FWndFrameSize: Integer;
     FChromeTabs: TChromeTabs;
@@ -43,6 +47,12 @@ type
     FChromeTabsMaxmizedTopOffset: Integer;
     FChromeTabsMaximizedRightOffset: Integer;
     FChromeTabsWindowedRightOffset: Integer;
+    FAeroEnabled: Boolean;
+    FPreviousGlassFrameEnabled: Boolean;
+    FPreviousChromeTabsTop: Integer;
+    FPreviousChromeTabsLeft: Integer;
+    FPreviousChromeTabsWidth: Integer;
+    FPreviousChromeTabsAlign: TAlign;
 
     procedure RecalcGlassFrameBounds(UpdateFrame: Boolean = TRUE);
     procedure SetChromeTabs(const Value: TChromeTabs);
@@ -52,6 +62,9 @@ type
     procedure SetChromeTabsMaxmizedTopOffset(const Value: Integer);
     procedure SetChromeTabsWindowedRightOffset(const Value: Integer);
     procedure SetChromeTabsWindowedTopOffset(const Value: Integer);
+    procedure UpdateAeroEnabled;
+    procedure DisableTitleTabs;
+    procedure EnableTitleTabs;
   protected
     // Overrides
     procedure AdjustClientRect(var Rect: TRect); override;
@@ -65,7 +78,11 @@ type
     procedure WMNCRButtonUp(var Message: TWMNCRButtonUp); message WM_NCRBUTTONUP;
     procedure WMWindowPosChanging(var Message: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMWindowPosChanged(var Message: TWMWindowPosChanged); message WM_WINDOWPOSCHANGED;
+    procedure WMThemeChanged(var Msg: TMessage); message WM_THEMECHANGED;
+
     procedure WndProc(var Message: TMessage); override;
+
+    procedure DoOnAeroStatusChanged(AeroEnabled: Boolean); virtual;
   public
     constructor Create(AOwner: TComponent); override;
 
@@ -74,6 +91,8 @@ type
     property ChromeTabsMaxmizedTopOffset: Integer read FChromeTabsMaxmizedTopOffset write SetChromeTabsMaxmizedTopOffset;
     property ChromeTabsMaximizedRightOffset: Integer read FChromeTabsMaximizedRightOffset write SetChromeTabsMaximizedRightOffset;
     property ChromeTabsWindowedRightOffset: Integer read FChromeTabsWindowedRightOffset write SetChromeTabsWindowedRightOffset;
+
+    property OnAeroStatusChanged: TOnAeroStatusChanged read FOnAeroStatusChanged write FOnAeroStatusChanged;
   end;
 
 implementation
@@ -176,6 +195,20 @@ begin
   inherited;
 end;
 
+procedure TChromeTabsGlassForm.UpdateAeroEnabled;
+var
+  AeroEnabled: Bool;
+begin
+  FAeroEnabled := FALSE;
+
+  if Win32MajorVersion >= 6 then
+  begin
+    DwmIsCompositionEnabled(AeroEnabled);
+
+    FAeroEnabled := AeroEnabled;
+  end;
+end;
+
 procedure TChromeTabsGlassForm.RecalcGlassFrameBounds(UpdateFrame: Boolean);
 var
   R: TRect;
@@ -266,6 +299,61 @@ begin
   end;
 end;
 
+procedure TChromeTabsGlassForm.WMThemeChanged(var Msg: TMessage);
+var
+  AeroWasEnabled: Boolean;
+begin
+  AeroWasEnabled := FAeroEnabled;
+
+  UpdateAeroEnabled;
+
+  if AeroWasEnabled then
+    DisableTitleTabs;
+
+  if FAeroEnabled then
+    EnableTitleTabs;
+
+  if AeroWasEnabled <> FAeroEnabled then
+    DoOnAeroStatusChanged(FAeroEnabled);
+end;
+
+procedure TChromeTabsGlassForm.DisableTitleTabs;
+begin
+  if FChromeTabs <> nil then
+  begin
+    GlassFrame.Enabled := FPreviousGlassFrameEnabled;
+    FChromeTabs.Top := FPreviousChromeTabsTop;
+    FChromeTabs.Left := FPreviousChromeTabsLeft;
+    FChromeTabs.Width := FPreviousChromeTabsWidth;
+    FChromeTabs.Align := FPreviousChromeTabsAlign;
+  end;
+end;
+
+procedure TChromeTabsGlassForm.DoOnAeroStatusChanged(AeroEnabled: Boolean);
+begin
+  if Assigned(FOnAeroStatusChanged) then
+    FOnAeroStatusChanged(Self, AeroEnabled);
+end;
+
+procedure TChromeTabsGlassForm.EnableTitleTabs;
+begin
+  if FChromeTabs <> nil then
+  begin
+    FPreviousGlassFrameEnabled := GlassFrame.Enabled;
+    FPreviousChromeTabsTop := FChromeTabs.Top;
+    FPreviousChromeTabsLeft := FChromeTabs.Left;
+    FPreviousChromeTabsWidth := FChromeTabs.Width;
+    FPreviousChromeTabsAlign := FChromeTabs.Align;
+
+    FChromeTabs.Align := alNone;
+    GlassFrame.Enabled := FAeroEnabled;
+
+    RecalcGlassFrameBounds(TRUE);
+
+    Invalidate;
+  end;
+end;
+
 procedure TChromeTabsGlassForm.WMWindowPosChanging(var Message: TWMWindowPosChanging);
 const
   SWP_STATECHANGED = $8000;
@@ -295,24 +383,23 @@ end;
 
 procedure TChromeTabsGlassForm.WndProc(var Message: TMessage);
 begin
-  if not UseCustomFrame or not HandleAllocated or
-    not DwmDefWindowProc(Handle, Message.Msg, Message.WParam, Message.LParam,
-    Message.Result) then
-    inherited;
+  if (not UseCustomFrame) or
+     (not HandleAllocated) or
+     (not DwmDefWindowProc(Handle, Message.Msg, Message.WParam, Message.LParam, Message.Result)) then
+   inherited;
 end;
 
 procedure TChromeTabsGlassForm.SetChromeTabs(const Value: TChromeTabs);
 begin
-  FChromeTabs := Value;
-
-  if not (csDestroying in ComponentState) then
+  if (not (csDestroying in ComponentState)) and (Value <> FChromeTabs) then
   begin
     if FChromeTabs <> nil then
-    begin
-      FChromeTabs.Align := alNone;
-    end;
+      DisableTitleTabs;
 
-    GlassFrame.Enabled := UseCustomFrame;
+    FChromeTabs := Value;
+
+    if Value <> nil then
+      EnableTitleTabs;
 
     RecalcGlassFrameBounds(TRUE);
 
@@ -381,7 +468,8 @@ end;
 
 function TChromeTabsGlassForm.UseCustomFrame: Boolean;
 begin
-  Result := FChromeTabs <> nil;
+  Result := (FChromeTabs <> nil) and
+            (FAeroEnabled);
 end;
 
 constructor TChromeTabsGlassForm.Create(AOwner: TComponent);
@@ -393,6 +481,8 @@ begin
   FChromeTabsMaxmizedTopOffset := 4;
   FChromeTabsWindowedRightOffset := 20;
   FChromeTabsMaximizedRightOffset := 35;
+
+  UpdateAeroEnabled;
 end;
 
 procedure TChromeTabsGlassForm.Notification(AComponent: TComponent;

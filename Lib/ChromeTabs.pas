@@ -108,7 +108,7 @@ type
   TOnAnimateStyle = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
-  TOnSetTabWidth = procedure(Sender: TObject; ATab: TChromeTab; var TabWidth: Integer) of object;
+  TOnSetTabWidth = procedure(Sender: TObject; ATabControl: TChromeTabControl; var TabWidth: Integer) of object;
 
   // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -328,7 +328,7 @@ type
     procedure DoPopupClick(Sender: TObject); virtual;
     procedure DoOnAnimateStyle(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnAnimateMovement(ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
-    procedure DoOnSetTabWidth(ATab: TChromeTab; var TabWidth: Integer); virtual;
+    procedure DoOnSetTabWidth(ATabControl: TChromeTabControl; var TabWidth: Integer); virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -447,6 +447,7 @@ type
     property OnScrollWidthChanged;
     property OnAnimateStyle;
     property OnAnimateMovement;
+    property OnSetTabWidth;
 
     property ActiveTabIndex;
     property Images;
@@ -634,8 +635,7 @@ end;
 function TCustomChromeTabs.GetTabDisplayState: TTabDisplayState;
 begin
   if (GetVisibleTabCount = 0) or
-     ((TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right < TabContainerRect.Right)) and
-      (not HasState(stsDeletingUnPinnedTabs)) then
+     ((TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right < TabContainerRect.Right)) then 
     Result := tdNormal else
   if ScrollingActive then
     Result := tdScrolling
@@ -1245,6 +1245,8 @@ begin
 
       tcDeleting:
         begin
+          RemoveState(stsEndTabDeleted);
+
           if FOptions.Behaviour.TabSmartDeleteResizing then
           begin
             if ATab.Index = Tabs.Count - 1 then
@@ -2250,11 +2252,11 @@ begin
     FOnScrollWidthChanged(Self);
 end;
 
-procedure TCustomChromeTabs.DoOnSetTabWidth(ATab: TChromeTab;
+procedure TCustomChromeTabs.DoOnSetTabWidth(ATabControl: TChromeTabControl;
   var TabWidth: Integer);
 begin
   if Assigned(FOnSetTabWidth) then
-    FOnSetTabWidth(Self, ATab, TabWidth);
+    FOnSetTabWidth(Self, ATabControl, TabWidth);
 end;
 
 procedure TCustomChromeTabs.DoOnTabDblClick(ATab: TChromeTab);
@@ -2698,6 +2700,8 @@ begin
     Result := FOptions.Display.Tabs.MaxWidth else
   if Result < FOptions.Display.Tabs.MinWidth then
     Result := FOptions.Display.Tabs.MinWidth;
+
+  DoOnSetTabWidth(TabControl, Result);
 end;
 
 procedure TCustomChromeTabs.CalculateTabRects;
@@ -2830,7 +2834,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
        (FActiveDragTabObject.DragTab.Pinned = PinnedTabs) then
     begin
       if FOptions.Display.Tabs.TabWidthFromContent then
-        DragTabWidth := GetTabWidthByContent(FDragTabControl)
+        DragTabWidth := GetTabWidthByContent(FDragTabControl) + FOptions.Display.Tabs.TabOverlap
       else
       begin
         DragTabWidth := TabWidth + FOptions.Display.Tabs.TabOverlap;
@@ -2956,7 +2960,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
              (ExtraTabWidth <> 0) then
             SetMovementAnimation(nil);
 
-          if FOptions.Display.Tabs.TabWidthFromContent then
+          if (FOptions.Display.Tabs.TabWidthFromContent) and (not PinnedTabs) then
             TabWidth := GetTabWidthByContent(TabControl);
 
           SetControlPosition(TabControl,
@@ -3028,15 +3032,22 @@ begin
       SetTabPositions(TabLeft, FAdjustedTabWidth, FTabEndSpace, FALSE);
     end;
 
-    if (FOptions.Display.AddButton.Visibility = avRightFloating) then
+    if FOptions.Display.AddButton.Visibility = avRightFloating then
     begin
       if GetVisibleTabCount(TRUE) = 0 then
         AddButtonLeft := FOptions.Display.TabContainer.PaddingLeft
       else
-        AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
-                         FOptions.Display.AddButton.Offsets.HorizontalFloating;
+      begin
+        if HasState(stsEndTabDeleted) then
+          AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].EndRect.Right +
+                         FOptions.Display.AddButton.Offsets.HorizontalFloating
+        else
+          AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
+                           FOptions.Display.AddButton.Offsets.HorizontalFloating;
+      end;
 
-      if (GetTabDisplayState <> tdNormal) or (AddButtonLeft > FMaxAddButtonRight) then
+      if ((GetTabDisplayState <> tdNormal) and (not HasState(stsEndTabDeleted))) or
+         (AddButtonLeft > FMaxAddButtonRight) then
         AddButtonLeft := FMaxAddButtonRight;
 
       SetControlPosition(FAddButtonControl,
@@ -3760,7 +3771,7 @@ begin
     // Draw the canvas bitmap to the control canvas
     BitBlt(Canvas.Handle, 0, 0, FCanvasBmp.Width, FCanvasBmp.Height, FCanvasBmp.Canvas.Handle, 0, 0, SRCCOPY);
   finally
-    RemoveState(stsEndTabDeleted);
+
   end;
 end;
 
