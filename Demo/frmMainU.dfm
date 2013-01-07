@@ -38,7 +38,6 @@ object frmMain: TfrmMain
     ImagesSpinnerDownload = ImageList4
     Options.Display.CloseButton.Offsets.Vertical = 6
     Options.Display.CloseButton.Offsets.Horizontal = 2
-    Options.Display.CloseButton.Offsets.HorizontalFloating = -3
     Options.Display.CloseButton.Height = 14
     Options.Display.CloseButton.Width = 14
     Options.Display.CloseButton.AutoHide = True
@@ -47,19 +46,17 @@ object frmMain: TfrmMain
     Options.Display.CloseButton.CrossRadialOffset = 4
     Options.Display.AddButton.Offsets.Vertical = 10
     Options.Display.AddButton.Offsets.Horizontal = 2
-    Options.Display.AddButton.Offsets.HorizontalFloating = -3
     Options.Display.AddButton.Height = 14
     Options.Display.AddButton.Width = 31
     Options.Display.AddButton.ShowPlusSign = False
     Options.Display.AddButton.Visibility = avRightFloating
+    Options.Display.AddButton.HorizontalOffsetFloating = -3
     Options.Display.ScrollButtonLeft.Offsets.Vertical = 10
     Options.Display.ScrollButtonLeft.Offsets.Horizontal = 1
-    Options.Display.ScrollButtonLeft.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonLeft.Height = 15
     Options.Display.ScrollButtonLeft.Width = 15
     Options.Display.ScrollButtonRight.Offsets.Vertical = 10
     Options.Display.ScrollButtonRight.Offsets.Horizontal = 1
-    Options.Display.ScrollButtonRight.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonRight.Height = 15
     Options.Display.ScrollButtonRight.Width = 15
     Options.Display.TabModifiedGlow.Style = msRightToLeft
@@ -95,17 +92,22 @@ object frmMain: TfrmMain
     Options.Display.TabContainer.PaddingRight = 0
     Options.Display.TabMouseGlow.Offsets.Vertical = 0
     Options.Display.TabMouseGlow.Offsets.Horizontal = 0
-    Options.Display.TabMouseGlow.Offsets.HorizontalFloating = -3
     Options.Display.TabMouseGlow.Height = 200
     Options.Display.TabMouseGlow.Width = 200
     Options.Display.TabMouseGlow.Visible = True
     Options.Display.TabSpinners.Upload.ReverseDirection = True
     Options.Display.TabSpinners.Upload.RenderedAnimationStep = 4
-    Options.Display.TabSpinners.Upload.Diameter = 16
+    Options.Display.TabSpinners.Upload.Position.Offsets.Vertical = 0
+    Options.Display.TabSpinners.Upload.Position.Offsets.Horizontal = 0
+    Options.Display.TabSpinners.Upload.Position.Height = 16
+    Options.Display.TabSpinners.Upload.Position.Width = 16
     Options.Display.TabSpinners.Upload.SweepAngle = 135
     Options.Display.TabSpinners.Download.ReverseDirection = False
     Options.Display.TabSpinners.Download.RenderedAnimationStep = 15
-    Options.Display.TabSpinners.Download.Diameter = 16
+    Options.Display.TabSpinners.Download.Position.Offsets.Vertical = 0
+    Options.Display.TabSpinners.Download.Position.Offsets.Horizontal = 0
+    Options.Display.TabSpinners.Download.Position.Height = 16
+    Options.Display.TabSpinners.Download.Position.Width = 16
     Options.Display.TabSpinners.Download.SweepAngle = 135
     Options.Display.TabSpinners.AnimationUpdateMS = 50
     Options.Display.TabSpinners.HideImagesWhenSpinnerVisible = True
@@ -391,7 +393,6 @@ object frmMain: TfrmMain
     ActiveTabIndex = -1
     Options.Display.CloseButton.Offsets.Vertical = 6
     Options.Display.CloseButton.Offsets.Horizontal = 2
-    Options.Display.CloseButton.Offsets.HorizontalFloating = -3
     Options.Display.CloseButton.Height = 14
     Options.Display.CloseButton.Width = 14
     Options.Display.CloseButton.AutoHide = True
@@ -400,19 +401,17 @@ object frmMain: TfrmMain
     Options.Display.CloseButton.CrossRadialOffset = 4
     Options.Display.AddButton.Offsets.Vertical = 7
     Options.Display.AddButton.Offsets.Horizontal = 2
-    Options.Display.AddButton.Offsets.HorizontalFloating = -3
     Options.Display.AddButton.Height = 15
     Options.Display.AddButton.Width = 32
     Options.Display.AddButton.ShowPlusSign = False
     Options.Display.AddButton.Visibility = avRightFloating
+    Options.Display.AddButton.HorizontalOffsetFloating = -3
     Options.Display.ScrollButtonLeft.Offsets.Vertical = 7
     Options.Display.ScrollButtonLeft.Offsets.Horizontal = 1
-    Options.Display.ScrollButtonLeft.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonLeft.Height = 15
     Options.Display.ScrollButtonLeft.Width = 15
     Options.Display.ScrollButtonRight.Offsets.Vertical = 7
     Options.Display.ScrollButtonRight.Offsets.Horizontal = 1
-    Options.Display.ScrollButtonRight.Offsets.HorizontalFloating = -3
     Options.Display.ScrollButtonRight.Height = 15
     Options.Display.ScrollButtonRight.Width = 15
     Options.Display.TabModifiedGlow.Style = msRightToLeft
@@ -448,17 +447,22 @@ object frmMain: TfrmMain
     Options.Display.TabContainer.PaddingRight = 0
     Options.Display.TabMouseGlow.Offsets.Vertical = 0
     Options.Display.TabMouseGlow.Offsets.Horizontal = 0
-    Options.Display.TabMouseGlow.Offsets.HorizontalFloating = -3
     Options.Display.TabMouseGlow.Height = 200
     Options.Display.TabMouseGlow.Width = 200
     Options.Display.TabMouseGlow.Visible = True
     Options.Display.TabSpinners.Upload.ReverseDirection = True
     Options.Display.TabSpinners.Upload.RenderedAnimationStep = 2
-    Options.Display.TabSpinners.Upload.Diameter = 16
+    Options.Display.TabSpinners.Upload.Position.Offsets.Vertical = 0
+    Options.Display.TabSpinners.Upload.Position.Offsets.Horizontal = 0
+    Options.Display.TabSpinners.Upload.Position.Height = 16
+    Options.Display.TabSpinners.Upload.Position.Width = 16
     Options.Display.TabSpinners.Upload.SweepAngle = 135
     Options.Display.TabSpinners.Download.ReverseDirection = False
     Options.Display.TabSpinners.Download.RenderedAnimationStep = 5
-    Options.Display.TabSpinners.Download.Diameter = 16
+    Options.Display.TabSpinners.Download.Position.Offsets.Vertical = 0
+    Options.Display.TabSpinners.Download.Position.Offsets.Horizontal = 0
+    Options.Display.TabSpinners.Download.Position.Height = 16
+    Options.Display.TabSpinners.Download.Position.Width = 16
     Options.Display.TabSpinners.Download.SweepAngle = 135
     Options.Display.TabSpinners.AnimationUpdateMS = 50
     Options.Display.TabSpinners.HideImagesWhenSpinnerVisible = True
@@ -1174,7 +1178,7 @@ object frmMain: TfrmMain
               Left = 0
               Top = 185
               Width = 731
-              Height = 193
+              Height = 216
               ActivePage = Spinners
               Align = alTop
               TabOrder = 1
@@ -1477,9 +1481,9 @@ object frmMain: TfrmMain
                 end
                 object pcTabSpinners: TPageControl
                   Left = 0
-                  Top = 52
+                  Top = 49
                   Width = 723
-                  Height = 111
+                  Height = 137
                   ActivePage = TabSheet18
                   Align = alBottom
                   TabOrder = 2
@@ -1495,20 +1499,44 @@ object frmMain: TfrmMain
                       FocusControl = edtSpinnerUploadAnimationStep
                     end
                     object Label87: TLabel
-                      Left = 128
-                      Top = 5
-                      Width = 51
+                      Left = 3
+                      Top = 53
+                      Width = 35
                       Height = 15
-                      Caption = 'Diameter:'
-                      FocusControl = edtSpinnerUploadDiameter
+                      Caption = 'Width:'
+                      FocusControl = edtSpinnerUploadWidth
                     end
                     object Label88: TLabel
-                      Left = 251
+                      Left = 127
                       Top = 5
                       Width = 71
                       Height = 15
                       Caption = 'Sweep Angle:'
                       FocusControl = edtSpinnerUploadSweepAngle
+                    end
+                    object Label92: TLabel
+                      Left = 127
+                      Top = 53
+                      Width = 39
+                      Height = 15
+                      Caption = 'Height:'
+                      FocusControl = edtSpinnerUploadHeight
+                    end
+                    object Label93: TLabel
+                      Left = 250
+                      Top = 53
+                      Width = 45
+                      Height = 15
+                      Caption = 'Offset X:'
+                      FocusControl = edtSpinnerUploadOffsetX
+                    end
+                    object Label94: TLabel
+                      Left = 370
+                      Top = 53
+                      Width = 42
+                      Height = 15
+                      Caption = 'OffsetY:'
+                      FocusControl = edtSpinnerUploadOffsetY
                     end
                     object edtSpinnerUploadAnimationStep: TSpinEdit
                       Left = 3
@@ -1521,38 +1549,71 @@ object frmMain: TfrmMain
                       Value = 50
                       OnChange = OnCommonControlPropertyChange
                     end
-                    object edtSpinnerUploadDiameter: TSpinEdit
-                      Left = 128
-                      Top = 22
+                    object edtSpinnerUploadWidth: TSpinEdit
+                      Left = 3
+                      Top = 70
                       Width = 106
                       Height = 24
                       MaxValue = 65535
                       MinValue = 1
-                      TabOrder = 1
+                      TabOrder = 3
                       Value = 50
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerUploadSweepAngle: TSpinEdit
-                      Left = 251
+                      Left = 127
                       Top = 22
                       Width = 106
                       Height = 24
                       MaxValue = 360
                       MinValue = 1
-                      TabOrder = 2
+                      TabOrder = 1
                       Value = 50
                       OnChange = OnCommonControlPropertyChange
                     end
                     object chkSpinnerUploadReverseDirection: TCheckBox
-                      Left = 3
-                      Top = 55
+                      Left = 250
+                      Top = 25
                       Width = 164
                       Height = 17
                       Caption = 'Reverse Direction'
                       Checked = True
                       State = cbChecked
-                      TabOrder = 3
+                      TabOrder = 2
                       OnClick = OnCommonControlPropertyChange
+                    end
+                    object edtSpinnerUploadHeight: TSpinEdit
+                      Left = 127
+                      Top = 70
+                      Width = 106
+                      Height = 24
+                      MaxValue = 65535
+                      MinValue = 1
+                      TabOrder = 4
+                      Value = 50
+                      OnChange = OnCommonControlPropertyChange
+                    end
+                    object edtSpinnerUploadOffsetX: TSpinEdit
+                      Left = 250
+                      Top = 70
+                      Width = 106
+                      Height = 24
+                      MaxValue = 65535
+                      MinValue = 1
+                      TabOrder = 5
+                      Value = 50
+                      OnChange = OnCommonControlPropertyChange
+                    end
+                    object edtSpinnerUploadOffsetY: TSpinEdit
+                      Left = 370
+                      Top = 70
+                      Width = 106
+                      Height = 24
+                      MaxValue = 65535
+                      MinValue = 1
+                      TabOrder = 6
+                      Value = 50
+                      OnChange = OnCommonControlPropertyChange
                     end
                   end
                   object TabSheet18: TTabSheet
@@ -1566,20 +1627,44 @@ object frmMain: TfrmMain
                       FocusControl = edtSpinnerDownloadAnimationStep
                     end
                     object Label84: TLabel
-                      Left = 128
-                      Top = 5
-                      Width = 51
+                      Left = 3
+                      Top = 53
+                      Width = 35
                       Height = 15
-                      Caption = 'Diameter:'
-                      FocusControl = edtSpinnerDownloadDiameter
+                      Caption = 'Width:'
+                      FocusControl = edtSpinnerDownloadWidth
                     end
                     object Label85: TLabel
-                      Left = 251
+                      Left = 127
                       Top = 5
                       Width = 71
                       Height = 15
                       Caption = 'Sweep Angle:'
                       FocusControl = edtSpinnerDownloadSweepAngle
+                    end
+                    object Label89: TLabel
+                      Left = 127
+                      Top = 53
+                      Width = 39
+                      Height = 15
+                      Caption = 'Height:'
+                      FocusControl = edtSpinnerDownloadHeight
+                    end
+                    object Label90: TLabel
+                      Left = 250
+                      Top = 53
+                      Width = 45
+                      Height = 15
+                      Caption = 'Offset X:'
+                      FocusControl = edtSpinnerDownloadOffsetX
+                    end
+                    object Label91: TLabel
+                      Left = 370
+                      Top = 53
+                      Width = 42
+                      Height = 15
+                      Caption = 'OffsetY:'
+                      FocusControl = edtSpinnerDownloadOffsetY
                     end
                     object edtSpinnerDownloadAnimationStep: TSpinEdit
                       Left = 3
@@ -1592,38 +1677,71 @@ object frmMain: TfrmMain
                       Value = 50
                       OnChange = OnCommonControlPropertyChange
                     end
-                    object edtSpinnerDownloadDiameter: TSpinEdit
-                      Left = 128
-                      Top = 22
+                    object edtSpinnerDownloadWidth: TSpinEdit
+                      Left = 3
+                      Top = 70
                       Width = 106
                       Height = 24
                       MaxValue = 65535
                       MinValue = 1
-                      TabOrder = 1
+                      TabOrder = 3
                       Value = 50
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerDownloadSweepAngle: TSpinEdit
-                      Left = 251
+                      Left = 127
                       Top = 22
                       Width = 106
                       Height = 24
                       MaxValue = 350
                       MinValue = 1
-                      TabOrder = 2
+                      TabOrder = 1
                       Value = 50
                       OnChange = OnCommonControlPropertyChange
                     end
                     object chkSpinnerDownloadReverseDirection: TCheckBox
-                      Left = 3
-                      Top = 55
+                      Left = 250
+                      Top = 25
                       Width = 164
                       Height = 17
                       Caption = 'Reverse Direction'
                       Checked = True
                       State = cbChecked
-                      TabOrder = 3
+                      TabOrder = 2
                       OnClick = OnCommonControlPropertyChange
+                    end
+                    object edtSpinnerDownloadHeight: TSpinEdit
+                      Left = 127
+                      Top = 70
+                      Width = 106
+                      Height = 24
+                      MaxValue = 65535
+                      MinValue = 1
+                      TabOrder = 4
+                      Value = 50
+                      OnChange = OnCommonControlPropertyChange
+                    end
+                    object edtSpinnerDownloadOffsetX: TSpinEdit
+                      Left = 250
+                      Top = 70
+                      Width = 106
+                      Height = 24
+                      MaxValue = 65535
+                      MinValue = 1
+                      TabOrder = 5
+                      Value = 50
+                      OnChange = OnCommonControlPropertyChange
+                    end
+                    object edtSpinnerDownloadOffsetY: TSpinEdit
+                      Left = 370
+                      Top = 70
+                      Width = 106
+                      Height = 24
+                      MaxValue = 65535
+                      MinValue = 1
+                      TabOrder = 6
+                      Value = 50
+                      OnChange = OnCommonControlPropertyChange
                     end
                   end
                 end

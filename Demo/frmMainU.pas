@@ -343,20 +343,32 @@ type
     Label83: TLabel;
     edtSpinnerDownloadAnimationStep: TSpinEdit;
     Label84: TLabel;
-    edtSpinnerDownloadDiameter: TSpinEdit;
+    edtSpinnerDownloadWidth: TSpinEdit;
     Label85: TLabel;
     edtSpinnerDownloadSweepAngle: TSpinEdit;
     chkSpinnerDownloadReverseDirection: TCheckBox;
     Label86: TLabel;
     edtSpinnerUploadAnimationStep: TSpinEdit;
     Label87: TLabel;
-    edtSpinnerUploadDiameter: TSpinEdit;
+    edtSpinnerUploadWidth: TSpinEdit;
     Label88: TLabel;
     edtSpinnerUploadSweepAngle: TSpinEdit;
     chkSpinnerUploadReverseDirection: TCheckBox;
     Panel11: TPanel;
     btnOpenForm: TButton;
     ImageList4: TImageList;
+    edtSpinnerDownloadHeight: TSpinEdit;
+    Label89: TLabel;
+    edtSpinnerDownloadOffsetX: TSpinEdit;
+    Label90: TLabel;
+    edtSpinnerDownloadOffsetY: TSpinEdit;
+    Label91: TLabel;
+    edtSpinnerUploadHeight: TSpinEdit;
+    Label92: TLabel;
+    edtSpinnerUploadOffsetX: TSpinEdit;
+    Label93: TLabel;
+    edtSpinnerUploadOffsetY: TSpinEdit;
+    Label94: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -1218,7 +1230,7 @@ begin
     cbAddButtonVisibility.ItemIndex := Integer(ChromeTabs.Options.Display.AddButton.Visibility);
     edtAddButtonVerticalOffset.Value := ChromeTabs.Options.Display.AddButton.Offsets.Vertical;
     edtAddButtonHorzOffset.Value := ChromeTabs.Options.Display.AddButton.Offsets.Horizontal;
-    edtAddButtonFloatingHorzOffset.Value := ChromeTabs.Options.Display.AddButton.Offsets.HorizontalFloating;
+    edtAddButtonFloatingHorzOffset.Value := ChromeTabs.Options.Display.AddButton.HorizontalOffsetFloating;
     edtAddButtonHeight.Value := ChromeTabs.Options.Display.AddButton.Height;
     edtAddButtonWidth.Value := ChromeTabs.Options.Display.AddButton.Width;
 
@@ -1325,13 +1337,21 @@ begin
 
     chkSpinnerUploadReverseDirection.Checked := ChromeTabs.Options.Display.TabSpinners.Upload.ReverseDirection;
     edtSpinnerUploadAnimationStep.Value := ChromeTabs.Options.Display.TabSpinners.Upload.RenderedAnimationStep;
-    edtSpinnerUploadDiameter.Value := ChromeTabs.Options.Display.TabSpinners.Upload.Diameter;
     edtSpinnerUploadSweepAngle.Value := ChromeTabs.Options.Display.TabSpinners.Upload.SweepAngle;
+
+    edtSpinnerUploadWidth.Value := ChromeTabs.Options.Display.TabSpinners.Upload.Position.Width;
+    edtSpinnerUploadHeight.Value := ChromeTabs.Options.Display.TabSpinners.Upload.Position.Height;
+    edtSpinnerUploadOffsetX.Value := ChromeTabs.Options.Display.TabSpinners.Upload.Position.Offsets.Horizontal;
+    edtSpinnerUploadOffsetY.Value := ChromeTabs.Options.Display.TabSpinners.Upload.Position.Offsets.Vertical;
 
     chkSpinnerDownloadReverseDirection.Checked := ChromeTabs.Options.Display.TabSpinners.Download.ReverseDirection;
     edtSpinnerDownloadAnimationStep.Value := ChromeTabs.Options.Display.TabSpinners.Download.RenderedAnimationStep;
-    edtSpinnerDownloadDiameter.Value := ChromeTabs.Options.Display.TabSpinners.Download.Diameter;
     edtSpinnerDownloadSweepAngle.Value := ChromeTabs.Options.Display.TabSpinners.Download.SweepAngle;
+
+    edtSpinnerDownloadWidth.Value := ChromeTabs.Options.Display.TabSpinners.Download.Position.Width;
+    edtSpinnerDownloadHeight.Value := ChromeTabs.Options.Display.TabSpinners.Download.Position.Height;
+    edtSpinnerDownloadOffsetX.Value := ChromeTabs.Options.Display.TabSpinners.Download.Position.Offsets.Horizontal;
+    edtSpinnerDownloadOffsetY.Value := ChromeTabs.Options.Display.TabSpinners.Download.Position.Offsets.Vertical;
 
     if ChromeTabs.Options.DragDrop.DragCursor = crDrag then
       cbDragCursor.ItemIndex := 1
@@ -1362,7 +1382,7 @@ begin
       ChromeTabs.Options.Display.AddButton.Visibility := TAddButtonVisibility(cbAddButtonVisibility.ItemIndex);
       ChromeTabs.Options.Display.AddButton.Offsets.Vertical := edtAddButtonVerticalOffset.Value;
       ChromeTabs.Options.Display.AddButton.Offsets.Horizontal := edtAddButtonHorzOffset.Value;
-      ChromeTabs.Options.Display.AddButton.Offsets.HorizontalFloating := edtAddButtonFloatingHorzOffset.Value;
+      ChromeTabs.Options.Display.AddButton.HorizontalOffsetFloating := edtAddButtonFloatingHorzOffset.Value;
       ChromeTabs.Options.Display.AddButton.Height := edtAddButtonHeight.Value;
       ChromeTabs.Options.Display.AddButton.Width := edtAddButtonWidth.Value;
 
@@ -1473,13 +1493,21 @@ begin
 
       ChromeTabs.Options.Display.TabSpinners.Upload.ReverseDirection := chkSpinnerUploadReverseDirection.Checked;
       ChromeTabs.Options.Display.TabSpinners.Upload.RenderedAnimationStep := edtSpinnerUploadAnimationStep.Value;
-      ChromeTabs.Options.Display.TabSpinners.Upload.Diameter := edtSpinnerUploadDiameter.Value;
       ChromeTabs.Options.Display.TabSpinners.Upload.SweepAngle := edtSpinnerUploadSweepAngle.Value;
+
+      ChromeTabs.Options.Display.TabSpinners.Upload.Position.Width := edtSpinnerUploadWidth.Value;
+      ChromeTabs.Options.Display.TabSpinners.Upload.Position.Height := edtSpinnerUploadHeight.Value;
+      ChromeTabs.Options.Display.TabSpinners.Upload.Position.Offsets.Horizontal := edtSpinnerUploadOffsetX.Value;
+      ChromeTabs.Options.Display.TabSpinners.Upload.Position.Offsets.Vertical := edtSpinnerUploadOffsetY.Value;
 
       ChromeTabs.Options.Display.TabSpinners.Download.ReverseDirection := chkSpinnerDownloadReverseDirection.Checked;
       ChromeTabs.Options.Display.TabSpinners.Download.RenderedAnimationStep := edtSpinnerDownloadAnimationStep.Value;
-      ChromeTabs.Options.Display.TabSpinners.Download.Diameter := edtSpinnerDownloadDiameter.Value;
       ChromeTabs.Options.Display.TabSpinners.Download.SweepAngle := edtSpinnerDownloadSweepAngle.Value;
+
+      ChromeTabs.Options.Display.TabSpinners.Download.Position.Width := edtSpinnerDownloadWidth.Value;
+      ChromeTabs.Options.Display.TabSpinners.Download.Position.Height := edtSpinnerDownloadHeight.Value;
+      ChromeTabs.Options.Display.TabSpinners.Download.Position.Offsets.Horizontal := edtSpinnerDownloadOffsetX.Value;
+      ChromeTabs.Options.Display.TabSpinners.Download.Position.Offsets.Vertical := edtSpinnerDownloadOffsetY.Value;
 
       if cbDragCursor.ItemIndex = 0 then
         ChromeTabs.Options.DragDrop.DragCursor := crDefault

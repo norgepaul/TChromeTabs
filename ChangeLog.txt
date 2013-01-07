@@ -2,6 +2,8 @@ TChromeTabs 2.0 BETA
 
 07-01-2013
 Fixed: Some Download spinner properties used the values from the upload spinner.
+Fixed: Removed Spinner diameter property and added height, width and offsets. 
+Fixed: Some options had an incorrect property (FloatingRightOffset).
 
 
 TChromeTabs 1.3 - 07-01-2013

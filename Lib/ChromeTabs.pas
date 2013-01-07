@@ -3079,10 +3079,10 @@ begin
       begin
         if HasState(stsEndTabDeleted) then
           AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].EndRect.Right +
-                         FOptions.Display.AddButton.Offsets.HorizontalFloating
+                         FOptions.Display.AddButton.HorizontalOffsetFloating
         else
           AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
-                           FOptions.Display.AddButton.Offsets.HorizontalFloating;
+                           FOptions.Display.AddButton.HorizontalOffsetFloating;
       end;
 
       if ((GetTabDisplayState <> tdNormal) and (not HasState(stsEndTabDeleted))) or
@@ -3892,7 +3892,6 @@ procedure TCustomChromeTabs.SetDefaultOptions;
 begin
   FOptions.Display.CloseButton.Offsets.Vertical := 6;
   FOptions.Display.CloseButton.Offsets.Horizontal := 2;
-  FOptions.Display.CloseButton.Offsets.HorizontalFloating := -3;
   FOptions.Display.CloseButton.Height := 14;
   FOptions.Display.CloseButton.Width := 14;
   FOptions.Display.CloseButton.AutoHide := True;
@@ -3901,19 +3900,17 @@ begin
   FOptions.Display.CloseButton.CrossRadialOffset := 4;
   FOptions.Display.AddButton.Offsets.Vertical := 10;
   FOptions.Display.AddButton.Offsets.Horizontal := 2;
-  FOptions.Display.AddButton.Offsets.HorizontalFloating := -3;
+  FOptions.Display.AddButton.HorizontalOffsetFloating := -3;
   FOptions.Display.AddButton.Height := 14;
   FOptions.Display.AddButton.Width := 31;
   FOptions.Display.AddButton.ShowPlusSign := False;
   FOptions.Display.AddButton.Visibility := avRightFloating;
   FOptions.Display.ScrollButtonLeft.Offsets.Vertical := 10;
   FOptions.Display.ScrollButtonLeft.Offsets.Horizontal := 1;
-  FOptions.Display.ScrollButtonLeft.Offsets.HorizontalFloating := -3;
   FOptions.Display.ScrollButtonLeft.Height := 15;
   FOptions.Display.ScrollButtonLeft.Width := 15;
   FOptions.Display.ScrollButtonRight.Offsets.Vertical := 10;
   FOptions.Display.ScrollButtonRight.Offsets.Horizontal := 1;
-  FOptions.Display.ScrollButtonRight.Offsets.HorizontalFloating := -3;
   FOptions.Display.ScrollButtonRight.Height := 15;
   FOptions.Display.ScrollButtonRight.Width := 15;
   FOptions.Display.TabModifiedGlow.Style := msRightToLeft;
@@ -3948,7 +3945,6 @@ begin
   FOptions.Display.TabContainer.PaddingRight := 0;
   FOptions.Display.TabMouseGlow.Offsets.Vertical := 0;
   FOptions.Display.TabMouseGlow.Offsets.Horizontal := 0;
-  FOptions.Display.TabMouseGlow.Offsets.HorizontalFloating := -3;
   FOptions.Display.TabMouseGlow.Height := 200;
   FOptions.Display.TabMouseGlow.Width := 200;
   FOptions.Display.TabMouseGlow.Visible := True;

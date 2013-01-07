@@ -956,13 +956,13 @@ begin
   begin
     if ChromeTab.GetSpinnerState = tssRenderedUpload then
     begin
-      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
-      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
+      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Position.Width;
+      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Position.Height;
     end
     else
     begin
-      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Download.Diameter;
-      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Download.Diameter;
+      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Download.Position.Width;
+      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Download.Position.Height;
     end;
   end;
 
@@ -1300,10 +1300,10 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
         SpinPen := TGPPen.Create(MakeGDIPColor(SpinnerLookAndFeel.Color, SpinnerLookAndFeel.Alpha), SpinnerLookAndFeel.Thickness);
         try
           TabCanvas.DrawArc(SpinPen,
-                            ImageRect.Left + Offset,
-                            ImageRect.Top + Offset,
-                            RectWidth(ImageRect) - (Offset * 2),
-                            RectHeight(ImageRect) - (Offset * 2),
+                            ImageRect.Left + Offset + SpinnerOptions.Position.Offsets.Horizontal,
+                            ImageRect.Top + Offset + SpinnerOptions.Position.Offsets.Vertical,
+                            SpinnerOptions.Position.Width - (Offset * 2),
+                            SpinnerOptions.Position.Height - (Offset * 2),
                             FSpinnerRenderedDegrees,
                             SpinnerOptions.SweepAngle);
         finally
