@@ -186,6 +186,8 @@ type
     FTabPopupMenu: TPopupMenu;
     FImages: TCustomImageList;
     FImagesOverlay: TCustomImageList;
+    FImagesSpinnerUpload: TCustomImageList;
+    FImagesSpinnerDownload: TCustomImageList;
     FTabs: TChromeTabsList;
     FUpdateCount: Integer;
     FAnimateTimer: TThreadTimer;
@@ -211,6 +213,7 @@ type
     FMovementAnimationTime: Cardinal;
     FMaxAddButtonRight: Integer;
     FNextModifiedGlowAnimateTickCount: Cardinal;
+    FNextSpinnerAnimateTickCount: Cardinal;
     FCreated: Boolean;
 
     // Timer events
@@ -275,6 +278,10 @@ type
     procedure DeleteTab(Index: Integer);
     function ControlReady: Boolean;
     function GetTabWidthByContent(TabControl: TChromeTabControl): Integer;
+    function GetImagesSpinnerDownload: TCustomImageList;
+    function GetImagesSpinnerUpload: TCustomImageList;
+    procedure SetImagesSpinnerDownload(const Value: TCustomImageList);
+    procedure SetImagesSpinnerUpload(const Value: TCustomImageList);
   protected
     // ** Important, often called procedures ** //
     procedure CalculateButtonRects; virtual;
@@ -372,6 +379,8 @@ type
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
     property Images: TCustomImageList read GetImages write SetImages;
     property ImagesOverlay: TCustomImageList read GetImagesOverlay write SetImagesOverlay;
+    property ImagesSpinnerUpload: TCustomImageList read GetImagesSpinnerUpload write SetImagesSpinnerUpload;
+    property ImagesSpinnerDownload: TCustomImageList read GetImagesSpinnerDownload write SetImagesSpinnerDownload;
     property Options: TOptions read GetOptions write SetOptions;
     property Tabs: TChromeTabsList read FTabs write SetTabs;
   public
@@ -452,6 +461,8 @@ type
     property ActiveTabIndex;
     property Images;
     property ImagesOverlay;
+    property ImagesSpinnerUpload;
+    property ImagesSpinnerDownload;
     property Options;
     property Tabs;
     property LookAndFeel;
@@ -928,6 +939,18 @@ begin
   FImagesOverlay := Value;
 
   Redraw;
+end;
+
+procedure TCustomChromeTabs.SetImagesSpinnerDownload(
+  const Value: TCustomImageList);
+begin
+  FImagesSpinnerDownload := Value;
+end;
+
+procedure TCustomChromeTabs.SetImagesSpinnerUpload(
+  const Value: TCustomImageList);
+begin
+  FImagesSpinnerUpload := Value;
 end;
 
 procedure TCustomChromeTabs.DeleteTab(Index: Integer);
@@ -1488,6 +1511,7 @@ var
   i: Integer;
   TickCount: Cardinal;
   AnimateModified: Boolean;
+  AnimateSpinner: Boolean;
 begin
   if not (csDestroying in ComponentState) then
   begin
@@ -1501,10 +1525,19 @@ begin
     if AnimateModified then
       FNextModifiedGlowAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabModifiedGlow.AnimationUpdateMS);
 
+    AnimateSpinner := FNextSpinnerAnimateTickCount < TickCount;
+
+    if AnimateSpinner then
+      FNextSpinnerAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabSpinners.AnimationUpdateMS);
+
     for i := pred(Tabs.Count) downto 0 do
     begin
       if (AnimateModified) and
          (TabControls[i].AnimateModified) then
+        AddState(stsAnimatingStyle);
+
+      if (AnimateSpinner) and
+         (TabControls[i].AnimateSpinner) then
         AddState(stsAnimatingStyle);
 
       if TabControls[i].AnimateStyle then
@@ -2403,6 +2436,12 @@ begin
 
     if AComponent = FImagesOverlay then
       SetImagesOverlay(nil);
+
+    if AComponent = FImagesSpinnerUpload then
+      SetImagesSpinnerUpload(nil);
+
+    if AComponent = FImagesSpinnerDownload then
+      SetImagesSpinnerDownload(nil);
   end;
 end;
 
@@ -3092,6 +3131,16 @@ end;
 function TCustomChromeTabs.GetImagesOverlay: TCustomImageList;
 begin
   Result := FImagesOverlay;
+end;
+
+function TCustomChromeTabs.GetImagesSpinnerDownload: TCustomImageList;
+begin
+  Result := FImagesSpinnerDownload;
+end;
+
+function TCustomChromeTabs.GetImagesSpinnerUpload: TCustomImageList;
+begin
+  Result := FImagesSpinnerUpload;
 end;
 
 procedure TCustomChromeTabs.PaintWindow(DC: HDC);

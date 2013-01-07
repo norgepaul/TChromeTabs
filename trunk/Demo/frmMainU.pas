@@ -91,17 +91,6 @@ type
     edtContainerOffsetRight: TSpinEdit;
     edtTabContentMarginLeft: TSpinEdit;
     edtTabContentMarginRight: TSpinEdit;
-    GroupBox5: TGroupBox;
-    Label15: TLabel;
-    Label54: TLabel;
-    Label55: TLabel;
-    Label56: TLabel;
-    Label57: TLabel;
-    cbModifiedGlowStyle: TComboBox;
-    edtModifiedGlowVerticalOffset: TSpinEdit;
-    edtModifiedGlowAnimationPeriod: TSpinEdit;
-    edtModifiedGlowHeight: TSpinEdit;
-    edtModifiedGlowWidth: TSpinEdit;
     TabSheet4: TTabSheet;
     pcButtons: TPageControl;
     TabSheet11: TTabSheet;
@@ -242,7 +231,6 @@ type
     btnSaveOptions: TButton;
     btnLoadOptions: TButton;
     pnlLookAndFeelPath: TPanel;
-    btnOpenForm: TButton;
     ScrollBox1: TScrollBox;
     ApplicationEvents1: TApplicationEvents;
     btnCopyOptions: TButton;
@@ -257,17 +245,6 @@ type
     edtGlassHeightTop: TSpinEdit;
     chkUseGlass: TCheckBox;
     edtGlassHeightBottom: TSpinEdit;
-    GroupBox6: TGroupBox;
-    pnlMouseGlow: TPanel;
-    Label9: TLabel;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label16: TLabel;
-    edtMouseGlowVerticalOffset: TSpinEdit;
-    edtMouseGlowHorzOffset: TSpinEdit;
-    edtMouseGlowHeight: TSpinEdit;
-    edtMouseGlowWidth: TSpinEdit;
-    chkMouseGlowVisible: TCheckBox;
     GroupBox10: TGroupBox;
     Label67: TLabel;
     cbTextTrimming: TComboBox;
@@ -322,14 +299,64 @@ type
     edtAddTabTime: TSpinEdit;
     cbAddTabEase: TComboBox;
     chkSeeThroughTabs: TCheckBox;
-    Label78: TLabel;
-    cbModifiedGlowEaseType: TComboBox;
-    Label79: TLabel;
-    edtModifiedGlowAnimationUpdate: TSpinEdit;
     chkDisplayTopTabsInTitleBar: TCheckBox;
     chkContrainDraggedTab: TCheckBox;
     chkSetTabWidthsFromCaptions: TCheckBox;
     Label80: TLabel;
+    ImageList3: TImageList;
+    Label81: TLabel;
+    cbSpinnerState: TComboBox;
+    pcTabExtras: TPageControl;
+    TabSheet16: TTabSheet;
+    TabSheet17: TTabSheet;
+    Spinners: TTabSheet;
+    Label15: TLabel;
+    Label54: TLabel;
+    Label55: TLabel;
+    Label56: TLabel;
+    Label57: TLabel;
+    Label78: TLabel;
+    Label79: TLabel;
+    cbModifiedGlowStyle: TComboBox;
+    edtModifiedGlowVerticalOffset: TSpinEdit;
+    edtModifiedGlowAnimationPeriod: TSpinEdit;
+    edtModifiedGlowHeight: TSpinEdit;
+    edtModifiedGlowWidth: TSpinEdit;
+    cbModifiedGlowEaseType: TComboBox;
+    edtModifiedGlowAnimationUpdate: TSpinEdit;
+    pnlMouseGlow: TPanel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label16: TLabel;
+    edtMouseGlowVerticalOffset: TSpinEdit;
+    edtMouseGlowHorzOffset: TSpinEdit;
+    edtMouseGlowHeight: TSpinEdit;
+    edtMouseGlowWidth: TSpinEdit;
+    chkMouseGlowVisible: TCheckBox;
+    Label82: TLabel;
+    edtSpinnerAnimationUpdate: TSpinEdit;
+    chkHideImagesWhenSpinnerActive: TCheckBox;
+    pcTabSpinners: TPageControl;
+    TabSheet18: TTabSheet;
+    TabSheet19: TTabSheet;
+    Label83: TLabel;
+    edtSpinnerDownloadAnimationStep: TSpinEdit;
+    Label84: TLabel;
+    edtSpinnerDownloadDiameter: TSpinEdit;
+    Label85: TLabel;
+    edtSpinnerDownloadSweepAngle: TSpinEdit;
+    chkSpinnerDownloadReverseDirection: TCheckBox;
+    Label86: TLabel;
+    edtSpinnerUploadAnimationStep: TSpinEdit;
+    Label87: TLabel;
+    edtSpinnerUploadDiameter: TSpinEdit;
+    Label88: TLabel;
+    edtSpinnerUploadSweepAngle: TSpinEdit;
+    chkSpinnerUploadReverseDirection: TCheckBox;
+    Panel11: TPanel;
+    btnOpenForm: TButton;
+    ImageList4: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -496,6 +523,9 @@ resourcestring
   StrDockControl = '   Dock Control';
   StrNone = 'None';
   StrDragAndDropTabs = 'Drag and Drop tabs on this tab control.';
+  StrSpinners = 'Spinners';
+  StrDownload = 'Download';
+  StrUpload = 'Upload';
 
 const
   EventNames: Array[0..18] of String = (
@@ -646,6 +676,7 @@ begin
   AddTreeNode(TabsNode, StrDefaultFont, 12);
   AddTreeNode(TabsNode, StrModifiedGlow, 14);
   AddTreeNode(TabsNode, StrMouseGlow, 15);
+  AddTreeNode(TabsNode, StrSpinners, 16);
 
   AddButtonNode := AddTreeNode(TabContainerNode, StrAddButton, 2);
   AddTreeNode(AddButtonNode, StrButton, 3);
@@ -751,6 +782,7 @@ begin
       Tab.ImageIndexOverlay := edtImageOverlayIndex.Value;
       Tab.Pinned := chkPinned.Checked;
       Tab.Modified := chkModified.Checked;
+      Tab.SpinnerState := TChromeTabSpinnerState(cbSpinnerState.ItemIndex);
     finally
       FCurrentTabs.EndUpdate;
     end;
@@ -768,6 +800,7 @@ begin
       edtImageOverlayIndex.Value := Tab.ImageIndexOverlay;
       chkPinned.Checked := Tab.Pinned;
       chkModified.Checked := Tab.Modified;
+      cbSpinnerState.ItemIndex := Integer(Tab.SpinnerState);
     end;
   finally
     FUpdatingProperties := FALSE;
@@ -965,6 +998,11 @@ begin
             AddChromeTabsLookAndFeelTabModified(StrMouseGlow, ChromeTabs.LookAndFeel.Tabs.MouseGlow);
           end;
 
+      16: begin // Spinners
+            AddChromeTabLookAndFeelPen(StrUpload, ChromeTabs.LookAndFeel.Tabs.Spinners.Upload);
+            AddChromeTabLookAndFeelPen(StrDownload, ChromeTabs.LookAndFeel.Tabs.Spinners.Download);
+          end;
+
       else
       begin
         pnlLookAndFeelPath.Caption := pnlLookAndFeelPath.Caption + StrPleaseSelectACh;
@@ -1010,6 +1048,8 @@ begin
     pcMain.ActivePageIndex := 0;
     pcOptions.ActivePageIndex := 0;
     pcButtons.ActivePageIndex := 0;
+    pcTabExtras.ActivePageIndex := 0;
+    pcTabSpinners.ActivePageIndex := 0;
 
     cbFontName.Items.Assign(Screen.Fonts);
 
@@ -1113,7 +1153,6 @@ begin
   FCurrentTabs.OnBeforeDrawItem := ChromeTabs1BeforeDrawItem;
   FCurrentTabs.OnButtonCloseTabClick := ChromeTabs1ButtonCloseTabClick;
   FCurrentTabs.OnCreateDragForm := ChromeTabs1CreateDragForm;
-  FCurrentTabs.OnDebugLog := ChromeTabs1DebugLog;
   FCurrentTabs.OnEnter := ChromeTabs1Enter;
   FCurrentTabs.OnExit := ChromeTabs1Exit;
   FCurrentTabs.OnGetControlPolygons := ChromeTabs1GetControlPolygons;
@@ -1140,7 +1179,6 @@ begin
   FCurrentTabs.OnBeforeDrawItem := nil;
   FCurrentTabs.OnChange := nil;
   FCurrentTabs.OnCreateDragForm := nil;
-  FCurrentTabs.OnDebugLog := nil;
   FCurrentTabs.OnEnter := nil;
   FCurrentTabs.OnExit := nil;
   FCurrentTabs.OnGetControlPolygons := nil;
@@ -1282,6 +1320,19 @@ begin
     chkContrainDraggedTab.Checked := ChromeTabs.Options.DragDrop.ContrainDraggedTabWithinContainer;
     cbExternalDragDisplay.ItemIndex := Integer(ChromeTabs.Options.DragDrop.DragDisplay);
 
+    edtSpinnerAnimationUpdate.Value := ChromeTabs.Options.Display.TabSpinners.AnimationUpdateMS;
+    chkHideImagesWhenSpinnerActive.Checked := ChromeTabs.Options.Display.TabSpinners.HideImagesWhenSpinnerVisible;
+
+    chkSpinnerUploadReverseDirection.Checked := ChromeTabs.Options.Display.TabSpinners.Upload.ReverseDirection;
+    edtSpinnerUploadAnimationStep.Value := ChromeTabs.Options.Display.TabSpinners.Upload.RenderedAnimationStep;
+    edtSpinnerUploadDiameter.Value := ChromeTabs.Options.Display.TabSpinners.Upload.Diameter;
+    edtSpinnerUploadSweepAngle.Value := ChromeTabs.Options.Display.TabSpinners.Upload.SweepAngle;
+
+    chkSpinnerDownloadReverseDirection.Checked := ChromeTabs.Options.Display.TabSpinners.Download.ReverseDirection;
+    edtSpinnerDownloadAnimationStep.Value := ChromeTabs.Options.Display.TabSpinners.Download.RenderedAnimationStep;
+    edtSpinnerDownloadDiameter.Value := ChromeTabs.Options.Display.TabSpinners.Download.Diameter;
+    edtSpinnerDownloadSweepAngle.Value := ChromeTabs.Options.Display.TabSpinners.Download.SweepAngle;
+
     if ChromeTabs.Options.DragDrop.DragCursor = crDrag then
       cbDragCursor.ItemIndex := 1
     else
@@ -1416,6 +1467,19 @@ begin
       ChromeTabs.Options.DragDrop.DragControlImageResizeFactor := StrToFloatDef(edtDragImageResize.Text, 0.5);
       ChromeTabs.Options.DragDrop.DragDisplay := TChromeTabDragDisplay(cbExternalDragDisplay.ItemIndex);
       ChromeTabs.Options.DragDrop.ContrainDraggedTabWithinContainer := chkContrainDraggedTab.Checked;
+
+      ChromeTabs.Options.Display.TabSpinners.AnimationUpdateMS := edtSpinnerAnimationUpdate.Value;
+      ChromeTabs.Options.Display.TabSpinners.HideImagesWhenSpinnerVisible := chkHideImagesWhenSpinnerActive.Checked;
+
+      ChromeTabs.Options.Display.TabSpinners.Upload.ReverseDirection := chkSpinnerUploadReverseDirection.Checked;
+      ChromeTabs.Options.Display.TabSpinners.Upload.RenderedAnimationStep := edtSpinnerUploadAnimationStep.Value;
+      ChromeTabs.Options.Display.TabSpinners.Upload.Diameter := edtSpinnerUploadDiameter.Value;
+      ChromeTabs.Options.Display.TabSpinners.Upload.SweepAngle := edtSpinnerUploadSweepAngle.Value;
+
+      ChromeTabs.Options.Display.TabSpinners.Download.ReverseDirection := chkSpinnerDownloadReverseDirection.Checked;
+      ChromeTabs.Options.Display.TabSpinners.Download.RenderedAnimationStep := edtSpinnerDownloadAnimationStep.Value;
+      ChromeTabs.Options.Display.TabSpinners.Download.Diameter := edtSpinnerDownloadDiameter.Value;
+      ChromeTabs.Options.Display.TabSpinners.Download.SweepAngle := edtSpinnerDownloadSweepAngle.Value;
 
       if cbDragCursor.ItemIndex = 0 then
         ChromeTabs.Options.DragDrop.DragCursor := crDefault
@@ -1606,7 +1670,8 @@ end;
 
 procedure TfrmMain.ChromeTabs1DebugLog(Sender: TObject; const Text: string);
 begin
-  FLogDebug.Log(Text, []);
+  if (Sender = FCurrentTabs) and (chkDebugLog.Checked) then
+    FLogDebug.Log(Text, []);
 end;
 
 procedure TfrmMain.ChromeTabs1EndTabDrag(Sender: TObject;

@@ -21,6 +21,12 @@ object TTabsLookAndFeel
   LookAndFeel.Tabs.MouseGlow.OutsideColor = clWhite
   LookAndFeel.Tabs.MouseGlow.CentreAlpha = 120
   LookAndFeel.Tabs.MouseGlow.OutsideAlpha = 0
+  LookAndFeel.Tabs.Spinners.Upload.Color = 12759975
+  LookAndFeel.Tabs.Spinners.Upload.Thickness = 2.500000000000000000
+  LookAndFeel.Tabs.Spinners.Upload.Alpha = 255
+  LookAndFeel.Tabs.Spinners.Download.Color = 14388040
+  LookAndFeel.Tabs.Spinners.Download.Thickness = 2.500000000000000000
+  LookAndFeel.Tabs.Spinners.Download.Alpha = 255
   LookAndFeel.Tabs.Active.Font.Name = 'Segoe UI'
   LookAndFeel.Tabs.Active.Font.Color = clOlive
   LookAndFeel.Tabs.Active.Font.Size = 9

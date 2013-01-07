@@ -42,6 +42,7 @@ object TTabsOptions
   Options.Display.Tabs.OffsetBottom = 0
   Options.Display.Tabs.MinWidth = 25
   Options.Display.Tabs.MaxWidth = 200
+  Options.Display.Tabs.TabWidthFromContent = False
   Options.Display.Tabs.PinnedWidth = 39
   Options.Display.Tabs.ImageOffsetLeft = 13
   Options.Display.Tabs.TextTrimType = tttFade
@@ -61,6 +62,16 @@ object TTabsOptions
   Options.Display.TabMouseGlow.Height = 200
   Options.Display.TabMouseGlow.Width = 200
   Options.Display.TabMouseGlow.Visible = True
+  Options.Display.TabSpinners.Upload.ReverseDirection = True
+  Options.Display.TabSpinners.Upload.RenderedAnimationStep = 4
+  Options.Display.TabSpinners.Upload.Diameter = 16
+  Options.Display.TabSpinners.Upload.SweepAngle = 135
+  Options.Display.TabSpinners.Download.ReverseDirection = False
+  Options.Display.TabSpinners.Download.RenderedAnimationStep = 15
+  Options.Display.TabSpinners.Download.Diameter = 16
+  Options.Display.TabSpinners.Download.SweepAngle = 135
+  Options.Display.TabSpinners.AnimationUpdateMS = 50
+  Options.Display.TabSpinners.HideImagesWhenSpinnerVisible = True
   Options.DragDrop.DragType = dtBetweenContainers
   Options.DragDrop.DragOutsideImageAlpha = 220
   Options.DragDrop.DragOutsideDistancePixels = 30
@@ -70,6 +81,7 @@ object TTabsOptions
   Options.DragDrop.DragDisplay = ddTabAndControl
   Options.DragDrop.DragFormBorderWidth = 2
   Options.DragDrop.DragFormBorderColor = 8421504
+  Options.DragDrop.ContrainDraggedTabWithinContainer = True
   Options.Animation.DefaultMovementAnimationTimeMS = 100
   Options.Animation.DefaultStyleAnimationTimeMS = 300
   Options.Animation.AnimationTimerInterval = 15

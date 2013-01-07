@@ -147,14 +147,17 @@ type
     FModifiedStartTicks: Cardinal;
     FLastCaption: String;
     FLastCaptionLength: Integer;
+    FSpinnerImageIndex: Integer;
+    FSpinnerRenderedDegrees: Integer;
 
     function CloseButtonVisible: Boolean;
     function GetTabBrush: TGPLinearGradientBrush;
     function GetTabPen: TGPPen;
     function ImageVisible(ImageList: TCustomImageList; ImageIndex: Integer): Boolean;
     procedure CalculateRects(var ImageRect, TextRect, CloseButtonRect,
-      CloseButtonCrossRect: TRect; var NormalImageVisible, OverlayImageVisible,
+      CloseButtonCrossRect: TRect; var NormalImageVisible, OverlayImageVisible, SpinnerVisible,
       TextVisible: Boolean);
+    function GetSpinnerImageList: TCustomImageList;
   protected
     procedure SetCloseButtonState(const Value: TDrawState); virtual;
     procedure EndAnimation; override;
@@ -164,7 +167,8 @@ type
 
     procedure Invalidate; override;
     function AnimateStyle: Boolean; override;
-    function AnimateModified: Boolean;
+    function AnimateModified: Boolean; virtual;
+    function AnimateSpinner: Boolean; virtual;
     procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
@@ -659,6 +663,76 @@ begin
     FModifiedStartTicks := 0;
 end;
 
+function TChromeTabControl.GetSpinnerImageList: TCustomImageList;
+begin
+  case ChromeTab.GetSpinnerState of
+    tssImageUpload: Result := ChromeTabs.GetImagesSpinnerUpload;
+    tssImageDownload: Result := ChromeTabs.GetImagesSpinnerDownload;
+  else
+    Result := nil;
+  end;
+end;
+
+function TChromeTabControl.AnimateSpinner: Boolean;
+
+  procedure UpdateSpinnerAngle(SpinnerOptions: TChromeTabsSpinnerOptions);
+  begin
+    if SpinnerOptions.ReverseDirection then
+    begin
+      Dec(FSpinnerRenderedDegrees, SpinnerOptions.RenderedAnimationStep);
+
+      if FSpinnerRenderedDegrees < 0 then
+        FSpinnerRenderedDegrees := 360 + FSpinnerRenderedDegrees;
+    end
+    else
+    begin
+      Inc(FSpinnerRenderedDegrees, SpinnerOptions.RenderedAnimationStep);
+
+      if FSpinnerRenderedDegrees > 360 then
+        FSpinnerRenderedDegrees := FSpinnerRenderedDegrees - 360;
+    end;
+  end;
+
+var
+  Images: TCustomImageList;
+begin
+  Images := GetSpinnerImageList;
+
+  Result := (Images <> nil) or
+            (ChromeTab.GetSpinnerState in [tssRenderedUpload, tssRenderedDownload]);
+
+  if Result then
+  begin
+    case ChromeTab.GetSpinnerState of
+      tssRenderedUpload:
+        begin
+          UpdateSpinnerAngle(ChromeTabs.GetOptions.Display.TabSpinners.Upload);
+        end;
+
+      tssRenderedDownload:
+        begin
+          UpdateSpinnerAngle(ChromeTabs.GetOptions.Display.TabSpinners.Download);
+        end;
+
+      tssImageUpload:
+        begin
+          Dec(FSpinnerImageIndex);
+
+          if FSpinnerImageIndex < 0 then
+            FSpinnerImageIndex := pred(Images.Count);
+        end;
+
+      tssImageDownload:
+        begin
+          Inc(FSpinnerImageIndex);
+
+          if FSpinnerImageIndex >= Images.Count then
+            FSpinnerImageIndex := 0;
+        end;
+    end;
+  end;
+end;
+
 function TChromeTabControl.AnimateStyle: Boolean;
 begin
   Result := FChromeTabControlPropertyItems.TransformColors(FALSE);
@@ -797,11 +871,10 @@ var
   GPRectF: TGPRectF;
   Bitmap: TBitmap;
   ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
-  NormalImageVisible, OverlayImageVisible, TextVisible: Boolean;
+  NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible: Boolean;
   RightOffset: Integer;
   ScrolledRect: TRect;
 begin
-  { TODO : Fix }
   if (FLastCaption = ChromeTab.GetCaption) and (FLastCaptionLength > 0) then
     Result := FLastCaptionLength
   else
@@ -827,11 +900,11 @@ begin
                                 GPRectF);
 
         CalculateRects(ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect,
-           NormalImageVisible, OverlayImageVisible, TextVisible);
+           NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible);
 
         ScrolledRect := ScrollRect(ControlRect);
 
-        if NormalImageVisible or OverlayImageVisible then
+        if NormalImageVisible or OverlayImageVisible or SpinnerVisible then
           RightOffset := ImageRect.Right
         else
           RightOffset := ScrolledRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
@@ -856,7 +929,7 @@ end;
 
 procedure TChromeTabControl.CalculateRects(var ImageRect, TextRect,
   CloseButtonRect, CloseButtonCrossRect: TRect;
-  var NormalImageVisible, OverlayImageVisible, TextVisible: Boolean);
+  var NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible: Boolean);
 var
   LeftOffset, RightOffset, ImageWidth, ImageHeight: Integer;
 begin
@@ -874,10 +947,16 @@ begin
 
   NormalImageVisible := ImageVisible(ChromeTabs.GetImages, ChromeTab.GetImageIndex);
   OverlayImageVisible := ImageVisible(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay);
+  SpinnerVisible := ChromeTab.GetSpinnerState <> tssNone;
 
   ImageWidth := 0;
   ImageHeight := 0;
 
+  if SpinnerVisible then
+  begin
+    ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
+    ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
+  end else
   if (NormalImageVisible) or
      (OverlayImageVisible) then
   begin
@@ -899,6 +978,7 @@ begin
   begin
     NormalImageVisible := FALSE;
     OverlayImageVisible := FALSE;
+    SpinnerVisible := FALSE;
   end
   else
   begin
@@ -934,7 +1014,8 @@ begin
   if (CloseButtonVisible) and
      (not TextVisible) and
      (not NormalImageVisible) and
-     (not OverlayImageVisible) then
+     (not OverlayImageVisible) and
+     (not SpinnerVisible) then
   begin
     // If only the close button is visible, we need to centre it
     CloseButtonRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2),
@@ -1174,11 +1255,64 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     end;
   end;
 
+  procedure DrawSpinner(ImageRect: TRect);
+  var
+    SpinnerImages: TCustomImageList;
+    SpinPen: TGPPen;
+    SpinnerOptions: TChromeTabsSpinnerOptions;
+    SpinnerLookAndFeel: TChromeTabsLookAndFeelPen;
+    Offset: Real;
+    Handled: Boolean;
+  begin
+    ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ImageRect, itTabImageSpinner, ChromeTab.GetIndex, Handled);
+
+    if not Handled then
+    begin
+      if ChromeTab.GetSpinnerState in [tssRenderedUpload, tssRenderedDownload] then
+      begin
+        if ChromeTab.GetSpinnerState = tssRenderedUpload then
+        begin
+          SpinnerOptions := ChromeTabs.GetOptions.Display.TabSpinners.Upload;
+          SpinnerLookAndFeel := ChromeTabs.GetLookAndFeel.Tabs.Spinners.Upload;
+        end
+        else
+        begin
+          SpinnerOptions := ChromeTabs.GetOptions.Display.TabSpinners.Download;
+          SpinnerLookAndFeel := ChromeTabs.GetLookAndFeel.Tabs.Spinners.Download;
+        end;
+
+        Offset := SpinnerLookAndFeel.Thickness / 2;
+
+        SpinPen := TGPPen.Create(MakeGDIPColor(SpinnerLookAndFeel.Color, SpinnerLookAndFeel.Alpha), SpinnerLookAndFeel.Thickness);
+        try
+          TabCanvas.DrawArc(SpinPen,
+                            ImageRect.Left + Offset,
+                            ImageRect.Top + Offset,
+                            RectWidth(ImageRect) - (Offset * 2),
+                            RectHeight(ImageRect) - (Offset * 2),
+                            FSpinnerRenderedDegrees,
+                            SpinnerOptions.SweepAngle);
+        finally
+          FreeAndNil(SpinPen);
+        end;
+      end
+      else
+      begin
+        SpinnerImages := GetSpinnerImageList;
+
+        if SpinnerImages <> nil then
+        begin
+          DrawImage(SpinnerImages, FSpinnerImageIndex, ImageRect, itTabImageSpinner);
+        end;
+      end;
+    end;
+  end;
+
 var
   CloseButtonStyle: TChromeTabsLookAndFeelStyle;
   CloseButtonCrossPen: TGPPen;
   ImageRect, TextRect, ButtonRect, CrossRect: TRect;
-  NormalImageVisible, OverlayImageVisible, TextVisible: Boolean;
+  NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible: Boolean;
   Handled: Boolean;
   ChromeTabPolygons: IChromeTabPolygons;
   OriginalClipRegion: TGPRegion;
@@ -1199,7 +1333,7 @@ begin
       ChromeTabPolygons := GetPolygons;
 
       // Calculate the positions and visibilty of the controls
-      CalculateRects(ImageRect, TextRect, ButtonRect, CrossRect, NormalImageVisible, OverlayImageVisible, TextVisible);
+      CalculateRects(ImageRect, TextRect, ButtonRect, CrossRect, NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible);
 
       // Fire the before draw event
       ChromeTabs.DoOnBeforeDrawItem(TabCanvas, ControlRect, itTab, ChromeTab.GetIndex, Handled);
@@ -1333,11 +1467,19 @@ begin
       end;
 
       // Draw the normal and overlay images
-      if NormalImageVisible then
-        DrawImage(ChromeTabs.GetImages, ChromeTab.GetImageIndex, ImageRect, itTabImage);
+      if (ChromeTab.GetSpinnerState = tssNone) or
+         (not ChromeTabs.GetOptions.Display.TabSpinners.HideImagesWhenSpinnerVisible) then
+      begin
+        if NormalImageVisible then
+          DrawImage(ChromeTabs.GetImages, ChromeTab.GetImageIndex, ImageRect, itTabImage);
 
-      if OverlayImageVisible then
-        DrawImage(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
+        if OverlayImageVisible then
+          DrawImage(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
+      end;
+
+      // Draw the spinner image
+      if SpinnerVisible then
+        DrawSpinner(ImageRect);
     finally
       FreeAndNil(OriginalClipRegion);
     end;
