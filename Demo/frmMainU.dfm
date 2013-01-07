@@ -26,6 +26,8 @@ object frmMain: TfrmMain
     OnNeedDragImageControl = ChromeTabs1NeedDragImageControl
     OnBeforeDrawItem = ChromeTabs1BeforeDrawItem
     OnGetControlPolygons = ChromeTabs1GetControlPolygons
+    OnTabDragDrop = ChromeTabs1TabDragDrop
+    OnTabDragDropped = ChromeTabs1TabDragDropped
     OnScroll = ChromeTabs1ScrollWidthChanged
     OnScrollWidthChanged = ChromeTabs1ScrollWidthChanged
     OnSetTabWidth = ChromeTabs1SetTabWidth
@@ -1173,7 +1175,7 @@ object frmMain: TfrmMain
               Top = 185
               Width = 731
               Height = 193
-              ActivePage = TabSheet16
+              ActivePage = Spinners
               Align = alTop
               TabOrder = 1
               object TabSheet16: TTabSheet
@@ -1478,7 +1480,7 @@ object frmMain: TfrmMain
                   Top = 52
                   Width = 723
                   Height = 111
-                  ActivePage = TabSheet19
+                  ActivePage = TabSheet18
                   Align = alBottom
                   TabOrder = 2
                   object TabSheet19: TTabSheet

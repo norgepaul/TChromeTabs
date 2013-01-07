@@ -954,14 +954,28 @@ begin
 
   if SpinnerVisible then
   begin
-    ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
-    ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
-  end else
-  if (NormalImageVisible) or
+    if ChromeTab.GetSpinnerState = tssRenderedUpload then
+    begin
+      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
+      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Diameter;
+    end
+    else
+    begin
+      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Download.Diameter;
+      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Download.Diameter;
+    end;
+  end;
+
+  if ((not SpinnerVisible) or
+      (not ChromeTabs.GetOptions.Display.TabSpinners.HideImagesWhenSpinnerVisible)) and
+     (NormalImageVisible) or
      (OverlayImageVisible) then
   begin
-    ImageWidth := ChromeTabs.GetImages.Width;
-    ImageHeight := ChromeTabs.GetImages.Height;
+    if ChromeTabs.GetImages.Width > ImageWidth then
+      ImageWidth := ChromeTabs.GetImages.Width;
+
+    if ChromeTabs.GetImages.Height > ImageHeight then
+      ImageHeight := ChromeTabs.GetImages.Height;
   end;
 
   if OverlayImageVisible then

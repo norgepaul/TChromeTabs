@@ -1,3 +1,9 @@
+TChromeTabs 2.0 BETA
+
+07-01-2013
+Fixed: Some Download spinner properties used the values from the upload spinner.
+
+
 TChromeTabs 1.3 - 07-01-2013
 
 Update: Implemented tab spinners - both image based and rendered.
