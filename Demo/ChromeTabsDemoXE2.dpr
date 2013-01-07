@@ -1,20 +1,6 @@
 program ChromeTabsDemoXE2;
 
 uses
-  {$IFDEF EUREKALOG_VER6}
-  ExceptionLog,
-  {$ENDIF}
-  {$IFDEF EUREKALOG_VER7}
-  EMemLeaks,
-  EResLeaks,
-  EDialogWinAPIMSClassic,
-  EDialogWinAPIEurekaLogDetailed,
-  EDialogWinAPIStepsToReproduce,
-  EDebugExports,
-  EDebugJCL,
-  EAppVCL,
-  ExceptionLog7,
-  {$ENDIF}
   Forms,
   frmMainU in 'frmMainU.pas' {frmMain},
   ChromeTabsLog in '..\Lib\ChromeTabsLog.pas',

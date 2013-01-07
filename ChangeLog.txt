@@ -1,30 +1,23 @@
-TChromeTabs 1.3 BETA
+TChromeTabs 1.3 - 07-01-2013
 
-06/01/2013
-Update: Variable width tabs implementation complete.
+Update: Implemented tab spinners - both image based and rendered.
+Update: Implemented variable width tabs. Width depends on caption but respects min and max tab widths.
+Update: Implemented TChromeTabsGlassForm - Allows Chrome title bar tabs with one line of code.
+Update: Added ContrainDraggedTabWithinContainer property.
+Breaking Update: Added Handled var to OnButtonAddClicked. If Handled is returned false, a new tab is automatically created.
 Fixed: Some events not hooked in demo.
 Fixed: Add button now working correctly for all scenarios.
 Fixed: OnBeforeDrawItem event caused unusual behaviour when applied to some items.
 Fixed: Tabs Modified flag reset when tab activated ignoring Allow value retruned from event.
-
-05/01/2013
-Breaking Update: Added Handled var to OnButtonAddClicked. If Handled is returned false, a new tab is automatically created.
-Update: Implemented variable width tabs. Width depends on caption but respects min and max tab widths.
 Fixed: Tab dragging broken in BiDi RightToLeftReadingOnly mode.
 Fixed: Constrained tab dragging now drags into the area that the add button occupied.
-Refactored: Tidied up some duplicate drag tab code.
-
-
-04/01/2013
-Update: Added TChromeTabsGlassForm - Allows Chrome title bar tabs with one line of code.
-Update: Added ContrainDraggedTabWithinContainer property.
-Update: Added title bar tabs functionality to Demo.
 Fixed: Control was not painted when dropped on a form until the form was closed, then re-opened.
 Fixed: Floating Right Add button was position far right if only pinned tabs were displayed.
 Fixed: Drag tab image not scaled down or alpha blended if no control image displayed.
 Fixed: Drag tab background wasn't transparent when only dragging tab.
 Fixed: Settings files contained deleted properties.
 Fixed: Default properties are set when the control is first created.
+Refactored: Tidied up some duplicate drag tab code.
 
 
 TChromeTabs 1.2 - 03/01/2013

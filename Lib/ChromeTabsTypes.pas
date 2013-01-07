@@ -70,6 +70,14 @@ type
     ddTabAndControl
   );
 
+  TChromeTabSpinnerState = (
+    tssNone,
+    tssRenderedUpload,
+    tssRenderedDownload,
+    tssImageUpload,
+    tssImageDownload
+  );
+
   TTabChangeType = (
     tcAdded,
     tcMoved,
@@ -132,6 +140,7 @@ type
     itTabCloseButton,
     itTabImage,
     itTabImageOverlay,
+    itTabImageSpinner,
     itTabMouseGlow,
     itTabModifiedGlow,
     itAddButton,
@@ -303,6 +312,7 @@ const
     'Tab Close Button',
     'Tab Image',
     'Tab Image Overlay',
+    'Tab Image Spinner',
     'Tab Mouse Glow',
     'Tab Modified Glow',
     'Add Button',

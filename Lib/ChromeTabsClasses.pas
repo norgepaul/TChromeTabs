@@ -49,6 +49,7 @@ type
     function GetModified: Boolean;
     function GetTab: TChromeTab;
     function GetMarkedForDeletion: Boolean;
+    function GetSpinnerState: TChromeTabSpinnerState;
   end;
 
   TChromeTabPolygon = class(TObject)
@@ -110,6 +111,7 @@ type
     FVisible: Boolean;
     FModified: Boolean;
     FMarkedForDeletion: Boolean;
+    FSpinnerState: TChromeTabSpinnerState;
 
     procedure SetActive(Value: boolean);
     procedure SetCaption(Value: TCaption);
@@ -132,6 +134,8 @@ type
     function GetModified: Boolean;
     function GetTab: TChromeTab;
     function GetMarkedForDeletion: Boolean;
+    function GetSpinnerState: TChromeTabSpinnerState;
+    procedure SetSpinnerState(const Value: TChromeTabSpinnerState);
   protected
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
@@ -157,6 +161,7 @@ type
     property Pinned: Boolean read GetPinned write SetPinned;
     property Visible: Boolean read GetVisible write SetVisible;
     property Modified: Boolean read GetModified write SetModified;
+    property SpinnerState: TChromeTabSpinnerState read GetSpinnerState write SetSpinnerState;
   end;
 
   TChromeTabClass = class of TChromeTab;
@@ -352,17 +357,34 @@ type
     property OutsideAlpha: Byte read FOutsideAlpha write SetOutsideAlpha;
   end;
 
+  TChromeTabsLookAndFeelSpinners = class(TChromeTabsPersistent)
+  private
+    FUpload: TChromeTabsLookAndFeelPen;
+    FDownload: TChromeTabsLookAndFeelPen;
+
+    procedure SetDownload(const Value: TChromeTabsLookAndFeelPen);
+    procedure SetUpload(const Value: TChromeTabsLookAndFeelPen);
+  public
+    constructor Create(AOwner: TPersistent); override;
+    destructor Destroy; override;
+  published
+    property Upload: TChromeTabsLookAndFeelPen read FUpload write SetUpload;
+    property Download: TChromeTabsLookAndFeelPen read fDownload write SetDownload;
+  end;
+
   TChromeTabsLookAndFeelTab = class(TChromeTabsCustomLookAndFeelStylePropertyItems)
   private
     FBaseLine: TChromeTabsLookAndFeelPen;
     FModified: TChromeTabsLookAndFeelGlow;
     FDefaultFont: TChromeTabsLookAndFeelBaseFont;
     FMouseGlow: TChromeTabsLookAndFeelGlow;
+    FSpinners: TChromeTabsLookAndFeelSpinners;
 
     procedure SetBaseLine(const Value: TChromeTabsLookAndFeelPen);
     procedure SetModified(const Value: TChromeTabsLookAndFeelGlow);
     procedure SetDefaultFont(const Value: TChromeTabsLookAndFeelBaseFont);
     procedure SetMouseGlow(const Value: TChromeTabsLookAndFeelGlow);
+    procedure SetSpinners(const Value: TChromeTabsLookAndFeelSpinners);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
@@ -373,6 +395,7 @@ type
     property Modified: TChromeTabsLookAndFeelGlow read FModified write SetModified;
     property DefaultFont: TChromeTabsLookAndFeelBaseFont read FDefaultFont write SetDefaultFont;
     property MouseGlow: TChromeTabsLookAndFeelGlow read FMouseGlow write SetMouseGlow;
+    property Spinners: TChromeTabsLookAndFeelSpinners read FSpinners write SetSpinners;
     property Active;
     property NotActive;
     property Hot;
@@ -1014,6 +1037,45 @@ type
     property PaddingRight: Integer read FPaddingRight write SetPaddingRight;
   end;
 
+  TChromeTabsSpinnerOptions = class(TChromeTabsPersistent)
+  private
+    FReverseDirection: Boolean;
+    FRenderedAnimationStep: Integer;
+    FDiameter: Integer;
+    FSweepAngle: Word;
+
+    procedure SetRenderedAnimationStep(const Value: Integer);
+    procedure SetReverseDirection(const Value: Boolean);
+    procedure SetDiameter(const Value: Integer);
+    procedure SetSweepAngle(const Value: Word);
+  published
+    property ReverseDirection: Boolean read FReverseDirection write SetReverseDirection;
+    property RenderedAnimationStep: Integer read FRenderedAnimationStep write SetRenderedAnimationStep;
+    property Diameter: Integer read FDiameter write SetDiameter;
+    property SweepAngle: Word read FSweepAngle write SetSweepAngle;
+  end;
+
+  TChromeTabsSpinnersOptions = class(TChromeTabsPersistent)
+  private
+    FUpload: TChromeTabsSpinnerOptions;
+    FDownload: TChromeTabsSpinnerOptions;
+    FAnimationUpdateMS: Cardinal;
+    FHideImagesWhenSpinnerVisible: Boolean;
+
+    procedure SetDownload(const Value: TChromeTabsSpinnerOptions);
+    procedure SetUpload(const Value: TChromeTabsSpinnerOptions);
+    procedure SetAnimationUpdateMS(const Value: Cardinal);
+    procedure SetHideImagesWhenSpinnerVisible(const Value: Boolean);
+  published
+    constructor Create(AOwner: TPersistent); override;
+    destructor Destroy; override;
+
+    property Upload: TChromeTabsSpinnerOptions read FUpload write SetUpload;
+    property Download: TChromeTabsSpinnerOptions read FDownload write SetDownload;
+    property AnimationUpdateMS: Cardinal read FAnimationUpdateMS write SetAnimationUpdateMS;
+    property HideImagesWhenSpinnerVisible: Boolean read FHideImagesWhenSpinnerVisible write SetHideImagesWhenSpinnerVisible;
+  end;
+
   TChromeTabsDisplayOptions = class(TChromeTabsPersistent)
   private
     FCloseButton: TChromeTabsCloseButtonProperties;
@@ -1024,6 +1086,7 @@ type
     FTabs: TChromeTabsOptions;
     FTabContainer: TChromeTabsContainerOptions;
     FTabMouseGlow: TChromeTabsControlPropertiesEx;
+    FTabSpinners: TChromeTabsSpinnersOptions;
   private
     procedure SetCloseButton(const Value: TChromeTabsCloseButtonProperties);
     procedure SetAddButton(const Value: TChromeTabsAddButtonProperties);
@@ -1033,6 +1096,7 @@ type
     procedure SetTabs(const Value: TChromeTabsOptions);
     procedure SetTabContainer(const Value: TChromeTabsContainerOptions);
     procedure SetTabMouseGlow(const Value: TChromeTabsControlPropertiesEx);
+    procedure SetTabSpinners(const Value: TChromeTabsSpinnersOptions);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
@@ -1045,6 +1109,7 @@ type
     property Tabs: TChromeTabsOptions read FTabs write SetTabs;
     property TabContainer: TChromeTabsContainerOptions read FTabContainer write SetTabContainer;
     property TabMouseGlow: TChromeTabsControlPropertiesEx read FTabMouseGlow write SetTabMouseGlow;
+    property TabSpinners: TChromeTabsSpinnersOptions read FTabSpinners write SetTabSpinners;
   end;
 
   TOptions = class(TChromeTabsPersistent)
@@ -1100,6 +1165,8 @@ type
 
     function GetImages: TCustomImageList;
     function GetImagesOverlay: TCustomImageList;
+    function GetImagesSpinnerDownload: TCustomImageList;
+    function GetImagesSpinnerUpload: TCustomImageList;
   end;
 
   TTabsLookAndFeel = class(TComponent)
@@ -1158,6 +1225,16 @@ begin
     DoChanged(tcPinned);
 
     Active := TRUE;
+  end;
+end;
+
+procedure TChromeTab.SetSpinnerState(const Value: TChromeTabSpinnerState);
+begin
+  if Value <> FSpinnerState then
+  begin
+    FSpinnerState := Value;
+
+    DoChanged;
   end;
 end;
 
@@ -1285,6 +1362,11 @@ end;
 function TChromeTab.GetPinned: Boolean;
 begin
   Result := FPinned;
+end;
+
+function TChromeTab.GetSpinnerState: TChromeTabSpinnerState;
+begin
+  Result := FSpinnerState;
 end;
 
 function TChromeTab.GetTab: TChromeTab;
@@ -2478,6 +2560,7 @@ begin
   FTabs := TChromeTabsOptions.Create(Self);
   FTabContainer := TChromeTabsContainerOptions.Create(Self);
   FTabMouseGlow := TChromeTabsControlPropertiesEx.Create(Self);
+  FTabSpinners := TChromeTabsSpinnersOptions.Create(Self);
 
   FScrollButtonLeft.Height := 15;
   FScrollButtonLeft.Width := 15;
@@ -2501,6 +2584,7 @@ begin
   FreeAndNil(FTabs);
   FreeAndNil(FTabContainer);
   FreeAndNil(FTabMouseGlow);
+  FreeAndNil(FTabSpinners);
 
   inherited;
 end;
@@ -2562,6 +2646,12 @@ begin
   DoChanged;
 end;
 
+
+procedure TChromeTabsDisplayOptions.SetTabSpinners(
+  const Value: TChromeTabsSpinnersOptions);
+begin
+  FTabSpinners.Assign(Value);
+end;
 
 { TChromeTabsBehaviourOptions }
 
@@ -3129,6 +3219,7 @@ begin
   FModified := TChromeTabsLookAndFeelGlow.Create(Self);
   FDefaultFont := TChromeTabsLookAndFeelBaseFont.Create(Self);
   FMouseGlow := TChromeTabsLookAndFeelGlow.Create(Self);
+  FSpinners := TChromeTabsLookAndFeelSpinners.Create(Self);
 
   FBaseLine.Color := clGray;
   FBaseLine.Thickness := 2;
@@ -3141,6 +3232,7 @@ begin
   FreeAndNil(FModified);
   FreeandNil(FMouseGlow);
   FreeandNil(FDefaultFont);
+  FreeAndNil(FSpinners);
 
   inherited;
 end;
@@ -3175,6 +3267,12 @@ begin
   FMouseGlow.Assign(Value);
 
   DoChanged;
+end;
+
+procedure TChromeTabsLookAndFeelTab.SetSpinners(
+  const Value: TChromeTabsLookAndFeelSpinners);
+begin
+  FSpinners.Assign(Value);
 end;
 
 procedure TChromeTabsLookAndFeelTab.Invalidate;
@@ -3586,6 +3684,137 @@ procedure TChromeTabsMovementAnimationTypes.SetUseDefaultEaseType(
   const Value: Boolean);
 begin
   FUseDefaultEaseType := Value;
+end;
+
+{ TChromeTabsSpinnersOptions }
+
+constructor TChromeTabsSpinnersOptions.Create(AOwner: TPersistent);
+begin
+  inherited;
+
+  FUpload := TChromeTabsSpinnerOptions.Create(Self);
+  FDownload := TChromeTabsSpinnerOptions.Create(Self);
+
+  FUpload.ReverseDirection := TRUE;
+  FUpload.FRenderedAnimationStep := 2;
+  FUpload.Diameter := 16;
+  FUpload.SweepAngle := 135;
+
+  FDownload.ReverseDirection := FALSE;
+  FDownload.FRenderedAnimationStep := 5;
+  FDownload.Diameter := 16;
+  FDownload.SweepAngle := 135;
+
+  FAnimationUpdateMS := 50;
+  FHideImagesWhenSpinnerVisible := TRUE;
+end;
+
+destructor TChromeTabsSpinnersOptions.Destroy;
+begin
+  FreeAndNil(FUpload);
+  FreeAndNil(FDownload);
+
+  inherited;
+end;
+
+procedure TChromeTabsSpinnersOptions.SetAnimationUpdateMS(
+  const Value: Cardinal);
+begin
+  FAnimationUpdateMS := Value;
+end;
+
+procedure TChromeTabsSpinnersOptions.SetDownload(
+  const Value: TChromeTabsSpinnerOptions);
+begin
+  FDownload.Assign(Value);
+end;
+
+procedure TChromeTabsSpinnersOptions.SetHideImagesWhenSpinnerVisible(
+  const Value: Boolean);
+begin
+  FHideImagesWhenSpinnerVisible := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabsSpinnersOptions.SetUpload(
+  const Value: TChromeTabsSpinnerOptions);
+begin
+  FUpload.Assign(Value);
+end;
+
+{ TChromeTabsSpinnerOptions }
+
+procedure TChromeTabsSpinnerOptions.SetRenderedAnimationStep(
+  const Value: Integer);
+begin
+  FRenderedAnimationStep := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabsSpinnerOptions.SetReverseDirection(const Value: Boolean);
+begin
+  FReverseDirection := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabsSpinnerOptions.SetDiameter(const Value: Integer);
+begin
+  FDiameter := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabsSpinnerOptions.SetSweepAngle(const Value: Word);
+begin
+  FSweepAngle := Value;
+
+  DoChanged;
+end;
+
+
+{ TChromeTabsLookAndFeelSpinners }
+
+constructor TChromeTabsLookAndFeelSpinners.Create(AOwner: TPersistent);
+begin
+  inherited;
+
+  FUpload := TChromeTabsLookAndFeelPen.Create(Self);
+  FDownload := TChromeTabsLookAndFeelPen.Create(Self);
+
+  FUpload.Color := $00c2b3a7;
+  FUpload.Thickness := 2.5;
+  FUpload.Alpha := 255;
+
+  FDownload.Color := $00db8b48;
+  FDownload.Thickness := 2.5;
+  FDownload.Alpha := 255;
+end;
+
+destructor TChromeTabsLookAndFeelSpinners.Destroy;
+begin
+  FreeAndNil(FUpload);
+  FreeAndNil(FDownload);
+
+  inherited;
+end;
+
+procedure TChromeTabsLookAndFeelSpinners.SetDownload(
+  const Value: TChromeTabsLookAndFeelPen);
+begin
+  FDownload.Assign(Value);
+
+  DoChanged;
+end;
+
+procedure TChromeTabsLookAndFeelSpinners.SetUpload(
+  const Value: TChromeTabsLookAndFeelPen);
+begin
+  FUpload.Assign(Value);
+
+  DoChanged;
 end;
 
 end.
