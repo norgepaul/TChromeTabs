@@ -663,31 +663,20 @@ type
     property Horizontal: Integer read FHorizontal write SetHorizontal;
   end;
 
-  TChromeTabsAddButtonOffsets = class(TChromeTabsOffsets)
-  private
-    FHorizontalFloating: Integer;
-
-    procedure SetHorizontalFloating(const Value: Integer);
-  public
-    constructor Create(AOwner: TPersistent); override;
-  published
-    property HorizontalFloating: Integer read FHorizontalFloating write SetHorizontalFloating;
-  end;
-
   TChromeTabsControlPosition = class(TChromeTabsPersistent)
   private
-    FOffsets: TChromeTabsAddButtonOffsets;
+    FOffsets: TChromeTabsOffsets;
     FHeight: Integer;
     FWidth: Integer;
   private
     procedure SetHeight(const Value: Integer);
-    procedure SetOffsets(const Value: TChromeTabsAddButtonOffsets);
+    procedure SetOffsets(const Value: TChromeTabsOffsets);
     procedure SetWidth(const Value: Integer);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
   published
-    property Offsets: TChromeTabsAddButtonOffsets read FOffsets write SetOffsets;
+    property Offsets: TChromeTabsOffsets read FOffsets write SetOffsets;
     property Height: Integer read FHeight write SetHeight;
     property Width: Integer read FWidth write SetWidth;
   end;
@@ -707,15 +696,18 @@ type
   private
     FShowPlusSign: Boolean;
     FVisibility: TAddButtonVisibility;
+    FHorizontalOffsetFloating: Integer;
   private
     procedure SetShowPlusSign(const Value: Boolean);
     procedure SetVisibility(const Value: TAddButtonVisibility);
+    procedure SetHorizontalOffsetFloating(const Value: Integer);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
   published
     property ShowPlusSign: Boolean read FShowPlusSign write SetShowPlusSign;
     property Visibility: TAddButtonVisibility read FVisibility write SetVisibility;
+    property HorizontalOffsetFloating: Integer read FHorizontalOffsetFloating write SetHorizontalOffsetFloating;
   end;
 
   TChromeTabsCloseButtonProperties = class(TChromeTabsControlPosition)
@@ -1041,17 +1033,20 @@ type
   private
     FReverseDirection: Boolean;
     FRenderedAnimationStep: Integer;
-    FDiameter: Integer;
+    FPosition: TChromeTabsControlPosition;
     FSweepAngle: Word;
 
     procedure SetRenderedAnimationStep(const Value: Integer);
     procedure SetReverseDirection(const Value: Boolean);
-    procedure SetDiameter(const Value: Integer);
     procedure SetSweepAngle(const Value: Word);
+    procedure SetPosition(const Value: TChromeTabsControlPosition);
+  public
+    constructor Create(AOwner: TPersistent); override;
+    destructor Destroy; override;
   published
     property ReverseDirection: Boolean read FReverseDirection write SetReverseDirection;
     property RenderedAnimationStep: Integer read FRenderedAnimationStep write SetRenderedAnimationStep;
-    property Diameter: Integer read FDiameter write SetDiameter;
+    property Position: TChromeTabsControlPosition read FPosition write SetPosition;
     property SweepAngle: Word read FSweepAngle write SetSweepAngle;
   end;
 
@@ -2805,7 +2800,7 @@ end;
 
 constructor TChromeTabsControlPosition.Create(AOwner: TPersistent);
 begin
-  FOffsets := TChromeTabsAddButtonOffsets.Create(Self);
+  FOffsets := TChromeTabsOffsets.Create(Self);
 
   inherited;
 end;
@@ -2824,7 +2819,7 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabsControlPosition.SetOffsets(const Value: TChromeTabsAddButtonOffsets);
+procedure TChromeTabsControlPosition.SetOffsets(const Value: TChromeTabsOffsets);
 begin
   FOffsets.Assign(Value);
 end;
@@ -2938,6 +2933,7 @@ begin
   FVisibility := avRightFloating;
 
   Offsets.Vertical := 9;
+  FHorizontalOffsetFloating := 0;
   Height := 14;
   Width := 25;
 end;
@@ -2946,6 +2942,14 @@ destructor TChromeTabsAddButtonProperties.Destroy;
 begin
 
   inherited;
+end;
+
+procedure TChromeTabsAddButtonProperties.SetHorizontalOffsetFloating(
+  const Value: Integer);
+begin
+  FHorizontalOffsetFloating := Value;
+
+  DoChanged;
 end;
 
 procedure TChromeTabsAddButtonProperties.SetShowPlusSign(
@@ -3584,23 +3588,6 @@ begin
   DoChanged;
 end;
 
-{ TChromeTabsAddButtonOffsets }
-
-constructor TChromeTabsAddButtonOffsets.Create(AOwner: TPersistent);
-begin
-  inherited;
-
-  FHorizontalFloating := 0;
-end;
-
-procedure TChromeTabsAddButtonOffsets.SetHorizontalFloating(
-  const Value: Integer);
-begin
-  FHorizontalFloating := Value;
-
-  DoChanged;
-end;
-
 { TChromeTabsMovementAnimationEasing }
 
 constructor TChromeTabsMovementAnimations.Create(AOwner: TPersistent);
@@ -3697,12 +3684,14 @@ begin
 
   FUpload.ReverseDirection := TRUE;
   FUpload.FRenderedAnimationStep := 2;
-  FUpload.Diameter := 16;
+  FUpload.Position.Width := 16;
+  FUpload.Position.Height := 16;
   FUpload.SweepAngle := 135;
 
   FDownload.ReverseDirection := FALSE;
   FDownload.FRenderedAnimationStep := 5;
-  FDownload.Diameter := 16;
+  FDownload.Position.Width := 16;
+  FDownload.Position.Height := 16;
   FDownload.SweepAngle := 135;
 
   FAnimationUpdateMS := 50;
@@ -3745,6 +3734,12 @@ end;
 
 { TChromeTabsSpinnerOptions }
 
+procedure TChromeTabsSpinnerOptions.SetPosition(
+  const Value: TChromeTabsControlPosition);
+begin
+  FPosition.Assign(Value);
+end;
+
 procedure TChromeTabsSpinnerOptions.SetRenderedAnimationStep(
   const Value: Integer);
 begin
@@ -3760,11 +3755,18 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabsSpinnerOptions.SetDiameter(const Value: Integer);
+constructor TChromeTabsSpinnerOptions.Create(AOwner: TPersistent);
 begin
-  FDiameter := Value;
+  inherited;
 
-  DoChanged;
+  FPosition := TChromeTabsControlPosition.Create(Self);
+end;
+
+destructor TChromeTabsSpinnerOptions.Destroy;
+begin
+  FreeAndNil(FPosition);
+
+  inherited;
 end;
 
 procedure TChromeTabsSpinnerOptions.SetSweepAngle(const Value: Word);
