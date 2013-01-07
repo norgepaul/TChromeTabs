@@ -1,0 +1,87 @@
+TChromeTabs 1.3 - 07-01-2013
+
+Update: Implemented tab spinners - both image based and rendered.
+Update: Implemented variable width tabs. Width depends on caption but respects min and max tab widths.
+Update: Implemented TChromeTabsGlassForm - Allows Chrome title bar tabs with one line of code.
+Update: Added ContrainDraggedTabWithinContainer property.
+Breaking Update: Added Handled var to OnButtonAddClicked. If Handled is returned false, a new tab is automatically created.
+Fixed: Some events not hooked in demo.
+Fixed: Add button now working correctly for all scenarios.
+Fixed: OnBeforeDrawItem event caused unusual behaviour when applied to some items.
+Fixed: Tabs Modified flag reset when tab activated ignoring Allow value retruned from event.
+Fixed: Tab dragging broken in BiDi RightToLeftReadingOnly mode.
+Fixed: Constrained tab dragging now drags into the area that the add button occupied.
+Fixed: Control was not painted when dropped on a form until the form was closed, then re-opened.
+Fixed: Floating Right Add button was position far right if only pinned tabs were displayed.
+Fixed: Drag tab image not scaled down or alpha blended if no control image displayed.
+Fixed: Drag tab background wasn't transparent when only dragging tab.
+Fixed: Settings files contained deleted properties.
+Fixed: Default properties are set when the control is first created.
+Refactored: Tidied up some duplicate drag tab code.
+
+
+TChromeTabs 1.2 - 03/01/2013
+
+Breaking Update: Rewrote modified tab glow to use Easing. Several properties removed and several added. 
+Update: BiDi fully implemented.
+Fixed: Tab space left in container after dragging tab to then from a container.
+Fixed: Tab glow performance improvements.
+Fixed: Drag tab width was incorrect when dragging to a container with a different tab width average.
+Fixed: Drag tab incorrectly positioned if a tab was dragged to a new container with smaller average tab size.
+Fixed: Scroll buttons not drawn hot.
+Fixed: Tab overlaps not drawn correctly when dragging tab.
+Fixed: All design time updates should now work correctly.
+Fixed: Modified glow incorrectly positioned for bottom tabs.
+Fixed: Tab delete at design time now correctly updates the control.
+
+
+TChromeTabs 1.1 - 21/12/2012
+
+Update: Improved design time drawing.
+Update: See through tab overlap area now rendered correctly when see through tabs is disabled.
+Update: All animation now working correctly.
+Fixed: Drag image tab position when using bottom tabs.
+Fixed: All edge case "Add Button" issues that I could find are fixed.
+Fixed: Small TTimerThread memory leak.
+
+
+TChromeTabs 1.0 - 20/12/2012
+
+Improvement: Major improvements in animation visuals and update times.
+Improvement: Began overhaul of animation effects.
+Update: Animation overhaul 90% finished and stable.
+Update: Added OnAnimateMovement event.
+Update: Removed redundant Skin property.
+Update: Changed several animation property names to bring them in line with the new Ease functionality.
+Update: Changed default animation properties to make animation smoother.
+Update: Split animation procedure into two; movement and style.
+Update: Added Options.Behabiour.IgnoreDoubleClicksWhileAnimatingMovement.
+Update: Added Animation Ease Type.
+Fixed: Delphi 7 Design Time editor (right click/double click tab control).
+Fixed: Changing tab visibility didn't update the tab positions.
+Fixed: Drag image tab background is now transparent
+Fixed: Add and scroll button initial draw states
+Fixed: Style transistions are now only active (by default) when moving from x to dsHot and vice versa
+Fixed: Left scroll and Add button not drawn at design time.
+Fixed: Form system buttons highlighted when dragging tab (http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390).
+Fixed: Tabs could become misaligned if the close button was pressed before a tab animation was finished.
+
+
+TChromeTabs 0.9 - 17/12/2012
+
+Update: More work on Bidi. Working except for scrolling and some drag outside container issues.
+Update: Added Close tab animation.
+Fixed: All BiDi mode functionality implemented and working.
+Fixed: Tab close active tab selection broken.
+Fixed: Scroll/Add button clip rect.
+Fixed: Bidi Tab dragging.
+Fixed: Scroll into view.
+Fixed: Style transition was animated by default for tab <-> active.
+Fixed: Demo didn't update animation type checkboxes from control.
+Fixed: BitmapToGPImage stream free issue.
+Fixed: Changed border/pen thickness properties from Integer to Single (although it doesn't seem to make any difference to the lines)
+Fixed: Erroneous hit test result if point wasn't in control. Caused tabs to stay hot when mouse left.
+Fixed: GDI+ error under Windows 8
+Fixed: "Cannot focus window" error after opening then closing additional form.
+Fixed: Better handling of add button animation when adding/deleting tabs (still not 100% perfect).
+Fixed: Added TabOrder property.
