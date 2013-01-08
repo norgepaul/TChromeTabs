@@ -326,6 +326,10 @@ begin
     FChromeTabs.Left := FPreviousChromeTabsLeft;
     FChromeTabs.Width := FPreviousChromeTabsWidth;
     FChromeTabs.Align := FPreviousChromeTabsAlign;
+
+    RecalcGlassFrameBounds(TRUE);
+
+    Invalidate;
   end;
 end;
 
@@ -337,7 +341,7 @@ end;
 
 procedure TChromeTabsGlassForm.EnableTitleTabs;
 begin
-  if FChromeTabs <> nil then
+  if UseCustomFrame then
   begin
     FPreviousGlassFrameEnabled := GlassFrame.Enabled;
     FPreviousChromeTabsTop := FChromeTabs.Top;
@@ -400,10 +404,6 @@ begin
 
     if Value <> nil then
       EnableTitleTabs;
-
-    RecalcGlassFrameBounds(TRUE);
-
-    Invalidate;
   end;
 end;
 

@@ -947,7 +947,7 @@ begin
 
   NormalImageVisible := ImageVisible(ChromeTabs.GetImages, ChromeTab.GetImageIndex);
   OverlayImageVisible := ImageVisible(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay);
-  SpinnerVisible := ChromeTab.GetSpinnerState <> tssNone;
+  SpinnerVisible := (ChromeTab.GetSpinnerState <> tssNone) and (not (csDesigning in ChromeTabs.GetComponentState));
 
   ImageWidth := 0;
   ImageHeight := 0;
@@ -1051,7 +1051,7 @@ end;
 
 procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons);
 
-  procedure DrawGDITextWithOffset(const Text: String; TextRect: TRect; OffsetX, OffsetY: Integer; FontColor: TColor);
+  procedure DrawGDITextWithOffset(const Text: String; TextRect: TRect; OffsetX, OffsetY: Integer; FontColor: TColor; Alpha: Byte; TextHint: TextRenderingHint);
   const
     BlendFactorsNormal: array[0..2] of Single = (0.0, 0.0, 0.0);
   var
@@ -1073,8 +1073,8 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName, TextSize);
     try
       TabsTxtBrush := TGPLinearGradientBrush.Create(RectToGPRect(TextRect),
-                                                    MakeGDIPColor(FChromeTabControlPropertyItems.CurrentTabProperties.FontColor, FChromeTabControlPropertyItems.CurrentTabProperties.FontAlpha),
-                                                    MakeGDIPColor(FChromeTabControlPropertyItems.CurrentTabProperties.FontColor, 0),
+                                                    MakeGDIPColor(FontColor, Alpha),
+                                                    MakeGDIPColor(FontColor, 0),
                                                     LinearGradientModeHorizontal);
       try
         GPRect.X := TextRect.Left + OffsetX;
@@ -1084,7 +1084,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
 
         TxtFormat := TGPStringFormat.Create;
         try
-          TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
+          TabCanvas.SetTextRenderingHint(TextHint);
 
           BlendPositions[0] := 0.0;
           BlendPositions[2] := 1.0;
@@ -1205,7 +1205,13 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
 
   procedure DrawGDIText(const Text: String; TextRect: TRect);
   begin
-    DrawGDITextWithOffset(Text, TextRect, 0, 0, FChromeTabControlPropertyItems.CurrentTabProperties.FontColor);
+    DrawGDITextWithOffset(Text,
+                          TextRect,
+                          0,
+                          0,
+                          FChromeTabControlPropertyItems.CurrentTabProperties.FontColor,
+                          FChromeTabControlPropertyItems.CurrentTabProperties.FontAlpha,
+                          FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
   end;
 
   procedure DrawImage(Images: TCustomImageList; ImageIndex: Integer; ImageRect: TRect; ChromeTabItemType: TChromeTabItemType);
@@ -1481,7 +1487,7 @@ begin
       end;
 
       // Draw the normal and overlay images
-      if (ChromeTab.GetSpinnerState = tssNone) or
+      if (not SpinnerVisible) or
          (not ChromeTabs.GetOptions.Display.TabSpinners.HideImagesWhenSpinnerVisible) then
       begin
         if NormalImageVisible then

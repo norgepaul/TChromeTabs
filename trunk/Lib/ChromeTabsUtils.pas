@@ -263,6 +263,7 @@ begin
 	        Result := ChangeInValue / 2 * (Sqrt(1 - CurrentTime * CurrentTime) + 1) + StartValue;
         end;
       end;
+
     else
     begin
       Result := 0;
