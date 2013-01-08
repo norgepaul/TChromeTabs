@@ -103,7 +103,7 @@ type
   TOnStateChange = procedure(Sender: TObject; PreviousState: TChromeTabStates; CurrentState: TChromeTabStates) of object;
   TOnBeforeDrawItem = procedure(Sender: TObject; TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean) of object;
   TOnAfterDrawItem = procedure(Sender: TObject; const TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer) of object;
-  TOnGetControlPolygons = procedure(Sender: TObject; ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons) of object;
+  TOnGetControlPolygons = procedure(Sender: TObject; ChromeTabsControl: TObject; ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons) of object;
   TOnShowHint = procedure(Sender: TObject; HitTestResult: THitTestResult; var HintText: String; var HintTimeout: Integer) of object;
   TOnTabDblClick = procedure(Sender: TObject; ATab: TChromeTab) of object;
   TOnTabDragStart = procedure(Sender: TObject; ATab: TChromeTab; var Allow: Boolean) of object;
@@ -345,7 +345,7 @@ type
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
     procedure DoOnAfterDrawItem(const TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer); virtual;
-    procedure DoOnGetControlPolygons(ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons); virtual;
+    procedure DoOnGetControlPolygons(ChromeTabsControl: TObject; ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons); virtual;
     procedure DoOnDebugLog(const Text: String; Args: Array of const); virtual;
     procedure DoOnActiveTabChanging(AOldTab, ANewTab: TChromeTab; var Allow: Boolean);
     procedure DoOnChange(ATab: TChromeTab; TabChangeType: TTabChangeType);
@@ -2254,11 +2254,11 @@ begin
     FOnDebugLog(Self, format(Text, Args));
 end;
 
-procedure TCustomChromeTabs.DoOnGetControlPolygons(ItemRect: TRect;
+procedure TCustomChromeTabs.DoOnGetControlPolygons(ChromeTabsControl: TObject; ItemRect: TRect;
   ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
 begin
   if Assigned(FOnGetControlPolygons) then
-    FOnGetControlPolygons(Self, ItemRect, ItemType, Orientation, Polygons);
+    FOnGetControlPolygons(Self, ChromeTabsControl, ItemRect, ItemType, Orientation, Polygons);
 end;
 
 procedure TCustomChromeTabs.DoOnNeedDragImageControl(ATab: TChromeTab;

@@ -56,19 +56,17 @@ type
     procedure DoChanged; virtual;
 
     procedure EndAnimation; virtual;
-    function NewPolygon(ControlRect: TRect; const Polygon: array of TPoint; Orientation: TTabOrientation): TPolygon; virtual;
     procedure Invalidate; virtual;
     function ScrollRect(ARect: TRect): TRect;
     function BidiRect(ARect: TRect): TRect;
-    function BidiPolygon(Polygon: TPolygon): TPolygon;
-
     property ChromeTabs: IChromeTabs read FChromeTabs;
   public
     constructor Create(ChromeTabs: IChromeTabs); virtual;
 
     procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); virtual; abstract;
 
-    function GetPolygons: IChromeTabPolygons; virtual;
+    function InternalGetPolygons(ControlType: TChromeTabItemType; DefaultBrush: TGPBrush; DefaultPen: TGPPen): IChromeTabPolygons; virtual;
+    function GetPolygons: IChromeTabPolygons; virtual; abstract;
     function AnimateMovement: Boolean; virtual;
     function AnimateStyle: Boolean; virtual;
     function ControlRectScrolled: TRect; virtual;
@@ -76,6 +74,8 @@ type
 
     property ControlRect: TRect read FControlRect;
     property BiDiControlRect: TRect read GetBidiControlRect;
+    function NewPolygon(ControlRect: TRect; const Polygon: array of TPoint; Orientation: TTabOrientation): TPolygon; virtual;
+    function BidiPolygon(Polygon: TPolygon): TPolygon;
 
     property StartRect: TRect read FStartRect;
     property EndRect: TRect read FEndRect;
@@ -356,11 +356,25 @@ begin
     Result := ChromeTabs.BidiRect(FControlRect);
 end;
 
-function TBaseChromeTabsControl.GetPolygons: IChromeTabPolygons;
+function TBaseChromeTabsControl.InternalGetPolygons(ControlType: TChromeTabItemType; DefaultBrush: TGPBrush; DefaultPen: TGPPen): IChromeTabPolygons;
+var
+  i: Integer;
 begin
   Result := nil;
 
-  ChromeTabs.DoOnGetControlPolygons(ControlRect, FControlType, ChromeTabs.GetOptions.Display.Tabs.Orientation, Result);
+  ChromeTabs.DoOnGetControlPolygons(Self, ControlRect, ControlType, ChromeTabs.GetOptions.Display.Tabs.Orientation, Result);
+
+  if Result <> nil then
+  begin
+    for i := 0 to pred(Result.PolygonCount) do
+    begin
+      if Result.Polygons[i].Brush = nil then
+        Result.Polygons[i].Brush := DefaultBrush;
+
+      if Result.Polygons[i].Pen = nil then
+        Result.Polygons[i].Pen := DefaultPen;
+    end;
+  end;
 end;
 
 procedure TBaseChromeTabsControl.Invalidate;
@@ -461,15 +475,12 @@ end;
 function TAddButtonControl.GetPolygons: IChromeTabPolygons;
 var
   LeftOffset, TopOffset: Integer;
-  Brush: TGPBrush;
 begin
-  Result := inherited GetPolygons;
+  Result := InternalGetPolygons(itAddButton, GetButtonBrush, GetButtonPen);
 
   if Result = nil then
   begin
     Result := TChromeTabPolygons.Create;
-
-    Brush := GetButtonBrush;
 
     Result.AddPolygon(BidiPolygon(
                       NewPolygon(BidiControlRect, [Point(7, RectHeight(BidiControlRect)),
@@ -481,12 +492,11 @@ begin
                                  Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - 2),
                                  Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect))],
                       ChromeTabs.GetOptions.Display.Tabs.Orientation)),
-                      Brush,
+                      GetButtonBrush,
                       GetButtonPen);
 
     if ChromeTabs.GetOptions.Display.AddButton.ShowPlusSign then
     begin
-
       LeftOffset := (ChromeTabs.GetOptions.Display.AddButton.Width div 2) - 4;
       TopOffset := (ChromeTabs.GetOptions.Display.AddButton.Height div 2) - 4;
 
@@ -778,7 +788,7 @@ end;
 
 function TChromeTabControl.GetPolygons: IChromeTabPolygons;
 begin
-  Result := inherited GetPolygons;
+  Result := InternalGetPolygons(itTab, GetTabBrush, GetTabPen);
 
   if Result = nil then
   begin
@@ -1570,42 +1580,50 @@ end;
 function TScrollButtonControl.GetArrowPolygons(
   Direction: TChromeTabDirection): IChromeTabPolygons;
 begin
-  Result := TChromeTabPolygons.Create;
-
-  Result.AddPolygon(BidiPolygon(
-                    NewPolygon(BidiControlRect, [Point(0, RectHeight(ControlRect)),
-                                             Point(0, 0),
-                                             Point(RectWidth(ControlRect), 0),
-                                             Point(RectWidth(ControlRect), RectHeight(ControlRect))],
-                               ChromeTabs.GetOptions.Display.Tabs.Orientation)),
-                               GetButtonBrush,
-                               GetButtonPen);
-
-
   case Direction of
-    drLeft:
-      begin
-        Result.AddPolygon(BidiPolygon(
-                          NewPolygon(BidiControlRect, [Point(3, RectHeight(ControlRect) div 2),
-                                                   Point(RectWidth(ControlRect) - 3, 2),
-                                                   Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) - 2),
-                                                   Point(3, RectHeight(ControlRect) div 2)],
-                                     ChromeTabs.GetOptions.Display.Tabs.Orientation)),
-                                     GetSymbolBrush,
-                                     GetSymbolPen);
-      end;
+    drLeft:  Result := InternalGetPolygons(itScrollLeftButton, GetButtonBrush, GetButtonPen);
+    drRight: Result := InternalGetPolygons(itScrollRightButton, GetButtonBrush, GetButtonPen);
+  end;
 
-    drRight:
-      begin
-        Result.AddPolygon(BidiPolygon(
-                          NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2),
-                                                   Point(3, 2),
-                                                   Point(3, RectHeight(ControlRect) - 2),
-                                                   Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2)],
-                                     ChromeTabs.GetOptions.Display.Tabs.Orientation)),
-                                     GetSymbolBrush,
-                                     GetSymbolPen);
-      end;
+  if Result = nil then
+  begin
+    Result := TChromeTabPolygons.Create;
+
+    Result.AddPolygon(BidiPolygon(
+                      NewPolygon(BidiControlRect, [Point(0, RectHeight(ControlRect)),
+                                               Point(0, 0),
+                                               Point(RectWidth(ControlRect), 0),
+                                               Point(RectWidth(ControlRect), RectHeight(ControlRect))],
+                                 ChromeTabs.GetOptions.Display.Tabs.Orientation)),
+                                 GetButtonBrush,
+                                 GetButtonPen);
+
+
+    case Direction of
+      drLeft:
+        begin
+          Result.AddPolygon(BidiPolygon(
+                            NewPolygon(BidiControlRect, [Point(3, RectHeight(ControlRect) div 2),
+                                                     Point(RectWidth(ControlRect) - 3, 2),
+                                                     Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) - 2),
+                                                     Point(3, RectHeight(ControlRect) div 2)],
+                                       ChromeTabs.GetOptions.Display.Tabs.Orientation)),
+                                       GetSymbolBrush,
+                                       GetSymbolPen);
+        end;
+
+      drRight:
+        begin
+          Result.AddPolygon(BidiPolygon(
+                            NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2),
+                                                     Point(3, 2),
+                                                     Point(3, RectHeight(ControlRect) - 2),
+                                                     Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2)],
+                                       ChromeTabs.GetOptions.Display.Tabs.Orientation)),
+                                       GetSymbolBrush,
+                                       GetSymbolPen);
+        end;
+    end;
   end;
 end;
 
@@ -1662,10 +1680,7 @@ end;
 
 function TScrollButtonLeftControl.GetPolygons: IChromeTabPolygons;
 begin
-  Result := inherited GetPolygons;
-
-  if Result = nil then
-    Result := GetArrowPolygons(drLeft);
+  Result := GetArrowPolygons(drLeft);
 end;
 
 
@@ -1693,10 +1708,7 @@ end;
 
 function TScrollButtonRightControl.GetPolygons: IChromeTabPolygons;
 begin
-  Result := inherited GetPolygons;
-
-  if Result = nil then
-    Result := GetArrowPolygons(drRight);
+  Result := GetArrowPolygons(drRight);
 end;
 
 
