@@ -1143,7 +1143,7 @@ type
 
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean);
     procedure DoOnAfterDrawItem(const TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer);
-    procedure DoOnGetControlPolygons(ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
+    procedure DoOnGetControlPolygons(ChromeTabsControl: TObject; ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
     procedure DoOnDebugLog(const Text: String; Args: Array of const);
     procedure DoOnActiveTabChanging(AOldTab, ANewTab: TChromeTab; var Allow: Boolean);
     procedure DoOnChange(ATab: TChromeTab; TabChangeType: TTabChangeType);

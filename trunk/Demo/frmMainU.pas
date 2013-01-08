@@ -419,9 +419,6 @@ type
     procedure sbScrollOffsetChange(Sender: TObject);
     procedure ChromeTabs1TabClientRectChanged(Sender: TObject);
     procedure ChromeTabs1ScrollWidthChanged(Sender: TObject);
-    procedure ChromeTabs1GetControlPolygons(Sender: TObject; ItemRect: TRect;
-      ItemType: TChromeTabItemType; Orientation: TTabOrientation;
-      var Polygons: IChromeTabPolygons);
     procedure btnOpenFormClick(Sender: TObject);
     procedure ChromeTabs1AfterDrawItem(Sender: TObject;
       const TargetCanvas: TGPGraphics; ItemRect: TRect;
@@ -450,6 +447,9 @@ type
     procedure ChromeTabs1ButtonAddClick(Sender: TObject; var Handled: Boolean);
     procedure ChromeTabs1SetTabWidth(Sender: TObject;
       ATabControl: TChromeTabControl; var TabWidth: Integer);
+    procedure ChromeTabs1GetControlPolygons(Sender, ChromeTabsControl: TObject;
+      ItemRect: TRect; ItemType: TChromeTabItemType;
+      Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -1718,33 +1718,30 @@ begin
   FLogOtherEvents.Log('OnExit', []);
 end;
 
-procedure TfrmMain.ChromeTabs1GetControlPolygons(Sender: TObject;
-  ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation;
-  var Polygons: IChromeTabPolygons);
+procedure TfrmMain.ChromeTabs1GetControlPolygons(Sender,
+  ChromeTabsControl: TObject; ItemRect: TRect; ItemType: TChromeTabItemType;
+  Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
+//var
+//  ChromeTabControl: TBaseChromeTabsControl;
 begin
-(*  if cbTabShapes.ItemIndex > 0 then
+  // Remove the comments for square tabs
+  (*
+  if (ItemType = itTab) and (ChromeTabsControl is TBaseChromeTabsControl) then
   begin
-    case ItemType of
-      itTab:
-        begin
-          case cbTabShapes.ItemIndex of
-            1: ItemPolygons := GeneratePolygon(ItemRect, [Point(0, RectHeight(ItemRect)),
-                                                         Point(0, 0),
-                                                         Point(RectWidth(ItemRect), 0),
-                                                         Point(RectWidth(ItemRect), RectHeight(ItemRect))],
-                                              Orientation);
-            2: ItemPolygons := GeneratePolygon(ItemRect, [Point(0, RectHeight(ItemRect)),
-                                                         Point(5, RectHeight(ItemRect) div 2),
-                                                         Point(3, 0),
-                                                         Point(RectWidth(ItemRect) div 2, 0),
-                                                         Point(RectWidth(ItemRect) - 3, 0),
-                                                         Point(RectWidth(ItemRect) - 5, RectHeight(ItemRect) div 2),
-                                                         Point(RectWidth(ItemRect), RectHeight(ItemRect))],
-                                              Orientation);
-          end
-        end
-    end;
-  end;*)
+    ChromeTabControl := ChromeTabsControl as TBaseChromeTabsControl;
+
+    Polygons := TChromeTabPolygons.Create;
+
+    Polygons.AddPolygon(ChromeTabControl.NewPolygon(ChromeTabControl.BidiControlRect,
+                                                     [Point(0, RectHeight(ItemRect)),
+                                                      Point(0, 0),
+                                                      Point(RectWidth(ItemRect), 0),
+                                                      Point(RectWidth(ItemRect), RectHeight(ItemRect))],
+                                 Orientation),
+                                 nil,
+                                 nil);
+  end;
+  *)
 end;
 
 procedure TfrmMain.ChromeTabs1MouseDown(Sender: TObject; Button: TMouseButton;
