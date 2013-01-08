@@ -1,5 +1,11 @@
 TChromeTabs 2.0 BETA
 
+08-01-2013
+Fixed: Some properties not tranfered to the new tab when dropped on a different container.
+Fixed: Add button wasn't hidden correctly when dragging pinnded tabs if there were no unpinned tabs.
+Fixed: TChromeTabsGlassForm failed badly if Aero was not enabled. It no falls back and is drawn in it's last know position.
+Fixed: Stopped spinners being drawn at design time.
+
 07-01-2013
 Fixed: Some Download spinner properties used the values from the upload spinner.
 Fixed: Removed Spinner diameter property and added height, width and offsets. 

@@ -517,7 +517,7 @@ resourcestring
   StrTabBaseline = 'Tab Baseline';
   StrDefaultTabFont = 'Default Tab Font';
   StrPleaseSelectACh = ' [Please select a child property]';
-  StrTabIndex = ' - Tab Index: ';
+  StrTabIndex = '   Tab Index: ';
   StrMouseX = 'Mouse X';
   StrMouseY = 'Mouse Y';
   StrHitTestArea = 'Hit Test Area';

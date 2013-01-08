@@ -1,6 +1,11 @@
 unit ChromeTabs;
 
-// Version 0.9
+// Version 1.3
+//
+// TChromeTabs - A Chome Tab component for Delphi 7-XE3 that includes ALL the
+//               features seen in the Google Chrome tabs along with much, much more.
+//
+//----------------------------------------------------------------------------------------------------------------------
 //
 // The contents of this file are subject to the Mozilla Public License
 // Version 1.1 (the "License"); you may not use this file except in compliance
@@ -35,28 +40,30 @@ unit ChromeTabs;
 //
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Features:
+// Features include:
+//
 // - Fully configurable Look and Feel including gradients, transparencies and custom tab shapes
-// - Works on Vista glass
+// - Full support for BiDi (Right to Left), including container, tabs and text
+// - Works on Vista glass - Allows tabs to be displayed in the Windows title bar, just like in Chrome.
 // - Tab movement animation
 // - Tab transitional style effects (fade between colours and alpha levels)
 // - Drag and Drop within container and between containers
 // - Drag image displays tab and any TWinControl
 // - Smart tab resizing when user clicks close button
 // - Fluid tab resizing with minimum and maximum tab sizes
+// - Variable tab sizes depending on text.
 // - Add tab button can be positioned on the left, right or floating right
-// - Full featured scrolling including auto scroll when dragging
+// - Fully featured scrolling including auto scroll when dragging
 // - Smart tab content display hides/shows items depending on the tab width
 // - Owner draw any item
-// - Right to Left text
 // - Pinned tabs
 // - Modified tabs with animated glow
 // - Tab images and overlay images
 // - Mouse over glow
-// - Lots of events
 // - Load/save look and feel and options to stream/file
 // - Generate look and feel/options Delphi code
-// - Full support for BiDi (Right to Left), including container, tabs and text
+// - Tab Spinner support - both rendered and bitmap animation.
+// - Lots of events
 
 // - Demo includes look and feel editor and GUI access to all tab properties and features
 
@@ -64,8 +71,6 @@ interface
 
 { TODO -cImprovement : Selective invalidation of tabs }
 { TODO -cImprovement : Better handling of GDI text alpha on Vista Glass - How? }
-
-{ TODO -cFeature : Tab busy spinners }
 
 { TODO -cBug : Tab Alpha increases slightly when drag begins }
 { TODO -cBug : Drag docking not accurate. Some problem with the control detection }
@@ -645,11 +650,11 @@ end;
 
 function TCustomChromeTabs.GetTabDisplayState: TTabDisplayState;
 begin
+  if ScrollingActive then
+    Result := tdScrolling else
   if (GetVisibleTabCount = 0) or
      ((TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right < TabContainerRect.Right)) then 
-    Result := tdNormal else
-  if ScrollingActive then
-    Result := tdScrolling
+    Result := tdNormal
   else
     Result := tdCompressed;
 end;
@@ -693,6 +698,10 @@ begin
       Result.ImageIndex := FActiveDragTabObject.DragTab.ImageIndex;
       Result.ImageIndexOverlay := FActiveDragTabObject.DragTab.ImageIndexOverlay;
       Result.Pinned := FActiveDragTabObject.DragTab.Pinned;
+      Result.SpinnerState := FActiveDragTabObject.DragTab.SpinnerState;
+      Result.Tag := FActiveDragTabObject.DragTab.Tag;
+      Result.Visible := FActiveDragTabObject.DragTab.Visible;
+      Result.Modified := FActiveDragTabObject.DragTab.Modified;
 
       Tabs.Move(Result.Index, FActiveDragTabObject.DropTabIndex);
 
@@ -903,7 +912,7 @@ function TCustomChromeTabs.GetMaxScrollOffset: Integer;
 begin
   Result := FScrollWidth - RectWidth(TabContainerRect);
 
-  if Tabs.Count > 1 then
+  if (Tabs.Count > 1) and (FScrollWidth > 0) then
     Result := Result + FOptions.Display.Tabs.TabOverlap;
 
   if Result < 0 then
@@ -2660,6 +2669,9 @@ begin
                               FOptions.Display.Tabs.OffsetTop,
                               FClosedTabRect.Right - ScrollDelta,
                               ClientHeight - FOptions.Display.Tabs.OffsetBottom);
+
+    if ScrollDelta > 0 then
+      RemoveState(stsEndTabDeleted);
   end
   else
   begin
@@ -3030,6 +3042,9 @@ procedure TCustomChromeTabs.CalculateTabRects;
       if (PinnedTabs) and (ActiveDragTabObject.DragTab.Pinned) then
       begin
         TabLeft := TabLeft + RectWidth(DragTabControl.ControlRect) - FOptions.Display.Tabs.TabOverlap;
+
+        if Tabs.Count = GetPinnedTabCount  then
+          FActiveDragTabObject.HideAddButton := FOptions.Display.AddButton.Visibility = avRightFloating;
       end
       else
         // If we're not dragging a pinned tab we need to hide the New Button
@@ -3261,14 +3276,14 @@ begin
   FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
   FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
 
+  FCreated := TRUE;
+
+  SetControlDrawStates(TRUE);
+
   // Make sure we reset all the control positions
   AddState(stsControlPositionsInvalidated);
   AddState(stsFirstPaint);
 
-  FCreated := TRUE;
-
-  SetControlDrawStates(TRUE);
-  
   // Force a redraw
   Redraw;
 end;
@@ -3424,15 +3439,18 @@ begin
        (FOptions.Scrolling.Enabled) and
        (FOptions.Scrolling.DragScroll) then
     begin
-      if (X <= BidiRect(FTabContainerRect).Right) and
+      DoOnDebugLog('Drag - X: %d, Bidi Left: %d, Offset: %d', [X, BidiRect(FTabContainerRect).Left, FOptions.Scrolling.DragScrollOffset]);
+
+      if //(X <= BidiRect(FTabContainerRect).Right) and
          (X >= BidiRect(FTabContainerRect).Right - FOptions.Scrolling.DragScrollOffset) then
       begin
         ScrollTabs(mdsRight);
       end else
 
-      if (X >= BidiRect(FTabContainerRect).Left) and
+      if //(X >= BidiRect(FTabContainerRect).Left) and
          (X <= BidiRect(FTabContainerRect).Left + FOptions.Scrolling.DragScrollOffset) then
       begin
+        DoOnDebugLog('Scroll!!!!!', []);
         ScrollTabs(mdsLeft);
       end
       else
