@@ -2868,6 +2868,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
     CursorPos: TPoint;
     ExtraTabWidth: Integer;
     DragTabWidth, DragCursorXOffset, DragTabX, MaxRight: Integer;
+    TabRight: Integer;
   begin
     // Set the start and end tab indices
     if PinnedTabs then
@@ -3014,10 +3015,15 @@ procedure TCustomChromeTabs.CalculateTabRects;
           if (FOptions.Display.Tabs.TabWidthFromContent) and (not PinnedTabs) then
             TabWidth := GetTabWidthByContent(TabControl);
 
+          TabRight := TabLeft + TabWidth + ExtraTabWidth + FOptions.Display.Tabs.TabOverlap;
+
+//          if TabRight > FTabContainerRect.Right - FOptions.Display.Tabs.TabOverlap then
+//            TabRight := FTabContainerRect.Right - FOptions.Display.Tabs.TabOverlap;
+
           SetControlPosition(TabControl,
                              Rect(TabLeft - ExtraTabWidth,
                                   FOptions.Display.Tabs.OffsetTop,
-                                  TabLeft + TabWidth + FOptions.Display.Tabs.TabOverlap + ExtraTabWidth,
+                                  TabRight,
                                   ClientHeight - FOptions.Display.Tabs.OffsetBottom),
                              TRUE);
 
@@ -3101,6 +3107,7 @@ begin
       end;
 
       if ((GetTabDisplayState <> tdNormal) and (not HasState(stsEndTabDeleted))) or
+         (GetTabDisplayState in [tdCompressed, tdScrolling]) or
          (AddButtonLeft > FMaxAddButtonRight) then
         AddButtonLeft := FMaxAddButtonRight;
 
