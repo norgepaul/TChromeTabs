@@ -1,6 +1,10 @@
 TChromeTabs 2.0 BETA
 
+09-01-2013
+Fixed: Issues when enabling/diabling title bar tabs.
+
 08-01-2013
+Breaking Fix: Modified the OnGetControlPolygons event.
 Fixed: Some properties not tranfered to the new tab when dropped on a different container.
 Fixed: Add button wasn't hidden correctly when dragging pinnded tabs if there were no unpinned tabs.
 Fixed: TChromeTabsGlassForm failed badly if Aero was not enabled. It no falls back and is drawn in it's last know position.

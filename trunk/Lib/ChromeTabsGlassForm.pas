@@ -53,6 +53,8 @@ type
     FPreviousChromeTabsLeft: Integer;
     FPreviousChromeTabsWidth: Integer;
     FPreviousChromeTabsAlign: TAlign;
+    FPreviousChromeTabsHeight: Integer;
+    FPreviousChromeTabsTopOffset: Integer;
 
     procedure RecalcGlassFrameBounds(UpdateFrame: Boolean = TRUE);
     procedure SetChromeTabs(const Value: TChromeTabs);
@@ -180,7 +182,7 @@ procedure TChromeTabsGlassForm.PaintWindow(DC: HDC);
 var
   R: TRect;
 begin
-  if UseCustomFrame then
+  //if UseCustomFrame then
   begin
     R := GetClientRect;
 
@@ -322,14 +324,12 @@ begin
   if FChromeTabs <> nil then
   begin
     GlassFrame.Enabled := FPreviousGlassFrameEnabled;
+    FChromeTabs.Options.Display.Tabs.OffsetTop := FPreviousChromeTabsTopOffset;
+    FChromeTabs.Height := FPreviousChromeTabsHeight;
     FChromeTabs.Top := FPreviousChromeTabsTop;
     FChromeTabs.Left := FPreviousChromeTabsLeft;
     FChromeTabs.Width := FPreviousChromeTabsWidth;
     FChromeTabs.Align := FPreviousChromeTabsAlign;
-
-    RecalcGlassFrameBounds(TRUE);
-
-    Invalidate;
   end;
 end;
 
@@ -348,6 +348,11 @@ begin
     FPreviousChromeTabsLeft := FChromeTabs.Left;
     FPreviousChromeTabsWidth := FChromeTabs.Width;
     FPreviousChromeTabsAlign := FChromeTabs.Align;
+    FPreviousChromeTabsTopOffset := FChromeTabs.Options.Display.Tabs.OffsetTop;
+    FPreviousChromeTabsHeight := FChromeTabs.Height;
+
+    FChromeTabs.Height := FChromeTabs.Height - FChromeTabs.Options.Display.Tabs.OffsetTop;
+    FChromeTabs.Options.Display.Tabs.OffsetTop := 0;
 
     FChromeTabs.Align := alNone;
     GlassFrame.Enabled := FAeroEnabled;
@@ -403,7 +408,15 @@ begin
     FChromeTabs := Value;
 
     if Value <> nil then
-      EnableTitleTabs;
+      EnableTitleTabs
+    else
+    begin
+      UpdateChromeTabPosition;
+
+      RecalcGlassFrameBounds(TRUE);
+
+      Invalidate;
+    end;
   end;
 end;
 
@@ -477,8 +490,8 @@ begin
   inherited Create(AOwner);
 
   // Set the defaults
-  FChromeTabsWindowedTopOffset := 12;
-  FChromeTabsMaxmizedTopOffset := 4;
+  FChromeTabsWindowedTopOffset := 16;
+  FChromeTabsMaxmizedTopOffset := 8;
   FChromeTabsWindowedRightOffset := 20;
   FChromeTabsMaximizedRightOffset := 35;
 
