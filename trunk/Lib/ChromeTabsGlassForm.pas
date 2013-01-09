@@ -55,6 +55,7 @@ type
     FPreviousChromeTabsAlign: TAlign;
     FPreviousChromeTabsHeight: Integer;
     FPreviousChromeTabsTopOffset: Integer;
+    FTabsInTitleBar: Boolean;
 
     procedure RecalcGlassFrameBounds(UpdateFrame: Boolean = TRUE);
     procedure SetChromeTabs(const Value: TChromeTabs);
@@ -321,7 +322,7 @@ end;
 
 procedure TChromeTabsGlassForm.DisableTitleTabs;
 begin
-  if FChromeTabs <> nil then
+  if (FChromeTabs <> nil) and (FTabsInTitleBar) then
   begin
     GlassFrame.Enabled := FPreviousGlassFrameEnabled;
     FChromeTabs.Options.Display.Tabs.OffsetTop := FPreviousChromeTabsTopOffset;
@@ -330,6 +331,8 @@ begin
     FChromeTabs.Left := FPreviousChromeTabsLeft;
     FChromeTabs.Width := FPreviousChromeTabsWidth;
     FChromeTabs.Align := FPreviousChromeTabsAlign;
+
+    FTabsInTitleBar := FALSE;
   end;
 end;
 
@@ -343,6 +346,7 @@ procedure TChromeTabsGlassForm.EnableTitleTabs;
 begin
   if UseCustomFrame then
   begin
+    FTabsInTitleBar := TRUE;
     FPreviousGlassFrameEnabled := GlassFrame.Enabled;
     FPreviousChromeTabsTop := FChromeTabs.Top;
     FPreviousChromeTabsLeft := FChromeTabs.Left;
