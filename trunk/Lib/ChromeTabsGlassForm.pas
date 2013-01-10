@@ -74,6 +74,7 @@ type
     procedure PaintWindow(DC: HDC); override;
     procedure Resize; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure ThemeChanged; virtual;
 
     // Messages
     procedure WMNCCalcSize(var Message: TWMNCCalcSize); message WM_NCCALCSIZE;
@@ -81,7 +82,7 @@ type
     procedure WMNCRButtonUp(var Message: TWMNCRButtonUp); message WM_NCRBUTTONUP;
     procedure WMWindowPosChanging(var Message: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMWindowPosChanged(var Message: TWMWindowPosChanged); message WM_WINDOWPOSCHANGED;
-    procedure WMThemeChanged(var Msg: TMessage); message WM_THEMECHANGED;
+    procedure WMDWMCompositionChanged(var Msg: TMessage); message WM_DWMCOMPOSITIONCHANGED;
 
     procedure WndProc(var Message: TMessage); override;
 
@@ -96,6 +97,7 @@ type
     property ChromeTabsWindowedRightOffset: Integer read FChromeTabsWindowedRightOffset write SetChromeTabsWindowedRightOffset;
 
     property OnAeroStatusChanged: TOnAeroStatusChanged read FOnAeroStatusChanged write FOnAeroStatusChanged;
+    property AeroEnabled: Boolean read FAeroEnabled;
   end;
 
 implementation
@@ -302,7 +304,7 @@ begin
   end;
 end;
 
-procedure TChromeTabsGlassForm.WMThemeChanged(var Msg: TMessage);
+procedure TChromeTabsGlassForm.WMDWMCompositionChanged(var Msg: TMessage);
 var
   AeroWasEnabled: Boolean;
 begin
@@ -318,6 +320,8 @@ begin
 
   if AeroWasEnabled <> FAeroEnabled then
     DoOnAeroStatusChanged(FAeroEnabled);
+
+  ThemeChanged;
 end;
 
 procedure TChromeTabsGlassForm.DisableTitleTabs;
@@ -454,6 +458,11 @@ begin
   FChromeTabsWindowedTopOffset := Value;
 
   Invalidate;
+end;
+
+procedure TChromeTabsGlassForm.ThemeChanged;
+begin
+  // override if you need to do anything when the theme is changed
 end;
 
 procedure TChromeTabsGlassForm.UpdateChromeTabPosition;

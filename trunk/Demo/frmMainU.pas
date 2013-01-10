@@ -369,6 +369,8 @@ type
     Label93: TLabel;
     edtSpinnerUploadOffsetY: TSpinEdit;
     Label94: TLabel;
+    Button2: TButton;
+    chkCustomTabShapes: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -450,6 +452,7 @@ type
     procedure ChromeTabs1GetControlPolygons(Sender, ChromeTabsControl: TObject;
       ItemRect: TRect; ItemType: TChromeTabItemType;
       Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
+    procedure Button2Click(Sender: TObject);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -713,6 +716,12 @@ procedure TfrmMain.Button1Click(Sender: TObject);
 begin
   if FCurrentTabs.ActiveTab <> nil then
     FCurrentTabs.ScrollIntoView(FCurrentTabs.ActiveTab);
+end;
+
+procedure TfrmMain.Button2Click(Sender: TObject);
+begin
+  if FCurrentTabs.ActiveTab <> nil then
+    FCurrentTabs.Tabs.DeleteTab(FCurrentTabs.ActiveTab.Index, TRUE);
 end;
 
 procedure TfrmMain.btnHideTabClick(Sender: TObject);
@@ -1721,27 +1730,36 @@ end;
 procedure TfrmMain.ChromeTabs1GetControlPolygons(Sender,
   ChromeTabsControl: TObject; ItemRect: TRect; ItemType: TChromeTabItemType;
   Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
-//var
-//  ChromeTabControl: TBaseChromeTabsControl;
+var
+  ChromeTabControl: TBaseChromeTabsControl;
+  TabTop: Integer;
 begin
-  // Remove the comments for square tabs
-  (*
-  if (ItemType = itTab) and (ChromeTabsControl is TBaseChromeTabsControl) then
+  // A very basic demo of how to alter the shape of the tabs
+  if (chkCustomTabShapes <> nil) and (chkCustomTabShapes.Checked) then
   begin
-    ChromeTabControl := ChromeTabsControl as TBaseChromeTabsControl;
+    if (ItemType = itTab) and
+       (ChromeTabsControl is TBaseChromeTabsControl) then
+    begin
+      ChromeTabControl := ChromeTabsControl as TBaseChromeTabsControl;
 
-    Polygons := TChromeTabPolygons.Create;
+      Polygons := TChromeTabPolygons.Create;
 
-    Polygons.AddPolygon(ChromeTabControl.NewPolygon(ChromeTabControl.BidiControlRect,
-                                                     [Point(0, RectHeight(ItemRect)),
-                                                      Point(0, 0),
-                                                      Point(RectWidth(ItemRect), 0),
-                                                      Point(RectWidth(ItemRect), RectHeight(ItemRect))],
-                                 Orientation),
-                                 nil,
-                                 nil);
+      TabTop := 0;
+
+      if (ChromeTabControl is TChromeTabControl) and
+         (not TChromeTabControl(ChromeTabControl).ChromeTab.GetActive) then
+        Inc(TabTop, 3);
+
+      Polygons.AddPolygon(ChromeTabControl.NewPolygon(ChromeTabControl.BidiControlRect,
+                                                      [Point(0, RectHeight(ItemRect)),
+                                                       Point(0, TabTop),
+                                                       Point(RectWidth(ItemRect), TabTop),
+                                                       Point(RectWidth(ItemRect), RectHeight(ItemRect))],
+                                   Orientation),
+                                   nil,
+                                   nil);
+    end;
   end;
-  *)
 end;
 
 procedure TfrmMain.ChromeTabs1MouseDown(Sender: TObject; Button: TMouseButton;
