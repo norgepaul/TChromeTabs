@@ -804,7 +804,7 @@ begin
                                        Point(RectWidth(ControlRect) - 14, 1),
                                        Point(RectWidth(ControlRect) - 13, 2),
                                        Point(RectWidth(ControlRect) - 12, 3),
-                                       Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) - 2),
+                                       Point(RectWidth(ControlRect) - 4, RectHeight(ControlRect) - 3),
                                        Point(RectWidth(ControlRect), RectHeight(ControlRect))],
                                  ChromeTabs.GetOptions.Display.Tabs.Orientation),
                       GetTabBrush,
