@@ -1185,7 +1185,7 @@ object frmMain: TfrmMain
               object chkCustomTabShapes: TCheckBox
                 Left = 9
                 Top = 162
-                Width = 182
+                Width = 270
                 Height = 17
                 Caption = 'Custom tab shapes (OnGetControlPolygons)'
                 TabOrder = 14
