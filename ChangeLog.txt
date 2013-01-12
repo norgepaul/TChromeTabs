@@ -1,5 +1,8 @@
 TChromeTabs 2.0 BETA
 
+12-01-2013
+Update: Added OnTabCreate and OnTabDestroy events.
+
 10-01-2013
 Update: Added custom tab shapes to the demo (OnGetControlPolygons event).
 Fixed: TChromeTabsGlassForm now correctly handles a Windows 7/Vista theme change and acts accordingly.

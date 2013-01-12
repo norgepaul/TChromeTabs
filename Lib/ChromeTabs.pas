@@ -114,6 +114,8 @@ type
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
   TOnSetTabWidth = procedure(Sender: TObject; ATabControl: TChromeTabControl; var TabWidth: Integer) of object;
+  TOnTabCreate = procedure(Sender: TObject; ATab: TChromeTab) of object;
+  TOnTabDestroy = procedure(Sender: TObject; ATab: TChromeTab) of object;
 
   // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -136,6 +138,8 @@ type
     function GetPreviousTabPolygons(Index: Integer): IChromeTabPolygons;
     function GetComponentState: TComponentState;
     function IsDragging: Boolean;
+    procedure TabCreate(ATab: TObject);
+    procedure TabDestroy(ATab: TObject);
 
     // ITabDockControl
     function GetControl: TWinControl;
@@ -172,6 +176,8 @@ type
     FOnAnimateStyle: TOnAnimateStyle;
     FOnAnimateMovement: TOnAnimateMovement;
     FOnSetTabWidth: TOnSetTabWidth;
+    FOnTabCreate: TOnTabCreate;
+    FOnTabDestroy: TOnTabDestroy;
 
     // Persistent Properties
     FOptions: TOptions;
@@ -341,6 +347,8 @@ type
     procedure DoOnAnimateStyle(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnAnimateMovement(ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnSetTabWidth(ATabControl: TChromeTabControl; var TabWidth: Integer); virtual;
+    procedure DoOnTabCreate(ATab: TChromeTab); virtual;
+    procedure DoOnTabDestroy(ATab: TChromeTab); virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -379,6 +387,8 @@ type
     property OnAnimateStyle: TOnAnimateStyle read FOnAnimateStyle write FOnAnimateStyle;
     property OnAnimateMovement: TOnAnimateMovement read FOnAnimateMovement write FOnAnimateMovement;
     property OnSetTabWidth: TOnSetTabWidth read FOnSetTabWidth write FOnSetTabWidth;
+    property OnTabCreate: TOnTabCreate read FOnTabCreate write FOnTabCreate;
+    property OnTabDestroy: TOnTabDestroy read FOnTabDestroy write FOnTabDestroy;
 
     property LookAndFeel: TChromeTabsLookAndFeel read GetLookAndFeel write SetLookAndFeel;
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
@@ -2301,10 +2311,22 @@ begin
     FOnSetTabWidth(Self, ATabControl, TabWidth);
 end;
 
+procedure TCustomChromeTabs.DoOnTabCreate(ATab: TChromeTab);
+begin
+  if Assigned(FOnTabCreate) then
+    FOnTabCreate(Self, ATab);
+end;
+
 procedure TCustomChromeTabs.DoOnTabDblClick(ATab: TChromeTab);
 begin
   if Assigned(FOnTabDblClick) then
     FOnTabDblClick(Self, ATab);
+end;
+
+procedure TCustomChromeTabs.DoOnTabDestroy(ATab: TChromeTab);
+begin
+  if Assigned(FOnTabDestroy) then
+    FOnTabDestroy(Self, ATab);
 end;
 
 procedure TCustomChromeTabs.DoOnTabDragDrop(X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean;
@@ -3416,6 +3438,11 @@ begin
   FTabs.Assign(Value);
 end;
 
+procedure TCustomChromeTabs.TabCreate(ATab: TObject);
+begin
+  DoOnTabCreate(TChromeTab(ATab));
+end;
+
 procedure TCustomChromeTabs.TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
 begin
   // Process the drop event
@@ -3524,6 +3551,11 @@ begin
         end;
     end;
   end;
+end;
+
+procedure TCustomChromeTabs.TabDestroy(ATab: TObject);
+begin
+  DoOnTabDestroy(TChromeTab(ATab));
 end;
 
 procedure TCustomChromeTabs.ShowTabDragForm(X, Y: Integer; FormVisible: Boolean);

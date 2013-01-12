@@ -1154,6 +1154,8 @@ type
     procedure Invalidate;
     function GetComponentState: TComponentState;
     function IsDragging: Boolean;
+    procedure TabCreate(ATab: TObject);
+    procedure TabDestroy(ATab: TObject);
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;
@@ -1192,10 +1194,14 @@ begin
   // Inherited needs to be here so the property values are
   // set before it is called
   inherited;
+
+  GetChromeTabInterface.TabCreate(Self);
 end;
 
 destructor TChromeTab.Destroy;
 begin
+  GetChromeTabInterface.TabDestroy(Self);
+
   inherited;
 
   if FTabControl <> nil then
