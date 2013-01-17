@@ -1,5 +1,9 @@
 TChromeTabs 2.0 BETA
 
+17-01-2013
+Fixed: More floating add button imporvements.
+Fixed: Alterations to delete code.
+
 12-01-2013
 Update: Added OnTabCreate and OnTabDestroy events.
 
