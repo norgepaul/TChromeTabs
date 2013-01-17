@@ -226,6 +226,8 @@ type
     FNextModifiedGlowAnimateTickCount: Cardinal;
     FNextSpinnerAnimateTickCount: Cardinal;
     FCreated: Boolean;
+    FTotalTabWidth: Integer;
+    FTabDisplayState: TTabDisplayState;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -264,7 +266,7 @@ type
     function DraggingInOwnContainer: Boolean;
     function GetVisiblePinnedTabCount(IncludeMarkedForDelete: Boolean = FALSE): Integer;
     function GetVisibleNonPinnedTabCount(IncludeMarkedForDelete: Boolean = FALSE): Integer;
-    function GetLastVisibleTabIndex(StartIndex: Integer): Integer;
+    function GetLastVisibleTabIndex(StartIndex: Integer; IncludeMarkedForDelete: Boolean = TRUE): Integer;
     procedure SetScrollOffset(const Value: Integer);
     procedure SetScrollOffsetEx(const Value: Integer; IgnoreContraints: Boolean);
     function ScrollRect(ARect: TRect): TRect; overload;
@@ -286,7 +288,6 @@ type
     procedure SetControlPosition(ChromeTabsControl: TBaseChromeTabsControl; ControlRect: TRect; Animate: Boolean);
     procedure SetControlLeft(ChromeTabsControl: TBaseChromeTabsControl; ALeft: Integer; Animate: Boolean);
     procedure SetMovementAnimation(MovementAnimationTypes: TChromeTabsMovementAnimationTypes);
-    procedure DeleteTab(Index: Integer);
     function ControlReady: Boolean;
     function GetTabWidthByContent(TabControl: TChromeTabControl): Integer;
     function GetImagesSpinnerDownload: TCustomImageList;
@@ -432,6 +433,7 @@ type
     procedure SetDefaultLookAndFeel;
     procedure SetDefaultOptions;
     procedure InvalidateAllControls;
+    procedure DeleteTab(Index: Integer);
 
     property ActiveDragTabObject: IDragTabObject read FActiveDragTabObject;
     property TabControls[Index: Integer]: TChromeTabControl read GetTabControl;
@@ -660,13 +662,7 @@ end;
 
 function TCustomChromeTabs.GetTabDisplayState: TTabDisplayState;
 begin
-  if ScrollingActive then
-    Result := tdScrolling else
-  if (GetVisibleTabCount = 0) or
-     ((TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right < TabContainerRect.Right)) then 
-    Result := tdNormal
-  else
-    Result := tdCompressed;
+  Result := FTabDisplayState;
 end;
 
 procedure TCustomChromeTabs.ClearTabClosingStates;
@@ -782,8 +778,8 @@ begin
   if (ChromeTabsControl.DrawState <> NewDrawState) or (ForceUpdate) then
   begin
     if (not (csDesigning in ComponentState)) and
-       (((ChromeTabsControl.DrawState = dsHot) and ((NewDrawState <> dsActive)) or (not (ChromeTabsControl is TChromeTabControl))) or
-        ((NewDrawState = dsHot) and (ChromeTabsControl.DrawState <> dsActive)) or (not (ChromeTabsControl is TChromeTabControl))) then
+       (((ChromeTabsControl.DrawState = dsHot) and ((not (NewDrawState in [dsActive, dsDown])))) or
+        ((NewDrawState = dsHot) and (not (ChromeTabsControl.DrawState in [dsActive, dsDown])))) then
       EaseType := FOptions.Animation.DefaultMovementEaseType
     else
       EaseType := ttNone;
@@ -974,7 +970,23 @@ end;
 
 procedure TCustomChromeTabs.DeleteTab(Index: Integer);
 begin
-  FTabs.DeleteTab(Index, csDesigning in ComponentState);
+  if (csDesigning in ComponentState) or
+     (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) = ttNone) or
+     ((GetTabDisplayState = tdCompressed) and (Index = Tabs.Count - 1)) then
+    FTabs.Delete(Index)
+  else
+  begin
+    FTabs.MarkTabForDeletetion(Index);
+
+    SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
+
+    // If the tabs are compressed and this is the last tab, don't animate
+    AddState(stsAnimatingCloseTab);
+
+    TabControls[Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
+                                     FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
+                                     FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
+  end;
 end;
 
 procedure TCustomChromeTabs.DoPopupClick(Sender: TObject);
@@ -1084,7 +1096,7 @@ begin
     FDragCancelled := FALSE;
 
     if (tdDeleteDraggedTab in TabDropOptions) and (ActiveTabIndex <> -1) then
-      FTabs.DeleteTab(ActiveTabIndex, TRUE);
+      FTabs.Delete(ActiveTabIndex);
 
     RemoveState(stsDragging);
 
@@ -1127,14 +1139,15 @@ begin
   end;
 end;
 
-function TCustomChromeTabs.GetLastVisibleTabIndex(StartIndex: Integer): Integer;
+function TCustomChromeTabs.GetLastVisibleTabIndex(StartIndex: Integer; IncludeMarkedForDelete: Boolean): Integer;
 var
   i: Integer;
 begin
   Result := -1;
 
   for i := StartIndex downto 0 do
-    if FTabs[i].Visible then
+    if (FTabs[i].Visible) and
+       ((IncludeMarkedForDelete) or (not FTabs[i].MarkedForDeletion)) then
     begin
       Result := i;
 
@@ -1263,26 +1276,7 @@ begin
 
       tcDeleted:
         begin
-          SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
-
-          // We're deleting the tab but we need to animate it first
-          if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
-             (ATab <> nil) then
-          begin
-            // If the tabs are compressed and this is the last tab, don't animate
-            if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
-            begin
-              Tabs.DeleteTab(ATab.Index, TRUE);
-            end
-            else
-            begin
-              AddState(stsAnimatingCloseTab);
-
-              TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
-                                               FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
-                                               FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
-            end;
-          end;
+          //
         end;
 
       tcDeleting:
@@ -1589,7 +1583,7 @@ begin
 
         if RectWidth(TabControls[i].ControlRect) <= FOptions.Animation.MinimumTabAnimationWidth then
         begin
-          DeleteTab(i);
+          FTabs.Delete(i);
 
           RemoveState(stsAnimatingCloseTab);
         end;
@@ -2706,7 +2700,7 @@ end;
 
 function TCustomChromeTabs.ScrollingActive: Boolean;
 begin
-  Result := FScrollWidth - FTabEndSpace > CorrectedClientWidth
+  Result := FTabDisplayState = tdScrolling;
 end;
 
 function TCustomChromeTabs.SameBidiTabMode(BidiMode1, BiDiMode2: TBidiMode): Boolean;
@@ -3024,7 +3018,11 @@ procedure TCustomChromeTabs.CalculateTabRects;
         else
           TabWidthAddition := 0;
 
-        if not Tabs[i].MarkedForDeletion then
+        if Tabs[i].MarkedForDeletion then
+        begin
+          TabLeft := TabLeft + RectWidth(TabControl.ControlRect);
+        end
+        else        
         begin
           Dec(TabEndSpace);
 
@@ -3039,9 +3037,6 @@ procedure TCustomChromeTabs.CalculateTabRects;
 
           TabRight := TabLeft + TabWidth + ExtraTabWidth + FOptions.Display.Tabs.TabOverlap;
 
-//          if TabRight > FTabContainerRect.Right - FOptions.Display.Tabs.TabOverlap then
-//            TabRight := FTabContainerRect.Right - FOptions.Display.Tabs.TabOverlap;
-
           SetControlPosition(TabControl,
                              Rect(TabLeft - ExtraTabWidth,
                                   FOptions.Display.Tabs.OffsetTop,
@@ -3050,13 +3045,10 @@ procedure TCustomChromeTabs.CalculateTabRects;
                              TRUE);
 
           TabLeft := TabLeft + TabWidth + TabWidthAddition;
-          FScrollWidth := FScrollWidth + TabWidth + TabWidthAddition;
-        end
-        else
-        begin
-          TabLeft := TabLeft + RectWidth(TabControl.ControlRect);
-          FScrollWidth := FScrollWidth + RectWidth(TabControl.ControlRect);
+//          FScrollWidth := FScrollWidth + TabWidth + TabWidthAddition;
         end;
+
+        //FScrollWidth := FScrollWidth + RectWidth(TabControl.ControlRect);
       end;
     end;
 
@@ -3093,7 +3085,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
   end;
 
 var
-  TabLeft, AddButtonLeft: Integer;
+  TabLeft, AddButtonLeft, LastTabIndex: Integer;
 begin
   try
     FScrollWidth := 0;
@@ -3114,6 +3106,28 @@ begin
       SetTabPositions(TabLeft, FAdjustedTabWidth, FTabEndSpace, FALSE);
     end;
 
+    // Set the scroll width (this is the total width of all the visible tabs)
+    FScrollWidth := TabLeft;
+
+    // Remove deleted tabs from the scroll width
+    if FScrollWidth <> FPreviousScrollWidth then
+      DoOnScrollWidthChanged;
+
+    FPreviousScrollWidth := FScrollWidth;
+
+    if not HasState(stsAnimatingCloseTab) then
+    begin
+      if FScrollWidth - FTabEndSpace > CorrectedClientWidth then
+        FTabDisplayState := tdScrolling else
+      if (GetVisibleTabCount = 0) or
+         //(HasState(stsDeletingUnPinnedTabs)) or
+         ((TabControls[GetLastVisibleTabIndex(Tabs.Count - 1)].EndRect.Right < TabContainerRect.Right)) then
+        FTabDisplayState := tdNormal
+      else
+        FTabDisplayState := tdCompressed;
+    end;
+
+    // Position the floating add button
     if FOptions.Display.AddButton.Visibility = avRightFloating then
     begin
       if GetVisibleTabCount(TRUE) = 0 then
@@ -3121,38 +3135,35 @@ begin
       else
       begin
         if HasState(stsEndTabDeleted) then
-          AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].EndRect.Right +
-                         FOptions.Display.AddButton.HorizontalOffsetFloating
+        begin
+          LastTabIndex := GetLastVisibleTabIndex(pred(FTabs.Count), FALSE);
+
+          if LastTabIndex <> -1 then
+            AddButtonLeft := TabControls[GetLastVisibleTabIndex(LastTabIndex)].EndRect.Right
+          else
+            AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].EndRect.Right;
+        end
         else
-          AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
-                           FOptions.Display.AddButton.HorizontalOffsetFloating;
+          AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right;
+
+        Inc(AddButtonLeft);
+
+        if (GetTabDisplayState = tdNormal) or (not HasState(stsEndTabDeleted)) then
+          AddButtonLeft := AddButtonLeft + FOptions.Display.AddButton.HorizontalOffsetFloating;
       end;
 
-      if ((GetTabDisplayState <> tdNormal) and (not HasState(stsEndTabDeleted))) or
-         (GetTabDisplayState in [tdCompressed, tdScrolling]) or
+      if //((GetTabDisplayState <> tdNormal) and (not HasState(stsEndTabDeleted))) or
+         ((GetTabDisplayState in [tdCompressed, tdScrolling]) and (not HasState(stsDeletingUnPinnedTabs))) or
          (AddButtonLeft > FMaxAddButtonRight) then
         AddButtonLeft := FMaxAddButtonRight;
 
       SetControlPosition(FAddButtonControl,
                          Rect(AddButtonLeft,
                               FOptions.Display.AddButton.Offsets.Vertical,
-                              AddButtonLeft +FOptions.Display.AddButton.Width,
+                              AddButtonLeft + FOptions.Display.AddButton.Width,
                               FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
                          FALSE);
     end;
-
-    if FScrollWidth <> FPreviousScrollWidth then
-      DoOnScrollWidthChanged;
-
-    FPreviousScrollWidth := FScrollWidth;
-
-    // Calculate the position of the next control
-    if Tabs.Count = 0 then
-      TabLeft := 0
-    else
-      TabLeft := TabControls[Tabs.Count - 1].ControlRect.Right;
-
-    TabLeft := FScrollWidth + FOptions.Display.Tabs.TabOverlap + FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.Tabs.OffsetLeft;
   finally
     // Reset the drag status now we're drawn everything
     if (HasState(stsCancellingDrag)) or

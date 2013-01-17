@@ -721,7 +721,7 @@ end;
 procedure TfrmMain.Button2Click(Sender: TObject);
 begin
   if FCurrentTabs.ActiveTab <> nil then
-    FCurrentTabs.Tabs.DeleteTab(FCurrentTabs.ActiveTab.Index, TRUE);
+    FCurrentTabs.DeleteTab(FCurrentTabs.ActiveTab.Index);
 end;
 
 procedure TfrmMain.btnHideTabClick(Sender: TObject);
