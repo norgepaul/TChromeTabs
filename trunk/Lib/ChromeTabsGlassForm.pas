@@ -59,7 +59,6 @@ type
 
     procedure RecalcGlassFrameBounds(UpdateFrame: Boolean = TRUE);
     procedure SetChromeTabs(const Value: TChromeTabs);
-    function UseCustomFrame: Boolean;
     procedure UpdateChromeTabPosition;
     procedure SetChromeTabsMaximizedRightOffset(const Value: Integer);
     procedure SetChromeTabsMaxmizedTopOffset(const Value: Integer);
@@ -75,6 +74,7 @@ type
     procedure Resize; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ThemeChanged; virtual;
+    function ShowTabsInTitleBar: Boolean; virtual;
 
     // Messages
     procedure WMNCCalcSize(var Message: TWMNCCalcSize); message WM_NCCALCSIZE;
@@ -177,7 +177,7 @@ procedure TChromeTabsGlassForm.AdjustClientRect(var Rect: TRect);
 begin
   inherited;
 
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
     Inc(Rect.Top, GlassFrame.Top);
 end;
 
@@ -233,7 +233,7 @@ end;
 
 procedure TChromeTabsGlassForm.Resize;
 begin
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
   begin
     FDwmBorderIconsRect := GetDwmBorderIconsRect(Self);
 
@@ -247,7 +247,7 @@ end;
 
 procedure TChromeTabsGlassForm.WMNCCalcSize(var Message: TWMNCCalcSize);
 begin
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
   begin
     Inc(Message.CalcSize_Params.rgrc[0].Left, FWndFrameSize);
     Dec(Message.CalcSize_Params.rgrc[0].Right, FWndFrameSize);
@@ -264,7 +264,7 @@ var
 begin
   inherited;
 
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
   begin
     if Message.Result in [HTMINBUTTON, HTMAXBUTTON, HTCLOSE] then
     begin
@@ -292,7 +292,7 @@ end;
 
 procedure TChromeTabsGlassForm.WMNCRButtonUp(var Message: TWMNCRButtonUp);
 begin
-  if (not UseCustomFrame) or
+  if (not ShowTabsInTitleBar) or
      (not (biSystemMenu in BorderIcons)) then
     inherited
   else
@@ -348,7 +348,7 @@ end;
 
 procedure TChromeTabsGlassForm.EnableTitleTabs;
 begin
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
   begin
     FTabsInTitleBar := TRUE;
     FPreviousGlassFrameEnabled := GlassFrame.Enabled;
@@ -375,7 +375,7 @@ procedure TChromeTabsGlassForm.WMWindowPosChanging(var Message: TWMWindowPosChan
 const
   SWP_STATECHANGED = $8000;
 begin
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
   begin
     if Message.WindowPos.flags and SWP_STATECHANGED = SWP_STATECHANGED then
       Invalidate;
@@ -383,7 +383,7 @@ begin
 
   inherited;
 
-  if (UseCustomFrame) and
+  if (ShowTabsInTitleBar) and
      (Message.WindowPos.flags and SWP_FRAMECHANGED <> 0) and
      (Message.WindowPos.flags <> SWP_FRAMECHANGED) then
     RecalcGlassFrameBounds(FALSE);
@@ -393,14 +393,14 @@ procedure TChromeTabsGlassForm.WMWindowPosChanged(var Message: TWMWindowPosChang
 begin
   inherited;
 
-  if (UseCustomFrame) and
+  if (ShowTabsInTitleBar) and
      (Message.WindowPos.flags and SWP_FRAMECHANGED <> 0) then
     Realign;
 end;
 
 procedure TChromeTabsGlassForm.WndProc(var Message: TMessage);
 begin
-  if (not UseCustomFrame) or
+  if (not ShowTabsInTitleBar) or
      (not HandleAllocated) or
      (not DwmDefWindowProc(Handle, Message.Msg, Message.WParam, Message.LParam, Message.Result)) then
    inherited;
@@ -469,7 +469,7 @@ procedure TChromeTabsGlassForm.UpdateChromeTabPosition;
 var
   TopOffset, RightOffset: Integer;
 begin
-  if UseCustomFrame then
+  if ShowTabsInTitleBar then
   begin
     if WindowState = wsMaximized then
     begin
@@ -492,7 +492,7 @@ begin
   end;
 end;
 
-function TChromeTabsGlassForm.UseCustomFrame: Boolean;
+function TChromeTabsGlassForm.ShowTabsInTitleBar: Boolean;
 begin
   Result := (FChromeTabs <> nil) and
             (FAeroEnabled);
