@@ -180,6 +180,7 @@ boHandleSafeCallExceptions=1
 boUseMainModuleOptions=1
 csoAllowedRenderMethods=64
 csoShowWindowsThreads=1
+DeleteMapAfterCompile=1
 dpJCL=1
 Email Address=""
 Email Object=""

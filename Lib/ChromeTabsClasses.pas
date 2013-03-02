@@ -170,9 +170,6 @@ type
   private
     function GetActiveTab: TChromeTab;
     procedure SetActiveTab(const Value: TChromeTab);
-    procedure DeActivateTab(Index: Integer);
-    function GetNextVisibleTabIndex(StartIndex: Integer): Integer;
-    function GetPreviousVisibleTabIndex(StartIndex: Integer): Integer;
   protected
     procedure SetItem(Index: Integer; Value: TChromeTab);
     function GetItem(Index: Integer): TChromeTab;
@@ -187,7 +184,7 @@ type
     property Items[Index: Integer]: TChromeTab read GetItem write SetItem; default;
     procedure Move(OldIndex, NewIndex: Integer);
     procedure Assign(Source: TPersistent); override;
-    procedure MarkTabForDeletetion(Index: Integer);
+    procedure DeleteTab(Index: Integer; DeleteNow: Boolean);
     function Add: TChromeTab; virtual;
 
     property ActiveTab: TChromeTab read GetActiveTab write SetActiveTab;
@@ -1157,8 +1154,6 @@ type
     procedure Invalidate;
     function GetComponentState: TComponentState;
     function IsDragging: Boolean;
-    procedure TabCreate(ATab: TObject);
-    procedure TabDestroy(ATab: TObject);
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;
@@ -1198,12 +1193,12 @@ begin
   // set before it is called
   inherited;
 
-  GetChromeTabInterface.TabCreate(Self);
+//  GetChromeTabInterface.TabCreate(Self);
 end;
 
 destructor TChromeTab.Destroy;
 begin
-  GetChromeTabInterface.TabDestroy(Self);
+//  GetChromeTabInterface.TabDestroy(Self);
 
   inherited;
 
@@ -1500,68 +1495,59 @@ begin
   inherited Create(AOwner, ChromeTabClass);
 end;
 
-function TChromeTabsList.GetNextVisibleTabIndex(StartIndex: Integer): Integer;
-var
-  i: Integer;
-begin
-  Result := -1;
-
-  for i := StartIndex to pred(Count) do
-    if (Items[i].Visible) and (not Items[i].FMarkedForDeletion) then
-    begin
-      Result := i;
-
-      Break;
-    end;
-end;
-
-function TChromeTabsList.GetPreviousVisibleTabIndex(StartIndex: Integer): Integer;
-var
-  i: Integer;
-begin
-  Result := -1;
-
-  for i := StartIndex downto 0 do
-    if (Items[i].Visible) and (not Items[i].FMarkedForDeletion) then
-    begin
-      Result := i;
-
-      Break;
-    end;
-end;
-
-procedure TChromeTabsList.DeActivateTab(Index: Integer);
+procedure TChromeTabsList.DeleteTab(Index: Integer; DeleteNow: Boolean);
 var
   NewIdx: Integer;
 begin
-  if Items[Index].Active then
+  // Has this tab already been marked for deletion? If so, remove it now
+  if Items[Index].FMarkedForDeletion then
   begin
-    // Can we select a tab to the right?
-    NewIdx := GetNextVisibleTabIndex(Index + 1);
+    inherited Delete(Index);
+  end
+  else
+  begin
+    if not Items[Index].Active then
+      NewIdx := -1 else
 
-    // Can we select a tab to the left?
-    if NewIdx = -1 then
-      NewIdx := GetPreviousVisibleTabIndex(Index - 1);
+    if Index < pred(Count) then
+    begin
+      NewIdx := Index;
 
-    Items[Index].Active := FALSE;
+      if (GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
+         (not DeleteNow) then
+      begin
+        if NewIdx < pred(Count) then
+          Inc(NewIdx)
+        else
+          Dec(NewIdx);
+      end;
+    end else
+    if Index > 0 then
+      NewIdx := Index - 1
+    else
+      NewIdx := -1;
+
+    GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
+
+    if (not DeleteNow) and
+       (GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) <> ttNone) then
+    begin
+      Items[Index].FMarkedForDeletion := TRUE;
+
+      GetChromeTabInterface.DoOnChange(Items[Index], tcDeleted);
+    end
+    else
+    begin
+      inherited Delete(Index);
+
+      GetChromeTabInterface.DoOnChange(nil, tcDeleted);
+    end;
+
+    if NewIdx > Count - 1 then
+      NewIdx := Count - 1;
 
     if NewIdx <> -1 then
       Items[NewIdx].Active := TRUE;
-  end;
-end;
-
-procedure TChromeTabsList.MarkTabForDeletetion(Index: Integer);
-begin
-  if (csDesigning in GetChromeTabInterface.GetComponentState) or
-     (GetChromeTabInterface.GetOptions.Animation.GetMovementAnimationEaseType(GetChromeTabInterface.GetOptions.Animation.MovementAnimations.TabDelete) = ttNone) then
-    Delete(Index)
-  else
-  begin
-    Items[Index].FMarkedForDeletion := TRUE;
-
-    DeActivateTab(Index);
-
-    GetChromeTabInterface.DoOnChange(Items[Index], tcDeleting);
   end;
 end;
 
@@ -1637,13 +1623,7 @@ begin
 
   if GetChromeTabInterface <> nil then
     case Action of
-      cnDeleting:
-        begin
-          if (not TChromeTab(Item).MarkedForDeletion) and
-             (not (csDesigning in GetChromeTabInterface.GetComponentState)) then
-            GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcDeleting);
-        end;
-
+      //cnDeleting: GetChromeTabInterface.Invalidate;
       cnAdded: GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcAdded);
     end;
 end;
