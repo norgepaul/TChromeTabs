@@ -1,5 +1,8 @@
 TChromeTabs 2.0 BETA
 
+12-03-2013
+Fixed: WMLButtonDblClk didn't call inherited.
+
 02-02-2013
 Fixed: Exception in OnTabDragStart if Allowed := FALSE [Christian Cristofori]
 
