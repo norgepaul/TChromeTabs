@@ -2489,6 +2489,8 @@ begin
       end;
     end;
   end;
+
+  inherited;
 end;
 
 procedure TCustomChromeTabs.SaveLookAndFeel(Stream: TStream);
