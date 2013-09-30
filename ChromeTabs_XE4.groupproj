@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{C2A5EE39-A05E-4F0E-9FF3-F200FE05B7E2}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Demo\ChromeTabsDemoXE4.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Packages\Delphi XE4\ChromeTabs_R.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Packages\Delphi XE4\ChromeTabs_D.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ChromeTabsDemoXE4">
+        <MSBuild Projects="Demo\ChromeTabsDemoXE4.dproj"/>
+    </Target>
+    <Target Name="ChromeTabsDemoXE4:Clean">
+        <MSBuild Projects="Demo\ChromeTabsDemoXE4.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ChromeTabsDemoXE4:Make">
+        <MSBuild Projects="Demo\ChromeTabsDemoXE4.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ChromeTabs_R">
+        <MSBuild Projects="Packages\Delphi XE4\ChromeTabs_R.dproj"/>
+    </Target>
+    <Target Name="ChromeTabs_R:Clean">
+        <MSBuild Projects="Packages\Delphi XE4\ChromeTabs_R.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ChromeTabs_R:Make">
+        <MSBuild Projects="Packages\Delphi XE4\ChromeTabs_R.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ChromeTabs_D">
+        <MSBuild Projects="Packages\Delphi XE4\ChromeTabs_D.dproj"/>
+    </Target>
+    <Target Name="ChromeTabs_D:Clean">
+        <MSBuild Projects="Packages\Delphi XE4\ChromeTabs_D.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ChromeTabs_D:Make">
+        <MSBuild Projects="Packages\Delphi XE4\ChromeTabs_D.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ChromeTabsDemoXE4;ChromeTabs_R;ChromeTabs_D"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ChromeTabsDemoXE4:Clean;ChromeTabs_R:Clean;ChromeTabs_D:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ChromeTabsDemoXE4:Make;ChromeTabs_R:Make;ChromeTabs_D:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
