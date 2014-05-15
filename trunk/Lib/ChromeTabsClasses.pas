@@ -256,6 +256,7 @@ type
     procedure SetAlpha(const Value: Integer);
   public
     constructor Create(AOwner: TPersistent); override;
+    destructor Destroy; override;
 
     function GetPen: TGPPen;
 
@@ -1988,6 +1989,9 @@ end;
 
 destructor TChromeTabsLookAndFeelStyle.Destroy;
 begin
+  FreeAndNil(FPen);
+  FreeAndNil(FBrush);
+
   inherited;
 end;
 
@@ -3077,6 +3081,13 @@ begin
   FThickness := 1;
   FAlpha := 255;
   FColor := clBlack;
+end;
+
+destructor TChromeTabsLookAndFeelPen.Destroy;
+begin
+  FreeAndNil(FPen);
+
+  inherited;
 end;
 
 function TChromeTabsLookAndFeelPen.GetPen: TGPPen;
