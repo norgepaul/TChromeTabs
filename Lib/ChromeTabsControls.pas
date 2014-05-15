@@ -590,6 +590,9 @@ end;
 
 destructor TChromeTabControl.Destroy;
 begin
+  FreeAndNil(FTabBrush);
+  FreeAndNil(FTabPen);
+
   FreeAndNil(FBmp);
   FreeAndNil(FChromeTabControlPropertyItems);
 
@@ -1725,6 +1728,7 @@ procedure TChromeTabControlPropertyItems.SetProperties(Style: TChromeTabsLookAnd
 var
   Dst: TChromeTabControlProperties;
   Font: TChromeTabsLookAndFeelBaseFont;
+  FontCreated: Boolean;
 begin
   FEaseType := EaseType;
 
@@ -1733,15 +1737,21 @@ begin
   else
     Font := StyleFont;
 
-  if Font <> nil then
+  FontCreated := False;
+  if Font = nil then
   begin
-    // Copy the property values to the record
-    Dst.FontColor := Font.Color;
-    Dst.FontAlpha := Font.Alpha;
-    Dst.FontName := Font.Name;
-    Dst.FontSize := Font.Size;
-    Dst.TextRendoringMode := Font.TextRendoringMode;
+    Font := TChromeTabsLookAndFeelBaseFont.Create(nil);
+    FontCreated := True;
   end;
+
+  // Copy the property values to the record
+  Dst.FontColor := Font.Color;
+  Dst.FontAlpha := Font.Alpha;
+  Dst.FontName := Font.Name;
+  Dst.FontSize := Font.Size;
+  Dst.TextRendoringMode := Font.TextRendoringMode;
+  if FontCreated then
+    FreeAndNil(Font);
 
   Dst.StartColor := Style.StartColor;
   Dst.StopColor := Style.StopColor;
@@ -1847,6 +1857,11 @@ end;
 
 destructor TBaseChromeButtonControl.Destroy;
 begin
+  FreeAndNil(FButtonBrush);
+  FreeAndNil(FButtonPen);
+  FreeAndNil(FSymbolBrush);
+  FreeAndNil(FSymbolPen);
+
   FreeAndNil(FButtonControlPropertyItems);
   FreeAndNil(FSymbolControlPropertyItems);
 
