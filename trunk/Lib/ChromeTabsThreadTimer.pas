@@ -79,7 +79,8 @@ end;
 
 procedure TTimerThread.Execute;
 var
-  SleepTime, Last: Integer;
+  SleepTime: Integer;
+  Last: DWORD;
 begin
   while (FTimer.Continue) and (not Terminated) do
   begin
@@ -91,7 +92,7 @@ begin
       // Just in case
     end;
 
-    SleepTime := FTimer.FInterval - (Integer(timeGetTime) - Last);
+    SleepTime := FTimer.FInterval - Integer(timeGetTime - Last);
 
     if SleepTime < 10 then
       SleepTime := 10;
