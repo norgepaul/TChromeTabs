@@ -249,7 +249,11 @@ procedure TChromeTabsGlassForm.WMNCCalcSize(var Message: TWMNCCalcSize);
 begin
   if ShowTabsInTitleBar then
   begin
-    Inc(Message.CalcSize_Params.rgrc[0].Left, FWndFrameSize);
+    if WindowState = wsMaximized then
+      Inc(Message.CalcSize_Params.rgrc[0].Left, FWndFrameSize + 1)
+    else
+      Inc(Message.CalcSize_Params.rgrc[0].Left, FWndFrameSize);
+
     Dec(Message.CalcSize_Params.rgrc[0].Right, FWndFrameSize);
     Dec(Message.CalcSize_Params.rgrc[0].Bottom, FWndFrameSize);
   end
@@ -264,6 +268,7 @@ var
 begin
   inherited;
 
+  { Fix: https://code.google.com/p/delphi-chrome-tabs/issues/detail?id=5 - Thanks Coriolis.ru}
   if ShowTabsInTitleBar then
   begin
     if Message.Result in [HTMINBUTTON, HTMAXBUTTON, HTCLOSE] then
@@ -278,13 +283,39 @@ begin
       begin
         if (ClientPos.X < IconRect.Right) and
            ((WindowState = wsMaximized) or
-            ((ClientPos.Y >= IconRect.Top) and
-             (ClientPos.Y < IconRect.Bottom))) then
-          Message.Result := HTSYSMENU else
-        if ClientPos.Y < FWndFrameSize then
-          Message.Result := HTTOP
+           ((ClientPos.Y >= IconRect.Top) and (ClientPos.Y < IconRect.Bottom))) then
+          Message.Result := HTSYSMENU
         else
-          Message.Result := HTCAPTION;
+          if ClientPos.Y < FWndFrameSize then
+          begin
+            if WindowState <> wsMaximized then
+            begin
+              if ClientPos.X < FWndFrameSize then
+                Message.Result := HTTOPLEFT
+              else
+                if ClientPos.X > ClientWidth then
+                  Message.Result := HTTOPRIGHT
+                else
+                  Message.Result := HTTOP
+            end
+            else
+              Message.Result := HTCAPTION
+          end
+          else
+          begin
+            if WindowState <> wsMaximized then
+            begin
+              if ClientPos.X < FWndFrameSize then
+                Message.Result := HTLEFT
+              else
+                if ClientPos.X > ClientWidth then
+                  Message.Result := HTRIGHT
+                else
+                  Message.Result := HTCAPTION
+            end
+            else
+              Message.Result := HTCAPTION
+          end;
       end;
     end;
   end;

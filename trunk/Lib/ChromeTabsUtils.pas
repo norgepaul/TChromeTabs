@@ -538,15 +538,12 @@ var
   MemStream: TMemoryStream;
 begin
   MemStream := TMemoryStream.Create;
-  try
-    Icon.SaveToStream(MemStream);
 
-    MemStream.Position := 0;
+  Icon.SaveToStream(MemStream);
 
-    Result := TGPImage.Create(TStreamAdapter.Create(MemStream));
-  finally
-    FreeAndNil(MemStream);
-  end;
+  MemStream.Position := 0;
+
+  Result := TGPImage.Create(TStreamAdapter.Create(MemStream, soOwned));
 end;
 
 function BitmapToGPBitmap(Bitmap: TBitmap): TGPBitmap;
@@ -554,15 +551,12 @@ var
   MemStream: TMemoryStream;
 begin
   MemStream := TMemoryStream.Create;
-  try
-    Bitmap.SaveToStream(MemStream);
 
-    MemStream.Position := 0;
+  Bitmap.SaveToStream(MemStream);
 
-    Result := TGPBitmap.Create(TStreamAdapter.Create(MemStream));
-  finally
-    FreeAndNil(MemStream);
-  end;
+  MemStream.Position := 0;
+
+  Result := TGPBitmap.Create(TStreamAdapter.Create(MemStream, soOwned));
 end;
 
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;

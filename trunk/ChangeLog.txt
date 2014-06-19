@@ -1,4 +1,10 @@
-TChromeTabs 2.0 BETA
+TChromeTabs 2.1 - 10-06-2015
+
+10-06-2015
+Fixed: Images not drawn under Windows XP
+Fixed: Maximized application form with TChromeTabsGlassForm blocks pop-up taskbar
+Added: Demo - Drag and drop a tab outside the control to create a new form.
+
 
 12-03-2013
 Fixed: WMLButtonDblClk didn't call inherited.

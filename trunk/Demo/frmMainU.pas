@@ -43,7 +43,7 @@ uses
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog;
+  ChromeTabsLog, System.Actions;
 
 type
   TFormType = {$IFDEF DELPHI2010_UP}
@@ -453,6 +453,9 @@ type
       ItemRect: TRect; ItemType: TChromeTabItemType;
       Orientation: TTabOrientation; var Polygons: IChromeTabPolygons);
     procedure Button2Click(Sender: TObject);
+    procedure ChromeTabs2TabDragDrop(Sender: TObject; X, Y: Integer;
+      DragTabObject: IDragTabObject; Cancelled: Boolean;
+      var TabDropOptions: TTabDropOptions);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -489,6 +492,9 @@ type
     procedure RefreshLookAndFeelOptions;
     procedure FixControls;
     procedure BuildLookAndFeelTree;
+    procedure ProcessDroppedTab(Sender: TObject; X, Y: Integer;
+      DragTabObject: IDragTabObject; Cancelled: Boolean;
+      var TabDropOptions: TTabDropOptions);
   end;
 
 var
@@ -1884,6 +1890,45 @@ begin
   FLogOtherEvents.Log('OnTabDragDrop ', []);
 
   lbTabDragOver.Clear;
+
+  ProcessDroppedTab(Sender, X, Y, DragTabObject, Cancelled, TabDropOptions);
+end;
+
+procedure TfrmMain.ProcessDroppedTab(Sender: TObject; X, Y: Integer;
+  DragTabObject: IDragTabObject; Cancelled: Boolean;
+  var TabDropOptions: TTabDropOptions);
+var
+  WinX, WinY: Integer;
+  NewForm: TfrmMain;
+begin
+  // Make sure that the drag drop hasn't been cancelled and that
+  // we are not dropping on a TChromeTab control
+  if (not Cancelled) and
+     (DragTabObject.SourceControl <> DragTabObject.DockControl) and
+     (DragTabObject.DockControl = nil) then
+  begin
+    // Find the drop position
+    WinX := Mouse.CursorPos.X - DragTabObject.DragCursorOffset.X - ((Width - ClientWidth) div 2);
+    WinY := Mouse.CursorPos.Y - DragTabObject.DragCursorOffset.Y - (Height - ClientHeight) + ((Width - ClientWidth) div 2);
+
+    // Create a new form
+    NewForm := TfrmMain.Create(Application);
+
+    // Set the new form position
+    NewForm.Position := poDesigned;
+    NewForm.Left := WinX;
+    NewForm.Top := WinY;
+
+    // Show the form
+    NewForm.Show;
+
+    // Remove the original tab
+    TabDropOptions := [tdDeleteDraggedTab];
+  end
+  else
+  begin
+    TabDropOptions := [tdCreateDroppedTab];
+  end;
 end;
 
 procedure TfrmMain.ChromeTabs1TabDragDropped(Sender: TObject;
@@ -1992,6 +2037,13 @@ begin
       FreeAndNil(TabsTxtBrush);
     end;
   end;
+end;
+
+procedure TfrmMain.ChromeTabs2TabDragDrop(Sender: TObject; X, Y: Integer;
+  DragTabObject: IDragTabObject; Cancelled: Boolean;
+  var TabDropOptions: TTabDropOptions);
+begin
+  ProcessDroppedTab(Sender, X, Y, DragTabObject, Cancelled, TabDropOptions);
 end;
 
 procedure TfrmMain.UpdateControls;
