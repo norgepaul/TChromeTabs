@@ -47,10 +47,10 @@ uses
 
 type
   TFormType = {$IFDEF DELPHI2010_UP}
-               TChromeTabsGlassForm;
-               {$ELSE}
-               TForm;
-               {$ENDIF}
+              TChromeTabsGlassForm;
+              {$ELSE}
+              TForm;
+              {$ENDIF}
 
   TfrmMain = class(TFormType)
     ChromeTabs1: TChromeTabs;
@@ -1174,7 +1174,7 @@ end;
 
 procedure TfrmMain.HookEvents;
 begin
-  //FCurrentTabs.OnActiveTabChanged := ChromeTabs1ActiveTabChanged;
+  FCurrentTabs.OnActiveTabChanged := ChromeTabs1ActiveTabChanged;
   FCurrentTabs.OnActiveTabChanging := ChromeTabs1ActiveTabChanging;
   FCurrentTabs.OnAfterDrawItem := ChromeTabs1AfterDrawItem;
   FCurrentTabs.OnBeforeDrawItem := ChromeTabs1BeforeDrawItem;
@@ -1200,7 +1200,7 @@ end;
 
 procedure TfrmMain.UnHookEvents;
 begin
-  //FCurrentTabs.OnActiveTabChanged := nil;
+  FCurrentTabs.OnActiveTabChanged := nil;
   FCurrentTabs.OnActiveTabChanging := nil;
   FCurrentTabs.OnAfterDrawItem := nil;
   FCurrentTabs.OnBeforeDrawItem := nil;
@@ -1924,10 +1924,6 @@ begin
 
     // Remove the original tab
     TabDropOptions := [tdDeleteDraggedTab];
-  end
-  else
-  begin
-    TabDropOptions := [tdCreateDroppedTab];
   end;
 end;
 
