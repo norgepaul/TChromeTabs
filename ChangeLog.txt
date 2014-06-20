@@ -1,10 +1,12 @@
-TChromeTabs 2.1 - 10-06-2015
+TChromeTabs 2.1 BETA - 10-06-2015
 
 10-06-2015
 Fixed: Images not drawn under Windows XP
 Fixed: Maximized application form with TChromeTabsGlassForm blocks pop-up taskbar
+Fixed: Improved image quality and added option to use external pngImage in Delphi 2008 and earlier.
+Fixed: A range check error caused by TChromeTabsThreadTimer
+Fixed: Several memory leaks.
 Added: Demo - Drag and drop a tab outside the control to create a new form.
-
 
 12-03-2013
 Fixed: WMLButtonDblClk didn't call inherited.

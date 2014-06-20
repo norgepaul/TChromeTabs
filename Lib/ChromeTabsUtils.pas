@@ -25,9 +25,20 @@ interface
 
 {$include versions.inc}
 
+{.$DEFINE USE_PNGIMAGE} // <-- Enable this define if you want to use an external
+                        //     copy of pngImage in Delphi 2008 or earlier
+
+{$IFDEF DELPHI2010_UP}
+  {$DEFINE USE_PNGIMAGE}
+{$ENDIF}
+
 uses
   Windows, SysUtils, Controls, Classes, Graphics, Messages, ExtCtrls, Forms,
   GraphUtil, Math,
+
+  {$IFDEF USE_PNGIMAGE}
+  pngImage,
+  {$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -538,10 +549,15 @@ var
   MemStream: TMemoryStream;
 begin
   MemStream := TMemoryStream.Create;
+  try
+    Icon.SaveToStream(MemStream);
 
-  Icon.SaveToStream(MemStream);
+    MemStream.Position := 0;
+  except
+    FreeAndNil(MemStream);
 
-  MemStream.Position := 0;
+    raise;
+  end;
 
   Result := TGPImage.Create(TStreamAdapter.Create(MemStream, soOwned));
 end;
@@ -551,14 +567,54 @@ var
   MemStream: TMemoryStream;
 begin
   MemStream := TMemoryStream.Create;
+  try
+    Bitmap.SaveToStream(MemStream);
 
-  Bitmap.SaveToStream(MemStream);
+    MemStream.Position := 0;
+  except
+    FreeAndNil(MemStream);
 
-  MemStream.Position := 0;
+    raise;
+  end;
 
   Result := TGPBitmap.Create(TStreamAdapter.Create(MemStream, soOwned));
 end;
 
+{$IFDEF USE_PNGIMAGE}
+function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
+var
+  Bitmap: TBitmap;
+  PNGObject: TPNGObject;
+  Stream: TStream;
+begin
+  Stream := TMemoryStream.Create;
+  try
+    PNGObject := TPNGObject.Create;
+    try
+      Bitmap := TBitmap.Create;
+      try
+        ImageList.GetBitmap(ImageIndex, Bitmap);
+
+        Bitmap.Transparent := True;
+        PNGObject.Assign(Bitmap);
+      finally
+        FreeAndNil(Bitmap);
+      end;
+
+      PNGObject.SaveToStream(Stream);
+      Stream.Position := 0;
+    finally
+      FreeAndNil(PNGObject);
+    end;
+  except
+    FreeAndNil(Stream);
+
+    raise;
+  end;
+
+  Result := TGPBitmap.Create(TStreamAdapter.Create(Stream, soOwned));
+end;
+{$ELSE}
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
 var
   Icon: TIcon;
@@ -572,6 +628,7 @@ begin
     FreeAndNil(Icon);
   end;
 end;
+{$ENDIF}
 
 procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: TBitmap; X, Y: Integer);
 var

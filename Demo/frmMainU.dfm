@@ -19,6 +19,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 1017
     Height = 27
+    OnActiveTabChanging = ChromeTabs1ActiveTabChanging
     OnChange = ChromeTabs1Change
     OnActiveTabChanged = ChromeTabs1ActiveTabChanged
     OnDebugLog = ChromeTabs1DebugLog
@@ -774,7 +775,7 @@ object frmMain: TfrmMain
       Top = 29
       Width = 1017
       Height = 519
-      ActivePage = TabSheet1
+      ActivePage = TabSheet15
       Align = alClient
       TabOrder = 1
       object TabSheet1: TTabSheet
