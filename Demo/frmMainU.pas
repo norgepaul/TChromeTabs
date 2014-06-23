@@ -371,6 +371,7 @@ type
     Label94: TLabel;
     Button2: TButton;
     chkCustomTabShapes: TCheckBox;
+    chkShowTextOnPinnedTabs: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -1298,6 +1299,7 @@ begin
     chkSetTabWidthsFromCaptions.Checked := ChromeTabs.Options.Display.Tabs.TabWidthFromContent;
     chkSeeThroughTabs.Checked := ChromeTabs.Options.Display.Tabs.SeeThroughTabs;
     edtTabOverlap.Value := ChromeTabs.Options.Display.Tabs.TabOverlap;
+    chkShowTextOnPinnedTabs.Checked := ChromeTabs.Options.Display.Tabs.ShowPinnedTabText;
 
     cbFontHintMode.ItemIndex := Integer(ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode);
     cbCanvasSmoothingMode.ItemIndex := Integer(ChromeTabs.Options.Display.Tabs.CanvasSmoothingMode);
@@ -1449,6 +1451,8 @@ begin
       ChromeTabs.Options.Display.Tabs.TabOverlap := edtTabOverlap.Value;
       ChromeTabs.Options.Display.Tabs.SeeThroughTabs := chkSeeThroughTabs.Checked;
       ChromeTabs.Options.Display.Tabs.TabWidthFromContent := chkSetTabWidthsFromCaptions.Checked;
+      ChromeTabs.Options.Display.Tabs.ShowPinnedTabText := chkShowTextOnPinnedTabs.Checked;
+
       ChromeTabs.BiDiMode := TBiDiMode(cbBidiMode.ItemIndex);
 
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);

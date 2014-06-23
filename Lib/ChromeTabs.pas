@@ -2790,19 +2790,36 @@ procedure TCustomChromeTabs.CalculateTabRects;
        (not FActiveDragTabObject.DragTab.Pinned) then
       VisibleTabCount := VisibleTabCount + 1;
 
-    PinnedTabWidth := VisiblePinnedTabCount * FOptions.Display.Tabs.PinnedWidth;
-    TabClientWidth := RectWidth(TabClientRect) - PinnedTabWidth - FOptions.Display.Tabs.TabOverlap;
+    if FOptions.Display.Tabs.ShowPinnedTabText then
+    begin
+      TabClientWidth := RectWidth(TabClientRect) - FOptions.Display.Tabs.TabOverlap;
+      PinnedTabWidth := TabClientWidth;
+    end
+    else
+    begin
+      PinnedTabWidth := VisiblePinnedTabCount * FOptions.Display.Tabs.PinnedWidth;
+      TabClientWidth := RectWidth(TabClientRect) - PinnedTabWidth - FOptions.Display.Tabs.TabOverlap;
+    end;
 
     if FDragTabControl <> nil then
       TabClientWidth := TabClientWidth + FOptions.Display.Tabs.TabOverlap;
 
+    TabWidth := 0;
+
+    if FOptions.Display.Tabs.ShowPinnedTabText then
+    begin
+      if GetVisibleTabCount + GetVisiblePinnedTabCount > 0 then
+      begin
+        TabWidth := TabClientWidth div (VisibleTabCount + GetVisiblePinnedTabCount);
+        TabEndSpace := TabClientWidth mod (VisibleTabCount + GetVisiblePinnedTabCount);
+      end;
+    end
+    else
     if VisibleTabCount > 0 then
     begin
       TabWidth := TabClientWidth div VisibleTabCount;
       TabEndSpace := TabClientWidth mod VisibleTabCount;
-    end
-    else
-      TabWidth := 0;
+    end;
 
     if TabWidth < FOptions.Display.Tabs.MinWidth then
     begin
@@ -2978,7 +2995,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
         end;
 
         // Do we need to hide the New Button?
-        if ((not PinnedTabs) or (Tabs.Count = GetPinnedTabCount)) and
+        if (not PinnedTabs) and
            (FActiveDragTabObject.DragTab.Index = pred(Tabs.Count)) then
           FActiveDragTabObject.HideAddButton := FOptions.Display.AddButton.Visibility = avRightFloating;
 
@@ -3002,7 +3019,8 @@ procedure TCustomChromeTabs.CalculateTabRects;
       begin
         // We add a sigle pixel to some of the tabs in order to align the
         // right hand side perfectly
-        if (not PinnedTabs) and
+        if ((not PinnedTabs) or
+            (FOptions.Display.Tabs.ShowPinnedTabText)) and
            (not FOptions.Display.Tabs.TabWidthFromContent) and
            (not Tabs[i].MarkedForDeletion) and
            (TabEndSpace > 0) then
@@ -3020,7 +3038,9 @@ procedure TCustomChromeTabs.CalculateTabRects;
              (ExtraTabWidth <> 0) then
             SetMovementAnimation(nil);
 
-          if (FOptions.Display.Tabs.TabWidthFromContent) and (not PinnedTabs) then
+          if (FOptions.Display.Tabs.TabWidthFromContent) and
+             ((not PinnedTabs) or
+              (FOptions.Display.Tabs.ShowPinnedTabText)) then
             TabWidth := GetTabWidthByContent(TabControl);
 
           TabRight := TabLeft + TabWidth + ExtraTabWidth + FOptions.Display.Tabs.TabOverlap;
@@ -3096,7 +3116,15 @@ begin
          (not FOptions.Display.Tabs.TabWidthFromContent) then
         CalculateAverageTabWidth(FAdjustedTabWidth, FTabEndSpace);
 
-      SetTabPositions(TabLeft, FOptions.Display.Tabs.PinnedWidth, 0, TRUE);
+      if FOptions.Display.Tabs.ShowPinnedTabText then
+      begin
+        SetTabPositions(TabLeft, FAdjustedTabWidth, 0, TRUE);
+      end
+      else
+      begin
+        SetTabPositions(TabLeft, FOptions.Display.Tabs.PinnedWidth, 0, TRUE);
+      end;
+
       SetTabPositions(TabLeft, FAdjustedTabWidth, FTabEndSpace, FALSE);
     end;
 

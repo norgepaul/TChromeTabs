@@ -928,6 +928,7 @@ type
     FTextHorizontalAlignment: TAlignment;
     FTextAlignmentVertical: TVerticalAlignment;
     FShowImages: Boolean;
+    FShowPinnedTabText: Boolean;
   private
     procedure SetSeeThroughTabs(const Value: Boolean);
     procedure SetOverlap(const Value: Integer);
@@ -950,6 +951,7 @@ type
     procedure SetTextAlignmentVertical(const Value: TVerticalAlignment);
     procedure SetShowImages(const Value: Boolean);
     procedure SetTabWidthFromContent(const Value: Boolean);
+    procedure SetShowPinnedTabText(const Value: Boolean);
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
@@ -975,6 +977,7 @@ type
     property TextAlignmentHorizontal: TAlignment read FTextHorizontalAlignment write SetTextAlignmentHorizontal;
     property TextAlignmentVertical: TVerticalAlignment read FTextAlignmentVertical write SetTextAlignmentVertical;
     property ShowImages: Boolean read FShowImages write SetShowImages;
+    property ShowPinnedTabText: Boolean read FShowPinnedTabText write SetShowPinnedTabText;
   end;
 
   TChromeTabsScrollOptions = class(TChromeTabsPersistent)
@@ -1649,6 +1652,7 @@ begin
   FTextHorizontalAlignment := taLeftJustify;
   FTextAlignmentVertical := taVerticalCenter;
   FShowImages := TRUE;
+  FShowPinnedTabText := FALSE;
 
   FTextTrimType := tttFade;
 
@@ -1679,6 +1683,13 @@ end;
 procedure TChromeTabsOptions.SetShowImages(const Value: Boolean);
 begin
   FShowImages := Value;
+
+  DoChanged;
+end;
+
+procedure TChromeTabsOptions.SetShowPinnedTabText(const Value: Boolean);
+begin
+  FShowPinnedTabText := Value;
 
   DoChanged;
 end;

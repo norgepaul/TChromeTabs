@@ -1,6 +1,11 @@
-TChromeTabs 2.1 BETA - 10-06-2015
+TChromeTabs 2.2 BETA
 
-10-06-2015
+23-06-2014
+Added: Display text on pinned tabs - Options.Display.Tabs.GetShowPinnedTabText
+
+TChromeTabs 2.1 BETA - 10-06-2014
+
+10-06-2014
 Fixed: Images not drawn under Windows XP
 Fixed: Maximized application form with TChromeTabsGlassForm blocks pop-up taskbar
 Fixed: Improved image quality and added option to use external pngImage in Delphi 2008 and earlier.

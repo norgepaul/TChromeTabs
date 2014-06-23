@@ -775,7 +775,7 @@ object frmMain: TfrmMain
       Top = 29
       Width = 1017
       Height = 519
-      ActivePage = TabSheet15
+      ActivePage = TabSheet1
       Align = alClient
       TabOrder = 1
       object TabSheet1: TTabSheet
@@ -919,7 +919,7 @@ object frmMain: TfrmMain
           Top = 0
           Width = 739
           Height = 456
-          ActivePage = TabSheet2
+          ActivePage = TabSheet5
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
@@ -1199,7 +1199,7 @@ object frmMain: TfrmMain
               Top = 185
               Width = 731
               Height = 216
-              ActivePage = Spinners
+              ActivePage = TabSheet16
               Align = alTop
               TabOrder = 1
               object TabSheet16: TTabSheet
@@ -1968,6 +1968,16 @@ object frmMain: TfrmMain
                   'Top'
                   'Bottom'
                   'Centre')
+              end
+              object chkShowTextOnPinnedTabs: TCheckBox
+                Tag = 1
+                Left = 173
+                Top = 26
+                Width = 188
+                Height = 17
+                Caption = 'Show text on pinned tabs'
+                TabOrder = 4
+                OnClick = OnCommonControlPropertyChange
               end
             end
           end

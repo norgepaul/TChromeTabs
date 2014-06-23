@@ -1010,7 +1010,8 @@ begin
   else
   begin
     // Should we centre the image?
-    if ChromeTab.GetPinned then
+    if (ChromeTab.GetPinned) and
+       (not ChromeTabs.GetOptions.Display.Tabs.ShowPinnedTabText) then
       ImageRect := Rect(ControlRect.Left + (RectWidth(ControlRect) div 2) - (ImageWidth div 2),
                         ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2),
                         ControlRect.Left + (RectWidth(ControlRect) div 2) - (RectWidth(CloseButtonRect) div 2) + ImageHeight,
@@ -1027,7 +1028,8 @@ begin
   end;
 
   // Does the Text fit?
-  TextVisible := (not ChromeTab.GetPinned) and
+  TextVisible := ((not ChromeTab.GetPinned) or
+                  (ChromeTabs.GetOptions.Display.Tabs.ShowPinnedTabText)) and
                  (RightOffset - LeftOffset >= 5);
 
   if TextVisible then
@@ -1432,7 +1434,7 @@ begin
       TabCanvas.SetClip(OriginalClipRegion);
 
       // Draw the text
-      if (not ChromeTab.GetPinned) and (TextVisible) then
+      if TextVisible then
       begin
         ChromeTabs.DoOnBeforeDrawItem(TabCanvas, TextRect, itTabText, ChromeTab.GetIndex, Handled);
 
