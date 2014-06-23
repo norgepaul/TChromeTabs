@@ -1,6 +1,7 @@
 program ChromeTabsDemoXE6;
 
 uses
+  EMemLeaks,
   Forms,
   frmMainU in 'frmMainU.pas' {frmMain},
   ChromeTabsLog in '..\Lib\ChromeTabsLog.pas',
