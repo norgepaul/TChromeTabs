@@ -1,4 +1,4 @@
-package ChromeTabs_R;
+package ChromeTabs_D;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -23,27 +23,20 @@ package ChromeTabs_R;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE EUREKALOG}
-{$DEFINE EUREKALOG_VER6}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Chrome Tabs'}
+{$DESCRIPTION 'Chrome Tabs Design Time'}
 {$LIBVERSION '200'}
-{$RUNONLY}
+{$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
 requires
   rtl,
-  vcl,
-  vclimg;
+  DesignIDE,
+  ChromeTabs_R;
 
 contains
-  ChromeTabsUtils in '..\..\Lib\ChromeTabsUtils.pas',
-  ChromeTabsTypes in '..\..\Lib\ChromeTabsTypes.pas',
-  ChromeTabsThreadTimer in '..\..\Lib\ChromeTabsThreadTimer.pas',
-  ChromeTabs in '..\..\Lib\ChromeTabs.pas',
-  ChromeTabsControls in '..\..\Lib\ChromeTabsControls.pas',
-  ChromeTabsClasses in '..\..\Lib\ChromeTabsClasses.pas',
-  ChromeTabsGlassForm in '..\..\Lib\ChromeTabsGlassForm.pas';
+  ChromeTabsDesign in '..\..\Lib\ChromeTabsDesign.pas',
+  ChromeTabsRegister in '..\..\Lib\ChromeTabsRegister.pas';
 
 end.
