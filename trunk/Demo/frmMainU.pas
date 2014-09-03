@@ -25,10 +25,16 @@ interface
 
 {$include versions.inc}
 
+{$DEFINE JEDI_INC}
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, ComCtrls, Spin, Contnrs,
   ExtCtrls, ImgList, Types, Menus, ClipBrd, AppEvnts,
+
+  //{$IF CompilerVersion >= 28}System.Actions,{$IFEND}
+  { TODO : This should work, but it seems that a bug in Delphi XE7 automatically
+    adds the System.Actions unit unless you use the IFDEF below. }
+  {$IFDEF VER280}System.Actions,{$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -43,7 +49,7 @@ uses
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog, System.Actions;
+  ChromeTabsLog;
 
 type
   TFormType = {$IFDEF DELPHI2010_UP}
@@ -372,6 +378,7 @@ type
     Button2: TButton;
     chkCustomTabShapes: TCheckBox;
     chkShowTextOnPinnedTabs: TCheckBox;
+    chkHideClosebutton: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -811,6 +818,7 @@ begin
       Tab.Pinned := chkPinned.Checked;
       Tab.Modified := chkModified.Checked;
       Tab.SpinnerState := TChromeTabSpinnerState(cbSpinnerState.ItemIndex);
+      Tab.HideCloseButton := chkHideClosebutton.Checked;
     finally
       FCurrentTabs.EndUpdate;
     end;
@@ -829,6 +837,7 @@ begin
       chkPinned.Checked := Tab.Pinned;
       chkModified.Checked := Tab.Modified;
       cbSpinnerState.ItemIndex := Integer(Tab.SpinnerState);
+      chkHideClosebutton.Checked := Tab.HideCloseButton;
     end;
   finally
     FUpdatingProperties := FALSE;

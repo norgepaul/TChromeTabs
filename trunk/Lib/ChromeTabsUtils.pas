@@ -36,9 +36,8 @@ uses
   Windows, SysUtils, Controls, Classes, Graphics, Messages, ExtCtrls, Forms,
   GraphUtil, Math,
 
-  {$IFDEF USE_PNGIMAGE}
-  pngImage,
-  {$ENDIF}
+  {$IF CompilerVersion >= 28}System.Types,{$IFEND}
+  {$IFDEF USE_PNGIMAGE}pngImage,{$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -584,12 +583,12 @@ end;
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
 var
   Bitmap: TBitmap;
-  PNGObject: TPNGObject;
+  PNGObject: {$IF CompilerVersion >= 28}TPNGImage{$ELSE}TPNGObject{$IFEND};
   Stream: TStream;
 begin
   Stream := TMemoryStream.Create;
   try
-    PNGObject := TPNGObject.Create;
+    PNGObject := {$IF CompilerVersion >= 28}TPNGImage{$ELSE}TPNGObject{$IFEND}.Create;
     try
       Bitmap := TBitmap.Create;
       try

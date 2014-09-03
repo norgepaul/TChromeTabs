@@ -26,6 +26,8 @@ interface
 uses
   Windows, Classes, Controls, SysUtils, ImgList, Graphics,
 
+  {$IF CompilerVersion >= 28}System.Types,{$IFEND}
+
   GDIPObj, GDIPAPI,
 
   ChromeTabsTypes,
@@ -763,11 +765,19 @@ begin
     Result := FALSE
   else
   begin
-    case ChromeTabs.GetOptions.Display.CloseButton.Visibility of
-      bvAll: Result := not ChromeTab.GetPinned;
-      bvActive: Result := (not ChromeTab.GetPinned) and (FDrawState = dsActive);
-    else
+    // Hide the close button on all tabs if we have the hide close button override set
+    if ChromeTab.GetHideCloseButton then
+    begin
       Result := FALSE;
+    end
+    else
+    begin
+      case ChromeTabs.GetOptions.Display.CloseButton.Visibility of
+        bvAll: Result := not ChromeTab.GetPinned;
+        bvActive: Result := (not ChromeTab.GetPinned) and (FDrawState = dsActive);
+      else
+        Result := FALSE;
+      end;
     end;
   end;
 end;

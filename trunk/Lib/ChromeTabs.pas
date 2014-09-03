@@ -82,6 +82,8 @@ uses
   Windows, SysUtils, Classes, Controls, ExtCtrls, Graphics, Forms, Messages,
   ImgList, Dialogs, Menus, StdCtrls, GraphUtil,
 
+  {$IF CompilerVersion >= 28}System.Types,{$IFEND}
+
   GDIPObj, GDIPAPI,
 
   ChromeTabsTypes,
@@ -2793,7 +2795,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
     if FOptions.Display.Tabs.ShowPinnedTabText then
     begin
       TabClientWidth := RectWidth(TabClientRect) - FOptions.Display.Tabs.TabOverlap;
-      PinnedTabWidth := TabClientWidth;
+      // PinnedTabWidth := TabClientWidth; {Removed 03.09.2014}
     end
     else
     begin
@@ -2911,7 +2913,12 @@ procedure TCustomChromeTabs.CalculateTabRects;
        (FActiveDragTabObject.DragTab.Pinned = PinnedTabs) then
     begin
       if FOptions.Display.Tabs.TabWidthFromContent then
-        DragTabWidth := GetTabWidthByContent(FDragTabControl) + FOptions.Display.Tabs.TabOverlap
+      begin
+        if FDragTabControl <> nil then
+          DragTabWidth := GetTabWidthByContent(FDragTabControl) + FOptions.Display.Tabs.TabOverlap
+        else
+          DragTabWidth := 0;
+      end
       else
       begin
         DragTabWidth := TabWidth + FOptions.Display.Tabs.TabOverlap;

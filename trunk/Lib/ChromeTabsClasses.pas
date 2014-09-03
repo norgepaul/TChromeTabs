@@ -27,6 +27,8 @@ uses
   Windows, Classes, SysUtils, ImgList, Controls, Graphics,
   Forms, Contnrs, Messages, Dialogs,
 
+  {$IF CompilerVersion >= 28}System.UITypes,{$IFEND}
+
   GDIPObj, GDIPAPI,
 
   ChromeTabsUtils,
@@ -50,6 +52,7 @@ type
     function GetTab: TChromeTab;
     function GetMarkedForDeletion: Boolean;
     function GetSpinnerState: TChromeTabSpinnerState;
+    function GetHideCloseButton: Boolean;
   end;
 
   TChromeTabPolygon = class(TObject)
@@ -112,6 +115,7 @@ type
     FModified: Boolean;
     FMarkedForDeletion: Boolean;
     FSpinnerState: TChromeTabSpinnerState;
+    FHideCloseButton: Boolean;
 
     procedure SetActive(Value: boolean);
     procedure SetCaption(Value: TCaption);
@@ -121,6 +125,8 @@ type
     procedure SetImageIndexOverlay(const Value: TImageIndex);
     procedure SetVisible(const Value: Boolean);
     procedure SetModified(const Value: Boolean);
+    procedure SetSpinnerState(const Value: TChromeTabSpinnerState);
+    procedure SetHideCloseButton(const Value: Boolean);
 
     function GetDisplayCaption: String;
     function GetCaption: TCaption;
@@ -135,7 +141,7 @@ type
     function GetTab: TChromeTab;
     function GetMarkedForDeletion: Boolean;
     function GetSpinnerState: TChromeTabSpinnerState;
-    procedure SetSpinnerState(const Value: TChromeTabSpinnerState);
+    function GetHideCloseButton: Boolean;
   protected
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
@@ -162,6 +168,7 @@ type
     property Visible: Boolean read GetVisible write SetVisible;
     property Modified: Boolean read GetModified write SetModified;
     property SpinnerState: TChromeTabSpinnerState read GetSpinnerState write SetSpinnerState;
+    property HideCloseButton: Boolean read GetHideCloseButton write SetHideCloseButton;
   end;
 
   TChromeTabClass = class of TChromeTab;
@@ -1337,6 +1344,11 @@ begin
     Result := inherited GetDisplayName;
 end;
 
+function TChromeTab.GetHideCloseButton: Boolean;
+begin
+  Result := FHideCloseButton;
+end;
+
 function TChromeTab.GetImageIndex: TImageIndex;
 begin
   Result := FImageIndex;
@@ -1417,6 +1429,11 @@ begin
   end
   else
     inherited;
+end;
+
+procedure TChromeTab.SetHideCloseButton(const Value: Boolean);
+begin
+  FHideCloseButton := Value;
 end;
 
 function TChromeTab.ImageIsVisible: Boolean;
