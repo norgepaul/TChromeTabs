@@ -158,6 +158,9 @@ Item0=..\..\bin\D7
 Item1=../../bin
 Item2=../bin
 [Exception Log]
-EurekaLog Version=7001
+EurekaLog Version=7007
+Activate=0
+DeleteMapAfterCompile=1
+Encrypt Password=""
 
 

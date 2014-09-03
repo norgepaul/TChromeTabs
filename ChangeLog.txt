@@ -1,7 +1,10 @@
 TChromeTabs 2.3 BETA
 
 03-10-2014
-Update: XE7 Compatibility
+Update: XE7 Compatibility.
+Fixed: Access violation error when sizing tabs by content.
+Fixed: 	TChromeTabsGlassForm Access Violation when built with C++ Builder
+Added: Each chrome tab now has a new "HideCloseButton" property.
 
 
 TChromeTabs 2.2

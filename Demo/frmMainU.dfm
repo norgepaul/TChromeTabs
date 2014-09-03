@@ -1,9 +1,9 @@
 object frmMain: TfrmMain
   Left = 207
   Top = 136
+  Width = 1033
+  Height = 644
   Caption = 'Chrome Tabs Demo'
-  ClientHeight = 606
-  ClientWidth = 1017
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -82,11 +82,13 @@ object frmMain: TfrmMain
     Options.Display.Tabs.ImageOffsetLeft = 13
     Options.Display.Tabs.TextTrimType = tttFade
     Options.Display.Tabs.Orientation = toTop
+    Options.Display.Tabs.CanvasSmoothingMode = 2
     Options.Display.Tabs.BaseLineTabRegionOnly = False
     Options.Display.Tabs.WordWrap = False
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
     Options.Display.Tabs.TextAlignmentVertical = taVerticalCenter
     Options.Display.Tabs.ShowImages = True
+    Options.Display.Tabs.ShowPinnedTabText = False
     Options.Display.TabContainer.TransparentBackground = True
     Options.Display.TabContainer.OverlayButtons = True
     Options.Display.TabContainer.PaddingLeft = 0
@@ -168,6 +170,7 @@ object frmMain: TfrmMain
         Visible = True
         Modified = False
         SpinnerState = tssRenderedDownload
+        HideCloseButton = False
       end
       item
         Caption = 'Chrome Tab 2'
@@ -179,6 +182,7 @@ object frmMain: TfrmMain
         Visible = True
         Modified = False
         SpinnerState = tssNone
+        HideCloseButton = False
       end>
     LookAndFeel.TabsContainer.StartColor = 14586466
     LookAndFeel.TabsContainer.StopColor = 13201730
@@ -438,11 +442,13 @@ object frmMain: TfrmMain
     Options.Display.Tabs.ImageOffsetLeft = 13
     Options.Display.Tabs.TextTrimType = tttFade
     Options.Display.Tabs.Orientation = toBottom
+    Options.Display.Tabs.CanvasSmoothingMode = 2
     Options.Display.Tabs.BaseLineTabRegionOnly = False
     Options.Display.Tabs.WordWrap = False
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
     Options.Display.Tabs.TextAlignmentVertical = taVerticalCenter
     Options.Display.Tabs.ShowImages = True
+    Options.Display.Tabs.ShowPinnedTabText = False
     Options.Display.TabContainer.TransparentBackground = False
     Options.Display.TabContainer.OverlayButtons = True
     Options.Display.TabContainer.PaddingLeft = 0
@@ -743,6 +749,7 @@ object frmMain: TfrmMain
         Width = 128
         Height = 23
         Style = csDropDownList
+        ItemHeight = 15
         ItemIndex = 0
         TabOrder = 1
         Text = 'Top Tabs'
@@ -854,7 +861,7 @@ object frmMain: TfrmMain
           object chkPinned: TCheckBox
             Left = 11
             Top = 163
-            Width = 97
+            Width = 67
             Height = 16
             Caption = 'Pinned'
             TabOrder = 4
@@ -866,13 +873,13 @@ object frmMain: TfrmMain
             Width = 122
             Height = 25
             Caption = 'Make All Tabs Visible'
-            TabOrder = 7
+            TabOrder = 8
             OnClick = btnMakeAllTabsVisibleClick
           end
           object chkModified: TCheckBox
-            Left = 135
+            Left = 75
             Top = 163
-            Width = 97
+            Width = 66
             Height = 16
             Caption = 'Modified'
             TabOrder = 5
@@ -884,7 +891,7 @@ object frmMain: TfrmMain
             Width = 118
             Height = 25
             Caption = 'Hide Tab'
-            TabOrder = 6
+            TabOrder = 7
             OnClick = btnHideTabClick
           end
           object cbSpinnerState: TComboBox
@@ -893,6 +900,7 @@ object frmMain: TfrmMain
             Width = 246
             Height = 23
             Style = csDropDownList
+            ItemHeight = 15
             ItemIndex = 0
             TabOrder = 3
             Text = 'None'
@@ -910,8 +918,17 @@ object frmMain: TfrmMain
             Width = 118
             Height = 25
             Caption = 'Delete Active Tab'
-            TabOrder = 8
+            TabOrder = 9
             OnClick = Button2Click
+          end
+          object chkHideClosebutton: TCheckBox
+            Left = 151
+            Top = 163
+            Width = 117
+            Height = 16
+            Caption = 'Hide Close Button'
+            TabOrder = 6
+            OnClick = CommonTabPropertyChange
           end
         end
         object pcOptions: TPageControl
@@ -1266,6 +1283,7 @@ object frmMain: TfrmMain
                   Width = 143
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Right to Left'
@@ -1326,6 +1344,7 @@ object frmMain: TfrmMain
                   Width = 165
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 1
                   Text = 'None'
@@ -1825,6 +1844,7 @@ object frmMain: TfrmMain
                 Width = 170
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 4
                 TabOrder = 0
                 Text = 'Anti Alias'
@@ -1842,6 +1862,7 @@ object frmMain: TfrmMain
                 Top = 89
                 Width = 170
                 Height = 23
+                ItemHeight = 0
                 TabOrder = 1
                 Text = 'Segoe UI'
                 OnChange = OnCommonControlPropertyChange
@@ -1874,6 +1895,7 @@ object frmMain: TfrmMain
                 Width = 170
                 Height = 22
                 DefaultColorColor = clSkyBlue
+                ItemHeight = 16
                 TabOrder = 4
                 OnChange = OnCommonControlPropertyChange
               end
@@ -1916,6 +1938,7 @@ object frmMain: TfrmMain
                 Width = 152
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 6
                 TabOrder = 3
                 Text = 'Fade'
@@ -1945,6 +1968,7 @@ object frmMain: TfrmMain
                 Width = 150
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 1
                 Text = 'Left'
@@ -1960,6 +1984,7 @@ object frmMain: TfrmMain
                 Width = 139
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 2
                 TabOrder = 2
                 Text = 'Centre'
@@ -2057,6 +2082,7 @@ object frmMain: TfrmMain
                   Width = 94
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 1
                   TabOrder = 0
                   Text = 'All Tabs'
@@ -2199,6 +2225,7 @@ object frmMain: TfrmMain
                   Width = 118
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Floating Right'
@@ -2293,6 +2320,7 @@ object frmMain: TfrmMain
                   Width = 144
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Right'
@@ -2520,6 +2548,7 @@ object frmMain: TfrmMain
               Width = 206
               Height = 23
               Style = csDropDownList
+              ItemHeight = 15
               ItemIndex = 0
               TabOrder = 0
               Text = 'Left to Right'
@@ -2695,6 +2724,7 @@ object frmMain: TfrmMain
               Width = 170
               Height = 23
               Style = csDropDownList
+              ItemHeight = 15
               ItemIndex = 2
               TabOrder = 0
               Text = 'High Quality'
@@ -2897,6 +2927,7 @@ object frmMain: TfrmMain
                 Width = 165
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 2
                 Text = 'None'
@@ -2932,6 +2963,7 @@ object frmMain: TfrmMain
                 Width = 165
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 4
                 Text = 'None'
@@ -3020,6 +3052,7 @@ object frmMain: TfrmMain
                   Width = 129
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 2
                   Text = 'None'
@@ -3100,6 +3133,7 @@ object frmMain: TfrmMain
                   Width = 129
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 2
                   Text = 'None'
@@ -3180,6 +3214,7 @@ object frmMain: TfrmMain
                   Width = 129
                   Height = 23
                   Style = csDropDownList
+                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 2
                   Text = 'None'
@@ -3223,6 +3258,7 @@ object frmMain: TfrmMain
               Style = csDropDownList
               Constraints.MaxWidth = 200
               Constraints.MinWidth = 200
+              ItemHeight = 15
               ItemIndex = 2
               TabOrder = 1
               Text = 'Drag between containers'
@@ -3278,6 +3314,7 @@ object frmMain: TfrmMain
                 Width = 126
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 0
                 Text = 'Default'
@@ -3303,6 +3340,7 @@ object frmMain: TfrmMain
                 Width = 126
                 Height = 23
                 Style = csDropDownList
+                ItemHeight = 15
                 ItemIndex = 3
                 TabOrder = 3
                 Text = 'Tab and Control'
@@ -3744,7 +3782,7 @@ object frmMain: TfrmMain
     Left = 48
     Top = 472
     Bitmap = {
-      494C010106000900040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010106000900100010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000002F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E
@@ -4020,7 +4058,7 @@ object frmMain: TfrmMain
     Left = 88
     Top = 472
     Bitmap = {
-      494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000500100010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000A3D0CA324802EDB001500610000
@@ -4228,7 +4266,7 @@ object frmMain: TfrmMain
     Left = 128
     Top = 472
     Bitmap = {
-      494C01010B000D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010B000D00100010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000B0B0B0C000000000000000000000000000000000000
@@ -4636,7 +4674,7 @@ object frmMain: TfrmMain
     Left = 168
     Top = 472
     Bitmap = {
-      494C01010A000D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010A000D00100010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       00001F1F1F24505050895F5F5FCB656565EB656565EB5F5F5FCB505050891F1F

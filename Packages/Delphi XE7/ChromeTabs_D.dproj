@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{1877BEAF-1AEB-47C0-B817-913A67404DBD}</ProjectGuid>
         <MainSource>ChromeTabs_D.dpk</MainSource>
-        <ProjectVersion>15.4</ProjectVersion>
+        <ProjectVersion>16.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -71,7 +71,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DllVersion>200</DllVersion>
+        <DllVersion>210</DllVersion>
         <DCC_DcuOutput>..\..\Bin\XE2\$(Config)\$(Platform)\DCU</DCC_DcuOutput>
         <DCC_Description>Chrome Tabs Design Time</DCC_Description>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -141,10 +141,8 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k200.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp200.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD20\dclfsibx20.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD20\dclfrxibx20.bpl">FastReport 4.0 IBX Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k210.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp210.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment/>
@@ -162,11 +160,3 @@
     <Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
     <Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
 </Project>
-
-<!-- EurekaLog First Line
-[Exception Log]
-EurekaLog Version=7007
-Activate=0
-DeleteMapAfterCompile=1
-Encrypt Password=""
-EurekaLog Last Line -->

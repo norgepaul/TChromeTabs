@@ -31,6 +31,8 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Forms, Controls,
 
+  {$IF CompilerVersion >= 28}System.Types,{$ENDIF}
+
   ChromeTabs;
 
 type
@@ -67,6 +69,7 @@ type
     procedure UpdateAeroEnabled;
     procedure DisableTitleTabs;
     procedure EnableTitleTabs;
+    function ShowTabsInTitleBar: Boolean;
   protected
     // Overrides
     procedure AdjustClientRect(var Rect: TRect); override;
@@ -74,7 +77,6 @@ type
     procedure Resize; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ThemeChanged; virtual;
-    function ShowTabsInTitleBar: Boolean; virtual;
 
     // Messages
     procedure WMNCCalcSize(var Message: TWMNCCalcSize); message WM_NCCALCSIZE;
