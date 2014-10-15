@@ -142,6 +142,7 @@ type
     function GetMarkedForDeletion: Boolean;
     function GetSpinnerState: TChromeTabSpinnerState;
     function GetHideCloseButton: Boolean;
+    procedure SetTabControl(const Value: TObject);
   protected
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
@@ -156,7 +157,7 @@ type
     property Data: Pointer read FData write FData;
     property DisplayCaption: String read GetDisplayCaption;
 
-    property TabControl: TObject read FTabControl write FTabControl;
+    property TabControl: TObject read FTabControl write SetTabControl;
     property MarkedForDeletion: Boolean read GetMarkedForDeletion;
   published
     property Caption: TCaption read GetCaption write SetCaption;
@@ -1294,6 +1295,11 @@ begin
       DoChanged;
     end;
   end;
+end;
+
+procedure TChromeTab.SetTabControl(const Value: TObject);
+begin
+  FTabControl := Value;
 end;
 
 procedure TChromeTab.SetTag(const Value: integer);

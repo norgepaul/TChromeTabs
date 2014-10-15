@@ -659,8 +659,8 @@ begin
 
       IntersectClipRect(DC, 0, 0, SrcControl.Parent.ClientWidth, SrcControl.Parent.ClientHeight);
 
-      SrcControl.Parent.Perform(WM_ERASEBKGND, DC, 0);
-      SrcControl.Parent.Perform(WM_PAINT, DC, 0);
+      SrcControl.Parent.Perform(WM_ERASEBKGND, NativeInt(DC), 0);
+      SrcControl.Parent.Perform(WM_PAINT, NativeInt(DC), 0);
     finally
       RestoreDC(DC, SaveIndex);
     end;
