@@ -1620,7 +1620,9 @@ end;
 
 function TChromeTabsList.GetChromeTabInterface: IChromeTabs;
 begin
-  Assert(Supports(Owner, IChromeTabs, Result), 'Collection owner must support IChromeTabInterface');
+  Supports(Owner, IChromeTabs, Result);
+
+  Assert(Result <> nil, 'Collection owner must support IChromeTabInterface');
 end;
 
 function TChromeTabsList.IndexOf(ATab: TChromeTab): integer;
