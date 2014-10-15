@@ -1154,10 +1154,9 @@ var
   NewTabControl: TChromeTabControl;
   NewTabLeft, LastVisibleTabIndex: Integer;
 begin
-  //if ControlReady then
+  if ATab <> nil then
   begin
-    if (TabChangeType = tcAdded) and
-       (ATab.TabControl = nil) then
+    if ATab.TabControl = nil then
     begin
       // If we are adding a new tab, we also need to create the corresponding
       // TabControl. The TabControl will be freed by the Tab
@@ -1204,113 +1203,116 @@ begin
       end;
     end;
 
-    case TabChangeType of
-      tcActivated:
-        begin
-          SetControlDrawState(TabControls[ATab.Index], dsActive);
-
-          if FOptions.Scrolling.Enabled then
-            ScrollIntoView(ATab);
-
-          DoOnActiveTabChanged(ATab);
-        end;
-
-      tcDeactivated:
-        begin
-          SetControlDrawState(TabControls[ATab.Index], dsNotActive);
-
-          // Is there an active tab?
-          if ActiveTab = nil then
+    //if ControlReady then
+    begin
+      case TabChangeType of
+        tcActivated:
           begin
-            // Make sure a tab is active
-            for i := ATab.Index + 1 to pred(Tabs.Count) do
-              if Tabs[i].Visible then
-              begin
-                Tabs[i].Active := TRUE;
+            SetControlDrawState(TabControls[ATab.Index], dsActive);
 
-                Break;
-              end;
+            if FOptions.Scrolling.Enabled then
+              ScrollIntoView(ATab);
+
+            DoOnActiveTabChanged(ATab);
           end;
 
-          // Still no active tab?
-          if ActiveTab = nil then
+        tcDeactivated:
           begin
-            // Make sure a tab is active
-            for i := pred(ATab.Index) downto 0 do
-              if Tabs[i].Visible then
-              begin
-                Tabs[i].Active := TRUE;
+            SetControlDrawState(TabControls[ATab.Index], dsNotActive);
 
-                Break;
-              end;
-          end;
-        end;
-
-      tcPinned: AddState(stsControlPositionsInvalidated);
-
-      tcPropertyUpdated:
-        begin
-          UpdateProperties;
-
-          InvalidateAllControls;
-        end;
-
-      tcAdded: ClearTabClosingStates;
-
-      tcVisibility: AddState(stsControlPositionsInvalidated);
-
-      tcDeleted:
-        begin
-          SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
-
-          // We're deleting the tab but we need to animate it first
-          if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
-             (ATab <> nil) then
-          begin
-            // If the tabs are compressed and this is the last tab, don't animate
-            if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
+            // Is there an active tab?
+            if ActiveTab = nil then
             begin
-              Tabs.DeleteTab(ATab.Index, TRUE);
-            end
-            else
-            begin
-              AddState(stsAnimatingCloseTab);
+              // Make sure a tab is active
+              for i := ATab.Index + 1 to pred(Tabs.Count) do
+                if Tabs[i].Visible then
+                begin
+                  Tabs[i].Active := TRUE;
 
-              TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
-                                               FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
-                                               FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
+                  Break;
+                end;
+            end;
+
+            // Still no active tab?
+            if ActiveTab = nil then
+            begin
+              // Make sure a tab is active
+              for i := pred(ATab.Index) downto 0 do
+                if Tabs[i].Visible then
+                begin
+                  Tabs[i].Active := TRUE;
+
+                  Break;
+                end;
             end;
           end;
-        end;
 
-      tcDeleting:
-        begin
-          RemoveState(stsEndTabDeleted);
+        tcPinned: AddState(stsControlPositionsInvalidated);
 
-          if FOptions.Behaviour.TabSmartDeleteResizing then
+        tcPropertyUpdated:
           begin
-            if ATab.Index = Tabs.Count - 1 then
-              AddState(stsEndTabDeleted)
-            else
-              AddState(stsTabDeleted);
+            UpdateProperties;
+
+            InvalidateAllControls;
           end;
-        end;
 
-      tcControlState:
-        begin
-          if ATab <> nil then
-            TabControls[ATab.Index].Invalidate;
-        end;
+        tcAdded: ClearTabClosingStates;
+
+        tcVisibility: AddState(stsControlPositionsInvalidated);
+
+        tcDeleted:
+          begin
+            SetMovementAnimation(FOptions.Animation.MovementAnimations.TabDelete);
+
+            // We're deleting the tab but we need to animate it first
+            if (FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete) <> ttNone) and
+               (ATab <> nil) then
+            begin
+              // If the tabs are compressed and this is the last tab, don't animate
+              if (GetTabDisplayState = tdCompressed) and (ATab.Index = Tabs.Count - 1) then
+              begin
+                Tabs.DeleteTab(ATab.Index, TRUE);
+              end
+              else
+              begin
+                AddState(stsAnimatingCloseTab);
+
+                TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
+                                                 FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
+                                                 FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
+              end;
+            end;
+          end;
+
+        tcDeleting:
+          begin
+            RemoveState(stsEndTabDeleted);
+
+            if FOptions.Behaviour.TabSmartDeleteResizing then
+            begin
+              if ATab.Index = Tabs.Count - 1 then
+                AddState(stsEndTabDeleted)
+              else
+                AddState(stsTabDeleted);
+            end;
+          end;
+
+        tcControlState:
+          begin
+            if ATab <> nil then
+              TabControls[ATab.Index].Invalidate;
+          end;
+      end;
+
+      if (FTabs <> nil) and (ActiveTabIndex = -1) and (GetVisibleTabCount > 0) then
+        ActiveTabIndex := GetLastVisibleTabIndex(FTabs.Count - 1);
+
+      Redraw;
     end;
-
-    if (FTabs <> nil) and (ActiveTabIndex = -1) and (GetVisibleTabCount > 0) then
-      ActiveTabIndex := GetLastVisibleTabIndex(FTabs.Count - 1);
-
-    Redraw;
-
-    if (Assigned(FOnChange)) and (TabChangeType <> tcAdded) then
-      FOnChange(Self, ATab, TabChangeType);
   end;
+
+  if (Assigned(FOnChange)) and (TabChangeType <> tcAdded) then
+    FOnChange(Self, ATab, TabChangeType);
 end;
 
 procedure TCustomChromeTabs.UpdateProperties;

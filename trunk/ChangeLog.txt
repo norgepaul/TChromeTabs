@@ -1,5 +1,9 @@
 TChromeTabs 2.3 BETA
 
+15-10-2014
+Fixed: Range check error in PaintControlToCanvas.
+Fixed: GetChromeTabInterface returned nil (exception) if assertions were not enabled.
+
 03-10-2014
 Update: XE7 Compatibility.
 Fixed: Access violation error when sizing tabs by content.
