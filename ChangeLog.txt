@@ -1,5 +1,9 @@
 TChromeTabs 2.3 BETA
 
+22-10-2015
+Fixed: "Ghost" tab would remain if a dragged tab immediately entered another container when dragging.
+Update: Removed several warnings on XE2+
+
 15-10-2014
 Fixed: Range check error in PaintControlToCanvas.
 Fixed: GetChromeTabInterface returned nil (exception) if assertions were not enabled.
