@@ -2000,6 +2000,9 @@ begin
             begin
               PreviousDockControl := FDragTabObject.DockControl;
 
+              if (PreviousDockControl <> nil) and (PreviousDockControl <> TabDockControl) then
+                PreviousDockControl.TabDragOver(Self, ControlPoint.X, ControlPoint.Y, dsDragLeave, FDragTabObject, DummyAccept);
+
               // Set the current dock control
               FDragTabObject.DockControl := TabDockControl;
 
@@ -2818,7 +2821,9 @@ procedure TCustomChromeTabs.CalculateTabRects;
     if (FDragTabControl <> nil) and
        (FActiveDragTabObject.SourceControl.GetControl <> Self) and
        (not FActiveDragTabObject.DragTab.Pinned) then
+    begin
       VisibleTabCount := VisibleTabCount + 1;
+    end;
 
     if FOptions.Display.Tabs.ShowPinnedTabText then
     begin
@@ -3502,7 +3507,6 @@ begin
       if //(X >= BidiRect(FTabContainerRect).Left) and
          (X <= BidiRect(FTabContainerRect).Left + FOptions.Scrolling.DragScrollOffset) then
       begin
-        DoOnDebugLog('Scroll!!!!!', []);
         ScrollTabs(mdsLeft);
       end
       else
@@ -3539,7 +3543,9 @@ begin
 
           FScrollTimer.Enabled := FALSE;
 
-          if DragTabObject.SourceControl.GetControl = Self then
+          FDragTabControl := nil;
+
+          if DraggingInOwnContainer then
           begin
             FDragTabControl := nil;
           end
@@ -3857,7 +3863,9 @@ begin
 
         // Draw the drag tab if required
         if FDragTabControl <> nil then
+        begin
           FDragTabControl.DrawTo(TabCanvas, FLastMouseX, FLastMouseY);
+        end;
 
         // Draw the new button
         if (FOptions.Display.AddButton.Visibility <> avNone) and
