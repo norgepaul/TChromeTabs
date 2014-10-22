@@ -27,7 +27,7 @@ uses
   Windows, Classes, SysUtils, ImgList, Controls, Graphics,
   Forms, Contnrs, Messages, Dialogs,
 
-  {$IF CompilerVersion >= 28}System.UITypes,{$IFEND}
+  {$IF CompilerVersion >= 23}System.UITypes,{$IFEND}
 
   GDIPObj, GDIPAPI,
 

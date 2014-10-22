@@ -82,7 +82,7 @@ uses
   Windows, SysUtils, Classes, Controls, ExtCtrls, Graphics, Forms, Messages,
   ImgList, Dialogs, Menus, StdCtrls, GraphUtil,
 
-  {$IF CompilerVersion >= 28}System.Types,{$IFEND}
+  {$IF CompilerVersion >= 23}System.Types,{$IFEND}
 
   GDIPObj, GDIPAPI,
 
@@ -1078,7 +1078,8 @@ begin
     FDragCancelled := FALSE;
 
     if (tdDeleteDraggedTab in TabDropOptions) and (ActiveTabIndex <> -1) then
-      FTabs.Delete(ActiveTabIndex);
+      DeleteTab(ActiveTabIndex);
+      //FTabs.Delete(ActiveTabIndex);
 
     RemoveState(stsDragging);
 
@@ -1304,7 +1305,10 @@ begin
             end;
         end;
 
-        if (FTabs <> nil) and (ActiveTabIndex = -1) and (GetVisibleTabCount > 0) then
+        if (FTabs <> nil) and
+           (ActiveTabIndex = -1) and
+           (FOptions.Behaviour.ActivateNewTab) and
+           (GetVisibleTabCount > 0) then
           ActiveTabIndex := GetLastVisibleTabIndex(FTabs.Count - 1);
 
         Redraw;
