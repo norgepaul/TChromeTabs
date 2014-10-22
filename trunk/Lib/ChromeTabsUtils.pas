@@ -28,15 +28,11 @@ interface
 {.$DEFINE USE_PNGIMAGE} // <-- Enable this define if you want to use an external
                         //     copy of pngImage in Delphi 2008 or earlier
 
-{$IFDEF DELPHI2010_UP}
-  {$DEFINE USE_PNGIMAGE}
-{$ENDIF}
-
 uses
   Windows, SysUtils, Controls, Classes, Graphics, Messages, ExtCtrls, Forms,
   GraphUtil, Math,
 
-  {$IF CompilerVersion >= 28}System.Types,{$IFEND}
+  {$IF CompilerVersion >= 23}System.Types,{$IFEND}
   {$IFDEF USE_PNGIMAGE}pngImage,{$ENDIF}
 
   GDIPObj, GDIPAPI,

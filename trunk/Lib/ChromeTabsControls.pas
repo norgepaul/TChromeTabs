@@ -26,7 +26,7 @@ interface
 uses
   Windows, Classes, Controls, SysUtils, ImgList, Graphics,
 
-  {$IF CompilerVersion >= 28}System.Types,{$IFEND}
+  {$IF CompilerVersion >= 23}System.Types,{$IFEND}
 
   GDIPObj, GDIPAPI,
 
