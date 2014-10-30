@@ -231,6 +231,12 @@ type
     avRightFixed
   );
 
+  TDragOverType = (
+    dotNone,
+    dotHomeContainer,
+    dotRemoteContainer
+  );
+
   TBiDiModes = set of TBiDiMode;
 
   THitTestResult = record

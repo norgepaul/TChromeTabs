@@ -1,9 +1,10 @@
 unit ChromeTabs;
 
-// Version 1.3
+// Version 2.3
 //
-// TChromeTabs - A Chome Tab component for Delphi 7-XE3 that includes ALL the
-//               features seen in the Google Chrome tabs along with much, much more.
+// TChromeTabs - A Chome Tab component for Delphi 7-XE7 that includes ALL the
+//               features seen in the Google Chrome tab control along with
+//               much, much more.
 //
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -112,6 +113,7 @@ type
   TOnTabDragOver = procedure(Sender: TObject; X, Y: Integer; State: TDragState; DragTabObject: IDragTabObject; var Accept: Boolean) of object;
   TOnTabDragDrop = procedure(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions) of object;
   TOnTabDragDropped = procedure(Sender: TObject; DragTabObject: IDragTabObject; NewTab: TChromeTab) of object;
+  TOnTabDragEnd = procedure(Sender: TObject; MouseX, MouseY: Integer; Cancelled: Boolean) of object;
   TOnAnimateStyle = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
@@ -143,7 +145,7 @@ type
     function GetControl: TWinControl;
     procedure TabDragOver(Sender: TObject; X, Y: Integer; State: TDragState; DragTabObject: IDragTabObject; var Accept: Boolean);
     procedure TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
-    procedure DragCompleted;
+    procedure DragCompleted(MouseX, MouseY: Integer; Cancelled: Boolean);
     function InsertDroppedTab: TChromeTab;
     procedure FireScrollTimer;
   private
@@ -169,6 +171,7 @@ type
     FOnTabDragOver: TOnTabDragOver;
     FOnTabDragDrop: TOnTabDragDrop;
     FOnTabDragDropped: TOnTabDragDropped;
+    FOnTabDragEnd: TOnTabDragEnd;
     FOnScroll: TNotifyEvent;
     FOnScrollWidthChanged: TNotifyEvent;
     FOnAnimateStyle: TOnAnimateStyle;
@@ -336,6 +339,7 @@ type
     procedure DoOnTabDragOver(X, Y: Integer; State: TDragState; DragTabObject: IDragTabObject; var Accept: Boolean); virtual;
     procedure DoOnTabDragDrop(X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions); virtual;
     procedure DoOnTabDragDropped(DragTabObject: IDragTabObject; NewTab: TChromeTab); virtual;
+    procedure DoOnTabDragEnd(MouseX, MouseY: Integer; Cancelled: Boolean); virtual;
     procedure DoOnScroll; virtual;
     procedure DoOnScrollWidthChanged; virtual;
     procedure DoPopup(Sender: TObject; APoint: TPoint); virtual;
@@ -376,6 +380,7 @@ type
     property OnTabDragOver: TOnTabDragOver read FOnTabDragOver write FOnTabDragOver;
     property OnTabDragDrop: TOnTabDragDrop read FOnTabDragDrop write FOnTabDragDrop;
     property OnTabDragDropped: TOnTabDragDropped read FOnTabDragDropped write FOnTabDragDropped;
+    property OnTabDragEnd: TOnTabDragEnd read FOnTabDragEnd write FOnTabDragEnd;
     property OnScroll: TNotifyEvent read FOnScroll write FOnScroll;
     property OnScrollWidthChanged: TNotifyEvent read FOnScrollWidthChanged write FOnScrollWidthChanged;
     property OnAnimateStyle: TOnAnimateStyle read FOnAnimateStyle write FOnAnimateStyle;
@@ -458,6 +463,7 @@ type
     property OnTabDragOver;
     property OnTabDragDrop;
     property OnTabDragDropped;
+    property OnTabDragEnd;
     property OnScroll;
     property OnScrollWidthChanged;
     property OnAnimateStyle;
@@ -609,6 +615,7 @@ begin
       FDragTabObject.OriginalCursor := Screen.Cursor;
       FDragTabObject.SourceControl := Self;
       FDragTabObject.DockControl := Self;
+      FDragTabObject.DragOverType := dotHomeContainer;
 
       Screen.Cursor := FOptions.DragDrop.DragCursor;
 
@@ -1072,6 +1079,14 @@ begin
       SourceControl := FDragTabObject.SourceControl;
     end;
 
+    if FDragTabObject <> nil then
+    begin
+      if DockControl <> nil then
+        DockControl.DragCompleted(MouseX, MouseY, Cancelled);
+
+      SourceControl.DragCompleted(MouseX, MouseY, Cancelled);
+    end;
+
     FDragTabObject := nil;
     FActiveDragTabObject := nil;
     FDragTabControl := nil;
@@ -1079,18 +1094,15 @@ begin
 
     if (tdDeleteDraggedTab in TabDropOptions) and (ActiveTabIndex <> -1) then
       DeleteTab(ActiveTabIndex);
-      //FTabs.Delete(ActiveTabIndex);
 
     RemoveState(stsDragging);
-
-    if FDragTabObject <> nil then
-    begin
-      if DockControl <> nil then
-        DockControl.DragCompleted;
-
-      SourceControl.DragCompleted;
-    end;
   end;
+end;
+
+procedure TCustomChromeTabs.DoOnTabDragEnd(MouseX, MouseY: Integer; Cancelled: Boolean);
+begin
+  if Assigned(FOnTabDragEnd) then
+    FOnTabDragEnd(Self, MouseX, MouseY, Cancelled);
 end;
 
 procedure TCustomChromeTabs.EndUpdate;
@@ -1966,8 +1978,12 @@ begin
       if (FDragTabObject <> nil) and
          (FDragTabObject.SourceControl.GetControl = Self) then
       begin
+        FDragTabObject.DragOverType := dotNone;
+
         if FOptions.DragDrop.DragType = dtWithinContainer then
         begin
+          FDragTabObject.DragOverType := dotHomeContainer;
+
           TabDragOver(Self, X, Y, dsDragMove, FDragTabObject, DummyAccept);
         end
         else
@@ -2005,6 +2021,14 @@ begin
 
               // Set the current dock control
               FDragTabObject.DockControl := TabDockControl;
+
+              if FDragTabObject.DockControl = nil then
+                FDragTabObject.DragOverType := dotNone
+              else
+              if FDragTabObject.DockControl.GetControl = Self then
+                FDragTabObject.DragOverType := dotHomeContainer
+              else
+                FDragTabObject.DragOverType := dotRemoteContainer;
 
               // Call the drag over method
               TabDockControl.TabDragOver(Self, ControlPoint.X, ControlPoint.Y, dsDragMove, FDragTabObject, DummyAccept);
@@ -2379,7 +2403,8 @@ var
   AllowClose: Boolean;
   HitTestResult: THitTestResult;
 begin
-  inherited;
+  if (Button <> mbRight) or (FDragTabObject = nil) then
+    inherited;
 
   BeginUpdate;
   try
@@ -3624,7 +3649,8 @@ begin
   end
   else
   begin
-    if FOptions.Behaviour.UseBuiltInPopupMenu then
+    if (FOptions.Behaviour.UseBuiltInPopupMenu) and
+       (FDragTabObject = nil) then
       DoPopup(Self, ScreenPoint);
   end;
 end;
@@ -3660,8 +3686,10 @@ begin
   inherited;
 end;
 
-procedure TCustomChromeTabs.DragCompleted;
+procedure TCustomChromeTabs.DragCompleted(MouseX, MouseY: Integer; Cancelled: Boolean);
 begin
+  DoOnTabDragEnd(MouseX, MouseY, Cancelled);
+
   AddState(stsControlPositionsInvalidated);
 
   Redraw;
