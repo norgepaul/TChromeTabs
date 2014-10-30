@@ -562,7 +562,7 @@ type
     procedure TabDragDrop(Sender: TObject; X, Y: Integer; DragTabObject: IDragTabObject; Cancelled: Boolean; var TabDropOptions: TTabDropOptions);
     function InsertDroppedTab: TChromeTab;
     procedure FireScrollTimer;
-    procedure DragCompleted;
+    procedure DragCompleted(MouseX, MouseY: Integer; Cancelled: Boolean);
     function GetBidiMode: TBiDiMode;
   end;
 
@@ -579,6 +579,7 @@ type
     function GetSourceControl: IChromeTabDockControl;
     function GetDockControl: IChromeTabDockControl;
     function GetOriginalCursor: TCursor;
+    function GetDragOverType: TDragOverType;
 
     procedure SetDragCursorOffset(const Value: TPoint);
     procedure SetDragForm(const Value: TForm);
@@ -591,6 +592,7 @@ type
     procedure SetSourceControl(const Value: IChromeTabDockControl);
     procedure SetDockControl(const Value: IChromeTabDockControl);
     procedure SetOriginalCursor(const Value: TCursor);
+    procedure SetDragOverType(const Value: TDragOverType);
 
     property DragTab: TChromeTab read GetDragTab write SetDragTab;
     property DragCursorOffset: TPoint read GetDragCursorOffset write SetDragCursorOffset;
@@ -603,6 +605,7 @@ type
     property SourceControl: IChromeTabDockControl read GetSourceControl write SetSourceControl;
     property DockControl: IChromeTabDockControl read GetDockControl write SetDockControl;
     property OriginalCursor: TCursor read GetOriginalCursor write SetOriginalCursor;
+    property DragOverType: TDragOverType read GetDragOverType write SetDragOverType;
   end;
 
   TDragTabObject = class(TInterfacedObject, IDragTabObject)
@@ -618,6 +621,7 @@ type
     FSourceControl: IChromeTabDockControl;
     FDockControl: IChromeTabDockControl;
     FOriginalCursor: TCursor;
+    FDragOverType: TDragOverType;
 
     function GetDragCursorOffset: TPoint;
     function GetDragForm: TForm;
@@ -630,6 +634,7 @@ type
     function GetSourceControl: IChromeTabDockControl;
     function GetDockControl: IChromeTabDockControl;
     function GetOriginalCursor: TCursor;
+    function GetDragOverType: TDragOverType;
 
     procedure SetDragCursorOffset(const Value: TPoint);
     procedure SetDragForm(const Value: TForm);
@@ -642,6 +647,7 @@ type
     procedure SetSourceControl(const Value: IChromeTabDockControl);
     procedure SetDockControl(const Value: IChromeTabDockControl);
     procedure SetOriginalCursor(const Value: TCursor);
+    procedure SetDragOverType(const Value: TDragOverType);
   public
     destructor Destroy; override;
 
@@ -656,6 +662,7 @@ type
     property SourceControl: IChromeTabDockControl read GetSourceControl write SetSourceControl;
     property DockControl: IChromeTabDockControl read GetDockControl write SetDockControl;
     property OriginalCursor: TCursor read GetOriginalCursor write SetOriginalCursor;
+    property DragOverType: TDragOverType read GetDragOverType write SetDragOverType;
   end;
 
   TChromeTabsOffsets = class(TChromeTabsPersistent)
@@ -2495,6 +2502,11 @@ begin
   Result := FDragFormOffset;
 end;
 
+function TDragTabObject.GetDragOverType: TDragOverType;
+begin
+  Result := FDragOverType;
+end;
+
 function TDragTabObject.GetDragPoint: TPoint;
 begin
   Result := FDragPoint;
@@ -2548,6 +2560,11 @@ end;
 procedure TDragTabObject.SetDragFormOffset(const Value: TPoint);
 begin
   FDragFormOffset := Value;
+end;
+
+procedure TDragTabObject.SetDragOverType(const Value: TDragOverType);
+begin
+  FDragOverType := Value;
 end;
 
 procedure TDragTabObject.SetDragPoint(const Value: TPoint);
