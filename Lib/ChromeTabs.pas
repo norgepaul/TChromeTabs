@@ -3613,6 +3613,13 @@ begin
 
   if FDragTabObject.DragForm <> nil then
   begin
+    // Move the drag form off the screen. This stops flicker on multi monitor systems
+    if not FDragTabObject.DragForm.Visible then
+    begin
+      FDragTabObject.DragForm.Left := 99999999;
+      FDragTabObject.DragForm.Top := 99999999;
+    end;
+
     // Set the position
     FDragTabObject.DragForm.Left := DragFormPoint.X - FDragTabObject.DragFormOffset.X;
     FDragTabObject.DragForm.Top := DragFormPoint.Y - FDragTabObject.DragFormOffset.Y;
