@@ -1,8 +1,11 @@
 TChromeTabs 2.3 BETA
 
+04-11-2014
+Fixed: Ghost drag form appeared on multi-monitor systems.
+
 30-10-2015
-Added: OnTabDragEnd event
-Added: IDragTabObject.DragOverType = (dotNone,dotHomeContainer,dotRemoteContainer)
+Added: OnTabDragEnd event.
+Added: IDragTabObject.DragOverType = (dotNone,dotHomeContainer,dotRemoteContainer).
 
 22-10-2015
 Fixed: "Ghost" tab would remain if a dragged tab immediately entered another container when dragging.
