@@ -177,6 +177,7 @@ type
     FOnAnimateStyle: TOnAnimateStyle;
     FOnAnimateMovement: TOnAnimateMovement;
     FOnSetTabWidth: TOnSetTabWidth;
+    FOnAfterDragImageCreated: TNotifyEvent;
 
     // Persistent Properties
     FOptions: TOptions;
@@ -347,6 +348,7 @@ type
     procedure DoOnAnimateStyle(ChromeTabsControl: TBaseChromeTabsControl; NewDrawState: TDrawState; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnAnimateMovement(ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnSetTabWidth(ATabControl: TChromeTabControl; var TabWidth: Integer); virtual;
+    procedure DoOnAfterDragImageCreated; virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -386,6 +388,7 @@ type
     property OnAnimateStyle: TOnAnimateStyle read FOnAnimateStyle write FOnAnimateStyle;
     property OnAnimateMovement: TOnAnimateMovement read FOnAnimateMovement write FOnAnimateMovement;
     property OnSetTabWidth: TOnSetTabWidth read FOnSetTabWidth write FOnSetTabWidth;
+    property OnAfterDragImageCreated: TNotifyEvent read FOnAfterDragImageCreated write FOnAfterDragImageCreated;
 
     property LookAndFeel: TChromeTabsLookAndFeel read GetLookAndFeel write SetLookAndFeel;
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
@@ -469,6 +472,7 @@ type
     property OnAnimateStyle;
     property OnAnimateMovement;
     property OnSetTabWidth;
+    property OnAfterDragImageCreated;
 
     property ActiveTabIndex;
     property Images;
@@ -2266,6 +2270,8 @@ begin
         FreeAndNil(Bitmap);
       end;
     end;
+
+    DoOnAfterDragImageCreated;
   end;
 end;
 
@@ -2465,6 +2471,12 @@ begin
   finally
     EndUpdate;
   end;
+end;
+
+procedure TCustomChromeTabs.DoOnAfterDragImageCreated;
+begin
+  if Assigned(FOnAfterDragImageCreated) then
+    FOnAfterDragImageCreated(Self);
 end;
 
 procedure TCustomChromeTabs.DoOnAfterDrawItem(const TargetCanvas: TGPGraphics;
