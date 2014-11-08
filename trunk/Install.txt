@@ -1,4 +1,4 @@
 TChromeTabs has been tested under Delphi 7 and Delphi XE2. To install:
 
 1) Compile ChromeTabs_<Delphi Version>_R.dpk
-2) Compile and Install ChromeTabs_<Delphi Version>_R.dpk
+2) Compile and Install ChromeTabs_<Delphi Version>_D.dpk
