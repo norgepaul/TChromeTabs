@@ -225,6 +225,7 @@ type
     FMaxAddButtonRight: Integer;
     FNextModifiedGlowAnimateTickCount: Cardinal;
     FNextSpinnerAnimateTickCount: Cardinal;
+    FControlConstructed: Boolean;
 
     // Timer events
     procedure OnScrollTimerTimer(Sender: TObject);
@@ -401,6 +402,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure AfterConstruction; override;
 
     procedure BeginUpdate;
     procedure EndUpdate;
@@ -741,6 +743,13 @@ begin
 
     DoOnStateChange(PreviousState, FState);
   end;
+end;
+
+procedure TCustomChromeTabs.AfterConstruction;
+begin
+  inherited;
+
+  FControlConstructed := TRUE;
 end;
 
 function TCustomChromeTabs.RemoveState(State: TChromeTabState): Boolean;
@@ -1159,6 +1168,7 @@ end;
 function TCustomChromeTabs.ControlReady: Boolean;
 begin
   Result := ([csDestroying, csLoading] * ComponentState = []) and
+            (FControlConstructed) and
             (not (csCreating in ControlState));
             (HandleAllocated);
 end;
@@ -1171,6 +1181,16 @@ var
 begin
   //if ControlReady then
   begin
+    if (ControlReady) and
+       (TabChangeType = tcPropertyUpdated) then
+    begin
+      UpdateProperties;
+
+      SetControlDrawStates(TRUE);
+
+      InvalidateAllControls;
+    end;
+
     if ATab <> nil then
     begin
       if ATab.TabControl = nil then
@@ -1265,13 +1285,6 @@ begin
             end;
 
           tcPinned: AddState(stsControlPositionsInvalidated);
-
-          tcPropertyUpdated:
-            begin
-              UpdateProperties;
-
-              InvalidateAllControls;
-            end;
 
           tcAdded: ClearTabClosingStates;
 

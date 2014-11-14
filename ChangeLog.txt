@@ -1,5 +1,9 @@
 TChromeTabs 2.3 BETA
 
+14-11-2014
+Fixed: Tab Controls do not reflect LookAndFeel changes at runtime.
+Fixed: Range check error when range checking enabled (regression).
+
 04-11-2014
 Fixed: Ghost drag form appeared on multi-monitor systems.
 Added: OnAfterDragImageCreated event.
