@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{1877BEAF-1AEB-47C0-B817-913A67404DBD}</ProjectGuid>
         <MainSource>ChromeTabs_D.dpk</MainSource>
-        <ProjectVersion>16.0</ProjectVersion>
+        <ProjectVersion>16.1</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>

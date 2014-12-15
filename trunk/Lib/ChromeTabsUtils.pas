@@ -617,6 +617,7 @@ begin
   Icon := TIcon.Create;
   try
     ImageList.GetIcon(ImageIndex, Icon);
+    Icon.Transparent := TRUE;
 
     Result := IconToGPImage(Icon);
   finally
@@ -655,8 +656,8 @@ begin
 
       IntersectClipRect(DC, 0, 0, SrcControl.Parent.ClientWidth, SrcControl.Parent.ClientHeight);
 
-      SrcControl.Parent.Perform(WM_ERASEBKGND, {$IF CompilerVersion >= 18}NativeUInt(DC){$ELSE}DC{$ENDIF}, 0);
-      SrcControl.Parent.Perform(WM_PAINT, {$IF CompilerVersion >= 18}NativeUInt(DC){$ELSE}DC{$ENDIF}, 0);
+      SrcControl.Parent.Perform(WM_ERASEBKGND, WParam(DC), 0);
+      SrcControl.Parent.Perform(WM_PAINT, WParam(DC), 0);
     finally
       RestoreDC(DC, SaveIndex);
     end;
