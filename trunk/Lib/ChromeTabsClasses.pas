@@ -53,6 +53,9 @@ type
     function GetMarkedForDeletion: Boolean;
     function GetSpinnerState: TChromeTabSpinnerState;
     function GetHideCloseButton: Boolean;
+    function GetData: Pointer;
+    procedure SetData(const Value: Pointer);
+    property Data: Pointer read GetData write SetData;
   end;
 
   TChromeTabPolygon = class(TObject)
@@ -127,6 +130,8 @@ type
     procedure SetModified(const Value: Boolean);
     procedure SetSpinnerState(const Value: TChromeTabSpinnerState);
     procedure SetHideCloseButton(const Value: Boolean);
+    procedure SetTabControl(const Value: TObject);
+    procedure SetData(const Value: Pointer);
 
     function GetDisplayCaption: String;
     function GetCaption: TCaption;
@@ -142,7 +147,7 @@ type
     function GetMarkedForDeletion: Boolean;
     function GetSpinnerState: TChromeTabSpinnerState;
     function GetHideCloseButton: Boolean;
-    procedure SetTabControl(const Value: TObject);
+    function GetData: Pointer;
   protected
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
@@ -154,7 +159,7 @@ type
 
     function ImageIsVisible: Boolean;
 
-    property Data: Pointer read FData write FData;
+    property Data: Pointer read GetData write SetData;
     property DisplayCaption: String read GetDisplayCaption;
 
     property TabControl: TObject read FTabControl write SetTabControl;
@@ -1341,6 +1346,11 @@ begin
   Result := FCaption;
 end;
 
+function TChromeTab.GetData: Pointer;
+begin
+  Result := FData;
+end;
+
 function TChromeTab.GetDisplayCaption: String;
 begin
   if FPinned then
@@ -1442,6 +1452,11 @@ begin
   end
   else
     inherited;
+end;
+
+procedure TChromeTab.SetData(const Value: Pointer);
+begin
+  FData := Value;
 end;
 
 procedure TChromeTab.SetHideCloseButton(const Value: Boolean);
