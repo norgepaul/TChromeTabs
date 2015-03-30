@@ -1,4 +1,7 @@
-TChromeTabs 2.3 BETA
+TChromeTabs 2.3
+
+06-03-2015
+Update: XE8 Support
 
 14-11-2014
 Fixed: Tab Controls do not reflect LookAndFeel changes at runtime.
