@@ -23,8 +23,6 @@ unit ChromeTabsUtils;
 
 interface
 
-{$include versions.inc}
-
 {.$DEFINE USE_PNGIMAGE} // <-- Enable this define if you want to use an external
                         //     copy of pngImage in Delphi 2008 or earlier
 
@@ -428,12 +426,12 @@ begin
 end;
 
 procedure ScaleImage(Bitmap, ScaledBitmap: TBitmap; ScaleFactor: Real);
-{$IFNDEF DELPHI2006_UP}
+{$if CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
 var
   NewHeight, NewWidth: Integer;
 {$ENDIF}
 begin
-  {$IFDEF DELPHI2006_UP}
+  {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
     GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
   {$ELSE}
     NewWidth := Round(Bitmap.Width * ScaleFactor);

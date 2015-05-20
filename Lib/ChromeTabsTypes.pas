@@ -23,15 +23,13 @@ unit ChromeTabsTypes;
 
 interface
 
-{$include versions.inc}
-
 uses
   Windows, Classes,
 
   GDIPAPI;
 
 type
-  {$IFNDEF DELPHI2006_UP}
+  {$if CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
   TVerticalAlignment = (
     taAlignTop,
     taAlignBottom,

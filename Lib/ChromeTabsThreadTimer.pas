@@ -23,8 +23,6 @@ unit ChromeTabsThreadTimer;
 
 interface
 
-{$include versions.inc}
-
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, MMSystem;
@@ -148,7 +146,7 @@ begin
     FTimerThread := TTimerThread.CreateTimerThread(Self);
     FTimerThread.FreeOnTerminate := FALSE;
 
-    {$IFDEF DELPHI2006_UP}
+    {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
       FTimerThread.Start;
     {$ELSE}
       FTimerThread.Resume;

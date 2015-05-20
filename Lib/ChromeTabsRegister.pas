@@ -2,8 +2,6 @@ unit ChromeTabsRegister;
 
 interface
 
-{$include versions.inc}
-
 uses
   SysUtils, Controls, ActnList,
   Classes,

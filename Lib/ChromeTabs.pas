@@ -77,8 +77,6 @@ interface
 { TODO -cBug : Drag docking not accurate. Some problem with the control detection }
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
-{$include versions.inc}
-
 uses
   Windows, SysUtils, Classes, Controls, ExtCtrls, Graphics, Forms, Messages,
   ImgList, Dialogs, Menus, StdCtrls, GraphUtil,
@@ -505,7 +503,7 @@ type
     property OnMouseMove;
     property OnResize;
     property TabOrder;
-    {$IFDEF DELPHI2006_UP}   { TODO : Is this the version when these events were introduced? }
+    {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}   { TODO : Is this the version when these events were introduced? }
       property OnMouseEnter;
       property OnMouseLeave;
     {$ENDIF}
