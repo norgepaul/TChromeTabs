@@ -23,15 +23,12 @@ unit frmMainU;
 
 interface
 
-{$include versions.inc}
-
-{$DEFINE JEDI_INC}
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, ComCtrls, Spin, Contnrs,
   ExtCtrls, ImgList, Types, Menus, ClipBrd, AppEvnts,
 
-  //{$IF CompilerVersion >= 28}System.Actions,{$IFEND}
+  //{$IF CompilerVersion >= 28.0}System.Actions,{$IFEND}
   { TODO : This should work, but it seems that a bug in Delphi XE7 automatically
     adds the System.Actions unit unless you use the IFDEF below. }
   {$IFDEF VER280}System.Actions,{$ENDIF}
@@ -40,9 +37,9 @@ uses
 
   frameChromeTabStyleU,
 
-  {$IFDEF DELPHI2010_UP}
+  {$if CompilerVersion >= 21.0}//{$IFDEF DELPHI2010_UP}
   ChromeTabsGlassForm,
-  {$ENDIF}
+  {$ifend}
 
   ChromeTabs,
   ChromeTabsTypes,

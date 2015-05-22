@@ -506,7 +506,7 @@ type
     {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}   { TODO : Is this the version when these events were introduced? }
       property OnMouseEnter;
       property OnMouseLeave;
-    {$ENDIF}
+    {$ifend}
   end;
 
 implementation

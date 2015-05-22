@@ -148,9 +148,9 @@ begin
 
     {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
       FTimerThread.Start;
-    {$ELSE}
+    {$else}
       FTimerThread.Resume;
-    {$ENDIF}
+    {$ifend}
   end;
 
   FRunning := TRUE;

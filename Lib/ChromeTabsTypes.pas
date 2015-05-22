@@ -35,7 +35,7 @@ type
     taAlignBottom,
     taVerticalCenter
   );
-  {$ENDIF}
+  {$ifend}
 
   TChromeTabDirection = (
     drLeft,
