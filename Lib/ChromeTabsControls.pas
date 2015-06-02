@@ -822,9 +822,7 @@ begin
                                  ChromeTabs.GetOptions.Display.Tabs.Orientation),
                       GetTabBrush,
                       GetTabPen);
-  end
-  else
-  sleep(1);
+  end;
 end;
 
 function TChromeTabControl.GetCloseButonRect: TRect;
