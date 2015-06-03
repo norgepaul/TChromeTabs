@@ -31,7 +31,11 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Forms, Controls,
 
-  {$IF CompilerVersion >= 28}System.Types,{$ENDIF}
+  {$IF CompilerVersion >= 28.0}
+  System.Types,
+  {$else}
+  Types,
+  {$endif}
 
   ChromeTabs;
 
