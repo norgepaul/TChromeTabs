@@ -49,7 +49,7 @@ uses
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog;
+  ChromeTabsLog, System.Actions, System.ImageList;
 
 type
   TFormType = {$IFDEF DELPHI2010_UP}

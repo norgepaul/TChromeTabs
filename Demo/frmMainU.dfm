@@ -2,23 +2,27 @@ object frmMain: TfrmMain
   Left = 207
   Top = 136
   Caption = 'Chrome Tabs Demo'
-  ClientHeight = 606
-  ClientWidth = 1017
+  ClientHeight = 758
+  ClientWidth = 1271
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
+  Font.Height = -15
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 15
+  PixelsPerInch = 120
+  TextHeight = 20
   object ChromeTabs1: TChromeTabs
     Left = 0
     Top = 0
-    Width = 1017
-    Height = 27
+    Width = 1271
+    Height = 34
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     OnActiveTabChanging = ChromeTabs1ActiveTabChanging
     OnChange = ChromeTabs1Change
     OnActiveTabChanged = ChromeTabs1ActiveTabChanged
@@ -383,9 +387,13 @@ object frmMain: TfrmMain
   end
   object ChromeTabs2: TChromeTabs
     Left = 0
-    Top = 575
-    Width = 1017
-    Height = 31
+    Top = 719
+    Width = 1271
+    Height = 39
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     OnChange = ChromeTabs1Change
     OnActiveTabChanged = ChromeTabs1ActiveTabChanged
     OnDebugLog = ChromeTabs1DebugLog
@@ -718,34 +726,50 @@ object frmMain: TfrmMain
   end
   object Panel1: TPanel
     Left = 0
-    Top = 27
-    Width = 1017
-    Height = 548
+    Top = 34
+    Width = 1271
+    Height = 685
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object pnlTop: TPanel
       Left = 0
       Top = 0
-      Width = 1017
-      Height = 29
+      Width = 1271
+      Height = 36
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       Align = alTop
       BevelOuter = bvNone
       Color = clMoneyGreen
       ParentBackground = False
       TabOrder = 0
       object Label19: TLabel
-        Left = 7
-        Top = 7
-        Width = 155
-        Height = 15
+        Left = 9
+        Top = 9
+        Width = 193
+        Height = 20
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'Show Options and Events for:'
       end
       object cbSelectTabs: TComboBox
-        Left = 167
-        Top = 4
-        Width = 128
-        Height = 23
+        Left = 209
+        Top = 5
+        Width = 160
+        Height = 28
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Style = csDropDownList
         ItemIndex = 0
         TabOrder = 1
@@ -756,18 +780,26 @@ object frmMain: TfrmMain
           'Bottom Tabs')
       end
       object Panel11: TPanel
-        Left = 873
+        Left = 1091
         Top = 0
-        Width = 144
-        Height = 29
+        Width = 180
+        Height = 36
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
         object btnOpenForm: TButton
           Left = 0
           Top = 1
-          Width = 141
-          Height = 26
+          Width = 176
+          Height = 33
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Caption = 'Open New Form'
           TabOrder = 0
           OnClick = btnOpenFormClick
@@ -776,68 +808,104 @@ object frmMain: TfrmMain
     end
     object pcMain: TPageControl
       Left = 0
-      Top = 29
-      Width = 1017
-      Height = 519
+      Top = 36
+      Width = 1271
+      Height = 649
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       ActivePage = TabSheet1
       Align = alClient
       TabOrder = 1
       object TabSheet1: TTabSheet
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'Options'
         object GroupBox1: TGroupBox
           Left = 0
           Top = 0
-          Width = 270
-          Height = 456
+          Width = 338
+          Height = 573
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alLeft
           Caption = 'New/Active Tab'
           TabOrder = 0
           object Label1: TLabel
-            Left = 11
-            Top = 22
-            Width = 25
-            Height = 15
+            Left = 14
+            Top = 28
+            Width = 31
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Text:'
             FocusControl = edtTabCaption
           end
           object Label2: TLabel
-            Left = 11
-            Top = 70
-            Width = 67
-            Height = 15
+            Left = 14
+            Top = 88
+            Width = 85
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Image Index:'
             FocusControl = edtImageIndex
           end
           object Label3: TLabel
-            Left = 135
-            Top = 70
-            Width = 110
-            Height = 15
+            Left = 169
+            Top = 88
+            Width = 139
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Image Overlay Index:'
             FocusControl = edtImageOverlayIndex
           end
           object Label81: TLabel
-            Left = 11
-            Top = 115
-            Width = 43
-            Height = 15
+            Left = 14
+            Top = 144
+            Width = 53
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Spinner:'
             FocusControl = cbSpinnerState
           end
           object edtTabCaption: TEdit
-            Left = 11
-            Top = 37
-            Width = 246
-            Height = 23
+            Left = 14
+            Top = 46
+            Width = 307
+            Height = 28
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             TabOrder = 0
             Text = 'New Tab'
             OnChange = CommonTabPropertyChange
           end
           object edtImageIndex: TSpinEdit
-            Left = 11
-            Top = 85
-            Width = 118
-            Height = 24
+            Left = 14
+            Top = 106
+            Width = 147
+            Height = 31
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             MaxValue = 5
             MinValue = -1
             TabOrder = 1
@@ -845,10 +913,14 @@ object frmMain: TfrmMain
             OnChange = CommonTabPropertyChange
           end
           object edtImageOverlayIndex: TSpinEdit
-            Left = 135
-            Top = 85
-            Width = 122
-            Height = 24
+            Left = 169
+            Top = 106
+            Width = 152
+            Height = 31
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             MaxValue = 1
             MinValue = -1
             TabOrder = 2
@@ -856,46 +928,66 @@ object frmMain: TfrmMain
             OnChange = CommonTabPropertyChange
           end
           object chkPinned: TCheckBox
-            Left = 11
-            Top = 163
-            Width = 67
-            Height = 16
+            Left = 14
+            Top = 204
+            Width = 84
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Pinned'
             TabOrder = 4
             OnClick = CommonTabPropertyChange
           end
           object btnMakeAllTabsVisible: TButton
-            Left = 135
-            Top = 193
-            Width = 122
-            Height = 25
+            Left = 169
+            Top = 241
+            Width = 152
+            Height = 32
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Make All Tabs Visible'
             TabOrder = 8
             OnClick = btnMakeAllTabsVisibleClick
           end
           object chkModified: TCheckBox
-            Left = 75
-            Top = 163
-            Width = 66
-            Height = 16
+            Left = 94
+            Top = 204
+            Width = 82
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Modified'
             TabOrder = 5
             OnClick = CommonTabPropertyChange
           end
           object btnHideTab: TButton
-            Left = 11
-            Top = 193
-            Width = 118
-            Height = 25
+            Left = 14
+            Top = 241
+            Width = 147
+            Height = 32
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Hide Tab'
             TabOrder = 7
             OnClick = btnHideTabClick
           end
           object cbSpinnerState: TComboBox
-            Left = 11
-            Top = 131
-            Width = 246
-            Height = 23
+            Left = 14
+            Top = 164
+            Width = 307
+            Height = 28
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Style = csDropDownList
             ItemIndex = 0
             TabOrder = 3
@@ -909,95 +1001,143 @@ object frmMain: TfrmMain
               'Download-Image')
           end
           object Button2: TButton
-            Left = 11
-            Top = 224
-            Width = 118
-            Height = 25
+            Left = 14
+            Top = 280
+            Width = 147
+            Height = 31
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Delete Active Tab'
             TabOrder = 9
             OnClick = Button2Click
           end
           object chkHideClosebutton: TCheckBox
-            Left = 151
-            Top = 163
-            Width = 117
-            Height = 16
+            Left = 189
+            Top = 204
+            Width = 146
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Hide Close Button'
             TabOrder = 6
             OnClick = CommonTabPropertyChange
           end
         end
         object pcOptions: TPageControl
-          Left = 270
+          Left = 338
           Top = 0
-          Width = 739
-          Height = 456
+          Width = 925
+          Height = 573
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           ActivePage = TabSheet5
           Align = alClient
           TabOrder = 1
           object TabSheet5: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Tabs'
             object GroupBox3: TGroupBox
               Left = 0
               Top = 0
-              Width = 731
-              Height = 185
+              Width = 917
+              Height = 231
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               Caption = 'Tabs'
               TabOrder = 0
               object Label6: TLabel
-                Left = 8
-                Top = 76
-                Width = 75
-                Height = 15
+                Left = 10
+                Top = 95
+                Width = 92
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Pinned Width:'
                 FocusControl = edtPinnedWidth
               end
               object Label12: TLabel
-                Left = 108
-                Top = 20
-                Width = 83
-                Height = 15
+                Left = 135
+                Top = 25
+                Width = 104
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Max Tab Width:'
                 FocusControl = edtMaxTabWidth
               end
               object lblMinTabWidth: TLabel
-                Left = 8
-                Top = 21
-                Width = 82
-                Height = 15
+                Left = 10
+                Top = 26
+                Width = 101
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Min Tab Width:'
                 FocusControl = edtMinTabWidth
               end
               object Label17: TLabel
-                Left = 278
-                Top = 20
-                Width = 120
-                Height = 15
+                Left = 348
+                Top = 25
+                Width = 148
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Tab/Container Offsets:'
                 FocusControl = edtTabOffsetTop
               end
               object Label51: TLabel
-                Left = 283
-                Top = 131
-                Width = 115
-                Height = 15
+                Left = 354
+                Top = 164
+                Width = 141
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Tab Content Margins:'
                 FocusControl = edtTabOffsetTop
               end
               object Label71: TLabel
-                Left = 108
-                Top = 76
-                Width = 67
-                Height = 15
+                Left = 135
+                Top = 95
+                Width = 84
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Tab Overlap:'
                 FocusControl = edtTabOverlap
               end
               object edtPinnedWidth: TSpinEdit
-                Left = 8
-                Top = 92
-                Width = 94
-                Height = 24
+                Left = 10
+                Top = 115
+                Width = 118
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = -65535
                 TabOrder = 7
@@ -1005,10 +1145,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtMaxTabWidth: TSpinEdit
-                Left = 108
-                Top = 37
-                Width = 94
-                Height = 24
+                Left = 135
+                Top = 46
+                Width = 118
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 4
                 TabOrder = 1
@@ -1016,10 +1160,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtMinTabWidth: TSpinEdit
-                Left = 8
-                Top = 37
-                Width = 94
-                Height = 24
+                Left = 10
+                Top = 46
+                Width = 118
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 4
                 TabOrder = 0
@@ -1027,13 +1175,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetTop: TSpinEdit
-                Left = 312
-                Top = 37
-                Width = 53
-                Height = 24
+                Left = 390
+                Top = 46
+                Width = 66
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 Increment = 2
@@ -1045,13 +1197,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetLeft: TSpinEdit
-                Left = 280
-                Top = 67
-                Width = 53
-                Height = 24
+                Left = 350
+                Top = 84
+                Width = 66
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 Increment = 10
@@ -1063,13 +1219,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetRight: TSpinEdit
-                Left = 352
-                Top = 67
-                Width = 53
-                Height = 24
+                Left = 440
+                Top = 84
+                Width = 66
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 Increment = 10
@@ -1081,13 +1241,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOffsetBottom: TSpinEdit
-                Left = 312
-                Top = 97
-                Width = 53
-                Height = 24
+                Left = 390
+                Top = 121
+                Width = 66
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 Increment = 2
@@ -1099,13 +1263,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtContainerOffsetLeft: TSpinEdit
-                Left = 221
-                Top = 67
-                Width = 53
-                Height = 24
+                Left = 276
+                Top = 84
+                Width = 67
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 Increment = 10
@@ -1117,13 +1285,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtContainerOffsetRight: TSpinEdit
-                Left = 411
-                Top = 67
-                Width = 53
-                Height = 24
+                Left = 514
+                Top = 84
+                Width = 66
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 Increment = 10
@@ -1135,13 +1307,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabContentMarginLeft: TSpinEdit
-                Left = 285
-                Top = 148
-                Width = 53
-                Height = 24
+                Left = 356
+                Top = 185
+                Width = 67
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 MaxValue = 65535
@@ -1152,13 +1328,17 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabContentMarginRight: TSpinEdit
-                Left = 344
-                Top = 148
-                Width = 53
-                Height = 24
+                Left = 430
+                Top = 185
+                Width = 66
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
-                Font.Height = -12
+                Font.Height = -15
                 Font.Name = 'Segoe UI'
                 Font.Style = []
                 MaxValue = 65535
@@ -1169,10 +1349,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtTabOverlap: TSpinEdit
-                Left = 108
-                Top = 92
-                Width = 94
-                Height = 24
+                Left = 135
+                Top = 115
+                Width = 118
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = -65535
                 TabOrder = 8
@@ -1180,28 +1364,40 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object chkSeeThroughTabs: TCheckBox
-                Left = 8
-                Top = 122
-                Width = 129
-                Height = 17
+                Left = 10
+                Top = 153
+                Width = 161
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'See through tabs'
                 TabOrder = 10
                 OnClick = OnCommonControlPropertyChange
               end
               object chkSetTabWidthsFromCaptions: TCheckBox
-                Left = 8
-                Top = 142
-                Width = 182
-                Height = 17
+                Left = 10
+                Top = 178
+                Width = 228
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Set tab widths from captions'
                 TabOrder = 13
                 OnClick = OnCommonControlPropertyChange
               end
               object chkCustomTabShapes: TCheckBox
-                Left = 9
-                Top = 162
-                Width = 270
-                Height = 17
+                Left = 11
+                Top = 203
+                Width = 338
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Custom tab shapes (OnGetControlPolygons)'
                 TabOrder = 14
                 OnClick = OnCommonControlPropertyChange
@@ -1209,75 +1405,115 @@ object frmMain: TfrmMain
             end
             object pcTabExtras: TPageControl
               Left = 0
-              Top = 185
-              Width = 731
-              Height = 216
+              Top = 231
+              Width = 917
+              Height = 270
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               ActivePage = TabSheet17
               Align = alTop
               TabOrder = 1
               object TabSheet16: TTabSheet
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Modified Glow'
                 object Label15: TLabel
-                  Left = 3
-                  Top = 4
-                  Width = 87
-                  Height = 15
+                  Left = 4
+                  Top = 5
+                  Width = 108
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Animation Style:'
                   FocusControl = cbModifiedGlowStyle
                 end
                 object Label54: TLabel
-                  Left = 227
-                  Top = 50
-                  Width = 77
-                  Height = 15
+                  Left = 284
+                  Top = 63
+                  Width = 97
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Vertical Offset:'
                   FocusControl = edtModifiedGlowVerticalOffset
                 end
                 object Label55: TLabel
-                  Left = 335
-                  Top = 50
-                  Width = 96
-                  Height = 15
+                  Left = 419
+                  Top = 63
+                  Width = 119
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Animation Period:'
                   FocusControl = edtModifiedGlowAnimationPeriod
                 end
                 object Label56: TLabel
-                  Left = 3
-                  Top = 50
-                  Width = 39
-                  Height = 15
+                  Left = 4
+                  Top = 63
+                  Width = 48
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Height:'
                   FocusControl = edtModifiedGlowHeight
                 end
                 object Label57: TLabel
-                  Left = 111
-                  Top = 50
-                  Width = 35
-                  Height = 15
+                  Left = 139
+                  Top = 63
+                  Width = 43
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Width:'
                   FocusControl = edtModifiedGlowWidth
                 end
                 object Label78: TLabel
-                  Left = 163
-                  Top = 2
-                  Width = 114
-                  Height = 15
+                  Left = 204
+                  Top = 3
+                  Width = 142
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Animation Ease Type:'
                   FocusControl = cbModifiedGlowEaseType
                 end
                 object Label79: TLabel
-                  Left = 447
-                  Top = 50
-                  Width = 100
-                  Height = 15
+                  Left = 559
+                  Top = 63
+                  Width = 125
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Animation Update:'
                   FocusControl = edtModifiedGlowAnimationUpdate
                 end
                 object cbModifiedGlowStyle: TComboBox
-                  Left = 3
-                  Top = 19
-                  Width = 143
-                  Height = 23
+                  Left = 4
+                  Top = 24
+                  Width = 179
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 2
                   TabOrder = 0
@@ -1290,10 +1526,14 @@ object frmMain: TfrmMain
                     'Knight Rider')
                 end
                 object edtModifiedGlowVerticalOffset: TSpinEdit
-                  Left = 227
-                  Top = 67
-                  Width = 94
-                  Height = 24
+                  Left = 284
+                  Top = 84
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 4
@@ -1301,10 +1541,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtModifiedGlowAnimationPeriod: TSpinEdit
-                  Left = 335
-                  Top = 67
-                  Width = 106
-                  Height = 24
+                  Left = 419
+                  Top = 84
+                  Width = 132
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 5
@@ -1312,10 +1556,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtModifiedGlowHeight: TSpinEdit
-                  Left = 3
-                  Top = 67
-                  Width = 94
-                  Height = 24
+                  Left = 4
+                  Top = 84
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 2
@@ -1323,10 +1571,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtModifiedGlowWidth: TSpinEdit
-                  Left = 111
-                  Top = 67
-                  Width = 94
-                  Height = 24
+                  Left = 139
+                  Top = 84
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 3
@@ -1334,10 +1586,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object cbModifiedGlowEaseType: TComboBox
-                  Left = 163
-                  Top = 19
-                  Width = 165
-                  Height = 23
+                  Left = 204
+                  Top = 24
+                  Width = 206
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 0
                   TabOrder = 1
@@ -1369,10 +1625,14 @@ object frmMain: TfrmMain
                     'In Out Circ')
                 end
                 object edtModifiedGlowAnimationUpdate: TSpinEdit
-                  Left = 447
-                  Top = 67
-                  Width = 106
-                  Height = 24
+                  Left = 559
+                  Top = 84
+                  Width = 132
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 6
@@ -1381,52 +1641,80 @@ object frmMain: TfrmMain
                 end
               end
               object TabSheet17: TTabSheet
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Mouse Glow'
                 ImageIndex = 1
                 object pnlMouseGlow: TPanel
-                  Left = -5
-                  Top = 27
-                  Width = 521
-                  Height = 41
+                  Left = -6
+                  Top = 34
+                  Width = 651
+                  Height = 51
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   BevelOuter = bvNone
                   TabOrder = 1
                   object Label9: TLabel
-                    Left = 233
+                    Left = 291
                     Top = -1
-                    Width = 77
-                    Height = 15
+                    Width = 97
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Vertical Offset:'
                     FocusControl = edtMouseGlowVerticalOffset
                   end
                   object Label10: TLabel
-                    Left = 341
+                    Left = 426
                     Top = -1
-                    Width = 93
-                    Height = 15
+                    Width = 117
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Horizontal Offset:'
                     FocusControl = edtMouseGlowHorzOffset
                   end
                   object Label11: TLabel
-                    Left = 9
+                    Left = 11
                     Top = -1
-                    Width = 39
-                    Height = 15
+                    Width = 48
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Height:'
                     FocusControl = edtMouseGlowHeight
                   end
                   object Label16: TLabel
-                    Left = 117
+                    Left = 146
                     Top = -1
-                    Width = 35
-                    Height = 15
+                    Width = 43
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Width:'
                     FocusControl = edtMouseGlowWidth
                   end
                   object edtMouseGlowVerticalOffset: TSpinEdit
-                    Left = 233
-                    Top = 14
-                    Width = 94
-                    Height = 24
+                    Left = 291
+                    Top = 18
+                    Width = 118
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 2
@@ -1434,10 +1722,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtMouseGlowHorzOffset: TSpinEdit
-                    Left = 341
-                    Top = 14
-                    Width = 94
-                    Height = 24
+                    Left = 426
+                    Top = 18
+                    Width = 118
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 3
@@ -1445,10 +1737,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtMouseGlowHeight: TSpinEdit
-                    Left = 9
-                    Top = 14
-                    Width = 94
-                    Height = 24
+                    Left = 11
+                    Top = 18
+                    Width = 118
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = 1
                     TabOrder = 0
@@ -1456,10 +1752,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtMouseGlowWidth: TSpinEdit
-                    Left = 117
-                    Top = 14
-                    Width = 94
-                    Height = 24
+                    Left = 146
+                    Top = 18
+                    Width = 118
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = 1
                     TabOrder = 1
@@ -1468,10 +1768,14 @@ object frmMain: TfrmMain
                   end
                 end
                 object chkMouseGlowVisible: TCheckBox
-                  Left = 4
-                  Top = 5
-                  Width = 84
-                  Height = 17
+                  Left = 5
+                  Top = 6
+                  Width = 105
+                  Height = 22
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Visible'
                   Checked = True
                   State = cbChecked
@@ -1480,21 +1784,33 @@ object frmMain: TfrmMain
                 end
               end
               object Spinners: TTabSheet
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Spinners'
                 ImageIndex = 2
                 object Label82: TLabel
-                  Left = 3
-                  Top = 2
-                  Width = 100
-                  Height = 15
+                  Left = 4
+                  Top = 3
+                  Width = 125
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Animation Update:'
                   FocusControl = edtSpinnerAnimationUpdate
                 end
                 object edtSpinnerAnimationUpdate: TSpinEdit
-                  Left = 3
-                  Top = 19
-                  Width = 106
-                  Height = 24
+                  Left = 4
+                  Top = 24
+                  Width = 132
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 0
@@ -1502,10 +1818,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object chkHideImagesWhenSpinnerActive: TCheckBox
-                  Left = 132
-                  Top = 21
-                  Width = 229
-                  Height = 17
+                  Left = 165
+                  Top = 26
+                  Width = 286
+                  Height = 22
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Hide Images when Spinner active'
                   Checked = True
                   State = cbChecked
@@ -1514,68 +1834,104 @@ object frmMain: TfrmMain
                 end
                 object pcTabSpinners: TPageControl
                   Left = 0
-                  Top = 49
-                  Width = 723
-                  Height = 137
+                  Top = 64
+                  Width = 909
+                  Height = 171
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   ActivePage = TabSheet18
                   Align = alBottom
                   TabOrder = 2
                   object TabSheet19: TTabSheet
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Upload'
                     ImageIndex = 1
                     object Label86: TLabel
-                      Left = 3
-                      Top = 5
-                      Width = 85
-                      Height = 15
+                      Left = 4
+                      Top = 6
+                      Width = 106
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Animation Step:'
                       FocusControl = edtSpinnerUploadAnimationStep
                     end
                     object Label87: TLabel
-                      Left = 3
-                      Top = 53
-                      Width = 35
-                      Height = 15
+                      Left = 4
+                      Top = 66
+                      Width = 43
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Width:'
                       FocusControl = edtSpinnerUploadWidth
                     end
                     object Label88: TLabel
-                      Left = 127
-                      Top = 5
-                      Width = 71
-                      Height = 15
+                      Left = 159
+                      Top = 6
+                      Width = 90
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Sweep Angle:'
                       FocusControl = edtSpinnerUploadSweepAngle
                     end
                     object Label92: TLabel
-                      Left = 127
-                      Top = 53
-                      Width = 39
-                      Height = 15
+                      Left = 159
+                      Top = 66
+                      Width = 48
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Height:'
                       FocusControl = edtSpinnerUploadHeight
                     end
                     object Label93: TLabel
-                      Left = 250
-                      Top = 53
-                      Width = 45
-                      Height = 15
+                      Left = 313
+                      Top = 66
+                      Width = 56
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Offset X:'
                       FocusControl = edtSpinnerUploadOffsetX
                     end
                     object Label94: TLabel
-                      Left = 370
-                      Top = 53
-                      Width = 42
-                      Height = 15
+                      Left = 463
+                      Top = 66
+                      Width = 51
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'OffsetY:'
                       FocusControl = edtSpinnerUploadOffsetY
                     end
                     object edtSpinnerUploadAnimationStep: TSpinEdit
-                      Left = 3
-                      Top = 22
-                      Width = 106
-                      Height = 24
+                      Left = 4
+                      Top = 28
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 0
@@ -1583,10 +1939,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerUploadWidth: TSpinEdit
-                      Left = 3
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 4
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 3
@@ -1594,10 +1954,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerUploadSweepAngle: TSpinEdit
-                      Left = 127
-                      Top = 22
-                      Width = 106
-                      Height = 24
+                      Left = 159
+                      Top = 28
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 360
                       MinValue = 1
                       TabOrder = 1
@@ -1605,10 +1969,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object chkSpinnerUploadReverseDirection: TCheckBox
-                      Left = 250
-                      Top = 25
-                      Width = 164
-                      Height = 17
+                      Left = 313
+                      Top = 31
+                      Width = 205
+                      Height = 22
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Reverse Direction'
                       Checked = True
                       State = cbChecked
@@ -1616,10 +1984,14 @@ object frmMain: TfrmMain
                       OnClick = OnCommonControlPropertyChange
                     end
                     object edtSpinnerUploadHeight: TSpinEdit
-                      Left = 127
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 159
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 4
@@ -1627,10 +1999,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerUploadOffsetX: TSpinEdit
-                      Left = 250
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 313
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 5
@@ -1638,10 +2014,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerUploadOffsetY: TSpinEdit
-                      Left = 370
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 463
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 6
@@ -1650,60 +2030,92 @@ object frmMain: TfrmMain
                     end
                   end
                   object TabSheet18: TTabSheet
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Download'
                     object Label83: TLabel
-                      Left = 3
-                      Top = 5
-                      Width = 85
-                      Height = 15
+                      Left = 4
+                      Top = 6
+                      Width = 106
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Animation Step:'
                       FocusControl = edtSpinnerDownloadAnimationStep
                     end
                     object Label84: TLabel
-                      Left = 3
-                      Top = 53
-                      Width = 35
-                      Height = 15
+                      Left = 4
+                      Top = 66
+                      Width = 43
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Width:'
                       FocusControl = edtSpinnerDownloadWidth
                     end
                     object Label85: TLabel
-                      Left = 127
-                      Top = 5
-                      Width = 71
-                      Height = 15
+                      Left = 159
+                      Top = 6
+                      Width = 90
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Sweep Angle:'
                       FocusControl = edtSpinnerDownloadSweepAngle
                     end
                     object Label89: TLabel
-                      Left = 127
-                      Top = 53
-                      Width = 39
-                      Height = 15
+                      Left = 159
+                      Top = 66
+                      Width = 48
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Height:'
                       FocusControl = edtSpinnerDownloadHeight
                     end
                     object Label90: TLabel
-                      Left = 250
-                      Top = 53
-                      Width = 45
-                      Height = 15
+                      Left = 313
+                      Top = 66
+                      Width = 56
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Offset X:'
                       FocusControl = edtSpinnerDownloadOffsetX
                     end
                     object Label91: TLabel
-                      Left = 370
-                      Top = 53
-                      Width = 42
-                      Height = 15
+                      Left = 463
+                      Top = 66
+                      Width = 51
+                      Height = 20
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'OffsetY:'
                       FocusControl = edtSpinnerDownloadOffsetY
                     end
                     object edtSpinnerDownloadAnimationStep: TSpinEdit
-                      Left = 3
-                      Top = 22
-                      Width = 106
-                      Height = 24
+                      Left = 4
+                      Top = 28
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 0
@@ -1711,10 +2123,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerDownloadWidth: TSpinEdit
-                      Left = 3
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 4
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 3
@@ -1722,10 +2138,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerDownloadSweepAngle: TSpinEdit
-                      Left = 127
-                      Top = 22
-                      Width = 106
-                      Height = 24
+                      Left = 159
+                      Top = 28
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 350
                       MinValue = 1
                       TabOrder = 1
@@ -1733,10 +2153,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object chkSpinnerDownloadReverseDirection: TCheckBox
-                      Left = 250
-                      Top = 25
-                      Width = 164
-                      Height = 17
+                      Left = 313
+                      Top = 31
+                      Width = 205
+                      Height = 22
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       Caption = 'Reverse Direction'
                       Checked = True
                       State = cbChecked
@@ -1744,10 +2168,14 @@ object frmMain: TfrmMain
                       OnClick = OnCommonControlPropertyChange
                     end
                     object edtSpinnerDownloadHeight: TSpinEdit
-                      Left = 127
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 159
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 4
@@ -1755,10 +2183,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerDownloadOffsetX: TSpinEdit
-                      Left = 250
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 313
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 5
@@ -1766,10 +2198,14 @@ object frmMain: TfrmMain
                       OnChange = OnCommonControlPropertyChange
                     end
                     object edtSpinnerDownloadOffsetY: TSpinEdit
-                      Left = 370
-                      Top = 70
-                      Width = 106
-                      Height = 24
+                      Left = 463
+                      Top = 88
+                      Width = 132
+                      Height = 31
+                      Margins.Left = 4
+                      Margins.Top = 4
+                      Margins.Right = 4
+                      Margins.Bottom = 4
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 6
@@ -1782,61 +2218,93 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet7: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Text'
             ImageIndex = 6
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
-              Width = 731
-              Height = 172
+              Width = 917
+              Height = 215
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               Caption = 'Default Font'
               TabOrder = 0
               object Label14: TLabel
-                Left = 8
-                Top = 20
-                Width = 158
-                Height = 15
+                Left = 10
+                Top = 25
+                Width = 200
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Default Text Rendoring Mode:'
                 FocusControl = cbFontHintMode
               end
               object Label63: TLabel
-                Left = 8
-                Top = 73
-                Width = 62
-                Height = 15
+                Left = 10
+                Top = 91
+                Width = 76
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Font Name:'
                 FocusControl = edtDragImageAapha
               end
               object Label64: TLabel
-                Left = 184
-                Top = 72
-                Width = 23
-                Height = 15
+                Left = 230
+                Top = 90
+                Width = 30
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Size:'
                 FocusControl = edtFontSize
               end
               object Label65: TLabel
-                Left = 184
-                Top = 120
-                Width = 34
-                Height = 15
+                Left = 230
+                Top = 150
+                Width = 42
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Alpha:'
                 FocusControl = edtFontAlpha
               end
               object Label66: TLabel
-                Left = 8
-                Top = 124
-                Width = 66
-                Height = 15
+                Left = 10
+                Top = 155
+                Width = 80
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Font Colour:'
                 FocusControl = edtFontColor
               end
               object cbFontHintMode: TComboBox
-                Left = 8
-                Top = 36
-                Width = 170
-                Height = 23
+                Left = 10
+                Top = 45
+                Width = 213
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 4
                 TabOrder = 0
@@ -1851,19 +2319,27 @@ object frmMain: TfrmMain
                   'ClearType Grid Fit')
               end
               object cbFontName: TComboBox
-                Left = 8
-                Top = 89
-                Width = 170
-                Height = 23
+                Left = 10
+                Top = 111
+                Width = 213
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 TabOrder = 1
                 Text = 'Segoe UI'
                 OnChange = OnCommonControlPropertyChange
               end
               object edtFontSize: TSpinEdit
-                Left = 184
-                Top = 89
-                Width = 94
-                Height = 24
+                Left = 230
+                Top = 111
+                Width = 118
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 2
@@ -1871,10 +2347,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtFontAlpha: TSpinEdit
-                Left = 184
-                Top = 137
-                Width = 94
-                Height = 24
+                Left = 230
+                Top = 171
+                Width = 118
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 255
                 MinValue = 0
                 TabOrder = 3
@@ -1882,10 +2362,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtFontColor: TColorBox
-                Left = 8
-                Top = 139
-                Width = 170
+                Left = 10
+                Top = 174
+                Width = 213
                 Height = 22
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 DefaultColorColor = clSkyBlue
                 TabOrder = 4
                 OnChange = OnCommonControlPropertyChange
@@ -1893,41 +2377,61 @@ object frmMain: TfrmMain
             end
             object GroupBox10: TGroupBox
               Left = 0
-              Top = 172
-              Width = 731
-              Height = 151
+              Top = 215
+              Width = 917
+              Height = 189
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               Caption = 'Display'
               TabOrder = 1
               object Label67: TLabel
-                Left = 13
-                Top = 99
-                Width = 90
-                Height = 15
+                Left = 16
+                Top = 124
+                Width = 110
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Trimming Mode:'
                 FocusControl = cbTextTrimming
               end
               object Label18: TLabel
-                Left = 13
-                Top = 51
-                Width = 122
-                Height = 15
+                Left = 16
+                Top = 64
+                Width = 153
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Horzizontal Alignment:'
                 FocusControl = cbTextAlignment
               end
               object Label52: TLabel
-                Left = 174
-                Top = 51
-                Width = 101
-                Height = 15
+                Left = 218
+                Top = 64
+                Width = 126
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Vertical Alignment:'
                 FocusControl = cbTextVerticalAlignment
               end
               object cbTextTrimming: TComboBox
-                Left = 13
-                Top = 115
-                Width = 152
-                Height = 23
+                Left = 16
+                Top = 144
+                Width = 190
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 6
                 TabOrder = 3
@@ -1944,19 +2448,27 @@ object frmMain: TfrmMain
               end
               object chkTabWordWrap: TCheckBox
                 Tag = 1
-                Left = 13
-                Top = 24
-                Width = 91
-                Height = 17
+                Left = 16
+                Top = 30
+                Width = 114
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Word Wrap'
                 TabOrder = 0
                 OnClick = OnCommonControlPropertyChange
               end
               object cbTextAlignment: TComboBox
-                Left = 13
-                Top = 66
-                Width = 150
-                Height = 23
+                Left = 16
+                Top = 83
+                Width = 188
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 0
                 TabOrder = 1
@@ -1968,10 +2480,14 @@ object frmMain: TfrmMain
                   'Centre')
               end
               object cbTextVerticalAlignment: TComboBox
-                Left = 174
-                Top = 66
-                Width = 139
-                Height = 23
+                Left = 218
+                Top = 83
+                Width = 173
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 2
                 TabOrder = 2
@@ -1984,10 +2500,14 @@ object frmMain: TfrmMain
               end
               object chkShowTextOnPinnedTabs: TCheckBox
                 Tag = 1
-                Left = 173
-                Top = 26
-                Width = 188
-                Height = 17
+                Left = 216
+                Top = 33
+                Width = 235
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Show text on pinned tabs'
                 TabOrder = 4
                 OnClick = OnCommonControlPropertyChange
@@ -1995,80 +2515,124 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet4: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Buttons'
             ImageIndex = 5
             object pcButtons: TPageControl
               Left = 0
-              Top = 19
-              Width = 731
-              Height = 407
+              Top = 24
+              Width = 917
+              Height = 514
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               ActivePage = TabSheet11
               Align = alClient
               TabOrder = 1
               object TabSheet11: TTabSheet
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Close Buttons'
                 ImageIndex = 1
                 object Label4: TLabel
-                  Left = 11
-                  Top = 6
-                  Width = 47
-                  Height = 15
+                  Left = 14
+                  Top = 8
+                  Width = 59
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Visibility:'
                   FocusControl = cbCloseButtonVisibility
                 end
                 object Label39: TLabel
-                  Left = 207
-                  Top = 6
-                  Width = 108
-                  Height = 15
+                  Left = 259
+                  Top = 8
+                  Width = 135
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Auto hide tab width:'
                   FocusControl = edtCloseButtonAutoHideWidth
                 end
                 object Label42: TLabel
-                  Left = 235
-                  Top = 56
-                  Width = 77
-                  Height = 15
+                  Left = 294
+                  Top = 70
+                  Width = 97
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Vertical Offset:'
                   FocusControl = edtCloseButtonVerticalOffset
                 end
                 object Label43: TLabel
-                  Left = 343
-                  Top = 56
-                  Width = 63
-                  Height = 15
+                  Left = 429
+                  Top = 70
+                  Width = 79
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Horz Offset:'
                   FocusControl = edtCloseButtonHorzOffset
                 end
                 object Label44: TLabel
-                  Left = 11
-                  Top = 56
-                  Width = 39
-                  Height = 15
+                  Left = 14
+                  Top = 70
+                  Width = 48
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Height:'
                   FocusControl = edtCloseButtonHeight
                 end
                 object Label45: TLabel
-                  Left = 119
-                  Top = 56
-                  Width = 35
-                  Height = 15
+                  Left = 149
+                  Top = 70
+                  Width = 43
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Width:'
                   FocusControl = edtCloseButtonWidth
                 end
                 object Label50: TLabel
-                  Left = 11
-                  Top = 112
-                  Width = 67
-                  Height = 15
+                  Left = 14
+                  Top = 140
+                  Width = 82
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Cross Offset:'
                   FocusControl = edtCrossOffset
                 end
                 object cbCloseButtonVisibility: TComboBox
-                  Left = 11
-                  Top = 21
-                  Width = 94
-                  Height = 23
+                  Left = 14
+                  Top = 26
+                  Width = 117
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 1
                   TabOrder = 0
@@ -2080,19 +2644,27 @@ object frmMain: TfrmMain
                     'Active Tab')
                 end
                 object chkCloseButtonAutoHide: TCheckBox
-                  Left = 115
-                  Top = 24
-                  Width = 84
-                  Height = 17
+                  Left = 144
+                  Top = 30
+                  Width = 105
+                  Height = 21
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Auto Hide'
                   TabOrder = 2
                   OnClick = OnCommonControlPropertyChange
                 end
                 object edtCloseButtonAutoHideWidth: TSpinEdit
-                  Left = 206
-                  Top = 21
-                  Width = 114
-                  Height = 24
+                  Left = 258
+                  Top = 26
+                  Width = 142
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -2100,10 +2672,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtCloseButtonVerticalOffset: TSpinEdit
-                  Left = 235
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 294
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 5
@@ -2111,10 +2687,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtCloseButtonHorzOffset: TSpinEdit
-                  Left = 343
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 429
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 6
@@ -2122,10 +2702,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtCloseButtonHeight: TSpinEdit
-                  Left = 11
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 14
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 3
@@ -2133,10 +2717,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtCloseButtonWidth: TSpinEdit
-                  Left = 119
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 149
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 4
@@ -2144,10 +2732,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtCrossOffset: TSpinEdit
-                  Left = 11
-                  Top = 129
-                  Width = 94
-                  Height = 24
+                  Left = 14
+                  Top = 161
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 7
@@ -2156,61 +2748,93 @@ object frmMain: TfrmMain
                 end
               end
               object TabSheet12: TTabSheet
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Add Button'
                 ImageIndex = 2
                 object Label29: TLabel
-                  Left = 11
-                  Top = 6
-                  Width = 47
-                  Height = 15
+                  Left = 14
+                  Top = 8
+                  Width = 59
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Visibility:'
                   FocusControl = cbAddButtonVisibility
                 end
                 object Label37: TLabel
-                  Left = 235
-                  Top = 56
-                  Width = 77
-                  Height = 15
+                  Left = 294
+                  Top = 70
+                  Width = 97
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Vertical Offset:'
                   FocusControl = edtAddButtonVerticalOffset
                 end
                 object Label38: TLabel
-                  Left = 343
-                  Top = 56
-                  Width = 63
-                  Height = 15
+                  Left = 429
+                  Top = 70
+                  Width = 79
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Horz Offset:'
                   FocusControl = edtAddButtonHorzOffset
                 end
                 object Label46: TLabel
-                  Left = 11
-                  Top = 56
-                  Width = 39
-                  Height = 15
+                  Left = 14
+                  Top = 70
+                  Width = 48
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Height:'
                   FocusControl = edtAddButtonHeight
                 end
                 object Label47: TLabel
-                  Left = 119
-                  Top = 56
-                  Width = 35
-                  Height = 15
+                  Left = 149
+                  Top = 70
+                  Width = 43
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Width:'
                   FocusControl = edtAddButtonWidth
                 end
                 object Label68: TLabel
-                  Left = 443
-                  Top = 56
-                  Width = 109
-                  Height = 15
+                  Left = 554
+                  Top = 70
+                  Width = 137
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Floating Horz Offset:'
                   FocusControl = edtAddButtonFloatingHorzOffset
                 end
                 object cbAddButtonVisibility: TComboBox
-                  Left = 11
-                  Top = 21
-                  Width = 118
-                  Height = 23
+                  Left = 14
+                  Top = 26
+                  Width = 147
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 2
                   TabOrder = 0
@@ -2223,10 +2847,14 @@ object frmMain: TfrmMain
                     'Fixed Right')
                 end
                 object edtAddButtonVerticalOffset: TSpinEdit
-                  Left = 235
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 294
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 4
@@ -2234,10 +2862,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtAddButtonHorzOffset: TSpinEdit
-                  Left = 343
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 429
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 5
@@ -2245,10 +2877,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtAddButtonHeight: TSpinEdit
-                  Left = 11
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 14
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 2
@@ -2256,10 +2892,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtAddButtonWidth: TSpinEdit
-                  Left = 119
-                  Top = 73
-                  Width = 94
-                  Height = 24
+                  Left = 149
+                  Top = 91
+                  Width = 117
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 3
@@ -2267,10 +2907,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object chkShowPlus: TCheckBox
-                  Left = 147
-                  Top = 24
-                  Width = 118
-                  Height = 17
+                  Left = 184
+                  Top = 30
+                  Width = 147
+                  Height = 21
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Show Plus'
                   Checked = True
                   State = cbChecked
@@ -2278,10 +2922,14 @@ object frmMain: TfrmMain
                   OnClick = OnCommonControlPropertyChange
                 end
                 object edtAddButtonFloatingHorzOffset: TSpinEdit
-                  Left = 443
-                  Top = 73
-                  Width = 118
-                  Height = 24
+                  Left = 554
+                  Top = 91
+                  Width = 147
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 6
@@ -2290,21 +2938,33 @@ object frmMain: TfrmMain
                 end
               end
               object TabSheet13: TTabSheet
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Scroll Buttons'
                 ImageIndex = 3
                 object Label25: TLabel
-                  Left = 11
-                  Top = 7
-                  Width = 76
-                  Height = 15
+                  Left = 14
+                  Top = 9
+                  Width = 94
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Scroll Buttons:'
                   FocusControl = cbScrollButtons
                 end
                 object cbScrollButtons: TComboBox
-                  Left = 11
-                  Top = 23
-                  Width = 144
-                  Height = 23
+                  Left = 14
+                  Top = 29
+                  Width = 180
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 2
                   TabOrder = 0
@@ -2317,10 +2977,14 @@ object frmMain: TfrmMain
                     'LeftAndRight')
                 end
                 object chkAutoHideScrollButtons: TCheckBox
-                  Left = 161
-                  Top = 26
-                  Width = 138
-                  Height = 17
+                  Left = 201
+                  Top = 33
+                  Width = 173
+                  Height = 21
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Auto Hide'
                   Checked = True
                   State = cbChecked
@@ -2328,49 +2992,73 @@ object frmMain: TfrmMain
                   OnClick = OnCommonControlPropertyChange
                 end
                 object GroupBox2: TGroupBox
-                  Left = 13
-                  Top = 63
-                  Width = 508
-                  Height = 74
+                  Left = 16
+                  Top = 79
+                  Width = 635
+                  Height = 92
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Left Button'
                   TabOrder = 2
                   object Label40: TLabel
-                    Left = 235
-                    Top = 20
-                    Width = 77
-                    Height = 15
+                    Left = 294
+                    Top = 25
+                    Width = 97
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Vertical Offset:'
                     FocusControl = edtLeftScrollButtonsVerticalOffset
                   end
                   object Label41: TLabel
-                    Left = 343
-                    Top = 20
-                    Width = 63
-                    Height = 15
+                    Left = 429
+                    Top = 25
+                    Width = 79
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Horz Offset:'
                     FocusControl = edtLeftScrollButtonsHorzOffset
                   end
                   object Label48: TLabel
-                    Left = 11
-                    Top = 20
-                    Width = 39
-                    Height = 15
+                    Left = 14
+                    Top = 25
+                    Width = 48
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Height:'
                     FocusControl = edtLeftScrollButtonHeight
                   end
                   object Label49: TLabel
-                    Left = 119
-                    Top = 20
-                    Width = 35
-                    Height = 15
+                    Left = 149
+                    Top = 25
+                    Width = 43
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Width:'
                     FocusControl = edtLeftScrollButtonWidth
                   end
                   object edtLeftScrollButtonsVerticalOffset: TSpinEdit
-                    Left = 235
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 294
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 2
@@ -2378,10 +3066,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtLeftScrollButtonsHorzOffset: TSpinEdit
-                    Left = 343
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 429
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 3
@@ -2389,10 +3081,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtLeftScrollButtonHeight: TSpinEdit
-                    Left = 11
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 14
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 0
@@ -2400,10 +3096,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtLeftScrollButtonWidth: TSpinEdit
-                    Left = 119
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 149
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 1
@@ -2412,49 +3112,73 @@ object frmMain: TfrmMain
                   end
                 end
                 object GroupBox7: TGroupBox
-                  Left = 13
-                  Top = 143
-                  Width = 508
-                  Height = 74
+                  Left = 16
+                  Top = 179
+                  Width = 635
+                  Height = 92
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Right Button'
                   TabOrder = 3
                   object Label58: TLabel
-                    Left = 235
-                    Top = 20
-                    Width = 77
-                    Height = 15
+                    Left = 294
+                    Top = 25
+                    Width = 97
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Vertical Offset:'
                     FocusControl = edtRightScrollButtonVerticalOffset
                   end
                   object Label59: TLabel
-                    Left = 343
-                    Top = 20
-                    Width = 63
-                    Height = 15
+                    Left = 429
+                    Top = 25
+                    Width = 79
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Horz Offset:'
                     FocusControl = edtRightScrollButtonHorzOffset
                   end
                   object Label60: TLabel
-                    Left = 11
-                    Top = 20
-                    Width = 39
-                    Height = 15
+                    Left = 14
+                    Top = 25
+                    Width = 48
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Height:'
                     FocusControl = edtRightScrollButtonHeight
                   end
                   object Label61: TLabel
-                    Left = 119
-                    Top = 20
-                    Width = 35
-                    Height = 15
+                    Left = 149
+                    Top = 25
+                    Width = 43
+                    Height = 20
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     Caption = 'Width:'
                     FocusControl = edtRightScrollButtonWidth
                   end
                   object edtRightScrollButtonVerticalOffset: TSpinEdit
-                    Left = 235
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 294
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 2
@@ -2462,10 +3186,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtRightScrollButtonHorzOffset: TSpinEdit
-                    Left = 343
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 429
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 3
@@ -2473,10 +3201,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtRightScrollButtonHeight: TSpinEdit
-                    Left = 11
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 14
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 0
@@ -2484,10 +3216,14 @@ object frmMain: TfrmMain
                     OnChange = OnCommonControlPropertyChange
                   end
                   object edtRightScrollButtonWidth: TSpinEdit
-                    Left = 119
-                    Top = 37
-                    Width = 94
-                    Height = 24
+                    Left = 149
+                    Top = 46
+                    Width = 117
+                    Height = 31
+                    Margins.Left = 4
+                    Margins.Top = 4
+                    Margins.Right = 4
+                    Margins.Bottom = 4
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 1
@@ -2500,16 +3236,24 @@ object frmMain: TfrmMain
             object Panel8: TPanel
               Left = 0
               Top = 0
-              Width = 731
-              Height = 19
+              Width = 917
+              Height = 24
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 0
               object chkScrollOverlayButtons: TCheckBox
                 Left = 0
                 Top = 0
-                Width = 728
-                Height = 17
+                Width = 910
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Overlay Buttons'
                 TabOrder = 0
                 OnClick = OnCommonControlPropertyChange
@@ -2517,21 +3261,33 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet10: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Internationlization'
             ImageIndex = 8
             object Label69: TLabel
-              Left = 3
-              Top = 6
-              Width = 57
-              Height = 15
+              Left = 4
+              Top = 8
+              Width = 72
+              Height = 20
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Bidi Mode:'
               FocusControl = cbBidiMode
             end
             object cbBidiMode: TComboBox
-              Left = 3
-              Top = 21
-              Width = 206
-              Height = 23
+              Left = 4
+              Top = 26
+              Width = 257
+              Height = 28
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Style = csDropDownList
               ItemIndex = 0
               TabOrder = 0
@@ -2545,13 +3301,21 @@ object frmMain: TfrmMain
             end
           end
           object Scrolling: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Scrolling'
             ImageIndex = 4
             object chkScrolling: TCheckBox
-              Left = 3
-              Top = 3
-              Width = 1057
-              Height = 17
+              Left = 4
+              Top = 4
+              Width = 1321
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Enable Scrolling'
               Checked = True
               State = cbChecked
@@ -2561,55 +3325,83 @@ object frmMain: TfrmMain
             object pnlScroll: TPanel
               Left = 0
               Top = 0
-              Width = 731
-              Height = 426
+              Width = 917
+              Height = 538
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
               object Label26: TLabel
-                Left = 17
-                Top = 60
-                Width = 60
-                Height = 15
+                Left = 21
+                Top = 75
+                Width = 77
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Scroll Steps'
                 FocusControl = edtScrollSteps
               end
               object Label27: TLabel
-                Left = 172
-                Top = 60
-                Width = 95
-                Height = 15
+                Left = 215
+                Top = 75
+                Width = 122
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Repeat Delay (ms)'
                 FocusControl = edtScrollRepeatDelay
               end
               object Label24: TLabel
-                Left = 17
-                Top = 8
-                Width = 67
-                Height = 15
+                Left = 21
+                Top = 10
+                Width = 84
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Scroll Offset:'
                 FocusControl = sbScrollOffset
               end
               object lblScrollOffset: TLabel
-                Left = 321
-                Top = 26
-                Width = 6
-                Height = 15
+                Left = 401
+                Top = 33
+                Width = 8
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = '0'
               end
               object Label28: TLabel
-                Left = 172
-                Top = 110
-                Width = 109
-                Height = 15
+                Left = 215
+                Top = 138
+                Width = 139
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Scroll Edge Distance:'
                 FocusControl = edtDragScrollEdge
               end
               object edtScrollSteps: TSpinEdit
-                Left = 17
-                Top = 77
-                Width = 144
-                Height = 24
+                Left = 21
+                Top = 96
+                Width = 180
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 1
@@ -2617,10 +3409,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtScrollRepeatDelay: TSpinEdit
-                Left = 172
-                Top = 77
-                Width = 141
-                Height = 24
+                Left = 215
+                Top = 96
+                Width = 176
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 0
                 TabOrder = 2
@@ -2628,19 +3424,27 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object sbScrollOffset: TScrollBar
-                Left = 17
-                Top = 26
-                Width = 296
-                Height = 17
+                Left = 21
+                Top = 33
+                Width = 370
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 PageSize = 1
                 TabOrder = 0
                 OnChange = sbScrollOffsetChange
               end
               object chkScrollWhileDragging: TCheckBox
-                Left = 17
-                Top = 130
-                Width = 149
-                Height = 17
+                Left = 21
+                Top = 163
+                Width = 187
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Scroll While Dragging'
                 Checked = True
                 State = cbChecked
@@ -2648,10 +3452,14 @@ object frmMain: TfrmMain
                 OnClick = OnCommonControlPropertyChange
               end
               object edtDragScrollEdge: TSpinEdit
-                Left = 172
-                Top = 127
-                Width = 141
-                Height = 24
+                Left = 215
+                Top = 159
+                Width = 176
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 3
@@ -2659,10 +3467,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object chkMouseWheelScrolling: TCheckBox
-                Left = 17
-                Top = 170
-                Width = 149
-                Height = 17
+                Left = 21
+                Top = 213
+                Width = 187
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Mouse Wheel Scrolling'
                 Checked = True
                 State = cbChecked
@@ -2670,10 +3482,14 @@ object frmMain: TfrmMain
                 OnClick = OnCommonControlPropertyChange
               end
               object Button1: TButton
-                Left = 17
-                Top = 208
-                Width = 184
-                Height = 25
+                Left = 21
+                Top = 260
+                Width = 230
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Scroll Active Tab into View'
                 TabOrder = 6
                 OnClick = Button1Click
@@ -2681,21 +3497,33 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet6: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Tab Container'
             ImageIndex = 1
             object Label20: TLabel
-              Left = 3
-              Top = 4
-              Width = 137
-              Height = 15
+              Left = 4
+              Top = 5
+              Width = 169
+              Height = 20
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Canvas Smoothing Mode:'
               FocusControl = cbCanvasSmoothingMode
             end
             object chkTransparentBackground: TCheckBox
-              Left = 3
-              Top = 50
-              Width = 198
-              Height = 17
+              Left = 4
+              Top = 63
+              Width = 247
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Transparent Background'
               Checked = True
               State = cbChecked
@@ -2703,10 +3531,14 @@ object frmMain: TfrmMain
               OnClick = OnCommonControlPropertyChange
             end
             object cbCanvasSmoothingMode: TComboBox
-              Left = 3
-              Top = 21
-              Width = 170
-              Height = 23
+              Left = 4
+              Top = 26
+              Width = 212
+              Height = 28
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Style = csDropDownList
               ItemIndex = 2
               TabOrder = 0
@@ -2721,42 +3553,62 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet2: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Behaviour'
             ImageIndex = 2
             object Label53: TLabel
-              Left = 24
-              Top = 166
-              Width = 240
-              Height = 15
+              Left = 26
+              Top = 208
+              Width = 304
+              Height = 20
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Alignment = taRightJustify
               Caption = 'Delay before resizing tabs when cursor leaves:'
               FocusControl = edtCloseButtonMouseLeaveDelay
             end
             object Label62: TLabel
-              Left = 348
-              Top = 166
-              Width = 16
-              Height = 15
+              Left = 435
+              Top = 208
+              Width = 19
+              Height = 20
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'ms'
             end
             object Label80: TLabel
-              Left = 16
-              Top = 26
-              Width = 308
-              Height = 15
+              Left = 20
+              Top = 33
+              Width = 388
+              Height = 20
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'This feature is only supported in Delphi versions from 2010'
               Font.Charset = ANSI_CHARSET
               Font.Color = clSilver
-              Font.Height = -12
+              Font.Height = -15
               Font.Name = 'Segoe UI'
               Font.Style = []
               ParentFont = False
             end
             object chkBackgroundDoubleClickMaxmise: TCheckBox
-              Left = 3
-              Top = 54
-              Width = 371
-              Height = 17
+              Left = 4
+              Top = 68
+              Width = 464
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Double click background to minimise/maxmise form'
               Checked = True
               State = cbChecked
@@ -2764,10 +3616,14 @@ object frmMain: TfrmMain
               OnClick = OnCommonControlPropertyChange
             end
             object chkDraggingBackgoundMovesForm: TCheckBox
-              Left = 3
-              Top = 77
-              Width = 371
-              Height = 17
+              Left = 4
+              Top = 96
+              Width = 464
+              Height = 22
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Dragging background moves form'
               Checked = True
               State = cbChecked
@@ -2775,10 +3631,14 @@ object frmMain: TfrmMain
               OnClick = OnCommonControlPropertyChange
             end
             object chkSmartResize: TCheckBox
-              Left = 3
-              Top = 142
-              Width = 371
-              Height = 17
+              Left = 4
+              Top = 178
+              Width = 464
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Reposition tab close button under mouse after closing a tab'
               Checked = True
               State = cbChecked
@@ -2786,10 +3646,14 @@ object frmMain: TfrmMain
               OnClick = OnCommonControlPropertyChange
             end
             object edtCloseButtonMouseLeaveDelay: TSpinEdit
-              Left = 270
-              Top = 163
-              Width = 75
-              Height = 24
+              Left = 338
+              Top = 204
+              Width = 93
+              Height = 31
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Increment = 100
               MaxValue = 65535
               MinValue = 1
@@ -2798,10 +3662,14 @@ object frmMain: TfrmMain
               OnChange = OnCommonControlPropertyChange
             end
             object chkRightClickSelect: TCheckBox
-              Left = 3
-              Top = 108
-              Width = 371
-              Height = 17
+              Left = 4
+              Top = 135
+              Width = 464
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Right Click Select'
               Checked = True
               State = cbChecked
@@ -2809,10 +3677,14 @@ object frmMain: TfrmMain
               OnClick = OnCommonControlPropertyChange
             end
             object chkDisplayTopTabsInTitleBar: TCheckBox
-              Left = 3
-              Top = 6
-              Width = 371
-              Height = 17
+              Left = 4
+              Top = 8
+              Width = 464
+              Height = 21
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Caption = 'Display the top tabs in the Title Bar non client area'
               Checked = True
               State = cbChecked
@@ -2821,61 +3693,93 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet8: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Animation'
             ImageIndex = 3
             object GroupBox8: TGroupBox
               Left = 0
               Top = 0
-              Width = 731
-              Height = 177
+              Width = 917
+              Height = 221
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               Caption = 'Default Animation Properties'
               TabOrder = 0
               object Label21: TLabel
-                Left = 8
-                Top = 76
-                Width = 122
-                Height = 15
+                Left = 10
+                Top = 95
+                Width = 152
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Default Movement MS:'
                 FocusControl = edtAnimationStepsMovement
               end
               object Label22: TLabel
-                Left = 8
-                Top = 127
-                Width = 89
-                Height = 15
+                Left = 10
+                Top = 159
+                Width = 113
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Default Style MS:'
                 FocusControl = edtAnimationStepsStyle
               end
               object Label23: TLabel
-                Left = 8
-                Top = 23
-                Width = 102
-                Height = 15
+                Left = 10
+                Top = 29
+                Width = 127
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Update Timer (ms):'
                 FocusControl = edtAnimationUpdate
               end
               object Label70: TLabel
-                Left = 164
-                Top = 76
-                Width = 157
-                Height = 15
+                Left = 205
+                Top = 95
+                Width = 197
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Default Movement Ease Type:'
                 FocusControl = cbMovementEaseType
               end
               object Label72: TLabel
-                Left = 164
-                Top = 127
-                Width = 124
-                Height = 15
+                Left = 205
+                Top = 159
+                Width = 158
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Default Style Ease Type:'
                 FocusControl = cbStyleEaseType
               end
               object edtAnimationStepsMovement: TSpinEdit
-                Left = 8
-                Top = 93
-                Width = 148
-                Height = 24
+                Left = 10
+                Top = 116
+                Width = 185
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 1
@@ -2883,10 +3787,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtAnimationStepsStyle: TSpinEdit
-                Left = 8
-                Top = 144
-                Width = 148
-                Height = 24
+                Left = 10
+                Top = 180
+                Width = 185
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 3
@@ -2894,10 +3802,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object edtAnimationUpdate: TSpinEdit
-                Left = 8
-                Top = 40
-                Width = 148
-                Height = 24
+                Left = 10
+                Top = 50
+                Width = 185
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 0
@@ -2905,10 +3817,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object cbMovementEaseType: TComboBox
-                Left = 164
-                Top = 93
-                Width = 165
-                Height = 23
+                Left = 205
+                Top = 116
+                Width = 206
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 0
                 TabOrder = 2
@@ -2940,10 +3856,14 @@ object frmMain: TfrmMain
                   'In Out Circ')
               end
               object cbStyleEaseType: TComboBox
-                Left = 164
-                Top = 144
-                Width = 165
-                Height = 23
+                Left = 205
+                Top = 180
+                Width = 206
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 0
                 TabOrder = 4
@@ -2977,50 +3897,74 @@ object frmMain: TfrmMain
             end
             object GroupBox9: TGroupBox
               Left = 0
-              Top = 177
-              Width = 731
-              Height = 177
+              Top = 221
+              Width = 917
+              Height = 222
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               Caption = 'Specific Animations'
               TabOrder = 1
               object GroupBox11: TGroupBox
-                Left = 337
-                Top = 17
-                Width = 168
-                Height = 158
+                Left = 420
+                Top = 22
+                Width = 210
+                Height = 198
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Align = alLeft
                 Caption = 'Move Tab'
                 TabOrder = 2
                 object Label30: TLabel
-                  Left = 24
-                  Top = 52
-                  Width = 81
-                  Height = 15
+                  Left = 30
+                  Top = 65
+                  Width = 99
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Movement MS:'
                   FocusControl = edtMoveTabTime
                 end
                 object Label73: TLabel
-                  Left = 24
-                  Top = 103
-                  Width = 116
-                  Height = 15
+                  Left = 30
+                  Top = 129
+                  Width = 144
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbMoveTabEase
                 end
                 object chkMoveTabDefaults: TCheckBox
-                  Left = 8
-                  Top = 24
-                  Width = 97
-                  Height = 17
+                  Left = 10
+                  Top = 30
+                  Width = 121
+                  Height = 21
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Use defaults'
                   TabOrder = 0
                   OnClick = OnCommonControlPropertyChange
                 end
                 object edtMoveTabTime: TSpinEdit
-                  Left = 24
-                  Top = 69
-                  Width = 118
-                  Height = 24
+                  Left = 30
+                  Top = 86
+                  Width = 148
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -3028,10 +3972,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object cbMoveTabEase: TComboBox
-                  Left = 24
-                  Top = 120
-                  Width = 129
-                  Height = 23
+                  Left = 30
+                  Top = 150
+                  Width = 161
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 0
                   TabOrder = 2
@@ -3064,43 +4012,63 @@ object frmMain: TfrmMain
                 end
               end
               object GroupBox12: TGroupBox
-                Left = 169
-                Top = 17
-                Width = 168
-                Height = 158
+                Left = 210
+                Top = 22
+                Width = 210
+                Height = 198
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Align = alLeft
                 Caption = 'Delete Tab'
                 TabOrder = 1
                 object Label74: TLabel
-                  Left = 24
-                  Top = 52
-                  Width = 81
-                  Height = 15
+                  Left = 30
+                  Top = 65
+                  Width = 99
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Movement MS:'
                   FocusControl = edtDeleteTabTime
                 end
                 object Label75: TLabel
-                  Left = 24
-                  Top = 103
-                  Width = 116
-                  Height = 15
+                  Left = 30
+                  Top = 129
+                  Width = 144
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbDeleteTabEase
                 end
                 object chkDeleteTabDefaults: TCheckBox
-                  Left = 8
-                  Top = 24
-                  Width = 97
-                  Height = 17
+                  Left = 10
+                  Top = 30
+                  Width = 121
+                  Height = 21
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Use defaults'
                   TabOrder = 0
                   OnClick = OnCommonControlPropertyChange
                 end
                 object edtDeleteTabTime: TSpinEdit
-                  Left = 24
-                  Top = 69
-                  Width = 118
-                  Height = 24
+                  Left = 30
+                  Top = 86
+                  Width = 148
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -3108,10 +4076,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object cbDeleteTabEase: TComboBox
-                  Left = 24
-                  Top = 120
-                  Width = 129
-                  Height = 23
+                  Left = 30
+                  Top = 150
+                  Width = 161
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 0
                   TabOrder = 2
@@ -3145,42 +4117,62 @@ object frmMain: TfrmMain
               end
               object GroupBox13: TGroupBox
                 Left = 2
-                Top = 17
-                Width = 167
-                Height = 158
+                Top = 22
+                Width = 208
+                Height = 198
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Align = alLeft
                 Caption = 'Add Tab'
                 TabOrder = 0
                 object Label76: TLabel
-                  Left = 24
-                  Top = 52
-                  Width = 81
-                  Height = 15
+                  Left = 30
+                  Top = 65
+                  Width = 99
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Movement MS:'
                   FocusControl = edtAddTabTime
                 end
                 object Label77: TLabel
-                  Left = 24
-                  Top = 103
-                  Width = 116
-                  Height = 15
+                  Left = 30
+                  Top = 129
+                  Width = 144
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbAddTabEase
                 end
                 object chkAddTabDefaults: TCheckBox
-                  Left = 8
-                  Top = 24
-                  Width = 97
-                  Height = 17
+                  Left = 10
+                  Top = 30
+                  Width = 121
+                  Height = 21
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Use defaults'
                   TabOrder = 0
                   OnClick = OnCommonControlPropertyChange
                 end
                 object edtAddTabTime: TSpinEdit
-                  Left = 24
-                  Top = 69
-                  Width = 118
-                  Height = 24
+                  Left = 30
+                  Top = 86
+                  Width = 148
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -3188,10 +4180,14 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object cbAddTabEase: TComboBox
-                  Left = 24
-                  Top = 120
-                  Width = 129
-                  Height = 23
+                  Left = 30
+                  Top = 150
+                  Width = 161
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Style = csDropDownList
                   ItemIndex = 0
                   TabOrder = 2
@@ -3226,16 +4222,24 @@ object frmMain: TfrmMain
             end
           end
           object TabSheet9: TTabSheet
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Drag Drop'
             ImageIndex = 7
             object cbDragType: TComboBox
-              Left = 3
-              Top = 21
-              Width = 200
-              Height = 23
+              Left = 4
+              Top = 26
+              Width = 250
+              Height = 28
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Style = csDropDownList
-              Constraints.MaxWidth = 200
-              Constraints.MinWidth = 200
+              Constraints.MaxWidth = 313
+              Constraints.MinWidth = 250
               ItemIndex = 2
               TabOrder = 1
               Text = 'Drag between containers'
@@ -3248,48 +4252,72 @@ object frmMain: TfrmMain
             object pnlDragDrop: TPanel
               Left = 0
               Top = 0
-              Width = 731
-              Height = 426
+              Width = 917
+              Height = 538
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
               object Label31: TLabel
-                Left = 6
-                Top = 6
-                Width = 63
-                Height = 15
+                Left = 8
+                Top = 8
+                Width = 79
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Drag Cursor'
                 FocusControl = cbDragCursor
               end
               object Label32: TLabel
-                Left = 140
-                Top = 5
-                Width = 87
-                Height = 15
+                Left = 175
+                Top = 6
+                Width = 112
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Drag Start Pixels:'
                 FocusControl = edtDragStartPixels
               end
               object Label33: TLabel
-                Left = 6
-                Top = 62
-                Width = 113
-                Height = 15
+                Left = 8
+                Top = 78
+                Width = 146
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'External Drag Display:'
                 FocusControl = cbExternalDragDisplay
               end
               object Label34: TLabel
-                Left = 274
-                Top = 5
-                Width = 105
-                Height = 15
+                Left = 343
+                Top = 6
+                Width = 133
+                Height = 20
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Drag away distance:'
                 FocusControl = edtDragAwayDistance
               end
               object cbDragCursor: TComboBox
-                Left = 6
-                Top = 22
-                Width = 126
-                Height = 23
+                Left = 8
+                Top = 28
+                Width = 157
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 0
                 TabOrder = 0
@@ -3300,10 +4328,14 @@ object frmMain: TfrmMain
                   'Drag')
               end
               object edtDragStartPixels: TSpinEdit
-                Left = 140
-                Top = 22
-                Width = 128
-                Height = 24
+                Left = 175
+                Top = 28
+                Width = 160
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 0
                 TabOrder = 1
@@ -3311,10 +4343,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object cbExternalDragDisplay: TComboBox
-                Left = 6
-                Top = 78
-                Width = 126
-                Height = 23
+                Left = 8
+                Top = 98
+                Width = 157
+                Height = 28
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Style = csDropDownList
                 ItemIndex = 3
                 TabOrder = 3
@@ -3327,33 +4363,49 @@ object frmMain: TfrmMain
                   'Tab and Control')
               end
               object pnlDragDisplay: TPanel
-                Left = 6
-                Top = 107
-                Width = 470
-                Height = 62
+                Left = 8
+                Top = 134
+                Width = 587
+                Height = 77
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 BevelOuter = bvNone
                 TabOrder = 4
                 object Label35: TLabel
                   Left = 1
-                  Top = 3
-                  Width = 98
-                  Height = 15
+                  Top = 4
+                  Width = 125
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Drag Image Alpha:'
                   FocusControl = edtDragImageAapha
                 end
                 object Label36: TLabel
-                  Left = 135
-                  Top = 3
-                  Width = 99
-                  Height = 15
+                  Left = 169
+                  Top = 4
+                  Width = 128
+                  Height = 20
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   Caption = 'Drag Image Resize:'
                   FocusControl = edtDragImageAapha
                 end
                 object edtDragImageAapha: TSpinEdit
                   Left = 0
-                  Top = 19
-                  Width = 128
-                  Height = 24
+                  Top = 24
+                  Width = 160
+                  Height = 31
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   MaxValue = 255
                   MinValue = 0
                   TabOrder = 0
@@ -3361,20 +4413,28 @@ object frmMain: TfrmMain
                   OnChange = OnCommonControlPropertyChange
                 end
                 object edtDragImageResize: TEdit
-                  Left = 135
-                  Top = 20
-                  Width = 121
-                  Height = 23
+                  Left = 169
+                  Top = 25
+                  Width = 151
+                  Height = 28
+                  Margins.Left = 4
+                  Margins.Top = 4
+                  Margins.Right = 4
+                  Margins.Bottom = 4
                   TabOrder = 1
                   Text = '0.5'
                   OnChange = OnCommonControlPropertyChange
                 end
               end
               object edtDragAwayDistance: TSpinEdit
-                Left = 274
-                Top = 22
-                Width = 130
-                Height = 24
+                Left = 343
+                Top = 28
+                Width = 162
+                Height = 31
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 MaxValue = 65535
                 MinValue = 0
                 TabOrder = 2
@@ -3382,10 +4442,14 @@ object frmMain: TfrmMain
                 OnChange = OnCommonControlPropertyChange
               end
               object chkContrainDraggedTab: TCheckBox
-                Left = 7
-                Top = 165
-                Width = 397
-                Height = 17
+                Left = 9
+                Top = 206
+                Width = 496
+                Height = 22
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 
                   'Don'#39't allow dragged tab to move beyond the edges of the containe' +
                   'r'
@@ -3397,46 +4461,70 @@ object frmMain: TfrmMain
         end
         object Panel7: TPanel
           Left = 0
-          Top = 456
-          Width = 1009
-          Height = 33
+          Top = 573
+          Width = 1263
+          Height = 41
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
           object btnSaveOptions: TButton
-            Left = 133
+            Left = 166
             Top = 0
-            Width = 133
-            Height = 33
+            Width = 167
+            Height = 41
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Action = actSaveOptions
             TabOrder = 1
           end
           object btnLoadOptions: TButton
             Left = 0
             Top = 0
-            Width = 133
-            Height = 33
+            Width = 166
+            Height = 41
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Action = actLoadOptions
             TabOrder = 0
           end
           object btnCopyOptions: TButton
-            Left = 266
+            Left = 333
             Top = 0
-            Width = 170
-            Height = 33
+            Width = 212
+            Height = 41
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Action = actCopyOptionsAsCode
             TabOrder = 2
           end
         end
       end
       object TabSheet14: TTabSheet
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'Look and Feel'
         ImageIndex = 3
         object tvLookAndFeelItems: TTreeView
           Left = 0
           Top = 0
-          Width = 169
-          Height = 456
+          Width = 211
+          Height = 573
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alLeft
           HideSelection = False
           Indent = 19
@@ -3446,25 +4534,33 @@ object frmMain: TfrmMain
           OnChange = tvLookAndFeelItemsChange
         end
         object Panel5: TPanel
-          Left = 169
+          Left = 211
           Top = 0
-          Width = 840
-          Height = 456
+          Width = 1052
+          Height = 573
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           object pnlLookAndFeelPath: TPanel
             Left = 0
             Top = 0
-            Width = 840
-            Height = 25
+            Width = 1052
+            Height = 31
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Align = alTop
             Alignment = taLeftJustify
             BevelOuter = bvNone
             Caption = 'pnlLookAndFeelPath'
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlue
-            Font.Height = -15
+            Font.Height = -19
             Font.Name = 'Segoe UI'
             Font.Style = []
             ParentFont = False
@@ -3472,9 +4568,13 @@ object frmMain: TfrmMain
           end
           object ScrollBox1: TScrollBox
             Left = 0
-            Top = 25
-            Width = 840
-            Height = 431
+            Top = 31
+            Width = 1052
+            Height = 542
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             HorzScrollBar.Smooth = True
             HorzScrollBar.Style = ssHotTrack
             HorzScrollBar.Tracking = True
@@ -3489,72 +4589,108 @@ object frmMain: TfrmMain
         end
         object Panel6: TPanel
           Left = 0
-          Top = 456
-          Width = 1009
-          Height = 33
+          Top = 573
+          Width = 1263
+          Height = 41
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
           object btnSaveLookAndFeel: TButton
-            Left = 133
+            Left = 166
             Top = 0
-            Width = 133
-            Height = 33
+            Width = 167
+            Height = 41
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Action = actSaveLookandFeel
             TabOrder = 1
           end
           object btnLoadLookAndFeel: TButton
             Left = 0
             Top = 0
-            Width = 133
-            Height = 33
+            Width = 166
+            Height = 41
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Action = actLoadLookAndFeel
             TabOrder = 0
           end
           object btnCopyLookAndFeel: TButton
-            Left = 266
+            Left = 333
             Top = 0
-            Width = 170
-            Height = 33
+            Width = 212
+            Height = 41
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Action = actCopyLookAndFeelAsCode
             TabOrder = 2
           end
         end
       end
       object TabSheet15: TTabSheet
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'General'
         ImageIndex = 4
         object Label7: TLabel
-          Left = 16
-          Top = 8
-          Width = 117
-          Height = 15
+          Left = 20
+          Top = 10
+          Width = 145
+          Height = 20
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Caption = 'Tab Container Height:'
           FocusControl = edtTabHeight
         end
         object Label5: TLabel
-          Left = 30
-          Top = 88
-          Width = 90
-          Height = 15
+          Left = 37
+          Top = 110
+          Width = 113
+          Height = 20
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Alignment = taRightJustify
           Caption = 'Glass Height Top'
           FocusControl = edtGlassHeightTop
         end
         object Label8: TLabel
-          Left = 11
-          Top = 115
-          Width = 109
-          Height = 15
+          Left = 13
+          Top = 144
+          Width = 137
+          Height = 20
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Alignment = taRightJustify
           Caption = 'Glass Height Bottom'
           FocusControl = edtGlassHeightBottom
         end
         object edtTabHeight: TSpinEdit
-          Left = 16
-          Top = 25
-          Width = 129
-          Height = 24
+          Left = 20
+          Top = 31
+          Width = 161
+          Height = 31
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           MaxValue = 65535
           MinValue = 4
           TabOrder = 0
@@ -3562,10 +4698,14 @@ object frmMain: TfrmMain
           OnChange = OnCommonControlPropertyChange
         end
         object edtGlassHeightTop: TSpinEdit
-          Left = 126
-          Top = 85
-          Width = 74
-          Height = 24
+          Left = 158
+          Top = 106
+          Width = 92
+          Height = 31
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           MaxValue = 0
           MinValue = 0
           TabOrder = 2
@@ -3573,10 +4713,14 @@ object frmMain: TfrmMain
           OnChange = OnCommonControlPropertyChange
         end
         object chkUseGlass: TCheckBox
-          Left = 14
-          Top = 63
-          Width = 155
-          Height = 17
+          Left = 18
+          Top = 79
+          Width = 193
+          Height = 21
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Caption = 'Glass Form'
           Checked = True
           State = cbChecked
@@ -3584,10 +4728,14 @@ object frmMain: TfrmMain
           OnClick = OnCommonControlPropertyChange
         end
         object edtGlassHeightBottom: TSpinEdit
-          Left = 126
-          Top = 112
-          Width = 74
-          Height = 24
+          Left = 158
+          Top = 140
+          Width = 92
+          Height = 31
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           MaxValue = 0
           MinValue = 0
           TabOrder = 3
@@ -3596,46 +4744,70 @@ object frmMain: TfrmMain
         end
       end
       object TabSheet3: TTabSheet
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'Events'
         ImageIndex = 2
         object Panel2: TPanel
           Left = 0
-          Top = 63
-          Width = 1009
-          Height = 426
+          Top = 79
+          Width = 1263
+          Height = 535
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           object gbOtherEvents: TGroupBox
-            Left = 685
+            Left = 856
             Top = 0
-            Width = 324
-            Height = 426
+            Width = 407
+            Height = 535
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Align = alClient
             Caption = 'Other Events'
             TabOrder = 3
           end
           object gbChange: TGroupBox
-            Left = 241
+            Left = 301
             Top = 0
-            Width = 222
-            Height = 426
+            Width = 278
+            Height = 535
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Align = alLeft
             Caption = 'OnChange'
             TabOrder = 1
             object Panel9: TPanel
               Left = 2
-              Top = 406
-              Width = 218
-              Height = 18
+              Top = 511
+              Width = 274
+              Height = 22
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 0
               object chkIgnorePropertyUpdated: TCheckBox
-                Left = 4
+                Left = 5
                 Top = 0
-                Width = 218
-                Height = 17
+                Width = 273
+                Height = 21
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Caption = 'Ignore Property Updated Events'
                 Checked = True
                 State = cbChecked
@@ -3646,45 +4818,65 @@ object frmMain: TfrmMain
           object Panel3: TPanel
             Left = 0
             Top = 0
-            Width = 241
-            Height = 426
+            Width = 301
+            Height = 535
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Align = alLeft
             BevelOuter = bvNone
             TabOrder = 0
             object gbMouseMove: TGroupBox
               Left = 0
               Top = 0
-              Width = 241
-              Height = 169
+              Width = 301
+              Height = 211
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alTop
               Caption = 'OnMouseMove'
               TabOrder = 0
             end
             object gbDragOver: TGroupBox
               Left = 0
-              Top = 169
-              Width = 241
-              Height = 257
+              Top = 211
+              Width = 301
+              Height = 324
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
               Align = alClient
               Caption = 'OnTabDragOver'
               TabOrder = 1
               object lbTabDragOver: TListBox
                 Left = 2
-                Top = 17
-                Width = 237
-                Height = 238
+                Top = 22
+                Width = 297
+                Height = 300
+                Margins.Left = 4
+                Margins.Top = 4
+                Margins.Right = 4
+                Margins.Bottom = 4
                 Align = alClient
                 BorderStyle = bsNone
-                ItemHeight = 15
+                ItemHeight = 20
                 TabOrder = 0
               end
             end
           end
           object gbEvents: TGroupBox
-            Left = 463
+            Left = 579
             Top = 0
-            Width = 222
-            Height = 426
+            Width = 277
+            Height = 535
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Align = alLeft
             Caption = 'Event Counts'
             TabOrder = 2
@@ -3693,35 +4885,51 @@ object frmMain: TfrmMain
         object Panel4: TPanel
           Left = 0
           Top = 0
-          Width = 1009
-          Height = 63
+          Width = 1263
+          Height = 79
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
           DesignSize = (
-            1009
-            63)
+            1263
+            79)
           object Label13: TLabel
             Left = 1
-            Top = 21
-            Width = 77
-            Height = 15
+            Top = 26
+            Width = 95
+            Height = 20
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Current States:'
           end
           object chkEnableEvents: TCheckBox
             Left = 1
             Top = 1
-            Width = 191
-            Height = 19
+            Width = 239
+            Height = 24
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Enable Events'
             TabOrder = 0
             OnClick = chkEnableEventsClick
           end
           object edtStates: TEdit
             Left = 1
-            Top = 36
-            Width = 1006
-            Height = 23
+            Top = 45
+            Width = 1260
+            Height = 28
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Anchors = [akLeft, akTop, akRight]
             ReadOnly = True
             TabOrder = 1
@@ -3729,21 +4937,33 @@ object frmMain: TfrmMain
         end
       end
       object tabDebug: TTabSheet
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
         Caption = 'Debug'
         ImageIndex = 2
         object Panel10: TPanel
           Left = 0
           Top = 0
-          Width = 1009
-          Height = 19
+          Width = 1263
+          Height = 24
+          Margins.Left = 4
+          Margins.Top = 4
+          Margins.Right = 4
+          Margins.Bottom = 4
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
           object chkDebugLog: TCheckBox
             Left = 0
             Top = 0
-            Width = 145
-            Height = 19
+            Width = 181
+            Height = 24
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
             Caption = 'Debug Mode'
             TabOrder = 0
             OnClick = OnCommonControlPropertyChange
@@ -3757,7 +4977,7 @@ object frmMain: TfrmMain
     Left = 48
     Top = 472
     Bitmap = {
-      494C010106000900040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010106000900080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000002F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E
@@ -4033,7 +5253,7 @@ object frmMain: TfrmMain
     Left = 88
     Top = 472
     Bitmap = {
-      494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000500080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000A3D0CA324802EDB001500610000
@@ -4241,7 +5461,7 @@ object frmMain: TfrmMain
     Left = 128
     Top = 472
     Bitmap = {
-      494C01010B000D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010B000D00080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000B0B0B0C000000000000000000000000000000000000
@@ -4649,7 +5869,7 @@ object frmMain: TfrmMain
     Left = 168
     Top = 472
     Bitmap = {
-      494C01010A000D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010A000D00080010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       00001F1F1F24505050895F5F5FCB656565EB656565EB5F5F5FCB505050891F1F
