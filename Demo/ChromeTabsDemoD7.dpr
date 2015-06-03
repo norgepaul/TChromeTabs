@@ -1,7 +1,7 @@
 program ChromeTabsDemoD7;
 
 uses
-  EMemLeaks,
+  //EMemLeaks,
   Forms,
   frmMainU in 'frmMainU.pas' {frmMain},
   frameChromeTabStyleU in 'frameChromeTabStyleU.pas';

@@ -23,8 +23,6 @@ unit ChromeTabsUtils;
 
 interface
 
-{$include versions.inc}
-
 {.$DEFINE USE_PNGIMAGE} // <-- Enable this define if you want to use an external
                         //     copy of pngImage in Delphi 2008 or earlier
 
@@ -428,14 +426,14 @@ begin
 end;
 
 procedure ScaleImage(Bitmap, ScaledBitmap: TBitmap; ScaleFactor: Real);
-{$IFNDEF DELPHI2006_UP}
+{$if CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
 var
   NewHeight, NewWidth: Integer;
-{$ENDIF}
+{$ifend}
 begin
-  {$IFDEF DELPHI2006_UP}
+  {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
     GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
-  {$ELSE}
+  {$else}
     NewWidth := Round(Bitmap.Width * ScaleFactor);
     NewHeight := Round(Bitmap.Height * ScaleFactor);
 
@@ -443,7 +441,7 @@ begin
     ScaledBitmap.Height := NewHeight;
 
     ScaledBitmap.Canvas.StretchDraw(Rect(0, 0, NewWidth, NewHeight), Bitmap);
-  {$ENDIF}
+  {$ifend}
 end;
 
 procedure SetTabClipRegionFromPolygon(GPGraphics: TGPGraphics; Polygon: TPolygon; CombineMode: TCombineMode);

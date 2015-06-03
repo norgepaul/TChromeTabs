@@ -2,8 +2,6 @@ unit ChromeTabsDesign;
 
 interface
 
-{$include versions.inc}
-
 uses
   Windows,
   Classes,

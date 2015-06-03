@@ -1,2 +1,3 @@
 # TChromeTabs
-TChromeTabs is a comprehensive implementation of Google Chrome's tabs for Delph7 - Delphi XE8
+=======
+TChromeTabs is a comprehensive implementation of Google Chrome's tabs for Delphi 6 - Delphi XE8
