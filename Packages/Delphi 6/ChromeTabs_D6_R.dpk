@@ -1,0 +1,44 @@
+package ChromeTabs_D6_R;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Chrome Tabs'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl;
+
+contains
+  ChromeTabs in '..\..\Lib\ChromeTabs.pas',
+  ChromeTabsClasses in '..\..\Lib\ChromeTabsClasses.pas',
+  ChromeTabsControls in '..\..\Lib\ChromeTabsControls.pas',
+  ChromeTabsThreadTimer in '..\..\Lib\ChromeTabsThreadTimer.pas',
+  ChromeTabsTypes in '..\..\Lib\ChromeTabsTypes.pas',
+  ChromeTabsUtils in '..\..\Lib\ChromeTabsUtils.pas',
+  GDIPAPI in '..\..\GDIPlus\GDIPAPI.pas',
+  GDIPOBJ in '..\..\GDIPlus\GDIPOBJ.pas',
+  DirectDraw in '..\..\GDIPlus\DirectDraw.pas';
+
+end.
