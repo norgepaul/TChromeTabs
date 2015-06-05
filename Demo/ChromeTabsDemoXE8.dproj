@@ -42,9 +42,9 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_Optimize>false</DCC_Optimize>
         <SanitizedProjectName>ChromeTabsDemoXE8</SanitizedProjectName>
-        <DCC_DcuOutput>..\Bin\XE6\$(Config)\$(Platform)\DCU</DCC_DcuOutput>
+        <DCC_DcuOutput>$(BDSCOMMONDIR)\TChromeTabs\DCU\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_UnitSearchPath>..\Lib;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_ExeOutput>..\Bin\XE6\$(Config)\$(Platform)</DCC_ExeOutput>
+        <DCC_ExeOutput>..\Bin\$(Config)\$(Platform)</DCC_ExeOutput>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_Namespace>WinAPI;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>7177</VerInfo_Locale>
@@ -117,14 +117,9 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Bpl\EasyIP.Base.Frames.bpl">Easy-IP Base Frames</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Bpl\EasyIP.Base.Network.bpl">Easy-IP Base Network</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Bpl\EasyIP.NetTools.bpl">Easy-IP NetTools</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Bpl\EasyIP.Base.Reports.bpl">Easy-IP Base Reports</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Bpl\EasyIP.Suite.bpl">Easy-IP Suite</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Bpl\EasyIP.Suite.Frames.bpl">EasyIP Suite Frames</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k210.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp210.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k220.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp220.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\ChromeTabs_D.210.bpl">File C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\ChromeTabs_D.210.bpl not found</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">ChromeTabsDemoXE8.dpr</Source>
@@ -135,13 +130,13 @@
                 <Platform value="Win64">True</Platform>
             </Platforms>
             <Deployment Version="1">
-                <DeployFile LocalName="..\Bin\XE6\Debug\Win32\ChromeTabsDemoXE8.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Bin\XE6\Release\Win32\ChromeTabsDemoXE8.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ChromeTabsDemoXE8.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Bin\XE6\Release\Win32\ChromeTabsDemoXE8.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\Bin\XE6\Debug\Win32\ChromeTabsDemoXE8.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ChromeTabsDemoXE8.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -469,9 +464,9 @@
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
             </Deployment>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

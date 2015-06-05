@@ -2,7 +2,7 @@ unit ChromeTabs;
 
 // Version 2.3
 //
-// TChromeTabs - A Chome Tab component for Delphi 7-XE7 that includes ALL the
+// TChromeTabs - A Chome Tab component for Delphi 6-XE8 that includes ALL the
 //               features seen in the Google Chrome tab control along with
 //               much, much more.
 //
@@ -74,7 +74,6 @@ interface
 { TODO -cImprovement : Better handling of GDI text alpha on Vista Glass - How? }
 
 { TODO -cBug : Tab Alpha increases slightly when drag begins }
-{ TODO -cBug : Drag docking not accurate. Some problem with the control detection }
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 uses
@@ -503,9 +502,10 @@ type
     property OnMouseMove;
     property OnResize;
     property TabOrder;
-    {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}   { TODO : Is this the version when these events were introduced? }
-      property OnMouseEnter;
-      property OnMouseLeave;
+
+    {$if CompilerVersion >= 18.0}
+    property OnMouseEnter;
+    property OnMouseLeave;
     {$ifend}
   end;
 

@@ -28,32 +28,27 @@ uses
   Dialogs, StdCtrls, ActnList, ComCtrls, Spin, Contnrs,
   ExtCtrls, ImgList, Types, Menus, ClipBrd, AppEvnts,
 
-  //{$IF CompilerVersion >= 28.0}System.Actions,{$IFEND}
-  { TODO : This should work, but it seems that a bug in Delphi XE7 automatically
-    adds the System.Actions unit unless you use the IFDEF below. }
-  {$IFDEF VER280}System.Actions,{$ENDIF}
-
   GDIPObj, GDIPAPI,
 
   frameChromeTabStyleU,
 
-  {$if CompilerVersion >= 21.0}//{$IFDEF DELPHI2010_UP}
-  ChromeTabsGlassForm,
-  {$ifend}
+  {$if CompilerVersion >= 21.0}ChromeTabsGlassForm,{$ifend}
+  {$if CompilerVersion >= 28.0}System.Actions,{$ifend}
+  {$if CompilerVersion >= 29.0}System.ImageList,{$ifend}
 
   ChromeTabs,
   ChromeTabsTypes,
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog, System.Actions, System.ImageList;
+  ChromeTabsLog;
 
 type
-  TFormType = {$IFDEF DELPHI2010_UP}
-              TChromeTabsGlassForm;
-              {$ELSE}
-              TForm;
-              {$ENDIF}
+  TFormType = {$if CompilerVersion >= 21.0}
+              TChromeTabsGlassForm
+              {$else}
+              TForm
+              {$ifend};
 
   TfrmMain = class(TFormType)
     ChromeTabs1: TChromeTabs;
@@ -860,9 +855,9 @@ begin
   if Sender is TframeChromeTabStyle then
     FCurrentColorPickerFrame := TframeChromeTabStyle(Sender);
 
-  {$IFDEF DELPHI2007_UP}
+  {$if CompilerVersion >= 18.0}
     FormStyle := fsStayOnTop; { TODO : This causes an exception in Delphi 7. Why? }
-  {$ENDIF}
+  {$ifend}
 end;
 
 procedure TfrmMain.UpdateLookAndFeelEditors(ChromeTabs: TChromeTabs; Index: Integer);
@@ -882,9 +877,9 @@ procedure TfrmMain.UpdateLookAndFeelEditors(ChromeTabs: TChromeTabs; Index: Inte
     Result.Align := alClient;
     Result.OnStartColorPicking := OnFrameSelectColorClick;
 
-    {$IFDEF DELPHI2007_UP}
+    {$if CompilerVersion >= 18.0}
       Result.AlignWithMargins := TRUE;
-    {$ENDIF}
+    {$ifend}
 
     GroupBox.ClientWidth := Result.Width + 6;
   end;
@@ -1115,14 +1110,16 @@ begin
 
   ChromeTabControlPropertiesToGUI(FCurrentTabs);
 
-  {$IFDEF DELPHI2010_UP}
+  {$if CompilerVersion >= 21.0}
   Self.ChromeTabs := ChromeTabs1;
-  {$ENDIF}
+  {$ifend}
+
+  ChromeTabs1.Tabs[0].Active := True;
 end;
 
 procedure TfrmMain.FixControls;
 begin
-  {$IFDEF DELPHI2007_UP}
+  {$if CompilerVersion >= 18.0}
     btnOpenForm.Align := alRight;
     btnOpenForm.AlignWithMargins := TRUE;
 
@@ -1139,7 +1136,7 @@ begin
     btnSaveLookAndFeel.AlignWithMargins := TRUE;
     btnCopyLookAndFeel.Align := alLeft;
     btnCopyLookAndFeel.AlignWithMargins := TRUE;
-  {$ENDIF}
+  {$ifend}
 end;
 
 procedure TfrmMain.OnCommonControlPropertyChange(Sender: TObject);
@@ -1539,7 +1536,7 @@ begin
       else
         ChromeTabs.Options.DragDrop.DragCursor := crDrag;
 
-      {$IFDEF DELPHI2010_UP}
+      {$if CompilerVersion >= 21.0}
       if chkDisplayTopTabsInTitleBar.Checked then
         Self.ChromeTabs := ChromeTabs1
       else
@@ -1549,7 +1546,7 @@ begin
         ChromeTabs1.Align := alTop;
         ChromeTabs1.Top := 0;
       end;
-      {$ENDIF}
+      {$ifend}
 
       ChromeTabs.Options.Behaviour.DebugMode := chkDebugLog.Checked;
     finally
@@ -1561,7 +1558,7 @@ begin
 
   pnlTop.Color := ChromeTabs1.LookAndFeel.Tabs.Active.Style.StopColor;
 
-  {$IFDEF DELPHI2007_UP}
+  {$if CompilerVersion >= 18.0}
   if not chkDisplayTopTabsInTitleBar.Checked then
   begin
     GlassFrame.Enabled := chkUseGlass.Checked;
@@ -1569,7 +1566,7 @@ begin
   end;
 
   GlassFrame.Bottom := edtGlassHeightBottom.Value;
-  {$ENDIF}
+  {$ifend}
 end;
 
 procedure TfrmMain.SpinButton1DownClick(Sender: TObject);
