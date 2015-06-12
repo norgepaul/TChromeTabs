@@ -30,8 +30,13 @@ uses
   Windows, SysUtils, Controls, Classes, Graphics, Messages, ExtCtrls, Forms,
   GraphUtil, Math,
 
-  {$IF CompilerVersion >= 23}System.Types,{$IFEND}
-  {$IFDEF USE_PNGIMAGE}pngImage,{$ENDIF}
+  {$if CompilerVersion >= 23}
+  System.Types,
+  {$ifend}
+
+  {$IFDEF USE_PNGIMAGE}
+  pngImage,
+  {$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -426,7 +431,7 @@ begin
 end;
 
 procedure ScaleImage(Bitmap, ScaledBitmap: TBitmap; ScaleFactor: Real);
-{$if CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
+{$if CompilerVersion < 18.0}
 var
   NewHeight, NewWidth: Integer;
 {$ifend}

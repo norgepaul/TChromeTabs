@@ -1,6 +1,7 @@
 package ChromeTabs_D;
 
 {$R *.res}
+{$R 'Icon.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -26,7 +27,7 @@ package ChromeTabs_D;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Chrome Tabs Design Time'}
-{$LIBVERSION '210'}
+{$LIBVERSION '220'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 

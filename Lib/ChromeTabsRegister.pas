@@ -3,8 +3,7 @@ unit ChromeTabsRegister;
 interface
 
 uses
-  SysUtils, Controls, ActnList,
-  Classes,
+  ToolsApi, Windows, SysUtils, Controls, ActnList, Classes,
 
   DesignIntf, DesignEditors,
 
@@ -15,15 +14,44 @@ uses
 
 implementation
 
+resourcestring
+  StrTChromeTabsEvery = 'TChromeTabs - Every tab you''ll ever need';
+
+{$R 'Icon.dcr'}
+
 const
   PropertySection = 'Chrome Tabs';
+  TChromeTabsName = 'TChromeTabs';
 
 procedure Register;
 begin
-  RegisterComponents(PropertySection, [TChromeTabs]);;
+  RegisterComponents(PropertySection, [TChromeTabs]);
 
   // Property Editors
   RegisterComponentEditor(TChromeTabs, TChromeTabEditor);
 end;
+
+procedure RegisterSplashScreen;
+var
+  ProductImage: HBITMAP;
+begin
+  if Assigned(SplashScreenServices) then
+  begin
+    ProductImage := LoadBitmap(
+      FindResourceHInstance(HInstance),
+      'TCHROMETABS');
+
+    SplashScreenServices.AddPluginBitmap(
+      TChromeTabsName,
+      ProductImage,
+      False,
+      StrTChromeTabsEvery);
+  end;
+end;
+
+initialization
+  RegisterSplashScreen;
+
+finalization
 
 end.

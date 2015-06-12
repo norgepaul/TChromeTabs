@@ -1,5 +1,8 @@
 TChromeTabs 2.3
 
+06-06-2014
+Update: Removed Versions.inc
+
 06-03-2015
 Update: XE8 Support
 

@@ -29,6 +29,7 @@ package ChromeTabs_D;
 {$LIBVERSION '210'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
+{$R 'Icon.dcr'}
 
 requires
   rtl,

@@ -1,9 +1,9 @@
 object frmMain: TfrmMain
   Left = 207
   Top = 140
-  Width = 1033
-  Height = 645
   Caption = 'Chrome Tabs Demo'
+  ClientHeight = 606
+  ClientWidth = 1017
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -82,7 +82,6 @@ object frmMain: TfrmMain
     Options.Display.Tabs.ImageOffsetLeft = 13
     Options.Display.Tabs.TextTrimType = tttFade
     Options.Display.Tabs.Orientation = toTop
-    Options.Display.Tabs.CanvasSmoothingMode = 2
     Options.Display.Tabs.BaseLineTabRegionOnly = False
     Options.Display.Tabs.WordWrap = False
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
@@ -118,7 +117,7 @@ object frmMain: TfrmMain
     Options.DragDrop.DragOutsideImageAlpha = 220
     Options.DragDrop.DragOutsideDistancePixels = 30
     Options.DragDrop.DragStartPixels = 2
-    Options.DragDrop.DragControlImageResizeFactor = 0.5
+    Options.DragDrop.DragControlImageResizeFactor = 0.500000000000000000
     Options.DragDrop.DragCursor = crDefault
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
@@ -191,7 +190,7 @@ object frmMain: TfrmMain
     LookAndFeel.TabsContainer.OutlineColor = 14520930
     LookAndFeel.TabsContainer.OutlineAlpha = 0
     LookAndFeel.Tabs.BaseLine.Color = 11110509
-    LookAndFeel.Tabs.BaseLine.Thickness = 1
+    LookAndFeel.Tabs.BaseLine.Thickness = 1.000000000000000000
     LookAndFeel.Tabs.BaseLine.Alpha = 255
     LookAndFeel.Tabs.Modified.CentreColor = clWhite
     LookAndFeel.Tabs.Modified.OutsideColor = clWhite
@@ -207,10 +206,10 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.MouseGlow.CentreAlpha = 120
     LookAndFeel.Tabs.MouseGlow.OutsideAlpha = 0
     LookAndFeel.Tabs.Spinners.Upload.Color = 12759975
-    LookAndFeel.Tabs.Spinners.Upload.Thickness = 2.5
+    LookAndFeel.Tabs.Spinners.Upload.Thickness = 2.500000000000000000
     LookAndFeel.Tabs.Spinners.Upload.Alpha = 255
     LookAndFeel.Tabs.Spinners.Download.Color = 14388040
-    LookAndFeel.Tabs.Spinners.Download.Thickness = 2.5
+    LookAndFeel.Tabs.Spinners.Download.Thickness = 2.500000000000000000
     LookAndFeel.Tabs.Spinners.Download.Alpha = 255
     LookAndFeel.Tabs.Active.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.Active.Font.Color = clOlive
@@ -223,7 +222,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Active.Style.StartAlpha = 255
     LookAndFeel.Tabs.Active.Style.StopAlpha = 255
     LookAndFeel.Tabs.Active.Style.OutlineColor = 10189918
-    LookAndFeel.Tabs.Active.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
     LookAndFeel.Tabs.NotActive.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.NotActive.Font.Color = 4603477
@@ -236,7 +235,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.NotActive.Style.StartAlpha = 210
     LookAndFeel.Tabs.NotActive.Style.StopAlpha = 230
     LookAndFeel.Tabs.NotActive.Style.OutlineColor = 13546390
-    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1
+    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.NotActive.Style.OutlineAlpha = 215
     LookAndFeel.Tabs.Hot.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.Hot.Font.Color = 4210752
@@ -249,135 +248,135 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Hot.Style.StartAlpha = 255
     LookAndFeel.Tabs.Hot.Style.StopAlpha = 255
     LookAndFeel.Tabs.Hot.Style.OutlineColor = 12423799
-    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Hot.Style.OutlineAlpha = 235
     LookAndFeel.CloseButton.Cross.Normal.Color = 6643031
-    LookAndFeel.CloseButton.Cross.Normal.Thickness = 1.5
+    LookAndFeel.CloseButton.Cross.Normal.Thickness = 1.500000000000000000
     LookAndFeel.CloseButton.Cross.Normal.Alpha = 255
     LookAndFeel.CloseButton.Cross.Down.Color = 15461369
-    LookAndFeel.CloseButton.Cross.Down.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Down.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Down.Alpha = 220
     LookAndFeel.CloseButton.Cross.Hot.Color = clWhite
-    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Hot.Alpha = 220
     LookAndFeel.CloseButton.Circle.Normal.StartColor = clGradientActiveCaption
     LookAndFeel.CloseButton.Circle.Normal.StopColor = clNone
     LookAndFeel.CloseButton.Circle.Normal.StartAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.StopAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Normal.OutlineAlpha = 0
     LookAndFeel.CloseButton.Circle.Down.StartColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StopColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Down.OutlineAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StartColor = 9408475
     LookAndFeel.CloseButton.Circle.Hot.StopColor = 9803748
     LookAndFeel.CloseButton.Circle.Hot.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.OutlineColor = 6054595
-    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StartColor = 14340292
     LookAndFeel.AddButton.Button.Normal.StopColor = 14340035
     LookAndFeel.AddButton.Button.Normal.StartAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StopAlpha = 255
     LookAndFeel.AddButton.Button.Normal.OutlineColor = 13088421
-    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Down.StartColor = 13417645
     LookAndFeel.AddButton.Button.Down.StopColor = 13417644
     LookAndFeel.AddButton.Button.Down.StartAlpha = 255
     LookAndFeel.AddButton.Button.Down.StopAlpha = 255
     LookAndFeel.AddButton.Button.Down.OutlineColor = 10852748
-    LookAndFeel.AddButton.Button.Down.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StartColor = 15524314
     LookAndFeel.AddButton.Button.Hot.StopColor = 15524314
     LookAndFeel.AddButton.Button.Hot.StartAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StopAlpha = 255
     LookAndFeel.AddButton.Button.Hot.OutlineColor = 14927787
-    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StartColor = 14735310
     LookAndFeel.ScrollButtons.Button.Normal.StopColor = 14274499
     LookAndFeel.ScrollButtons.Button.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.OutlineColor = 11507842
-    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Normal.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StartColor = 13417645
     LookAndFeel.ScrollButtons.Button.Down.StopColor = 13417644
     LookAndFeel.ScrollButtons.Button.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.OutlineColor = 10852748
-    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Down.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StartColor = 15524314
     LookAndFeel.ScrollButtons.Button.Hot.StopColor = 15524313
     LookAndFeel.ScrollButtons.Button.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.OutlineColor = 14927788
-    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Disabled.StartColor = 14340036
     LookAndFeel.ScrollButtons.Button.Disabled.StopColor = 14274499
     LookAndFeel.ScrollButtons.Button.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineColor = 11113341
-    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineAlpha = 100
     LookAndFeel.ScrollButtons.Arrow.Normal.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Down.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Hot.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alTop
     TabOrder = 0
@@ -442,7 +441,6 @@ object frmMain: TfrmMain
     Options.Display.Tabs.ImageOffsetLeft = 13
     Options.Display.Tabs.TextTrimType = tttFade
     Options.Display.Tabs.Orientation = toBottom
-    Options.Display.Tabs.CanvasSmoothingMode = 2
     Options.Display.Tabs.BaseLineTabRegionOnly = False
     Options.Display.Tabs.WordWrap = False
     Options.Display.Tabs.TextAlignmentHorizontal = taLeftJustify
@@ -478,7 +476,7 @@ object frmMain: TfrmMain
     Options.DragDrop.DragOutsideImageAlpha = 220
     Options.DragDrop.DragOutsideDistancePixels = 30
     Options.DragDrop.DragStartPixels = 2
-    Options.DragDrop.DragControlImageResizeFactor = 0.5
+    Options.DragDrop.DragControlImageResizeFactor = 0.500000000000000000
     Options.DragDrop.DragCursor = crDefault
     Options.DragDrop.DragDisplay = ddTabAndControl
     Options.DragDrop.DragFormBorderWidth = 2
@@ -527,7 +525,7 @@ object frmMain: TfrmMain
     LookAndFeel.TabsContainer.OutlineColor = 14520930
     LookAndFeel.TabsContainer.OutlineAlpha = 0
     LookAndFeel.Tabs.BaseLine.Color = 11110509
-    LookAndFeel.Tabs.BaseLine.Thickness = 1
+    LookAndFeel.Tabs.BaseLine.Thickness = 1.000000000000000000
     LookAndFeel.Tabs.BaseLine.Alpha = 255
     LookAndFeel.Tabs.Modified.CentreColor = clWhite
     LookAndFeel.Tabs.Modified.OutsideColor = clWhite
@@ -543,10 +541,10 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.MouseGlow.CentreAlpha = 120
     LookAndFeel.Tabs.MouseGlow.OutsideAlpha = 0
     LookAndFeel.Tabs.Spinners.Upload.Color = 12759975
-    LookAndFeel.Tabs.Spinners.Upload.Thickness = 2.5
+    LookAndFeel.Tabs.Spinners.Upload.Thickness = 2.500000000000000000
     LookAndFeel.Tabs.Spinners.Upload.Alpha = 255
     LookAndFeel.Tabs.Spinners.Download.Color = 14388040
-    LookAndFeel.Tabs.Spinners.Download.Thickness = 2.5
+    LookAndFeel.Tabs.Spinners.Download.Thickness = 2.500000000000000000
     LookAndFeel.Tabs.Spinners.Download.Alpha = 255
     LookAndFeel.Tabs.Active.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.Active.Font.Color = clOlive
@@ -559,7 +557,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Active.Style.StartAlpha = 255
     LookAndFeel.Tabs.Active.Style.StopAlpha = 255
     LookAndFeel.Tabs.Active.Style.OutlineColor = 9985595
-    LookAndFeel.Tabs.Active.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Active.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Active.Style.OutlineAlpha = 255
     LookAndFeel.Tabs.NotActive.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.NotActive.Font.Color = clBlack
@@ -572,7 +570,7 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.NotActive.Style.StartAlpha = 210
     LookAndFeel.Tabs.NotActive.Style.StopAlpha = 210
     LookAndFeel.Tabs.NotActive.Style.OutlineColor = 10576703
-    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1
+    LookAndFeel.Tabs.NotActive.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.NotActive.Style.OutlineAlpha = 215
     LookAndFeel.Tabs.Hot.Font.Name = 'Segoe UI'
     LookAndFeel.Tabs.Hot.Font.Color = 4210752
@@ -585,135 +583,135 @@ object frmMain: TfrmMain
     LookAndFeel.Tabs.Hot.Style.StartAlpha = 255
     LookAndFeel.Tabs.Hot.Style.StopAlpha = 255
     LookAndFeel.Tabs.Hot.Style.OutlineColor = 12423799
-    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1
+    LookAndFeel.Tabs.Hot.Style.OutlineSize = 1.000000000000000000
     LookAndFeel.Tabs.Hot.Style.OutlineAlpha = 235
     LookAndFeel.CloseButton.Cross.Normal.Color = 6643031
-    LookAndFeel.CloseButton.Cross.Normal.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Normal.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Normal.Alpha = 255
     LookAndFeel.CloseButton.Cross.Down.Color = 15461369
-    LookAndFeel.CloseButton.Cross.Down.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Down.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Down.Alpha = 220
     LookAndFeel.CloseButton.Cross.Hot.Color = clWhite
-    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2
+    LookAndFeel.CloseButton.Cross.Hot.Thickness = 2.000000000000000000
     LookAndFeel.CloseButton.Cross.Hot.Alpha = 220
     LookAndFeel.CloseButton.Circle.Normal.StartColor = clGradientActiveCaption
     LookAndFeel.CloseButton.Circle.Normal.StopColor = clNone
     LookAndFeel.CloseButton.Circle.Normal.StartAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.StopAlpha = 0
     LookAndFeel.CloseButton.Circle.Normal.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Normal.OutlineAlpha = 0
     LookAndFeel.CloseButton.Circle.Down.StartColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StopColor = 3487169
     LookAndFeel.CloseButton.Circle.Down.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Down.OutlineColor = clGray
-    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Down.OutlineAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StartColor = 9408475
     LookAndFeel.CloseButton.Circle.Hot.StopColor = 9803748
     LookAndFeel.CloseButton.Circle.Hot.StartAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.StopAlpha = 255
     LookAndFeel.CloseButton.Circle.Hot.OutlineColor = 6054595
-    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1
+    LookAndFeel.CloseButton.Circle.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.CloseButton.Circle.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StartColor = 16041889
     LookAndFeel.AddButton.Button.Normal.StopColor = 15844511
     LookAndFeel.AddButton.Button.Normal.StartAlpha = 255
     LookAndFeel.AddButton.Button.Normal.StopAlpha = 255
     LookAndFeel.AddButton.Button.Normal.OutlineColor = 11889731
-    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Down.StartColor = 12355685
     LookAndFeel.AddButton.Button.Down.StopColor = 12091999
     LookAndFeel.AddButton.Button.Down.StartAlpha = 255
     LookAndFeel.AddButton.Button.Down.StopAlpha = 255
     LookAndFeel.AddButton.Button.Down.OutlineColor = 9135436
-    LookAndFeel.AddButton.Button.Down.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StartColor = 16375240
     LookAndFeel.AddButton.Button.Hot.StopColor = 16044468
     LookAndFeel.AddButton.Button.Hot.StartAlpha = 255
     LookAndFeel.AddButton.Button.Hot.StopAlpha = 255
     LookAndFeel.AddButton.Button.Hot.OutlineColor = 11824194
-    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.Button.Hot.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Normal.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Normal.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Normal.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Down.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Down.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Down.OutlineAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StartColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StopColor = clWhite
     LookAndFeel.AddButton.PlusSign.Hot.StartAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.StopAlpha = 255
     LookAndFeel.AddButton.PlusSign.Hot.OutlineColor = clGray
-    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1
+    LookAndFeel.AddButton.PlusSign.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.AddButton.PlusSign.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StartColor = 15975841
     LookAndFeel.ScrollButtons.Button.Normal.StopColor = 15778204
     LookAndFeel.ScrollButtons.Button.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Normal.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Normal.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StartColor = 12355684
     LookAndFeel.ScrollButtons.Button.Down.StopColor = 12091999
     LookAndFeel.ScrollButtons.Button.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Down.OutlineColor = 9135180
-    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Down.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StartColor = 16241848
     LookAndFeel.ScrollButtons.Button.Hot.StopColor = 16044468
     LookAndFeel.ScrollButtons.Button.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Button.Hot.OutlineColor = 11824194
-    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Hot.OutlineAlpha = 255
     LookAndFeel.ScrollButtons.Button.Disabled.StartColor = 13531723
     LookAndFeel.ScrollButtons.Button.Disabled.StopColor = 13267523
     LookAndFeel.ScrollButtons.Button.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineColor = 9985595
-    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Button.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Button.Disabled.OutlineAlpha = 100
     LookAndFeel.ScrollButtons.Arrow.Normal.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Normal.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Normal.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Down.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Down.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Down.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Down.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Hot.StartColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StopColor = clWhite
     LookAndFeel.ScrollButtons.Arrow.Hot.StartAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.StopAlpha = 255
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Hot.OutlineAlpha = 200
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopColor = clSilver
     LookAndFeel.ScrollButtons.Arrow.Disabled.StartAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.StopAlpha = 150
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineColor = clGray
-    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1
+    LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize = 1.000000000000000000
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alBottom
     TabOrder = 2
@@ -748,7 +746,6 @@ object frmMain: TfrmMain
         Width = 128
         Height = 23
         Style = csDropDownList
-        ItemHeight = 15
         ItemIndex = 0
         TabOrder = 1
         Text = 'Top Tabs'
@@ -783,7 +780,6 @@ object frmMain: TfrmMain
       Height = 519
       ActivePage = TabSheet1
       Align = alClient
-      TabIndex = 0
       TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Options'
@@ -900,7 +896,6 @@ object frmMain: TfrmMain
             Width = 246
             Height = 23
             Style = csDropDownList
-            ItemHeight = 15
             ItemIndex = 0
             TabOrder = 3
             Text = 'None'
@@ -938,7 +933,6 @@ object frmMain: TfrmMain
           Height = 456
           ActivePage = TabSheet5
           Align = alClient
-          TabIndex = 0
           TabOrder = 1
           object TabSheet5: TTabSheet
             Caption = 'Tabs'
@@ -1219,7 +1213,6 @@ object frmMain: TfrmMain
               Height = 216
               ActivePage = TabSheet17
               Align = alTop
-              TabIndex = 1
               TabOrder = 1
               object TabSheet16: TTabSheet
                 Caption = 'Modified Glow'
@@ -1285,7 +1278,6 @@ object frmMain: TfrmMain
                   Width = 143
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Right to Left'
@@ -1300,7 +1292,7 @@ object frmMain: TfrmMain
                   Left = 227
                   Top = 67
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 4
@@ -1311,7 +1303,7 @@ object frmMain: TfrmMain
                   Left = 335
                   Top = 67
                   Width = 106
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 5
@@ -1322,7 +1314,7 @@ object frmMain: TfrmMain
                   Left = 3
                   Top = 67
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 2
@@ -1333,7 +1325,7 @@ object frmMain: TfrmMain
                   Left = 111
                   Top = 67
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 3
@@ -1346,7 +1338,6 @@ object frmMain: TfrmMain
                   Width = 165
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 1
                   Text = 'None'
@@ -1380,7 +1371,7 @@ object frmMain: TfrmMain
                   Left = 447
                   Top = 67
                   Width = 106
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 6
@@ -1502,7 +1493,7 @@ object frmMain: TfrmMain
                   Left = 3
                   Top = 19
                   Width = 106
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 0
@@ -1527,7 +1518,6 @@ object frmMain: TfrmMain
                   Height = 137
                   ActivePage = TabSheet18
                   Align = alBottom
-                  TabIndex = 1
                   TabOrder = 2
                   object TabSheet19: TTabSheet
                     Caption = 'Upload'
@@ -1584,7 +1574,7 @@ object frmMain: TfrmMain
                       Left = 3
                       Top = 22
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 0
@@ -1595,7 +1585,7 @@ object frmMain: TfrmMain
                       Left = 3
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 3
@@ -1606,7 +1596,7 @@ object frmMain: TfrmMain
                       Left = 127
                       Top = 22
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 360
                       MinValue = 1
                       TabOrder = 1
@@ -1628,7 +1618,7 @@ object frmMain: TfrmMain
                       Left = 127
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 4
@@ -1639,7 +1629,7 @@ object frmMain: TfrmMain
                       Left = 250
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 5
@@ -1650,7 +1640,7 @@ object frmMain: TfrmMain
                       Left = 370
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 6
@@ -1712,7 +1702,7 @@ object frmMain: TfrmMain
                       Left = 3
                       Top = 22
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 0
@@ -1723,7 +1713,7 @@ object frmMain: TfrmMain
                       Left = 3
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 3
@@ -1734,7 +1724,7 @@ object frmMain: TfrmMain
                       Left = 127
                       Top = 22
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 350
                       MinValue = 1
                       TabOrder = 1
@@ -1756,7 +1746,7 @@ object frmMain: TfrmMain
                       Left = 127
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 4
@@ -1767,7 +1757,7 @@ object frmMain: TfrmMain
                       Left = 250
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 5
@@ -1778,7 +1768,7 @@ object frmMain: TfrmMain
                       Left = 370
                       Top = 70
                       Width = 106
-                      Height = 24
+                      Height = 31
                       MaxValue = 65535
                       MinValue = 1
                       TabOrder = 6
@@ -1847,7 +1837,6 @@ object frmMain: TfrmMain
                 Width = 170
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 4
                 TabOrder = 0
                 Text = 'Anti Alias'
@@ -1864,8 +1853,7 @@ object frmMain: TfrmMain
                 Left = 8
                 Top = 89
                 Width = 170
-                Height = 23
-                ItemHeight = 0
+                Height = 28
                 TabOrder = 1
                 Text = 'Segoe UI'
                 OnChange = OnCommonControlPropertyChange
@@ -1874,7 +1862,7 @@ object frmMain: TfrmMain
                 Left = 184
                 Top = 89
                 Width = 94
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 2
@@ -1885,7 +1873,7 @@ object frmMain: TfrmMain
                 Left = 184
                 Top = 137
                 Width = 94
-                Height = 24
+                Height = 31
                 MaxValue = 255
                 MinValue = 0
                 TabOrder = 3
@@ -1898,7 +1886,6 @@ object frmMain: TfrmMain
                 Width = 170
                 Height = 22
                 DefaultColorColor = clSkyBlue
-                ItemHeight = 16
                 TabOrder = 4
                 OnChange = OnCommonControlPropertyChange
               end
@@ -1941,7 +1928,6 @@ object frmMain: TfrmMain
                 Width = 152
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 6
                 TabOrder = 3
                 Text = 'Fade'
@@ -1971,7 +1957,6 @@ object frmMain: TfrmMain
                 Width = 150
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 1
                 Text = 'Left'
@@ -1987,7 +1972,6 @@ object frmMain: TfrmMain
                 Width = 139
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 2
                 TabOrder = 2
                 Text = 'Centre'
@@ -2019,7 +2003,6 @@ object frmMain: TfrmMain
               Height = 407
               ActivePage = TabSheet11
               Align = alClient
-              TabIndex = 0
               TabOrder = 1
               object TabSheet11: TTabSheet
                 Caption = 'Close Buttons'
@@ -2086,7 +2069,6 @@ object frmMain: TfrmMain
                   Width = 94
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 1
                   TabOrder = 0
                   Text = 'All Tabs'
@@ -2109,7 +2091,7 @@ object frmMain: TfrmMain
                   Left = 206
                   Top = 21
                   Width = 114
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -2120,7 +2102,7 @@ object frmMain: TfrmMain
                   Left = 235
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 5
@@ -2131,7 +2113,7 @@ object frmMain: TfrmMain
                   Left = 343
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 6
@@ -2142,7 +2124,7 @@ object frmMain: TfrmMain
                   Left = 11
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 3
@@ -2153,7 +2135,7 @@ object frmMain: TfrmMain
                   Left = 119
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 4
@@ -2164,7 +2146,7 @@ object frmMain: TfrmMain
                   Left = 11
                   Top = 129
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 7
@@ -2229,7 +2211,6 @@ object frmMain: TfrmMain
                   Width = 118
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Floating Right'
@@ -2244,7 +2225,7 @@ object frmMain: TfrmMain
                   Left = 235
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 4
@@ -2255,7 +2236,7 @@ object frmMain: TfrmMain
                   Left = 343
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 5
@@ -2266,7 +2247,7 @@ object frmMain: TfrmMain
                   Left = 11
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 2
@@ -2277,7 +2258,7 @@ object frmMain: TfrmMain
                   Left = 119
                   Top = 73
                   Width = 94
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 3
@@ -2299,7 +2280,7 @@ object frmMain: TfrmMain
                   Left = 443
                   Top = 73
                   Width = 118
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = -65535
                   TabOrder = 6
@@ -2324,7 +2305,6 @@ object frmMain: TfrmMain
                   Width = 144
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 2
                   TabOrder = 0
                   Text = 'Right'
@@ -2389,7 +2369,7 @@ object frmMain: TfrmMain
                     Left = 235
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 2
@@ -2400,7 +2380,7 @@ object frmMain: TfrmMain
                     Left = 343
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 3
@@ -2411,7 +2391,7 @@ object frmMain: TfrmMain
                     Left = 11
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 0
@@ -2422,7 +2402,7 @@ object frmMain: TfrmMain
                     Left = 119
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 1
@@ -2473,7 +2453,7 @@ object frmMain: TfrmMain
                     Left = 235
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 2
@@ -2484,7 +2464,7 @@ object frmMain: TfrmMain
                     Left = 343
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 3
@@ -2495,7 +2475,7 @@ object frmMain: TfrmMain
                     Left = 11
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 0
@@ -2506,7 +2486,7 @@ object frmMain: TfrmMain
                     Left = 119
                     Top = 37
                     Width = 94
-                    Height = 24
+                    Height = 31
                     MaxValue = 65535
                     MinValue = -65535
                     TabOrder = 1
@@ -2552,7 +2532,6 @@ object frmMain: TfrmMain
               Width = 206
               Height = 23
               Style = csDropDownList
-              ItemHeight = 15
               ItemIndex = 0
               TabOrder = 0
               Text = 'Left to Right'
@@ -2581,8 +2560,8 @@ object frmMain: TfrmMain
             object pnlScroll: TPanel
               Left = 0
               Top = 0
-              Width = 731
-              Height = 426
+              Width = 734
+              Height = 430
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
@@ -2629,7 +2608,7 @@ object frmMain: TfrmMain
                 Left = 17
                 Top = 77
                 Width = 144
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 1
@@ -2640,7 +2619,7 @@ object frmMain: TfrmMain
                 Left = 172
                 Top = 77
                 Width = 141
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 0
                 TabOrder = 2
@@ -2671,7 +2650,7 @@ object frmMain: TfrmMain
                 Left = 172
                 Top = 127
                 Width = 141
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 3
@@ -2728,7 +2707,6 @@ object frmMain: TfrmMain
               Width = 170
               Height = 23
               Style = csDropDownList
-              ItemHeight = 15
               ItemIndex = 2
               TabOrder = 0
               Text = 'High Quality'
@@ -2810,7 +2788,7 @@ object frmMain: TfrmMain
               Left = 270
               Top = 163
               Width = 75
-              Height = 24
+              Height = 31
               Increment = 100
               MaxValue = 65535
               MinValue = 1
@@ -2896,7 +2874,7 @@ object frmMain: TfrmMain
                 Left = 8
                 Top = 93
                 Width = 148
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 1
@@ -2907,7 +2885,7 @@ object frmMain: TfrmMain
                 Left = 8
                 Top = 144
                 Width = 148
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 3
@@ -2918,7 +2896,7 @@ object frmMain: TfrmMain
                 Left = 8
                 Top = 40
                 Width = 148
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 1
                 TabOrder = 0
@@ -2931,7 +2909,6 @@ object frmMain: TfrmMain
                 Width = 165
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 2
                 Text = 'None'
@@ -2967,7 +2944,6 @@ object frmMain: TfrmMain
                 Width = 165
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 4
                 Text = 'None'
@@ -3007,7 +2983,7 @@ object frmMain: TfrmMain
               Caption = 'Specific Animations'
               TabOrder = 1
               object GroupBox11: TGroupBox
-                Left = 337
+                Left = 336
                 Top = 17
                 Width = 168
                 Height = 158
@@ -3043,7 +3019,7 @@ object frmMain: TfrmMain
                   Left = 24
                   Top = 69
                   Width = 118
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -3056,7 +3032,6 @@ object frmMain: TfrmMain
                   Width = 129
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 2
                   Text = 'None'
@@ -3088,7 +3063,7 @@ object frmMain: TfrmMain
                 end
               end
               object GroupBox12: TGroupBox
-                Left = 169
+                Left = 168
                 Top = 17
                 Width = 168
                 Height = 158
@@ -3124,7 +3099,7 @@ object frmMain: TfrmMain
                   Left = 24
                   Top = 69
                   Width = 118
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -3137,7 +3112,6 @@ object frmMain: TfrmMain
                   Width = 129
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 2
                   Text = 'None'
@@ -3171,7 +3145,7 @@ object frmMain: TfrmMain
               object GroupBox13: TGroupBox
                 Left = 2
                 Top = 17
-                Width = 167
+                Width = 166
                 Height = 158
                 Align = alLeft
                 Caption = 'Add Tab'
@@ -3205,7 +3179,7 @@ object frmMain: TfrmMain
                   Left = 24
                   Top = 69
                   Width = 118
-                  Height = 24
+                  Height = 31
                   MaxValue = 65535
                   MinValue = 1
                   TabOrder = 1
@@ -3218,7 +3192,6 @@ object frmMain: TfrmMain
                   Width = 129
                   Height = 23
                   Style = csDropDownList
-                  ItemHeight = 15
                   ItemIndex = 0
                   TabOrder = 2
                   Text = 'None'
@@ -3260,9 +3233,8 @@ object frmMain: TfrmMain
               Width = 200
               Height = 23
               Style = csDropDownList
-              Constraints.MaxWidth = 200
+              Constraints.MaxWidth = 250
               Constraints.MinWidth = 200
-              ItemHeight = 15
               ItemIndex = 2
               TabOrder = 1
               Text = 'Drag between containers'
@@ -3318,7 +3290,6 @@ object frmMain: TfrmMain
                 Width = 126
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 0
                 TabOrder = 0
                 Text = 'Default'
@@ -3331,7 +3302,7 @@ object frmMain: TfrmMain
                 Left = 140
                 Top = 22
                 Width = 128
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 0
                 TabOrder = 1
@@ -3344,7 +3315,6 @@ object frmMain: TfrmMain
                 Width = 126
                 Height = 23
                 Style = csDropDownList
-                ItemHeight = 15
                 ItemIndex = 3
                 TabOrder = 3
                 Text = 'Tab and Control'
@@ -3382,7 +3352,7 @@ object frmMain: TfrmMain
                   Left = 0
                   Top = 19
                   Width = 128
-                  Height = 24
+                  Height = 31
                   MaxValue = 255
                   MinValue = 0
                   TabOrder = 0
@@ -3393,7 +3363,7 @@ object frmMain: TfrmMain
                   Left = 135
                   Top = 20
                   Width = 121
-                  Height = 23
+                  Height = 28
                   TabOrder = 1
                   Text = '0.5'
                   OnChange = OnCommonControlPropertyChange
@@ -3403,7 +3373,7 @@ object frmMain: TfrmMain
                 Left = 274
                 Top = 22
                 Width = 130
-                Height = 24
+                Height = 31
                 MaxValue = 65535
                 MinValue = 0
                 TabOrder = 2
@@ -3583,7 +3553,7 @@ object frmMain: TfrmMain
           Left = 16
           Top = 25
           Width = 129
-          Height = 24
+          Height = 31
           MaxValue = 65535
           MinValue = 4
           TabOrder = 0
@@ -3594,7 +3564,7 @@ object frmMain: TfrmMain
           Left = 126
           Top = 85
           Width = 74
-          Height = 24
+          Height = 31
           MaxValue = 0
           MinValue = 0
           TabOrder = 2
@@ -3616,7 +3586,7 @@ object frmMain: TfrmMain
           Left = 126
           Top = 112
           Width = 74
-          Height = 24
+          Height = 31
           MaxValue = 0
           MinValue = 0
           TabOrder = 3
@@ -3630,16 +3600,16 @@ object frmMain: TfrmMain
         object Panel2: TPanel
           Left = 0
           Top = 63
-          Width = 1009
-          Height = 426
+          Width = 1010
+          Height = 428
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           object gbOtherEvents: TGroupBox
             Left = 685
             Top = 0
-            Width = 324
-            Height = 426
+            Width = 325
+            Height = 428
             Align = alClient
             Caption = 'Other Events'
             TabOrder = 3
@@ -3648,15 +3618,15 @@ object frmMain: TfrmMain
             Left = 241
             Top = 0
             Width = 222
-            Height = 426
+            Height = 428
             Align = alLeft
             Caption = 'OnChange'
             TabOrder = 1
             object Panel9: TPanel
               Left = 2
-              Top = 406
-              Width = 218
-              Height = 18
+              Top = 409
+              Width = 219
+              Height = 17
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 0
@@ -3676,7 +3646,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 241
-            Height = 426
+            Height = 428
             Align = alLeft
             BevelOuter = bvNone
             TabOrder = 0
@@ -3693,18 +3663,18 @@ object frmMain: TfrmMain
               Left = 0
               Top = 169
               Width = 241
-              Height = 257
+              Height = 259
               Align = alClient
               Caption = 'OnTabDragOver'
               TabOrder = 1
               object lbTabDragOver: TListBox
                 Left = 2
-                Top = 17
+                Top = 18
                 Width = 237
-                Height = 238
+                Height = 240
                 Align = alClient
                 BorderStyle = bsNone
-                ItemHeight = 15
+                ItemHeight = 20
                 TabOrder = 0
               end
             end
@@ -3749,8 +3719,8 @@ object frmMain: TfrmMain
           object edtStates: TEdit
             Left = 1
             Top = 36
-            Width = 1006
-            Height = 23
+            Width = 1007
+            Height = 28
             Anchors = [akLeft, akTop, akRight]
             ReadOnly = True
             TabOrder = 1
@@ -3763,7 +3733,7 @@ object frmMain: TfrmMain
         object Panel10: TPanel
           Left = 0
           Top = 0
-          Width = 1009
+          Width = 1010
           Height = 19
           Align = alTop
           BevelOuter = bvNone

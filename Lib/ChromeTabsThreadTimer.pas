@@ -146,7 +146,7 @@ begin
     FTimerThread := TTimerThread.CreateTimerThread(Self);
     FTimerThread.FreeOnTerminate := FALSE;
 
-    {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
+    {$if CompilerVersion >= 18.0}
       FTimerThread.Start;
     {$else}
       FTimerThread.Resume;
