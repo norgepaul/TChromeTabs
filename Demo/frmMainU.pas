@@ -41,7 +41,7 @@ uses
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog;
+  ChromeTabsLog, System.Actions;
 
 type
   TFormType = {$if CompilerVersion >= 21.0}

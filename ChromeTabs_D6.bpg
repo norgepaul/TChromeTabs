@@ -1,0 +1,26 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = ChromeTabsDemoD6.exe ChromeTabs_D6_R.bpl ChromeTabs_D6_D.bpl
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+ChromeTabs_D6_D.bpl: Packages\Delphi 6\ChromeTabs_D6_D.dpk
+  $(DCC)
+
+ChromeTabs_D6_R.bpl: Packages\Delphi 6\ChromeTabs_D6_R.dpk
+  $(DCC)
+
+ChromeTabsDemoD6.exe: Demo\ChromeTabsDemoD6.dpr
+  $(DCC)
+
+

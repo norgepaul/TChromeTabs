@@ -22,7 +22,7 @@ unit ChromeTabsGlassForm;
 // (C) 2012 Easy-IP AS. All Rights Reserved.
 //
 // ----------------------------------------------------------------------------
-//
+// 
 // Based on code provided by Chris Rolliston.
 // http://delphihaven.wordpress.com/2010/04/22/setting-up-a-custom-title-bar-reprise/
 
@@ -30,13 +30,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Forms, Controls,
-
   {$IF CompilerVersion >= 28.0}
   System.Types,
   {$else}
   Types,
   {$endif}
-
   ChromeTabs;
 
 type

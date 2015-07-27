@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 207
-  Top = 136
+  Top = 140
   Caption = 'Chrome Tabs Demo'
   ClientHeight = 606
   ClientWidth = 1017
@@ -732,7 +732,6 @@ object frmMain: TfrmMain
       Align = alTop
       BevelOuter = bvNone
       Color = clMoneyGreen
-      ParentBackground = False
       TabOrder = 0
       object Label19: TLabel
         Left = 7
@@ -1217,10 +1216,6 @@ object frmMain: TfrmMain
               TabOrder = 1
               object TabSheet16: TTabSheet
                 Caption = 'Modified Glow'
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label15: TLabel
                   Left = 3
                   Top = 4
@@ -1486,10 +1481,6 @@ object frmMain: TfrmMain
               object Spinners: TTabSheet
                 Caption = 'Spinners'
                 ImageIndex = 2
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label82: TLabel
                   Left = 3
                   Top = 2
@@ -1528,15 +1519,9 @@ object frmMain: TfrmMain
                   ActivePage = TabSheet18
                   Align = alBottom
                   TabOrder = 2
-                  ExplicitTop = 55
-                  ExplicitWidth = 727
                   object TabSheet19: TTabSheet
                     Caption = 'Upload'
                     ImageIndex = 1
-                    ExplicitLeft = 0
-                    ExplicitTop = 0
-                    ExplicitWidth = 0
-                    ExplicitHeight = 0
                     object Label86: TLabel
                       Left = 3
                       Top = 5
@@ -1665,10 +1650,6 @@ object frmMain: TfrmMain
                   end
                   object TabSheet18: TTabSheet
                     Caption = 'Download'
-                    ExplicitLeft = 0
-                    ExplicitTop = 0
-                    ExplicitWidth = 0
-                    ExplicitHeight = 0
                     object Label83: TLabel
                       Left = 3
                       Top = 5
@@ -1802,10 +1783,6 @@ object frmMain: TfrmMain
           object TabSheet7: TTabSheet
             Caption = 'Text'
             ImageIndex = 6
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object GroupBox4: TGroupBox
               Left = 0
               Top = 0
@@ -1814,7 +1791,6 @@ object frmMain: TfrmMain
               Align = alTop
               Caption = 'Default Font'
               TabOrder = 0
-              ExplicitWidth = 734
               object Label14: TLabel
                 Left = 8
                 Top = 20
@@ -1922,7 +1898,6 @@ object frmMain: TfrmMain
               Align = alTop
               Caption = 'Display'
               TabOrder = 1
-              ExplicitWidth = 734
               object Label67: TLabel
                 Left = 13
                 Top = 99
@@ -2021,10 +1996,6 @@ object frmMain: TfrmMain
           object TabSheet4: TTabSheet
             Caption = 'Buttons'
             ImageIndex = 5
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object pcButtons: TPageControl
               Left = 0
               Top = 19
@@ -2033,15 +2004,9 @@ object frmMain: TfrmMain
               ActivePage = TabSheet11
               Align = alClient
               TabOrder = 1
-              ExplicitWidth = 734
-              ExplicitHeight = 419
               object TabSheet11: TTabSheet
                 Caption = 'Close Buttons'
                 ImageIndex = 1
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label4: TLabel
                   Left = 11
                   Top = 6
@@ -2192,10 +2157,6 @@ object frmMain: TfrmMain
               object TabSheet12: TTabSheet
                 Caption = 'Add Button'
                 ImageIndex = 2
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label29: TLabel
                   Left = 11
                   Top = 6
@@ -2330,10 +2291,6 @@ object frmMain: TfrmMain
               object TabSheet13: TTabSheet
                 Caption = 'Scroll Buttons'
                 ImageIndex = 3
-                ExplicitLeft = 0
-                ExplicitTop = 0
-                ExplicitWidth = 0
-                ExplicitHeight = 0
                 object Label25: TLabel
                   Left = 11
                   Top = 7
@@ -2547,7 +2504,6 @@ object frmMain: TfrmMain
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitWidth = 734
               object chkScrollOverlayButtons: TCheckBox
                 Left = 0
                 Top = 0
@@ -2562,10 +2518,6 @@ object frmMain: TfrmMain
           object TabSheet10: TTabSheet
             Caption = 'Internationlization'
             ImageIndex = 8
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label69: TLabel
               Left = 3
               Top = 6
@@ -2594,10 +2546,6 @@ object frmMain: TfrmMain
           object Scrolling: TTabSheet
             Caption = 'Scrolling'
             ImageIndex = 4
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object chkScrolling: TCheckBox
               Left = 3
               Top = 3
@@ -2734,10 +2682,6 @@ object frmMain: TfrmMain
           object TabSheet6: TTabSheet
             Caption = 'Tab Container'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label20: TLabel
               Left = 3
               Top = 4
@@ -2778,10 +2722,6 @@ object frmMain: TfrmMain
           object TabSheet2: TTabSheet
             Caption = 'Behaviour'
             ImageIndex = 2
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object Label53: TLabel
               Left = 24
               Top = 166
@@ -2882,10 +2822,6 @@ object frmMain: TfrmMain
           object TabSheet8: TTabSheet
             Caption = 'Animation'
             ImageIndex = 3
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object GroupBox8: TGroupBox
               Left = 0
               Top = 0
@@ -2894,7 +2830,6 @@ object frmMain: TfrmMain
               Align = alTop
               Caption = 'Default Animation Properties'
               TabOrder = 0
-              ExplicitWidth = 734
               object Label21: TLabel
                 Left = 8
                 Top = 76
@@ -3047,7 +2982,6 @@ object frmMain: TfrmMain
               Align = alTop
               Caption = 'Specific Animations'
               TabOrder = 1
-              ExplicitWidth = 734
               object GroupBox11: TGroupBox
                 Left = 336
                 Top = 17
@@ -3056,7 +2990,6 @@ object frmMain: TfrmMain
                 Align = alLeft
                 Caption = 'Move Tab'
                 TabOrder = 2
-                ExplicitTop = 18
                 object Label30: TLabel
                   Left = 24
                   Top = 52
@@ -3137,7 +3070,6 @@ object frmMain: TfrmMain
                 Align = alLeft
                 Caption = 'Delete Tab'
                 TabOrder = 1
-                ExplicitTop = 18
                 object Label74: TLabel
                   Left = 24
                   Top = 52
@@ -3218,7 +3150,6 @@ object frmMain: TfrmMain
                 Align = alLeft
                 Caption = 'Add Tab'
                 TabOrder = 0
-                ExplicitTop = 18
                 object Label76: TLabel
                   Left = 24
                   Top = 52
@@ -3296,10 +3227,6 @@ object frmMain: TfrmMain
           object TabSheet9: TTabSheet
             Caption = 'Drag Drop'
             ImageIndex = 7
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cbDragType: TComboBox
               Left = 3
               Top = 21
@@ -3325,8 +3252,6 @@ object frmMain: TfrmMain
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
-              ExplicitWidth = 734
-              ExplicitHeight = 438
               object Label31: TLabel
                 Left = 6
                 Top = 6
@@ -3506,10 +3431,6 @@ object frmMain: TfrmMain
       object TabSheet14: TTabSheet
         Caption = 'Look and Feel'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object tvLookAndFeelItems: TTreeView
           Left = 0
           Top = 0
@@ -3531,8 +3452,6 @@ object frmMain: TfrmMain
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitWidth = 841
-          ExplicitHeight = 462
           object pnlLookAndFeelPath: TPanel
             Left = 0
             Top = 0
@@ -3549,7 +3468,6 @@ object frmMain: TfrmMain
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            ExplicitWidth = 842
           end
           object ScrollBox1: TScrollBox
             Left = 0
@@ -3566,8 +3484,6 @@ object frmMain: TfrmMain
             Color = clWindow
             ParentColor = False
             TabOrder = 1
-            ExplicitWidth = 842
-            ExplicitHeight = 433
           end
         end
         object Panel6: TPanel
@@ -3578,8 +3494,6 @@ object frmMain: TfrmMain
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 2
-          ExplicitTop = 462
-          ExplicitWidth = 1010
           object btnSaveLookAndFeel: TButton
             Left = 133
             Top = 0
@@ -3609,10 +3523,6 @@ object frmMain: TfrmMain
       object TabSheet15: TTabSheet
         Caption = 'General'
         ImageIndex = 4
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label7: TLabel
           Left = 16
           Top = 8
@@ -3687,10 +3597,6 @@ object frmMain: TfrmMain
       object TabSheet3: TTabSheet
         Caption = 'Events'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel2: TPanel
           Left = 0
           Top = 63
@@ -3781,7 +3687,6 @@ object frmMain: TfrmMain
             Align = alLeft
             Caption = 'Event Counts'
             TabOrder = 2
-            ExplicitHeight = 428
           end
         end
         object Panel4: TPanel
@@ -3792,7 +3697,6 @@ object frmMain: TfrmMain
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitWidth = 1010
           DesignSize = (
             1009
             63)
@@ -3820,17 +3724,12 @@ object frmMain: TfrmMain
             Anchors = [akLeft, akTop, akRight]
             ReadOnly = True
             TabOrder = 1
-            ExplicitWidth = 1008
           end
         end
       end
       object tabDebug: TTabSheet
         Caption = 'Debug'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel10: TPanel
           Left = 0
           Top = 0
@@ -3857,7 +3756,7 @@ object frmMain: TfrmMain
     Left = 48
     Top = 472
     Bitmap = {
-      494C010106000900140010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010106000900040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000002F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E46FF2F3E
@@ -4133,7 +4032,7 @@ object frmMain: TfrmMain
     Left = 88
     Top = 472
     Bitmap = {
-      494C010102000500140010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000A3D0CA324802EDB001500610000
@@ -4341,7 +4240,7 @@ object frmMain: TfrmMain
     Left = 128
     Top = 472
     Bitmap = {
-      494C01010B000D00140010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010B000D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000B0B0B0C000000000000000000000000000000000000
@@ -4749,7 +4648,7 @@ object frmMain: TfrmMain
     Left = 168
     Top = 472
     Bitmap = {
-      494C01010A000D00140010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010A000D00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       00001F1F1F24505050895F5F5FCB656565EB656565EB5F5F5FCB505050891F1F
