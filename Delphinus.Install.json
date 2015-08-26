@@ -1,0 +1,83 @@
+{
+	"search_pathes": 
+	[
+		{
+			"pathes": "GDIPlus"
+		},
+
+		{
+			"pathes": "Lib"
+		}
+	],
+	
+	"source_folders":
+	[
+		{
+			"folder": "Demo",
+			"recursive": false
+		},
+		
+		{
+			"folder": "GDIPlus",
+			"recursive": false,
+			"filter": "*.*;*"
+		},
+		
+		{
+			"folder": "Lib",
+			"recursive": true,
+			"filter": "*.*;*"
+		},
+		
+		{
+			"folder": "Packages",
+			"recursive": true,
+			"filter": "*.*;*"
+		}
+	],
+	
+	"projects":
+	[
+		{
+			"project": "ChromeTabs_XE2.groupproj",
+			"compiler_min": 23,
+			"compiler_max": 23
+		},
+		
+		{
+			"project": "ChromeTabs_XE3.groupproj",
+			"compiler_min": 24,
+			"compiler_max": 24
+		},
+		
+		{
+			"project": "ChromeTabs_XE4.groupproj",
+			"compiler_min": 25,
+			"compiler_max": 25
+		},
+		
+		{
+			"project": "ChromeTabs_XE5.groupproj",
+			"compiler_min": 26,
+			"compiler_max": 26
+		},
+		
+		{
+			"project": "ChromeTabs_XE6.groupproj",
+			"compiler_min": 27,
+			"compiler_max": 27
+		},	
+			
+			{
+			"project": "ChromeTabs_XE7.groupproj",
+			"compiler_min": 28,
+			"compiler_max": 28
+		},	
+		
+		{
+			"project": "ChromeTabs_XE8.groupproj",
+			"compiler_min": 29,
+			"compiler_max": 29
+		}
+    ]
+}
