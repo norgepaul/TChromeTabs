@@ -2,11 +2,7 @@
 	"search_pathes": 
 	[
 		{
-			"pathes": "GDIPlus"
-		},
-
-		{
-			"pathes": "Lib"
+			"pathes": "GDIPlus;Lib"
 		}
 	],
 	
@@ -27,6 +23,12 @@
 			"folder": "Lib",
 			"recursive": true,
 			"filter": "*.*;*"
+		},
+		
+		{
+			"folder": ".",
+			"recursive": false,
+			"filter": "*.groupproj"
 		},
 		
 		{
