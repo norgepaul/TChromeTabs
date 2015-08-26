@@ -40,9 +40,9 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\Bin\XE2\$(Config)\$(Platform)\DCU</DCC_DcuOutput>
+        <DCC_DcuOutput>..\Bin\XE4\$(Config)\$(Platform)\DCU</DCC_DcuOutput>
         <DCC_UnitSearchPath>..\Lib;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_ExeOutput>..\Bin\XE2\$(Config)\$(Platform)</DCC_ExeOutput>
+        <DCC_ExeOutput>..\Bin\XE4\$(Config)\$(Platform)</DCC_ExeOutput>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_Namespace>WinAPI;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>7177</VerInfo_Locale>
@@ -66,15 +66,12 @@
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DCC_DcuOutput>..\Bin\XE2\$(Config)\$(Platform)\DCU</DCC_DcuOutput>
-        <DCC_ExeOutput>..\Bin\XE2\$(Config)\$(Platform)</DCC_ExeOutput>
         <BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
         <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
         <BCC_DebugLineNumbers>true</BCC_DebugLineNumbers>
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
-        <DCC_Define>_VER7;_VER7;EUREKALOG;EUREKALOG_VER7;$(DCC_Define)</DCC_Define>
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
@@ -112,23 +109,9 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\ChromeTabsD.bpl">Chrome Tabs Design Time</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\Data Abstract for Delphi\Dcu\D16\win32\DataAbstract_BDEDriver_D16.bpl">RemObjects Data Abstract - BDE Driver</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D16\win32\RemObjects_FMX_D16.bpl">RemObjects SDK - Core Library (FMX)</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\JvWizardsDesign160.bpl">JVCL Wizard</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\Developer Express.VCL\Library\RS16\dcldxSpellCheckerRS16.bpl">ExpressSpellChecker 2 by Developer Express Inc.</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\Developer Express.VCL\Library\RS16\dcldxtrmdRS16.bpl">ExpressTreePrintedDataSet by Developer Express Inc.</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\Developer Express.VCL\Library\RS16\dclcxSchedulerGridRS16.bpl">ExpressScheduler connection to ExpressQuantumGrid by Developer Express Inc.</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\Developer Express.VCL\Library\RS16\dclcxPivotGridChartRS16.bpl">ExpressPivotGrid connection to ExpressQuantumGrid Chart View by Developer Express Inc.</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\Data Abstract for Delphi\Dcu\D16\win32\DataAbstract_FMX_D16.bpl">RemObjects Data Abstract - FMX Library</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\Developer Express.VCL\Library\RS16\dclcxPivotGridOLAPRS16.bpl">ExpressPivotGrid OLAP by Developer Express Inc.</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\JvBDEDesign160.bpl">JVCL BDE Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcltee9160.bpl">TeeChart Standard VCL Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\LifeCycleCommon_XE2.bpl">LifeCycle</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\FibPlusEditors_XE2.bpl">FIBPlus Property Editors</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\tmssoftware\TMSFMXPack RSXE2\Win32\TMSFMXPackPkgDXE2.bpl">TMS Component Pack for FireMonkey HD</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclMetropolisUILiveTile180.bpl">Embarcadero Metropolis-UI Standardkomponenten für Live-Kacheln</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k180.bpl">Microsoft Office 2000 Beispiele für gekapselte Komponenten für Automatisierungsserver</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp180.bpl">Microsoft Office XP Beispiele für gekapselte Komponenten für Automation Server</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">ChromeTabsDemoXE4.dpr</Source>
@@ -169,118 +152,3 @@
     <Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
     <Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
 </Project>
-
-<!-- EurekaLog First Line
-[Exception Log]
-EurekaLog Version=7001
-Activate=1
-atVCL=1
-AutoCrashOperation=2
-boHandleSafeCallExceptions=1
-boUseMainModuleOptions=1
-csoAllowedRenderMethods=64
-csoShowWindowsThreads=1
-DeleteMapAfterCompile=1
-dpJCL=1
-Email Address=""
-Email Object=""
-Encrypt Password=""
-Errors Number=32
-Errors Terminate=3
-Freeze Timeout=1
-idEurekaLog=1
-idEurekaLogDetailed=1
-idMSClassic=1
-idStepsToReproduce=1
-InjectCode=1
-InjectInfo=1
-InjectOptions=1
-loCatchLeaks=0
-loEnableMMDebugMode=0
-loFreeAllLeaks=1
-loHideRTLLeaks=0
-loMaxLeaks=1024
-loOnlyUnderIDE=0
-loProcessesSection=1
-Output Path=""
-ProjectID="{15EBF18E-B60B-46A2-A829-AEF743A82EF9}"
-SMTP From="eurekalog@email.com"
-SMTP Host=""
-SMTP UserID=""
-sndAddDateInFileName=0
-sndBugZillaLogin=""
-sndBugZillaPort=0
-sndBugZillaURL=""
-sndFogBugzHost=""
-sndFogBugzLogin=""
-sndFogBugzPort=0
-sndFTPLogin=""
-sndFTPPort=0
-sndFTPURL=""
-sndHTTPPort=0
-sndHTTPURL=""
-sndMantisLogin=""
-sndMantisPort=0
-sndMantisURL=""
-sndMAPISubject=""
-sndMAPITarget=""
-sndShellRecepient=""
-sndShellSubject=""
-sndShowFailureMsg=1
-sndSMAPISubject=""
-sndSMAPITarget=""
-sndSMTPClientFrom="eurekalog@email.com"
-sndSMTPClientHost=""
-sndSMTPClientLogin=""
-sndSMTPClientSubject=""
-sndSMTPClientTarget=""
-sndSMTPServerFrom="eurekalog@email.com"
-sndSMTPServerSubject=""
-sndSMTPServerTarget=""
-soActCtlsControlClass=1
-soActCtlsControlText=1
-soActCtlsFormClass=1
-soActCtlsFormText=1
-soAppCompilationDate=1
-soAppName=1
-soAppParameters=1
-soAppStartDate=1
-soAppUpTime=1
-soAppVersionNumber=1
-soCmpDisplayDPI=1
-soCmpDisplayMode=1
-soCmpFreeDisk=1
-soCmpFreeMemory=1
-soCmpName=1
-soCmpPrinter=1
-soCmpProcessor=1
-soCmpSysUpTime=1
-soCmpTotalDisk=1
-soCmpTotalMemory=1
-soCmpVideoCard=1
-soCustomData=1
-soExcCount=1
-soExcDate=1
-soExcModuleName=1
-soExcModuleVersion=1
-soExcNote=1
-soExcStatus=1
-soNetDHCP=1
-soNetDNS1=1
-soNetDNS2=1
-soNetGateway=1
-soNetIP=1
-soNetSubmask=1
-soOSBuildN=1
-soOSCharset=1
-soOSLanguage=1
-soOSType=1
-soOSUpdate=1
-soUserCompany=1
-soUserID=1
-soUserPrivileges=1
-TextsCollection=""
-TrakerUser=""
-WebPort=0
-WebURL=""
-EurekaLog Last Line -->
