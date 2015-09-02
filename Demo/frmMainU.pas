@@ -23,6 +23,11 @@ unit frmMainU;
 
 interface
 
+// Fix to workaround compiler bug that re-introduces System.Actions
+{$if CompilerVersion >= 28.0}
+  {$DEFINE USE_SYSTEM_ACTIONS}
+{$endif}
+
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, ComCtrls, Spin, Contnrs,
@@ -33,7 +38,7 @@ uses
   frameChromeTabStyleU,
 
   {$if CompilerVersion >= 21.0}ChromeTabsGlassForm,{$ifend}
-  {$if CompilerVersion >= 28.0}System.Actions,{$ifend}
+  {$IFDEF USE_SYSTEM_ACTIONS}System.Actions,{$ENDIF}
   {$if CompilerVersion >= 29.0}System.ImageList,{$ifend}
 
   ChromeTabs,
@@ -41,7 +46,7 @@ uses
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog, System.Actions;
+  ChromeTabsLog;
 
 type
   TFormType = {$if CompilerVersion >= 21.0}
