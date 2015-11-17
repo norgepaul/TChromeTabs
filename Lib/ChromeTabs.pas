@@ -115,6 +115,7 @@ type
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
   TOnSetTabWidth = procedure(Sender: TObject; ATabControl: TChromeTabControl; var TabWidth: Integer) of object;
+  TOnTabPopupMenu = procedure(Sender: TObject; const PopupMenu: TPopupMenu) of object;
 
   // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -175,6 +176,7 @@ type
     FOnAnimateMovement: TOnAnimateMovement;
     FOnSetTabWidth: TOnSetTabWidth;
     FOnAfterDragImageCreated: TNotifyEvent;
+    FOnTabPopupMenu: TOnTabPopupMenu;
 
     // Persistent Properties
     FOptions: TOptions;
@@ -347,6 +349,7 @@ type
     procedure DoOnAnimateMovement(ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnSetTabWidth(ATabControl: TChromeTabControl; var TabWidth: Integer); virtual;
     procedure DoOnAfterDragImageCreated; virtual;
+    procedure DoOnTabMenuPopup(const PopupMenu: TPopupMenu); virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -387,6 +390,7 @@ type
     property OnAnimateMovement: TOnAnimateMovement read FOnAnimateMovement write FOnAnimateMovement;
     property OnSetTabWidth: TOnSetTabWidth read FOnSetTabWidth write FOnSetTabWidth;
     property OnAfterDragImageCreated: TNotifyEvent read FOnAfterDragImageCreated write FOnAfterDragImageCreated;
+    property OnTabPopupMenu: TOnTabPopupMenu read FOnTabPopupMenu write FOnTabPopupMenu;
 
     property LookAndFeel: TChromeTabsLookAndFeel read GetLookAndFeel write SetLookAndFeel;
     property ActiveTabIndex: Integer read GetActiveTabIndex write SetActiveTabIndex;
@@ -472,6 +476,7 @@ type
     property OnAnimateMovement;
     property OnSetTabWidth;
     property OnAfterDragImageCreated;
+    property OnTabPopupMenu;
 
     property ActiveTabIndex;
     property Images;
@@ -1425,7 +1430,15 @@ begin
   for i := 0 to Tabs.Count - 1 do
     AddMenuItem(GetTabDescription(i), i + 10);
 
+  DoOnTabMenuPopup(FTabPopupMenu);
+
   FTabPopupMenu.Popup(APoint.x, APoint.y);
+end;
+
+procedure TCustomChromeTabs.DoOnTabMenuPopup(const PopupMenu: TPopupMenu);
+begin
+  if Assigned(FOnTabPopupMenu) then
+    FOnTabPopupMenu(Self, PopupMenu);
 end;
 
 constructor TCustomChromeTabs.Create(AOwner: TComponent);

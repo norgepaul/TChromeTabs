@@ -23,10 +23,18 @@ unit frmMainU;
 
 interface
 
+{$if CompilerVersion >= 21.0}
+  {$DEFINE USE_GLASS_FORM}
+{$ifend}
+
 // Fix to workaround compiler bug that re-introduces System.Actions
 {$if CompilerVersion >= 28.0}
   {$DEFINE USE_SYSTEM_ACTIONS}
 {$endif}
+
+{$if CompilerVersion >= 29.0}
+  {$DEFINE USE_SYSTEM_IMAGELIST}
+{$ifend}
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
@@ -37,9 +45,12 @@ uses
 
   frameChromeTabStyleU,
 
-  {$if CompilerVersion >= 21.0}ChromeTabsGlassForm,{$ifend}
+  {$IFDEF USE_GLASS_FORM}ChromeTabsGlassForm,{$ENDIF}
+
+(* NOTE - If you get "unit xxx is redeclared errors", comment out the IFDEF lines
+   below. This is due to a Delphi bug with the {$if CompilerVersion .. } *)
   {$IFDEF USE_SYSTEM_ACTIONS}System.Actions,{$ENDIF}
-  {$if CompilerVersion >= 29.0}System.ImageList,{$ifend}
+  {$IFDEF USE_SYSTEM_IMAGELIST}System.ImageList,{$ENDIF}
 
   ChromeTabs,
   ChromeTabsTypes,
@@ -49,11 +60,11 @@ uses
   ChromeTabsLog;
 
 type
-  TFormType = {$if CompilerVersion >= 21.0}
+  TFormType = {$IFDEF USE_GLASS_FORM}
               TChromeTabsGlassForm
-              {$else}
+              {$ELSE}
               TForm
-              {$ifend};
+              {$ENDIF};
 
   TfrmMain = class(TFormType)
     ChromeTabs1: TChromeTabs;
@@ -1072,7 +1083,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   CreateLogs;
 
-  {$IFNDEF DELPHI2010_UP}
+  {$if CompilerVersion > 14.0}
   chkDisplayTopTabsInTitleBar.Enabled := FALSE;
   chkDisplayTopTabsInTitleBar.Checked := FALSE;
   {$ENDIF}
@@ -1115,9 +1126,9 @@ begin
 
   ChromeTabControlPropertiesToGUI(FCurrentTabs);
 
-  {$if CompilerVersion >= 21.0}
+  {$IFDEF USE_GLASS_FORM}
   Self.ChromeTabs := ChromeTabs1;
-  {$ifend}
+  {$ENDIF}
 
   ChromeTabs1.Tabs[0].Active := True;
 end;
@@ -1541,7 +1552,7 @@ begin
       else
         ChromeTabs.Options.DragDrop.DragCursor := crDrag;
 
-      {$if CompilerVersion >= 21.0}
+      {$IFDEF USE_GLASS_FORM}
       if chkDisplayTopTabsInTitleBar.Checked then
         Self.ChromeTabs := ChromeTabs1
       else
@@ -1551,7 +1562,7 @@ begin
         ChromeTabs1.Align := alTop;
         ChromeTabs1.Top := 0;
       end;
-      {$ifend}
+      {$ENDIF}
 
       ChromeTabs.Options.Behaviour.DebugMode := chkDebugLog.Checked;
     finally

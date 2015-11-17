@@ -1,3 +1,7 @@
+TChromeTabs 2.4 Beta
+17-11-2015
+Update: Added OnTabPopupMenu event
+
 TChromeTabs 2.3
 
 06-06-2014
