@@ -1083,7 +1083,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   CreateLogs;
 
-  {$if CompilerVersion > 14.0}
+  {$IFNDEF USE_GLASS_FORM}
   chkDisplayTopTabsInTitleBar.Enabled := FALSE;
   chkDisplayTopTabsInTitleBar.Checked := FALSE;
   {$ENDIF}
@@ -1574,7 +1574,7 @@ begin
 
   pnlTop.Color := ChromeTabs1.LookAndFeel.Tabs.Active.Style.StopColor;
 
-  {$if CompilerVersion >= 18.0}
+  {$IFDEF USE_GLASS_FORM}
   if not chkDisplayTopTabsInTitleBar.Checked then
   begin
     GlassFrame.Enabled := chkUseGlass.Checked;
@@ -1582,7 +1582,7 @@ begin
   end;
 
   GlassFrame.Bottom := edtGlassHeightBottom.Value;
-  {$ifend}
+  {$ENDIF}
 end;
 
 procedure TfrmMain.SpinButton1DownClick(Sender: TObject);

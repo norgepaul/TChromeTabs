@@ -1461,7 +1461,12 @@ end;
 
 procedure TChromeTab.SetHideCloseButton(const Value: Boolean);
 begin
-  FHideCloseButton := Value;
+  if FHideCloseButton <> Value then
+  begin
+    FHideCloseButton := Value;
+
+    DoChanged;
+  end;
 end;
 
 function TChromeTab.ImageIsVisible: Boolean;
@@ -1594,6 +1599,9 @@ begin
 
     if NewIdx > Count - 1 then
       NewIdx := Count - 1;
+
+    while ((NewIdx <> -1)) and (not(Items[NewIdx].Visible)) do
+      Dec(NewIdx);
 
     if NewIdx <> -1 then
       Items[NewIdx].Active := TRUE;

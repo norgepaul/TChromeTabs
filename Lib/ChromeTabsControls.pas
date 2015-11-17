@@ -147,8 +147,6 @@ type
     FBrushInvalidated: Boolean;
     FCloseButtonInvalidate: Boolean;
     FModifiedStartTicks: Cardinal;
-    FLastCaption: String;
-    FLastCaptionLength: Integer;
     FSpinnerImageIndex: Integer;
     FSpinnerRenderedDegrees: Integer;
 
@@ -896,55 +894,48 @@ var
   RightOffset: Integer;
   ScrolledRect: TRect;
 begin
-  if (FLastCaption = ChromeTab.GetCaption) and (FLastCaptionLength > 0) then
-    Result := FLastCaptionLength
-  else
-  begin
-    Bitmap := TBitmap.Create;
+  Bitmap := TBitmap.Create;
+  try
+    Bitmap.Width := ChromeTabs.GetOptions.Display.Tabs.MaxWidth;
+    Bitmap.Height := RectHeight(ControlRect);
+
+    TabCanvas := TGPGraphics.Create(Bitmap.Canvas.Handle);
+    TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName,
+                               FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
+    TxtFormat := TGPStringFormat.Create;
     try
-      Bitmap.Width := ChromeTabs.GetOptions.Display.Tabs.MaxWidth;
-      Bitmap.Height := RectHeight(ControlRect);
+      TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
+      TxtFormat.SetTrimming(StringTrimmingNone);
 
-      TabCanvas := TGPGraphics.Create(Bitmap.Canvas.Handle);
-      TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName,
-                                 FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
-      TxtFormat := TGPStringFormat.Create;
-      try
-        TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
-        TxtFormat.SetTrimming(StringTrimmingNone);
+      TabCanvas.MeasureString(WideString(ChromeTab.GetCaption),
+                              length(ChromeTab.GetCaption),
+                              TabsFont,
+                              RectToGPRectF(Rect(0, 0, 1000, RectHeight(ControlRect))),
+                              TxtFormat,
+                              GPRectF);
 
-        TabCanvas.MeasureString(WideString(ChromeTab.GetCaption),
-                                length(ChromeTab.GetCaption),
-                                TabsFont,
-                                RectToGPRectF(Rect(0, 0, 1000, RectHeight(ControlRect))),
-                                TxtFormat,
-                                GPRectF);
+      CalculateRects(ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect,
+         NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible);
 
-        CalculateRects(ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect,
-           NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible);
+      ScrolledRect := ScrollRect(ControlRect);
 
-        ScrolledRect := ScrollRect(ControlRect);
+      if NormalImageVisible or OverlayImageVisible or SpinnerVisible then
+        RightOffset := ImageRect.Right
+      else
+        RightOffset := ScrolledRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
 
-        if NormalImageVisible or OverlayImageVisible or SpinnerVisible then
-          RightOffset := ImageRect.Right
-        else
-          RightOffset := ScrolledRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
-
-        Result := Round(GPRectF.Width) +
-                 (RightOffset - ScrolledRect.Left) +
-                 (ScrolledRect.Right - CloseButtonRect.Left) -
-                 (ChromeTabs.GetOptions.Display.Tabs.TabOverlap);
-
-        FLastCaption := ChromeTab.GetCaption;
-        FLastCaptionLength := Result;
-      finally
-        FreeAndNil(TabCanvas);
-        FreeAndNil(TabsFont);
-        FreeandNil(TxtFormat);
-      end;
+      Result :=
+        Round(GPRectF.Width) +
+        (RightOffset - ScrolledRect.Left) +
+        (ScrolledRect.Right - CloseButtonRect.Left) -
+        (ChromeTabs.GetOptions.Display.Tabs.TabOverlap);
     finally
-      FreeAndNil(Bitmap);
+      FreeAndNil(TabCanvas);
+      FreeAndNil(TabsFont);
+      FreeandNil(TxtFormat);
     end;
+  finally
+    FreeAndNil(Bitmap);
   end;
 end;
 
@@ -959,9 +950,14 @@ begin
   CloseButtonCrossRect := GetCloseButtonCrossRect;
 
   if CloseButtonVisible then
+  begin
     RightOffset := CloseButtonRect.Left - 1
+  end
   else
+  begin
     RightOffset := ControlRect.Right - ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight;
+    CloseButtonRect.Left := CloseButtonRect.Right;
+  end;
 
   // Get image size
   LeftOffset := ControlRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;

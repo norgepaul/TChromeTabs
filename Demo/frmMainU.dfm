@@ -380,7 +380,8 @@ object frmMain: TfrmMain
     LookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha = 200
     Align = alTop
     TabOrder = 0
-    ExplicitTop = 1
+    OnMouseEnter = ChromeTabs1MouseEnter
+    OnMouseLeave = ChromeTabs1MouseLeave
   end
   object ChromeTabs2: TChromeTabs
     Left = 0
@@ -397,6 +398,10 @@ object frmMain: TfrmMain
     OnShowHint = ChromeTabs1ShowHint
     OnTabDragDrop = ChromeTabs2TabDragDrop
     ActiveTabIndex = -1
+    Images = ImageList1
+    ImagesOverlay = ImageList2
+    ImagesSpinnerUpload = ImageList4
+    ImagesSpinnerDownload = ImageList3
     Options.Display.CloseButton.Offsets.Vertical = 6
     Options.Display.CloseButton.Offsets.Horizontal = 2
     Options.Display.CloseButton.Height = 14

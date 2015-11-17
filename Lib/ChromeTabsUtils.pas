@@ -479,8 +479,8 @@ begin
       toTop: Result[i] := Point(PolygonPoints[i].X + ControlRect.Left,
                                 PolygonPoints[i].Y + ControlRect.Top);
 
-      toBottom:     Result[i] := Point(PolygonPoints[i].X + ControlRect.Left,
-                                       (RectHeight(ControlRect) - PolygonPoints[i].Y) + ControlRect.Top);
+      toBottom: Result[i] := Point(PolygonPoints[i].X + ControlRect.Left,
+                                  (RectHeight(ControlRect) - PolygonPoints[i].Y) + ControlRect.Top - 1);
     end;
   end;
 end;

@@ -1,6 +1,14 @@
 TChromeTabs 2.4 Beta
+
 17-11-2015
 Update: Added OnTabPopupMenu event
+Fixed: HideCloseButton property value lost when tab is dragged between controls #38
+Fixed: Delete Tab logic faulty when tab is flanked by invisible tabs. #37
+Fixed: Changeing HideCloseButton property didn't immediately update the tab
+Fixed: Tab widths set by content not working correctly with images #36
+Fixed: Mouse enter and leave events not working #35
+Fixed: Border missing when Orientation is set to toBottom #22
+
 
 TChromeTabs 2.3
 

@@ -153,8 +153,6 @@ type
     FOnChange: TOnChange;
     FOnButtonAddClick: TOnButtonAddClick;
     FOnButtonCloseTabClick: TOnButtonCloseTabClick;
-    FOnMouseEnter: TNotifyEvent;
-    FOnMouseLeave: TNotifyEvent;
     FOnDebugLog: TOnDebugLog;
     FOnNeedDragImageControl: TOnNeedDragImageControl;
     FOnCreateDragForm: TOnCreateDragForm;
@@ -645,8 +643,8 @@ procedure TCustomChromeTabs.CMMouseEnter(var Msg: TMessage);
 begin
   FCancelTabSmartResizeTimer.Enabled := FALSE;
 
-  if Assigned(FOnMouseEnter) then
-    FOnMouseEnter(Self);
+  if Assigned(OnMouseEnter) then
+    OnMouseEnter(Self);
 end;
 
 procedure TCustomChromeTabs.CMMouseLeave(var Msg: TMessage);
@@ -689,8 +687,8 @@ procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
   //SetControlDrawStates(TRUE);
 
-  if Assigned(FOnMouseLeave) then
-    FOnMouseLeave(Self);
+  if Assigned(OnMouseLeave) then
+    OnMouseLeave(Self);
 end;
 
 function TCustomChromeTabs.InsertDroppedTab: TChromeTab;
@@ -715,6 +713,7 @@ begin
       Result.ImageIndex := FActiveDragTabObject.DragTab.ImageIndex;
       Result.ImageIndexOverlay := FActiveDragTabObject.DragTab.ImageIndexOverlay;
       Result.Pinned := FActiveDragTabObject.DragTab.Pinned;
+      Result.HideCloseButton := FActiveDragTabObject.DragTab.HideCloseButton;
       Result.SpinnerState := FActiveDragTabObject.DragTab.SpinnerState;
       Result.Tag := FActiveDragTabObject.DragTab.Tag;
       Result.Visible := FActiveDragTabObject.DragTab.Visible;
@@ -723,9 +722,12 @@ begin
       Tabs.Move(Result.Index, FActiveDragTabObject.DropTabIndex);
 
       // Move the dropped tab to a new position
-      SetControlPosition(TabControls[FActiveDragTabObject.DropTabIndex],
-                         FDragTabControl.ControlRect,
-                         FALSE);
+      if FDragTabControl <> nil then
+      begin
+        SetControlPosition(TabControls[FActiveDragTabObject.DropTabIndex],
+                           FDragTabControl.ControlRect,
+                           FALSE);
+      end;
 
       Result.Active := TRUE;
     finally
