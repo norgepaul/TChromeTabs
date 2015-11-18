@@ -115,7 +115,7 @@ type
   TOnAnimateMovement = procedure(Sender: TObject; ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType) of object;
   TOnButtonAddClick = procedure(Sender: TObject; var Handled: Boolean) of object;
   TOnSetTabWidth = procedure(Sender: TObject; ATabControl: TChromeTabControl; var TabWidth: Integer) of object;
-  TOnTabPopupMenu = procedure(Sender: TObject; const PopupMenu: TPopupMenu) of object;
+  TOnTabPopupMenu = procedure(Sender: TObject; const ATab: TChromeTab; const PopupMenu: TPopupMenu) of object;
 
   // Why do we need this?
   // See http://stackoverflow.com/questions/13915160/why-are-a-forms-system-buttons-highlighted-when-calling-windowfrompoint-in-mous/13943390#13943390
@@ -347,7 +347,7 @@ type
     procedure DoOnAnimateMovement(ChromeTabsControl: TBaseChromeTabsControl; var AnimationTimeMS: Cardinal; var EaseType: TChromeTabsEaseType); virtual;
     procedure DoOnSetTabWidth(ATabControl: TChromeTabControl; var TabWidth: Integer); virtual;
     procedure DoOnAfterDragImageCreated; virtual;
-    procedure DoOnTabMenuPopup(const PopupMenu: TPopupMenu); virtual;
+    procedure DoOnTabMenuPopup(const ATab: TChromeTab; const PopupMenu: TPopupMenu); virtual;
 
     // Virtual (IChromeTabInterface)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
@@ -1407,6 +1407,9 @@ var
     FTabPopupMenu.Items.Add(AMenuItem);
   end;
 
+var
+  ATab: TChromeTab;
+  HitTestResult: THitTestResult;
 begin
   if FTabPopupMenu <> nil then
     FreeAndNil(FTabPopupMenu);
@@ -1432,15 +1435,26 @@ begin
   for i := 0 to Tabs.Count - 1 do
     AddMenuItem(GetTabDescription(i), i + 10);
 
-  DoOnTabMenuPopup(FTabPopupMenu);
+  HitTestResult := HitTest(APoint);
+
+  if HitTestResult.TabIndex = -1 then
+  begin
+    ATab := nil;
+  end
+  else
+  begin
+    ATab := FTabs[HitTestResult.TabIndex];
+  end;
+
+  DoOnTabMenuPopup(ATab, FTabPopupMenu);
 
   FTabPopupMenu.Popup(APoint.x, APoint.y);
 end;
 
-procedure TCustomChromeTabs.DoOnTabMenuPopup(const PopupMenu: TPopupMenu);
+procedure TCustomChromeTabs.DoOnTabMenuPopup(const ATab: TChromeTab; const PopupMenu: TPopupMenu);
 begin
   if Assigned(FOnTabPopupMenu) then
-    FOnTabPopupMenu(Self, PopupMenu);
+    FOnTabPopupMenu(Self, ATab, PopupMenu);
 end;
 
 constructor TCustomChromeTabs.Create(AOwner: TComponent);
