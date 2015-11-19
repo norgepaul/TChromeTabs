@@ -296,6 +296,7 @@ type
     procedure CalculateTabRects; virtual;
     procedure DrawCanvas; virtual;
     procedure SetControlDrawStates(ForceUpdate: Boolean = FALSE); virtual;
+    procedure Loaded; override;
   protected
     FMouseButton: TMouseButton;
     FMouseDownHitTest: THitTestResult;
@@ -1111,7 +1112,9 @@ begin
     FDragCancelled := FALSE;
 
     if (tdDeleteDraggedTab in TabDropOptions) and (ActiveTabIndex <> -1) then
-      DeleteTab(ActiveTabIndex);
+    begin
+      FTabs.DeleteTab(ActiveTabIndex, True);
+    end;
 
     RemoveState(stsDragging);
   end;
@@ -1435,7 +1438,7 @@ begin
   for i := 0 to Tabs.Count - 1 do
     AddMenuItem(GetTabDescription(i), i + 10);
 
-  HitTestResult := HitTest(APoint);
+  HitTestResult := HitTest(Point(FLastMouseX, FLastMouseY));
 
   if HitTestResult.TabIndex = -1 then
   begin
@@ -2323,9 +2326,14 @@ begin
   ScrollOffset := 0;
 
   // Fix the draw states
-  FAddButtonControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
-  FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
-  FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+  if FAddButtonControl.DrawState = dsUnknown then
+    FAddButtonControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  if FScrollButtonLeftControl.DrawState = dsUnknown then
+    FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  if FScrollButtonRightControl.DrawState = dsUnknown then
+    FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
 
   SetControlDrawStates(TRUE);
 
@@ -3438,6 +3446,19 @@ begin
     end;
   finally
     EndUpdate;
+  end;
+end;
+
+procedure TCustomChromeTabs.Loaded;
+var
+  i: Integer;
+begin
+  inherited;
+
+  // Make sure the active tab is drawn correctly
+  if ActiveTab <> nil then
+  begin
+    TabControls[ActiveTabIndex].SetDrawState(TDrawState.dsActive, 0, TChromeTabsEaseType.ttNone, True);
   end;
 end;
 

@@ -8,6 +8,8 @@ Fixed: Changeing HideCloseButton property didn't immediately update the tab
 Fixed: Tab widths set by content not working correctly with images #36
 Fixed: Mouse enter and leave events not working #35
 Fixed: Border missing when Orientation is set to toBottom #22
+Fixed: Tab animation when removed from a container via drag and drop
+Fixed: Active tab drawn incorrectly if created at runtime
 
 
 TChromeTabs 2.3
