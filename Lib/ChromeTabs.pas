@@ -3641,8 +3641,6 @@ begin
 
           FScrollTimer.Enabled := FALSE;
 
-          FDragTabControl := nil;
-
           if DraggingInOwnContainer then
           begin
             FDragTabControl := nil;
