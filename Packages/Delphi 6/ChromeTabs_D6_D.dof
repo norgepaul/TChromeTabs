@@ -43,8 +43,8 @@ ExeDescription=Chrome Tabs Design Time
 [Directories]
 OutputDir=
 UnitOutputDir=..\..\bin\D6\DCU
-PackageDLLOutputDir=
-PackageDCPOutputDir=
+PackageDLLOutputDir=..\..\bin\D6\DCU
+PackageDCPOutputDir=..\..\bin\D6\DCU
 SearchPath=
 Packages=
 Conditionals=
@@ -89,5 +89,11 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlUnitOutputDirectory]
+Count=1
+Item0=..\..\bin\D6\DCU
+[HistoryLists\hlBPLOutput]
+Count=1
+Item0=..\..\bin\D6\DCU
+[HistoryLists\hlDCPOutput]
 Count=1
 Item0=..\..\bin\D6\DCU

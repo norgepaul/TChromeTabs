@@ -24,9 +24,18 @@ unit ChromeTabsControls;
 interface
 
 uses
-  Windows, Classes, Controls, SysUtils, ImgList, Graphics,
-
-  {$IF CompilerVersion >= 23}System.Types,{$IFEND}
+  {$IF CompilerVersion >= 23.0}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  Vcl.Dialogs,
+  WinApi.Windows, WinApi.Messages,
+  Vcl.Graphics,
+  {$ELSE}
+  SysUtils,Classes,Math,
+  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
+  Windows,Messages,
+  Graphics,
+  {$ifend}
 
   GDIPObj, GDIPAPI,
 
@@ -135,7 +144,7 @@ type
   TChromeTabControl = class(TBaseChromeTabsControl)
   private
     FChromeTab: IChromeTab;
-    FBmp: TBitmap;
+    FBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
     FCloseButtonState: TDrawState;
     FChromeTabControlPropertyItems: TChromeTabControlPropertyItems;
     FTabProperties: TChromeTabsLookAndFeelStyleProperties;
@@ -578,7 +587,7 @@ begin
 
   FChromeTabControlPropertyItems := TChromeTabControlPropertyItems.Create;
 
-  FBmp := TBitmap.Create;
+  FBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FBmp.PixelFormat := pf32Bit;
 
   FControlType := itTab;
@@ -888,13 +897,13 @@ var
   TabsFont: TGPFont;
   TxtFormat: TGPStringFormat;
   GPRectF: TGPRectF;
-  Bitmap: TBitmap;
+  Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
   ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
   NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible: Boolean;
   RightOffset: Integer;
   ScrolledRect: TRect;
 begin
-  Bitmap := TBitmap.Create;
+  Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
   try
     Bitmap.Width := ChromeTabs.GetOptions.Display.Tabs.MaxWidth;
     Bitmap.Height := RectHeight(ControlRect);

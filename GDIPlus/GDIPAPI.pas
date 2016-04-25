@@ -33,10 +33,14 @@ interface
 \**************************************************************************)
 
 uses
-  Windows,
-  ActiveX,
-  DirectDraw,
-  Math;
+  {$IF CompilerVersion >= 23.0}
+  System.Math,
+  WinApi.Windows, WinApi.ActiveX,
+  {$ELSE}
+  Math,
+  Windows,ActiveX,
+  {$ifend}
+  DirectDraw;
 
 type
   INT16   = type Smallint;
@@ -1840,7 +1844,7 @@ type
     Points : PGPPointF;
     Types  : PBYTE;
     constructor Create;
-    destructor destroy; override;
+    destructor Destroy; override;
   end;
 
   PCharacterRange = ^TCharacterRange;
@@ -2320,8 +2324,8 @@ type
 
 type
   { from Windef.h }
-  RECTL = Windows.TRect;
-  SIZEL = Windows.TSize;
+  RECTL = {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.TRect;
+  SIZEL = {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.TSize;
 
   {$EXTERNALSYM ENHMETAHEADER3}
   ENHMETAHEADER3 = packed record

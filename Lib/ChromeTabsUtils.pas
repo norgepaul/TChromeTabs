@@ -27,11 +27,16 @@ interface
                         //     copy of pngImage in Delphi 2008 or earlier
 
 uses
-  Windows, SysUtils, Controls, Classes, Graphics, Messages, ExtCtrls, Forms,
-  GraphUtil, Math,
-
-  {$if CompilerVersion >= 23}
-  System.Types,
+  {$IF CompilerVersion >= 23.0}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  WinApi.Windows, WinApi.Messages,WinApi.ActiveX,
+  Vcl.Graphics,
+  {$ELSE}
+  SysUtils,Classes,Math,
+  Controls,ExtCtrls,Forms,GraphUtil,ImgList,
+  Windows,Messages,ActiveX,
+  Graphics,
   {$ifend}
 
   {$IFDEF USE_PNGIMAGE}
@@ -39,8 +44,6 @@ uses
   {$ENDIF}
 
   GDIPObj, GDIPAPI,
-
-  ImgList, ActiveX,
 
   ChromeTabsTypes;
 
@@ -51,19 +54,19 @@ function ColorBetween(const ColorA, ColorB: TColor; const Percent: Integer): TCo
 function IntegerBetween(const IntA, IntB: Integer; const Percent: Integer): Integer;
 function SingleBetween(const SingA, SingB: Single; const Percent: Integer): Single;
 procedure PaintControlToCanvas(SrcControl: TControl; TargetCanvas: TCanvas);
-procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: TBitmap; X, Y: Integer);
+procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; X, Y: Integer);
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
 function ChromeTabStatesToString(States: TChromeTabStates): String;
 function RectToGPRectF(ARect: TRect): TGPRectF;
 function RectToGPRect(ARect: TRect): TGPRect;
 function PointToGPPoint(Pt: TPoint): TGPPoint;
 function IconToGPImage(Icon: TIcon): TGPImage;
-function BitmapToGPBitmap(Bitmap: TBitmap): TGPBitmap;
+function BitmapToGPBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap): TGPBitmap;
 function GeneratePolygon(ControlRect: TRect; const PolygonPoints: Array of TPoint; Orientation: TTabOrientation): TPolygon;
-function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
+function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; Alpha: Byte): TForm;
 procedure SetTabClipRegionFromPolygon(GPGraphics: TGPGraphics; Polygon: TPolygon; CombineMode: TCombineMode);
-procedure ClearBitmap(Bitmap: TBitmap);
-procedure ScaleImage(Bitmap, ScaledBitmap: TBitmap; ScaleFactor: Real);
+procedure ClearBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
+procedure ScaleImage(Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
 procedure EnableControlAndChildren(Control: TWinControl; DoEnable: Boolean);
 procedure SaveComponentToStream(AComponent: TComponent; AStream: TStream);
 procedure ReadComponentFromStream(AComponent: TComponent; AStream: TStream);
@@ -74,8 +77,8 @@ function HorzFlipPolygon(ParentRect: TRect; Polygon: TPolygon): TPolygon;
 function RectHeight(Rect: TRect): Integer;
 function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
-procedure BitmapTo32BitBitmap(Bitmap: TBitmap);
-procedure SetColorAlpha(Bitmap: TBitmap; AColor: TColor; NewAlpha: Byte);
+procedure BitmapTo32BitBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
+procedure SetColorAlpha(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; AColor: TColor; NewAlpha: Byte);
 function TransformRect(StartRect, EndRect: TRect; CurrentTicks, EndTicks: Cardinal; EaseType: TChromeTabsEaseType): TRect;
 function CalculateEase(CurrentTime, StartValue, ChangeInValue, Duration: Real; EaseType: TChromeTabsEaseType): Real; overload;
 function CalculateEase(StartPos, EndPos, PositionPct: Real; EaseType: TChromeTabsEaseType): Real; overload;
@@ -409,7 +412,7 @@ begin
   Result := Rect.Right - Rect.Left;
 end;
 
-procedure ClearBitmap(Bitmap: TBitmap);
+procedure ClearBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
 var
   Graphics: TGPGraphics;
   Brush: TGPBrush;
@@ -430,14 +433,14 @@ begin
   end;
 end;
 
-procedure ScaleImage(Bitmap, ScaledBitmap: TBitmap; ScaleFactor: Real);
+procedure ScaleImage(Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
 {$if CompilerVersion < 18.0}
 var
   NewHeight, NewWidth: Integer;
 {$ifend}
 begin
   {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
-    GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
+    {$IF CompilerVersion >= 23.0}Vcl.{$IFEND}GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
   {$else}
     NewWidth := Round(Bitmap.Width * ScaleFactor);
     NewHeight := Round(Bitmap.Height * ScaleFactor);
@@ -560,7 +563,7 @@ begin
   Result := TGPImage.Create(TStreamAdapter.Create(MemStream, soOwned));
 end;
 
-function BitmapToGPBitmap(Bitmap: TBitmap): TGPBitmap;
+function BitmapToGPBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap): TGPBitmap;
 var
   MemStream: TMemoryStream;
 begin
@@ -581,7 +584,7 @@ end;
 {$IFDEF USE_PNGIMAGE}
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
 var
-  Bitmap: TBitmap;
+  Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
   PNGObject: {$IF CompilerVersion >= 28}TPNGImage{$ELSE}TPNGObject{$IFEND};
   Stream: TStream;
 begin
@@ -589,7 +592,7 @@ begin
   try
     PNGObject := {$IF CompilerVersion >= 28}TPNGImage{$ELSE}TPNGObject{$IFEND}.Create;
     try
-      Bitmap := TBitmap.Create;
+      Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
       try
         ImageList.GetBitmap(ImageIndex, Bitmap);
 
@@ -629,7 +632,7 @@ begin
 end;
 {$ENDIF}
 
-procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: TBitmap; X, Y: Integer);
+procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; X, Y: Integer);
 var
  SrcDC: HDC;
 begin
@@ -741,7 +744,7 @@ begin
   end;
 end;
 
-procedure BitmapTo32BitBitmap(Bitmap: TBitmap);
+procedure BitmapTo32BitBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
 var
   PNGBitmap: TGPBitmap;
   BitmapHandle: HBITMAP;
@@ -774,7 +777,7 @@ begin
   end;
 end;
 
-procedure SetColorAlpha(Bitmap: TBitmap; AColor: TColor; NewAlpha: Byte);
+procedure SetColorAlpha(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; AColor: TColor; NewAlpha: Byte);
 var
   Row, Col: integer;
   p: PRGBQuad;
@@ -817,7 +820,7 @@ end;
 
 // Thanks to Anders Melander for the transparent form tutorial
 // (http://melander.dk/articles/alphasplash2/2/)
-function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: TBitmap; Alpha: Byte): TForm;
+function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; Alpha: Byte): TForm;
 var
   BlendFunction: TBlendFunction;
   BitmapPos: TPoint;

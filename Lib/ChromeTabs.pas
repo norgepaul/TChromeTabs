@@ -77,10 +77,18 @@ interface
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 uses
-  Windows, SysUtils, Classes, Controls, ExtCtrls, Graphics, Forms, Messages,
-  ImgList, Dialogs, Menus, StdCtrls, GraphUtil,
-
-  {$IF CompilerVersion >= 23}System.Types,{$IFEND}
+  {$IF CompilerVersion >= 23.0}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  Vcl.Dialogs,Vcl.Menus,
+  WinApi.Windows, WinApi.Messages,
+  Vcl.Graphics,
+  {$ELSE}
+  SysUtils,Classes,Math,
+  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,Menus,
+  Windows,Messages,
+  Graphics,
+  {$ifend}
 
   GDIPObj, GDIPAPI,
 
@@ -189,8 +197,8 @@ type
     FDragTabObject: IDragTabObject;
     FActiveDragTabObject: IDragTabObject;
 
-    FCanvasBmp: TBitmap;
-    FBackgroundBmp: TBitmap;
+    FCanvasBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+    FBackgroundBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
     FTabPopupMenu: TPopupMenu;
     FImages: TCustomImageList;
     FImagesOverlay: TCustomImageList;
@@ -644,8 +652,10 @@ procedure TCustomChromeTabs.CMMouseEnter(var Msg: TMessage);
 begin
   FCancelTabSmartResizeTimer.Enabled := FALSE;
 
+  {$if CompilerVersion >= 18.0}
   if Assigned(OnMouseEnter) then
     OnMouseEnter(Self);
+  {$ifend}
 end;
 
 procedure TCustomChromeTabs.CMMouseLeave(var Msg: TMessage);
@@ -688,8 +698,10 @@ procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
   //SetControlDrawStates(TRUE);
 
+  {$if CompilerVersion >= 18.0}
   if Assigned(OnMouseLeave) then
     OnMouseLeave(Self);
+  {$ifend}
 end;
 
 function TCustomChromeTabs.InsertDroppedTab: TChromeTab;
@@ -1468,10 +1480,10 @@ begin
                                   csCaptureMouse];
 
   // Canvas Bitmaps
-  FCanvasBmp := TBitmap.Create;
+  FCanvasBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FCanvasBmp.PixelFormat := pf32Bit;
 
-  FBackgroundBmp := TBitmap.Create;
+  FBackgroundBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FBackgroundBmp.PixelFormat := pf32bit;
 
   // Options
@@ -2125,7 +2137,7 @@ const
 var
   DragControl: TWinControl;
   DragCanvas: TGPGraphics;
-  Bitmap, ScaledBitmap: TBitmap;
+  Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
   TempRect: TRect;
   TabTop, ControlTop, TabEndX, BorderOffset: Integer;
   ActualDragDisplay: TChromeTabDragDisplay;
@@ -2165,7 +2177,7 @@ begin
         FDragTabObject.DragFormOffset := Point(Round(BiDiX * FOptions.DragDrop.DragControlImageResizeFactor),
                                                Round(FDragTabObject.DragCursorOffset.Y * FOptions.DragDrop.DragControlImageResizeFactor));
 
-      Bitmap := TBitmap.Create;
+      Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
       try
         TabTop := 0;
         ControlTop := 0;
@@ -2280,7 +2292,7 @@ begin
           FreeAndNil(DragCanvas);
         end;
 
-        ScaledBitmap := TBitmap.Create;
+        ScaledBitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
         try
           // Scale the image
           if ActualDragDisplay = ddTab then
@@ -2630,7 +2642,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    DeleteFile(Filename);
+    {$IF CompilerVersion >= 23.0}System.{$IFEND}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -2645,7 +2657,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    DeleteFile(Filename);
+    {$IF CompilerVersion >= 23.0}System.{$IFEND}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -3450,15 +3462,13 @@ begin
 end;
 
 procedure TCustomChromeTabs.Loaded;
-var
-  i: Integer;
 begin
   inherited;
 
   // Make sure the active tab is drawn correctly
   if ActiveTab <> nil then
   begin
-    TabControls[ActiveTabIndex].SetDrawState(TDrawState.dsActive, 0, TChromeTabsEaseType.ttNone, True);
+    TabControls[ActiveTabIndex].SetDrawState({$IF CompilerVersion >= 18.0}TDrawState.{$IFEND}dsActive, 0, {$IF CompilerVersion >= 18.0}TChromeTabsEaseType.{$IFEND}ttNone, True);
   end;
 end;
 

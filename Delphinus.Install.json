@@ -86,6 +86,12 @@
 			"project": "ChromeTabs_DX10.groupproj",
 			"compiler_min": 30,
 			"compiler_max": 30
+		},
+
+		{
+			"project": "ChromeTabs_DX101.groupproj",
+			"compiler_min": 31,
+			"compiler_max": 31
 		}
     ]
 }

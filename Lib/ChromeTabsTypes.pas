@@ -24,7 +24,13 @@ unit ChromeTabsTypes;
 interface
 
 uses
-  Windows, Classes,
+  {$IF CompilerVersion >= 23.0}
+  System.Classes,
+  WinApi.Windows,
+  {$ELSE}
+  Classes,
+  Windows,
+  {$ifend}
 
   GDIPAPI;
 

@@ -3,8 +3,17 @@ unit ChromeTabsRegister;
 interface
 
 uses
-  ToolsApi, Windows, SysUtils, Controls, ActnList, Classes,
-
+  ToolsApi,
+  {$IF CompilerVersion >= 23.0}
+  System.SysUtils,System.Classes,
+  Vcl.Controls,
+  Vcl.Dialogs,Vcl.Menus,Vcl.ActnList,
+  WinApi.Windows,
+  {$ELSE}
+  SysUtils,Classes,
+  Controls,ActnList,
+  Windows,
+  {$ifend}
   DesignIntf, DesignEditors,
 
   ChromeTabs,
@@ -31,6 +40,8 @@ begin
   RegisterComponentEditor(TChromeTabs, TChromeTabEditor);
 end;
 
+{$IF CompilerVersion >= 18.0}
+
 procedure RegisterSplashScreen;
 var
   ProductImage: HBITMAP;
@@ -50,8 +61,11 @@ begin
 end;
 
 initialization
+
   RegisterSplashScreen;
 
 finalization
+
+{$IFEND}
 
 end.

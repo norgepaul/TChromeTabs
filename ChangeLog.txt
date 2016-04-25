@@ -1,5 +1,8 @@
 TChromeTabs 2.4 Beta
 
+25-04-2016
+Update: DX10.1 Berlin Support
+
 17-11-2015
 Update: Added OnTabPopupMenu event
 Fixed: HideCloseButton property value lost when tab is dragged between controls #38
@@ -14,7 +17,7 @@ Fixed: Active tab drawn incorrectly if created at runtime
 
 TChromeTabs 2.3
 
-06-06-2014
+06-06-2015
 Update: Removed Versions.inc
 
 06-03-2015

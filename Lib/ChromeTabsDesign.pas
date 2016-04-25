@@ -3,16 +3,20 @@ unit ChromeTabsDesign;
 interface
 
 uses
-  Windows,
-  Classes,
-  SysUtils,
-  DesignIntf,
-  DesignEditors,
-  VclEditors,
-  StrEdit,
-  ColnEdit,
-  ChromeTabs,
-  Dialogs;
+  {$IF CompilerVersion >= 23.0}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  Vcl.Dialogs,Vcl.Menus,
+  WinApi.Windows, WinApi.Messages,
+  Vcl.Graphics,
+  {$ELSE}
+  SysUtils,Classes,Math,
+  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,Menus,
+  Windows,Messages,
+  Graphics,
+  {$ifend}
+  DesignIntf,DesignEditors,VclEditors,StrEdit,ColnEdit,
+  ChromeTabs;
 
 type
   TChromeTabEditor = class (TDefaultEditor)

@@ -22,19 +22,23 @@ unit ChromeTabsGlassForm;
 // (C) 2012 Easy-IP AS. All Rights Reserved.
 //
 // ----------------------------------------------------------------------------
-// 
+//
 // Based on code provided by Chris Rolliston.
 // http://delphihaven.wordpress.com/2010/04/22/setting-up-a-custom-title-bar-reprise/
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Forms, Controls,
-  {$IF CompilerVersion >= 28.0}
-  System.Types,
-  {$else}
-  Types,
-  {$endif}
+  {$IF CompilerVersion >= 23.0}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Graphics,Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  Vcl.Dialogs,
+  WinApi.Windows, WinApi.Messages,WinApi.CommCtrl, WinApi.DwmApi,
+  {$ELSE}
+  SysUtils,Classes,Math,
+  Graphics,Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
+  Windows,Messages,CommCtrl,DwmApi,
+  {$ifend}
   ChromeTabs;
 
 type
@@ -105,9 +109,6 @@ type
   end;
 
 implementation
-
-uses
-  CommCtrl, DwmApi;
 
 function GetDwmBorderIconsRect(Form: TForm): TRect;
 begin

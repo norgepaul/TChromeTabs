@@ -22,9 +22,13 @@
 unit GDIPOBJ;
 
 interface
+
 uses
-  Windows,
-  ActiveX,
+  {$IF CompilerVersion >= 23.0}
+  WinApi.Windows, WinApi.ActiveX,
+  {$ELSE}
+  Windows,ActiveX,
+  {$ifend}
   DirectDraw,
   GDIPAPI;
 
@@ -145,7 +149,7 @@ type
     function IsVisible(const rect: TGPRect; g: TGPGraphics = nil): BOOL; overload;
     function IsVisible(x, y, width, height: Single; g: TGPGraphics = nil): BOOL; overload;
     function IsVisible(const rect: TGPRectF; g: TGPGraphics = nil): BOOL; overload;
-    function Equals(region: TGPRegion; g: TGPGraphics): BOOL;
+    function Equals(region: TGPRegion; g: TGPGraphics): BOOL; reintroduce;
     function GetRegionScansCount(matrix: TGPMatrix): UINT;
     function GetRegionScans(matrix: TGPMatrix ;rects: PGPRectF; out count: Integer): TStatus; overload;
     function GetRegionScans(matrix: TGPMatrix; rects: PGPRect; out count: Integer): TStatus; overload;
@@ -495,7 +499,7 @@ type
 
     function IsInvertible: BOOL;
     function IsIdentity: BOOL;
-    function Equals(matrix: TGPMatrix): BOOL;
+    function Equals(matrix: TGPMatrix): BOOL; reintroduce;
     function GetLastStatus: TStatus;
   end;
 
