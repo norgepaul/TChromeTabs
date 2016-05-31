@@ -1,5 +1,8 @@
 TChromeTabs 2.4 Beta
 
+31-05-2016
+Fixed: 64-bit pointer issue
+
 25-04-2016
 Update: DX10.1 Berlin Support
 
@@ -47,7 +50,7 @@ Fixed: ChromeTab control dropped from the component palette always parented to t
 03-10-2014
 Update: XE7 Compatibility.
 Fixed: Access violation error when sizing tabs by content.
-Fixed: 	TChromeTabsGlassForm Access Violation when built with C++ Builder
+Fixed: TChromeTabsGlassForm Access Violation when built with C++ Builder
 Added: Each chrome tab now has a new "HideCloseButton" property.
 
 
