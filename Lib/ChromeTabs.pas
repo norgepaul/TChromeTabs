@@ -132,6 +132,7 @@ type
     FPoint: TPoint;
     FRange: Integer;
     FStep: Integer;
+    FChromeTabs: TCustomChromeTabs;
   public
     constructor Create(Pt: TPoint; Range, Step: Integer);
 
@@ -358,7 +359,7 @@ type
     procedure DoOnAfterDragImageCreated; virtual;
     procedure DoOnTabMenuPopup(const ATab: TChromeTab; const PopupMenu: TPopupMenu); virtual;
 
-    // Virtual (IChromeTabInterface)
+    // Virtual (IChromeTabs)
     procedure DoOnBeforeDrawItem(TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer; var Handled: Boolean); virtual;
     procedure DoOnAfterDrawItem(const TargetCanvas: TGPGraphics; ItemRect: TRect; ItemType: TChromeTabItemType; TabIndex: Integer); virtual;
     procedure DoOnGetControlPolygons(ChromeTabsControl: TObject; ItemRect: TRect; ItemType: TChromeTabItemType; Orientation: TTabOrientation; var Polygons: IChromeTabPolygons); virtual;
@@ -542,7 +543,8 @@ var
 begin
   WindowFromPointFixThread := TWindowFromPointFixThread.Create(Pt, Range, Step);
   try
-    Result := TCustomChromeTabs(WindowFromPointFixThread.WaitFor);
+    WindowFromPointFixThread.WaitFor;
+    Result := WindowFromPointFixThread.FChromeTabs;
   finally
     FreeAndNil(WindowFromPointFixThread);
   end;
@@ -4386,7 +4388,6 @@ begin
   end;
 end;
 
-
 { TWindowFromPointFixThread }
 
 constructor TWindowFromPointFixThread.Create(Pt: TPoint; Range, Step: Integer);
@@ -4396,6 +4397,7 @@ begin
   FPoint := Pt;
   FRange := Range;
   FStep := Step;
+  FChromeTabs := nil;
 end;
 
 function FindChromeTabsControlAt(X, Y: Integer; var ChromeTabs: TCustomChromeTabs): Boolean;
@@ -4418,27 +4420,24 @@ end;
 procedure TWindowFromPointFixThread.Execute;
 var
   i: Integer;
-  ChromeTabs: TCustomChromeTabs;
 begin
   i := FRange;
 
   while i >= 0 do
   begin
     if i = 0 then
-      FindChromeTabsControlAt(FPoint.X, FPoint.Y, ChromeTabs)
+      FindChromeTabsControlAt(FPoint.X, FPoint.Y, FChromeTabs)
     else
     begin
-      if (FindChromeTabsControlAt(FPoint.X - i, FPoint.Y - i, ChromeTabs)) or
-         (FindChromeTabsControlAt(FPoint.X + i, FPoint.Y - i, ChromeTabs)) or
-         (FindChromeTabsControlAt(FPoint.X + i, FPoint.Y + i, ChromeTabs)) or
-         (FindChromeTabsControlAt(FPoint.X - i, FPoint.Y + i, ChromeTabs)) then
+      if (FindChromeTabsControlAt(FPoint.X - i, FPoint.Y - i, FChromeTabs)) or
+         (FindChromeTabsControlAt(FPoint.X + i, FPoint.Y - i, FChromeTabs)) or
+         (FindChromeTabsControlAt(FPoint.X + i, FPoint.Y + i, FChromeTabs)) or
+         (FindChromeTabsControlAt(FPoint.X - i, FPoint.Y + i, FChromeTabs)) then
         Break;
     end;
 
     i := i - FStep;
   end;
-
-  ReturnValue := Integer(ChromeTabs);
 end;
 
 end.
