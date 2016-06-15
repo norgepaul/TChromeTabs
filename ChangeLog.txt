@@ -1,5 +1,8 @@
 TChromeTabs 2.4 Beta
 
+15-06-2016
+Fixed: CanvasSmoothingMode exception in 10.1 Berlin. Property moved to public.
+
 31-05-2016
 Fixed: 64-bit pointer issue
 

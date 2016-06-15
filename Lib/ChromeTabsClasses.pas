@@ -982,6 +982,8 @@ type
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
+
+    property CanvasSmoothingMode: TSmoothingMode read FCanvasSmoothingMode write SetCanvasSmoothingMode;
   published
     property SeeThroughTabs: Boolean read FSeeThroughTabs write SetSeeThroughTabs;
     property TabOverlap: Integer read FTabOverlap write SetOverlap;
@@ -998,7 +1000,6 @@ type
     property ImageOffsetLeft: Integer read FImageOffsetLeft write SetImageOffsetLeft;
     property TextTrimType: TTextTrimType read FTextTrimType write SetTextTrimType;
     property Orientation: TTabOrientation read FOrientation write SetOrientation;
-    property CanvasSmoothingMode: TSmoothingMode read FCanvasSmoothingMode write SetCanvasSmoothingMode;
     property BaseLineTabRegionOnly: Boolean read FBaseLineTabRegionOnly write SetBaseLineTabRegionOnly;
     property WordWrap: Boolean read FWordWrap write SetWordWrap;
     property TextAlignmentHorizontal: TAlignment read FTextHorizontalAlignment write SetTextAlignmentHorizontal;

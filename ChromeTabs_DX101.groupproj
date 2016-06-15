@@ -3,6 +3,9 @@
         <ProjectGuid>{C6CF8742-6D2D-495F-B596-B6BBA24F9DCE}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="Demo\ChromeTabsDemoDX10_1.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Packages\Delphi DX10.1\ChromeTabs_R.dproj">
             <Dependencies/>
         </Projects>
@@ -17,6 +20,15 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="ChromeTabsDemoDX10_1">
+        <MSBuild Projects="Demo\ChromeTabsDemoDX10_1.dproj"/>
+    </Target>
+    <Target Name="ChromeTabsDemoDX10_1:Clean">
+        <MSBuild Projects="Demo\ChromeTabsDemoDX10_1.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ChromeTabsDemoDX10_1:Make">
+        <MSBuild Projects="Demo\ChromeTabsDemoDX10_1.dproj" Targets="Make"/>
+    </Target>
     <Target Name="ChromeTabs_R">
         <MSBuild Projects="Packages\Delphi DX10.1\ChromeTabs_R.dproj"/>
     </Target>
@@ -36,13 +48,13 @@
         <MSBuild Projects="Packages\Delphi DX10.1\ChromeTabs_D.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="ChromeTabs_R;ChromeTabs_D"/>
+        <CallTarget Targets="ChromeTabsDemoDX10_1;ChromeTabs_R;ChromeTabs_D"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ChromeTabs_R:Clean;ChromeTabs_D:Clean"/>
+        <CallTarget Targets="ChromeTabsDemoDX10_1:Clean;ChromeTabs_R:Clean;ChromeTabs_D:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ChromeTabs_R:Make;ChromeTabs_D:Make"/>
+        <CallTarget Targets="ChromeTabsDemoDX10_1:Make;ChromeTabs_R:Make;ChromeTabs_D:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
