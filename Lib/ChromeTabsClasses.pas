@@ -25,16 +25,16 @@ interface
 
 uses
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,System.Types,System.Math,System.Contnrs,
+  System.SysUtils, System.Classes, System.Types, System.Math, System.Contnrs,
   System.UITypes,
-  Vcl.Graphics,Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
-  Vcl.Dialogs,
+  Vcl.Graphics, Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil,
+  Vcl.ImgList, Vcl.Dialogs,
   WinApi.Windows, WinApi.Messages,
   {$ELSE}
-  SysUtils,Classes,Math,Contnrs,
-  Graphics,Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
-  Windows,Messages,
-  {$ifend}
+  SysUtils, Classes, Math, Contnrs,
+  Graphics, Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs,
+  Windows, Messages,
+  {$IFEND}
 
   GDIPObj, GDIPAPI,
 

@@ -5,13 +5,13 @@ interface
 uses
   ToolsApi,
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,
+  System.SysUtils, System.Classes,
   Vcl.Controls,
-  Vcl.Dialogs,Vcl.Menus,Vcl.ActnList,
+  Vcl.Dialogs, Vcl.Menus, Vcl.ActnList,
   WinApi.Windows,
   {$ELSE}
-  SysUtils,Classes,
-  Controls,ActnList,
+  SysUtils, Classes,
+  Controls, ActnList,
   Windows,
   {$ifend}
   DesignIntf, DesignEditors,

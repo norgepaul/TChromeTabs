@@ -30,18 +30,18 @@ uses
   {$ELSE}
   Classes,
   Windows,
-  {$ifend}
+  {$IFEND}
 
   GDIPAPI;
 
 type
-  {$if CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
+  {$IF CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
   TVerticalAlignment = (
     taAlignTop,
     taAlignBottom,
     taVerticalCenter
   );
-  {$ifend}
+  {$IFEND}
 
   TChromeTabDirection = (
     drLeft,
@@ -360,4 +360,3 @@ const
 implementation
 
 end.
-

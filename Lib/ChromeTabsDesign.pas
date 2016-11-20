@@ -4,18 +4,18 @@ interface
 
 uses
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,System.Types,System.Math,
-  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
-  Vcl.Dialogs,Vcl.Menus,
+  System.SysUtils, System.Classes, System.Types, System.Math,
+  Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil, Vcl.ImgList,
+  Vcl.Dialogs, Vcl.Menus,
   WinApi.Windows, WinApi.Messages,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils,Classes,Math,
-  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,Menus,
-  Windows,Messages,
+  SysUtils, Classes, Math,
+  Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs, Menus,
+  Windows, Messages,
   Graphics,
   {$ifend}
-  DesignIntf,DesignEditors,VclEditors,StrEdit,ColnEdit,
+  DesignIntf, DesignEditors, VclEditors, StrEdit, ColnEdit,
   ChromeTabs;
 
 type

@@ -30,15 +30,15 @@ interface
 
 uses
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,System.Types,System.Math,
-  Vcl.Graphics,Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
-  Vcl.Dialogs,
-  WinApi.Windows, WinApi.Messages,WinApi.CommCtrl, WinApi.DwmApi,
+  System.SysUtils, System.Classes, System.Types, System.Math,
+  Vcl.Graphics, Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil,
+  Vcl.ImgList, Vcl.Dialogs,
+  WinApi.Windows, WinApi.Messages, WinApi.CommCtrl, WinApi.DwmApi,
   {$ELSE}
-  SysUtils,Classes,Math,
-  Graphics,Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
-  Windows,Messages,CommCtrl,DwmApi,
-  {$ifend}
+  SysUtils, Classes, Math,
+  Graphics, Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs,
+  Windows, Messages, CommCtrl, DwmApi,
+  {$IFEND}
   ChromeTabs;
 
 type

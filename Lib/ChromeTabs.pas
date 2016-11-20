@@ -78,17 +78,17 @@ interface
 
 uses
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,System.Types,System.Math,
-  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
-  Vcl.Dialogs,Vcl.Menus,
+  System.SysUtils, System.Classes, System.Types, System.Math,
+  Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil, Vcl.ImgList,
+  Vcl.Dialogs, Vcl.Menus,
   WinApi.Windows, WinApi.Messages,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils,Classes,Math,
-  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,Menus,
-  Windows,Messages,
+  SysUtils, Classes, Math,
+  Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs, Menus,
+  Windows, Messages,
   Graphics,
-  {$ifend}
+  {$IFEND}
 
   GDIPObj, GDIPAPI,
 
@@ -516,10 +516,10 @@ type
     property OnResize;
     property TabOrder;
 
-    {$if CompilerVersion >= 18.0}
+    {$IF CompilerVersion >= 18.0}
     property OnMouseEnter;
     property OnMouseLeave;
-    {$ifend}
+    {$IFEND}
   end;
 
 implementation
@@ -654,10 +654,10 @@ procedure TCustomChromeTabs.CMMouseEnter(var Msg: TMessage);
 begin
   FCancelTabSmartResizeTimer.Enabled := FALSE;
 
-  {$if CompilerVersion >= 18.0}
+  {$IF CompilerVersion >= 18.0}
   if Assigned(OnMouseEnter) then
     OnMouseEnter(Self);
-  {$ifend}
+  {$IFEND}
 end;
 
 procedure TCustomChromeTabs.CMMouseLeave(var Msg: TMessage);
@@ -700,10 +700,10 @@ procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
   //SetControlDrawStates(TRUE);
 
-  {$if CompilerVersion >= 18.0}
+  {$IF CompilerVersion >= 18.0}
   if Assigned(OnMouseLeave) then
     OnMouseLeave(Self);
-  {$ifend}
+  {$IFEND}
 end;
 
 function TCustomChromeTabs.InsertDroppedTab: TChromeTab;
