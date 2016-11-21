@@ -267,7 +267,7 @@ begin
 
       if FChromeTabFont <> nil then
       begin
-        cbFontHintMode.ItemIndex := Integer(FChromeTabFont.TextRendoringMode);
+        cbFontHintMode.ItemIndex := Integer(FChromeTabFont.TextRenderingMode);
         cbFontName.Text := FChromeTabFont.Name;
         edtFontAlpha.Value := FChromeTabFont.Alpha;
         edtFontSize.Value := FChromeTabFont.Size;
@@ -324,7 +324,7 @@ begin
 
       if FChromeTabFont <> nil then
       begin
-        FChromeTabFont.TextRendoringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
+        FChromeTabFont.TextRenderingMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
         FChromeTabFont.Name := cbFontName.Text;
         FChromeTabFont.Alpha := edtFontAlpha.Value;
         FChromeTabFont.Size := edtFontSize.Value;

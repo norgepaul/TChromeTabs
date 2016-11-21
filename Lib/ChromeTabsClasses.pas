@@ -293,13 +293,13 @@ type
     FColor: TColor;
     FSize: Integer;
     FAlpha: Byte;
-    FTextRendoringMode: TTextRenderingHint;
+    FTextRenderingMode: TTextRenderingHint;
 
     procedure SetAlpha(const Value: Byte);
     procedure SetColor(const Value: TColor);
     procedure SetName(const Value: TFontName);
     procedure SetSize(const Value: Integer);
-    procedure SetTextRendoringMode(const Value: TTextRenderingHint);
+    procedure SetTextRenderingMode(const Value: TTextRenderingHint);
   public
     constructor Create(AOwner: TPersistent); override;
   published
@@ -307,7 +307,7 @@ type
     property Color: TColor read FColor write SetColor;
     property Size: Integer read FSize write SetSize;
     property Alpha: Byte read FAlpha write SetAlpha;
-    property TextRendoringMode: TTextRenderingHint read FTextRendoringMode write SetTextRendoringMode;
+    property TextRenderingMode: TTextRenderingHint read FTextRenderingMode write SetTextRenderingMode;
   end;
 
   TChromeTabsLookAndFeelFont = class(TChromeTabsLookAndFeelBaseFont)
@@ -3632,7 +3632,7 @@ begin
   FColor := clBlack;
   FSize := 9;
   FAlpha := 255;
-  FTextRendoringMode := TextRenderingHintClearTypeGridFit;
+  FTextRenderingMode := TextRenderingHintClearTypeGridFit;
 end;
 
 procedure TChromeTabsLookAndFeelBaseFont.SetAlpha(const Value: Byte);
@@ -3663,9 +3663,9 @@ begin
   DoChanged;
 end;
 
-procedure TChromeTabsLookAndFeelBaseFont.SetTextRendoringMode(const Value: TTextRenderingHint);
+procedure TChromeTabsLookAndFeelBaseFont.SetTextRenderingMode(const Value: TTextRenderingHint);
 begin
-  FTextRendoringMode := Value;
+  FTextRenderingMode := Value;
 
   DoChanged;
 end;

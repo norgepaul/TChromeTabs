@@ -108,7 +108,7 @@ type
     FontAlpha: Byte;
     FontName: String;
     FontSize: Integer;
-    TextRendoringMode: TTextRenderingHint;
+    TextRenderingMode: TTextRenderingHint;
     StartColor: TColor;
     StopColor: TColor;
     OutlineColor: TColor;
@@ -912,7 +912,7 @@ begin
                                FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
     TxtFormat := TGPStringFormat.Create;
     try
-      TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
+      TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRenderingMode);
       TxtFormat.SetTrimming(StringTrimmingNone);
 
       TabCanvas.MeasureString(WideString(ChromeTab.GetCaption),
@@ -1238,7 +1238,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
                           0,
                           FChromeTabControlPropertyItems.CurrentTabProperties.FontColor,
                           FChromeTabControlPropertyItems.CurrentTabProperties.FontAlpha,
-                          FChromeTabControlPropertyItems.StopTabProperties.TextRendoringMode);
+                          FChromeTabControlPropertyItems.StopTabProperties.TextRenderingMode);
   end;
 
   procedure DrawImage(Images: TCustomImageList; ImageIndex: Integer; ImageRect: TRect; ChromeTabItemType: TChromeTabItemType);
@@ -1763,7 +1763,7 @@ begin
   Dst.FontAlpha := Font.Alpha;
   Dst.FontName := Font.Name;
   Dst.FontSize := Font.Size;
-  Dst.TextRendoringMode := Font.TextRendoringMode;
+  Dst.TextRenderingMode := Font.TextRenderingMode;
   if FontCreated then
     FreeAndNil(Font);
 
