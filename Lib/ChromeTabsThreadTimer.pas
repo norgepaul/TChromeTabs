@@ -23,8 +23,20 @@ unit ChromeTabsThreadTimer;
 
 interface
 
-uses
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  {$DEFINE MODERN_THREAD}
+{$ELSE}
   {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+  {$if CompilerVersion >= 18.0}
+    {$DEFINE MODERN_THREAD}
+  {$ENDIF}
+{$ENDIF}
+
+uses
+  {$IFDEF UNIT_SCOPE_NAMES}
   System.SysUtils,System.Classes,System.Types,System.Math,
   Vcl.Graphics,Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
   Vcl.Dialogs,
@@ -154,7 +166,7 @@ begin
     FTimerThread := TTimerThread.CreateTimerThread(Self);
     FTimerThread.FreeOnTerminate := FALSE;
 
-    {$if CompilerVersion >= 18.0}
+    {$ifdef MODERN_THREAD}
       FTimerThread.Start;
     {$else}
       FTimerThread.Resume;
