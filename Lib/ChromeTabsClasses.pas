@@ -117,8 +117,11 @@ type
   private
     // These dummy functions are required so we can implement an interface
 
+    {$IFDEF FPC}
     function QueryInterface({$IFDEF FPC_HAS_CONSTREF}constref{$ELSE}const{$ENDIF} iid : tguid;out obj) : longint;{$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
-    //function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
+    {$ELSE}
+    function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
+    {$ENDIF}
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;
   private
@@ -1492,8 +1495,11 @@ begin
   Result := (FImageIndex <> -1) or (FImageIndexOverlay <> -1);
 end;
 
+{$IFDEF FPC}
 function TChromeTab.QueryInterface({$IFDEF FPC_HAS_CONSTREF}constref{$ELSE}const{$ENDIF} iid : tguid;out obj) : longint;{$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
-//QueryInterface(const IID: TGUID; out Obj): HResult;
+{$ELSE}
+function TChromeTab.QueryInterface(const IID: TGUID; out Obj): HResult;
+{$ENDIF}
 begin
   // Do nothing
   Result := 0;
