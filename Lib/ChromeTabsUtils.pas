@@ -26,18 +26,34 @@ interface
 {.$DEFINE USE_PNGIMAGE} // <-- Enable this define if you want to use an external
                         //     copy of pngImage in Delphi 2008 or earlier
 
-uses
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ELSE}
   {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+ {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
+    {$DEFINE GRAPHUTILS_HAS_SCALE_FUNCTION}
+ {$ifend}
+{$ENDIF}
+
+uses
+  {$IFDEF UNIT_SCOPE_NAMES}
   System.SysUtils,System.Classes,System.Types,System.Math,
   Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
   WinApi.Windows, WinApi.Messages,WinApi.ActiveX,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils,Classes,Math,
+  SysUtils,Math,
   Controls,ExtCtrls,Forms,GraphUtil,ImgList,
   Windows,Messages,ActiveX,
   Graphics,
-  {$ifend}
+  Classes, // for FPC Classes must be listed after Windows
+  {$ENDIF}
+
+  {$IFDEF FPC}
+  Win32Extra,
+  {$ENDIF}
 
   {$IFDEF USE_PNGIMAGE}
   pngImage,
@@ -54,19 +70,19 @@ function ColorBetween(const ColorA, ColorB: TColor; const Percent: Integer): TCo
 function IntegerBetween(const IntA, IntB: Integer; const Percent: Integer): Integer;
 function SingleBetween(const SingA, SingB: Single; const Percent: Integer): Single;
 procedure PaintControlToCanvas(SrcControl: TControl; TargetCanvas: TCanvas);
-procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; X, Y: Integer);
+procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; X, Y: Integer);
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
 function ChromeTabStatesToString(States: TChromeTabStates): String;
 function RectToGPRectF(ARect: TRect): TGPRectF;
 function RectToGPRect(ARect: TRect): TGPRect;
 function PointToGPPoint(Pt: TPoint): TGPPoint;
 function IconToGPImage(Icon: TIcon): TGPImage;
-function BitmapToGPBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap): TGPBitmap;
+function BitmapToGPBitmap(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap): TGPBitmap;
 function GeneratePolygon(ControlRect: TRect; const PolygonPoints: Array of TPoint; Orientation: TTabOrientation): TPolygon;
-function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; Alpha: Byte): TForm;
+function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; Alpha: Byte): TForm;
 procedure SetTabClipRegionFromPolygon(GPGraphics: TGPGraphics; Polygon: TPolygon; CombineMode: TCombineMode);
-procedure ClearBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
-procedure ScaleImage(Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
+procedure ClearBitmap(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap);
+procedure ScaleImage(Bitmap, ScaledBitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
 procedure EnableControlAndChildren(Control: TWinControl; DoEnable: Boolean);
 procedure SaveComponentToStream(AComponent: TComponent; AStream: TStream);
 procedure ReadComponentFromStream(AComponent: TComponent; AStream: TStream);
@@ -77,8 +93,8 @@ function HorzFlipPolygon(ParentRect: TRect; Polygon: TPolygon): TPolygon;
 function RectHeight(Rect: TRect): Integer;
 function RectWidth(Rect: TRect): Integer;
 function RectInflate(ARect: TRect; Value: Integer): TRect;
-procedure BitmapTo32BitBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
-procedure SetColorAlpha(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; AColor: TColor; NewAlpha: Byte);
+procedure BitmapTo32BitBitmap(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap);
+procedure SetColorAlpha(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; AColor: TColor; NewAlpha: Byte);
 function TransformRect(StartRect, EndRect: TRect; CurrentTicks, EndTicks: Cardinal; EaseType: TChromeTabsEaseType): TRect;
 function CalculateEase(CurrentTime, StartValue, ChangeInValue, Duration: Real; EaseType: TChromeTabsEaseType): Real; overload;
 function CalculateEase(StartPos, EndPos, PositionPct: Real; EaseType: TChromeTabsEaseType): Real; overload;
@@ -412,7 +428,7 @@ begin
   Result := Rect.Right - Rect.Left;
 end;
 
-procedure ClearBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
+procedure ClearBitmap(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap);
 var
   Graphics: TGPGraphics;
   Brush: TGPBrush;
@@ -433,14 +449,15 @@ begin
   end;
 end;
 
-procedure ScaleImage(Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
-{$if CompilerVersion < 18.0}
+procedure ScaleImage(Bitmap, ScaledBitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
+
+{$ifndef GRAPHUTILS_HAS_SCALE_FUNCTION}
 var
   NewHeight, NewWidth: Integer;
 {$ifend}
 begin
-  {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
-    {$IF CompilerVersion >= 23.0}Vcl.{$IFEND}GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
+  {$ifdef GRAPHUTILS_HAS_SCALE_FUNCTION} //{$IFDEF DELPHI2006_UP}
+    {$IFDEF UNIT_SCOPE_NAMES}Vcl.{$IFEND}GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
   {$else}
     NewWidth := Round(Bitmap.Width * ScaleFactor);
     NewHeight := Round(Bitmap.Height * ScaleFactor);
@@ -563,7 +580,7 @@ begin
   Result := TGPImage.Create(TStreamAdapter.Create(MemStream, soOwned));
 end;
 
-function BitmapToGPBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap): TGPBitmap;
+function BitmapToGPBitmap(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap): TGPBitmap;
 var
   MemStream: TMemoryStream;
 begin
@@ -584,7 +601,7 @@ end;
 {$IFDEF USE_PNGIMAGE}
 function ImageListToTGPImage(ImageList: TCustomImageList; ImageIndex: Integer): TGPImage;
 var
-  Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+  Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
   PNGObject: {$IF CompilerVersion >= 28}TPNGImage{$ELSE}TPNGObject{$IFEND};
   Stream: TStream;
 begin
@@ -592,7 +609,7 @@ begin
   try
     PNGObject := {$IF CompilerVersion >= 28}TPNGImage{$ELSE}TPNGObject{$IFEND}.Create;
     try
-      Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+      Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
       try
         ImageList.GetBitmap(ImageIndex, Bitmap);
 
@@ -632,7 +649,7 @@ begin
 end;
 {$ENDIF}
 
-procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; X, Y: Integer);
+procedure CopyControlToBitmap(AWinControl: TWinControl; Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; X, Y: Integer);
 var
  SrcDC: HDC;
 begin
@@ -744,7 +761,7 @@ begin
   end;
 end;
 
-procedure BitmapTo32BitBitmap(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap);
+procedure BitmapTo32BitBitmap(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap);
 var
   PNGBitmap: TGPBitmap;
   BitmapHandle: HBITMAP;
@@ -777,7 +794,7 @@ begin
   end;
 end;
 
-procedure SetColorAlpha(Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; AColor: TColor; NewAlpha: Byte);
+procedure SetColorAlpha(Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; AColor: TColor; NewAlpha: Byte);
 var
   Row, Col: integer;
   p: PRGBQuad;
@@ -820,7 +837,7 @@ end;
 
 // Thanks to Anders Melander for the transparent form tutorial
 // (http://melander.dk/articles/alphasplash2/2/)
-function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; Alpha: Byte): TForm;
+function CreateAlphaBlendForm(AOwner: TComponent; Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap; Alpha: Byte): TForm;
 var
   BlendFunction: TBlendFunction;
   BitmapPos: TPoint;

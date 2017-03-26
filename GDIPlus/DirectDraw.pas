@@ -67,6 +67,12 @@ unit DirectDraw;
 
 interface
 
+{$IFNDEF FPC}
+  {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+{$ENDIF}
+
 {$I DirectX.inc}
 
 ////////////////////////////////////////////////////////////////////////
@@ -146,11 +152,11 @@ interface
 (*$HPPEMIT '#include "dvp.h"' *)
 
 uses
-  {$IF CompilerVersion >= 23.0}
+  {$IFDEF UNIT_SCOPE_NAMES}
   WinApi.Windows
   {$ELSE}
   Windows
-  {$ifend}
+  {$ENDIF}
   ;
   
 (*==========================================================================;
@@ -1275,7 +1281,7 @@ type
     function GetAvailableVidMem(const lpDDSCaps: TDDSCaps2;
         out lpdwTotal, lpdwFree: DWORD): HResult; stdcall;
     (*** Added in the V4 Interface ***)
-    function GetSurfaceFromDC(hdc: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC;
+    function GetSurfaceFromDC(hdc: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC;
         out lpDDS4: IDirectDrawSurface4): HResult; stdcall;
     function RestoreAllSurfaces: HResult; stdcall;
     function TestCooperativeLevel: HResult; stdcall;
@@ -1324,7 +1330,7 @@ type
     function GetAvailableVidMem(const lpDDSCaps: TDDSCaps2;
         out lpdwTotal, lpdwFree: DWORD): HResult; stdcall;
     (*** Added in the V4 Interface ***)
-    function GetSurfaceFromDC(hdc: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC;
+    function GetSurfaceFromDC(hdc: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC;
         out lpDDS: IDirectDrawSurface7): HResult; stdcall;
     function RestoreAllSurfaces: HResult; stdcall;
     function TestCooperativeLevel: HResult; stdcall;
@@ -1412,7 +1418,7 @@ type
     function IsLost: HResult; stdcall;
     function Lock(lpDestRect: PRect; out lpDDSurfaceDesc:
         TDDSurfaceDesc; dwFlags: DWORD; hEvent: THandle): HResult; stdcall;
-    function ReleaseDC(hDC: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
+    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC): HResult; stdcall;
     function _Restore: HResult; stdcall;
     function SetClipper(lpDDClipper: IDirectDrawClipper): HResult; stdcall;
     function SetColorKey(dwFlags: DWORD; lpDDColorKey: PDDColorKey) :
@@ -1473,7 +1479,7 @@ type
     function Lock(lpDestRect: PRect;
         out lpDDSurfaceDesc: TDDSurfaceDesc; dwFlags: DWORD;
         hEvent: THandle): HResult; stdcall;
-    function ReleaseDC(hDC: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
+    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC): HResult; stdcall;
     function _Restore: HResult; stdcall;
     function SetClipper(lpDDClipper: IDirectDrawClipper): HResult; stdcall;
     function SetColorKey(dwFlags: DWORD; lpDDColorKey: PDDColorKey) :
@@ -1534,7 +1540,7 @@ type
     function Lock(lpDestRect: PRect;
         out lpDDSurfaceDesc: TDDSurfaceDesc; dwFlags: DWORD;
         hEvent: THandle): HResult; stdcall;
-    function ReleaseDC(hDC: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
+    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
     function _Restore: HResult; stdcall;
     function SetClipper(lpDDClipper: IDirectDrawClipper): HResult; stdcall;
     function SetColorKey(dwFlags: DWORD; lpDDColorKey: PDDColorKey) :
@@ -1600,7 +1606,7 @@ type
     function Lock(lpDestRect: PRect;
         out lpDDSurfaceDesc: TDDSurfaceDesc2; dwFlags: DWORD;
         hEvent: THandle): HResult; stdcall;
-    function ReleaseDC(hDC: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
+    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC): HResult; stdcall;
     function _Restore: HResult; stdcall;
     function SetClipper(lpDDClipper: IDirectDrawClipper): HResult; stdcall;
     function SetColorKey(dwFlags: DWORD; lpDDColorKey: PDDColorKey) :
@@ -1671,7 +1677,7 @@ type
     function Lock(lpDestRect: PRect;
         out lpDDSurfaceDesc: TDDSurfaceDesc2; dwFlags: DWORD;
         hEvent: THandle): HResult; stdcall;
-    function ReleaseDC(hDC: {$IF CompilerVersion >= 23.0}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
+    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC): HResult; stdcall;
     function _Restore: HResult; stdcall;
     function SetClipper(lpDDClipper: IDirectDrawClipper): HResult; stdcall;
     function SetColorKey(dwFlags: DWORD; lpDDColorKey: PDDColorKey) :

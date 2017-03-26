@@ -68,6 +68,20 @@ unit ChromeTabs;
 
 // - Demo includes look and feel editor and GUI access to all tab properties and features
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  {$DEFINE ADDITIONAL_MOUSE_EVENTS}
+  {$DEFINE EXPLICIT_DRAW_STATE}
+{$ELSE}
+  {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+  {$if CompilerVersion >= 18.0}
+    {$DEFINE ADDITIONAL_MOUSE_EVENTS}
+    {$DEFINE EXPLICIT_DRAW_STATE}
+  {$ENDIF}
+{$ENDIF}
+
 interface
 
 { TODO -cImprovement : Selective invalidation of tabs }
@@ -77,18 +91,23 @@ interface
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 uses
-  {$IF CompilerVersion >= 23.0}
+  {$IFDEF UNIT_SCOPE_NAMES}
   System.SysUtils,System.Classes,System.Types,System.Math,
   Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
   Vcl.Dialogs,Vcl.Menus,
   WinApi.Windows, WinApi.Messages,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils,Classes,Math,
+  SysUtils,Math,
   Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,Menus,
   Windows,Messages,
   Graphics,
+  Classes, // for FPC Classes must be listed after Windows
   {$ifend}
+
+  {$IFDEF FPC}
+  LMessages,
+  {$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -198,8 +217,8 @@ type
     FDragTabObject: IDragTabObject;
     FActiveDragTabObject: IDragTabObject;
 
-    FCanvasBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
-    FBackgroundBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+    FCanvasBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
+    FBackgroundBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
     FTabPopupMenu: TPopupMenu;
     FImages: TCustomImageList;
     FImagesOverlay: TCustomImageList;
@@ -331,7 +350,9 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure WndProc(var Message: TMessage); override;
     procedure SetBiDiMode(Value: TBiDiMode); override;
+    {$IFNDEF LCL}
     procedure CreateWindowHandle(const Params: TCreateParams); override;
+    {$ENDIF}
 
     // Virtual
     procedure DoOnActiveTabChanged(ATab: TChromeTab); virtual;
@@ -516,7 +537,7 @@ type
     property OnResize;
     property TabOrder;
 
-    {$if CompilerVersion >= 18.0}
+    {$ifdef ADDITIONAL_MOUSE_EVENTS}
     property OnMouseEnter;
     property OnMouseLeave;
     {$ifend}
@@ -654,7 +675,7 @@ procedure TCustomChromeTabs.CMMouseEnter(var Msg: TMessage);
 begin
   FCancelTabSmartResizeTimer.Enabled := FALSE;
 
-  {$if CompilerVersion >= 18.0}
+  {$ifdef ADDITIONAL_MOUSE_EVENTS}
   if Assigned(OnMouseEnter) then
     OnMouseEnter(Self);
   {$ifend}
@@ -700,7 +721,7 @@ procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
   //SetControlDrawStates(TRUE);
 
-  {$if CompilerVersion >= 18.0}
+  {$ifdef ADDITIONAL_MOUSE_EVENTS}
   if Assigned(OnMouseLeave) then
     OnMouseLeave(Self);
   {$ifend}
@@ -768,6 +789,27 @@ end;
 procedure TCustomChromeTabs.AfterConstruction;
 begin
   inherited;
+
+  {$IFDEF LCL}
+  // Set the intial scroll position
+  ScrollOffset := 0;
+
+  // Fix the draw states
+  if FAddButtonControl.DrawState = dsUnknown then
+    FAddButtonControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  if FScrollButtonLeftControl.DrawState = dsUnknown then
+    FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  if FScrollButtonRightControl.DrawState = dsUnknown then
+    FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  SetControlDrawStates(TRUE);
+
+  // Make sure we reset all the control positions
+  AddState(stsControlPositionsInvalidated);
+  AddState(stsFirstPaint);
+  {$ENDIF}
 
   FControlConstructed := TRUE;
 end;
@@ -1482,10 +1524,10 @@ begin
                                   csCaptureMouse];
 
   // Canvas Bitmaps
-  FCanvasBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FCanvasBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FCanvasBmp.PixelFormat := pf32Bit;
 
-  FBackgroundBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FBackgroundBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FBackgroundBmp.PixelFormat := pf32bit;
 
   // Options
@@ -2139,7 +2181,7 @@ const
 var
   DragControl: TWinControl;
   DragCanvas: TGPGraphics;
-  Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+  Bitmap, ScaledBitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
   TempRect: TRect;
   TabTop, ControlTop, TabEndX, BorderOffset: Integer;
   ActualDragDisplay: TChromeTabDragDisplay;
@@ -2179,7 +2221,7 @@ begin
         FDragTabObject.DragFormOffset := Point(Round(BiDiX * FOptions.DragDrop.DragControlImageResizeFactor),
                                                Round(FDragTabObject.DragCursorOffset.Y * FOptions.DragDrop.DragControlImageResizeFactor));
 
-      Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+      Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
       try
         TabTop := 0;
         ControlTop := 0;
@@ -2294,7 +2336,7 @@ begin
           FreeAndNil(DragCanvas);
         end;
 
-        ScaledBitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+        ScaledBitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
         try
           // Scale the image
           if ActualDragDisplay = ddTab then
@@ -2332,6 +2374,7 @@ begin
   end;
 end;
 
+{$IFNDEF LCL}
 procedure TCustomChromeTabs.CreateWindowHandle(const Params: TCreateParams);
 begin
   inherited;
@@ -2358,6 +2401,7 @@ begin
   // Force a redraw
   Redraw;
 end;
+{$ENDIF}
 
 procedure TCustomChromeTabs.DoOnButtonAddClick;
 var
@@ -2644,7 +2688,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    {$IF CompilerVersion >= 23.0}System.{$IFEND}SysUtils.DeleteFile(Filename);
+    {$IFDEF UNIT_SCOPE_NAMES}System.{$IFEND}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -2659,7 +2703,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    {$IF CompilerVersion >= 23.0}System.{$IFEND}SysUtils.DeleteFile(Filename);
+    {$IFDEF UNIT_SCOPE_NAMES}System.{$IFEND}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -3470,7 +3514,7 @@ begin
   // Make sure the active tab is drawn correctly
   if ActiveTab <> nil then
   begin
-    TabControls[ActiveTabIndex].SetDrawState({$IF CompilerVersion >= 18.0}TDrawState.{$IFEND}dsActive, 0, {$IF CompilerVersion >= 18.0}TChromeTabsEaseType.{$IFEND}ttNone, True);
+    TabControls[ActiveTabIndex].SetDrawState({$IFDEF EXPLICIT_DRAW_STATE}TDrawState.{$IFEND}dsActive, 0, {$IFDEF EXPLICIT_DRAW_STATE}TChromeTabsEaseType.{$IFEND}ttNone, True);
   end;
 end;
 
@@ -3751,8 +3795,9 @@ begin
 end;
 
 procedure TCustomChromeTabs.WMPaint(var Message: TWMPaint);
+
 begin
-  PaintHandler(Message);
+  PaintHandler({$IFDEF FPC}TLMPaint(Message){$ELSE}Message{$ENDIF});
 end;
 
 procedure TCustomChromeTabs.WMWindowPosChanged(var Message: TWMWindowPosChanged);
