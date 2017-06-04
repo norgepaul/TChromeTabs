@@ -1,4 +1,10 @@
-TChromeTabs 2.4 Beta
+TChromeTabs 2.5 Beta
+
+04-05-2017
+Update: DX10.2 Tokyo Support
+
+
+TChromeTabs 2.4
 
 15-06-2016
 Fixed: CanvasSmoothingMode exception in 10.1 Berlin. Property moved to public.
