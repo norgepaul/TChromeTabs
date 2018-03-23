@@ -2,7 +2,7 @@ unit ChromeTabs;
 
 // Version 2.3
 //
-// TChromeTabs - A Chome Tab component for Delphi 6-XE8 that includes ALL the
+// TChromeTabs - A Chome Tab component for Delphi that includes ALL the
 //               features seen in the Google Chrome tab control along with
 //               much, much more.
 //
@@ -88,7 +88,7 @@ uses
   Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs, Menus,
   Windows, Messages,
   Graphics,
-  {$IFEND}
+  {$ifend}
 
   GDIPObj, GDIPAPI,
 

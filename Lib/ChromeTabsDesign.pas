@@ -14,7 +14,7 @@ uses
   Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs, Menus,
   Windows, Messages,
   Graphics,
-  {$ifend}
+  {$IFEND}
   DesignIntf, DesignEditors, VclEditors, StrEdit, ColnEdit,
   ChromeTabs;
 

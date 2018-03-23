@@ -577,7 +577,6 @@ begin
   ChromeTabs.DoOnAfterDrawItem(TabCanvas, ControlRect, itAddButton, -1);
 end;
 
-
 { TChromeTabControl }
 
 constructor TChromeTabControl.Create(ChromeTabs: IChromeTabs; TabInterface: IChromeTab);

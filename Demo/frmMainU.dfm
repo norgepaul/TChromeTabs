@@ -784,7 +784,7 @@ object frmMain: TfrmMain
       Top = 29
       Width = 1017
       Height = 519
-      ActivePage = TabSheetDebug
+      ActivePage = TabSheetOptions
       Align = alClient
       TabOrder = 1
       object TabSheetOptions: TTabSheet
@@ -800,7 +800,7 @@ object frmMain: TfrmMain
           object Label1: TLabel
             Left = 11
             Top = 22
-            Width = 25
+            Width = 24
             Height = 15
             Caption = 'Text:'
             FocusControl = edtTabCaption
@@ -961,7 +961,7 @@ object frmMain: TfrmMain
               object Label12: TLabel
                 Left = 108
                 Top = 20
-                Width = 83
+                Width = 82
                 Height = 15
                 Caption = 'Max Tab Width:'
                 FocusControl = edtMaxTabWidth
@@ -969,7 +969,7 @@ object frmMain: TfrmMain
               object lblMinTabWidth: TLabel
                 Left = 8
                 Top = 21
-                Width = 82
+                Width = 81
                 Height = 15
                 Caption = 'Min Tab Width:'
                 FocusControl = edtMinTabWidth
@@ -977,7 +977,7 @@ object frmMain: TfrmMain
               object Label17: TLabel
                 Left = 278
                 Top = 20
-                Width = 120
+                Width = 119
                 Height = 15
                 Caption = 'Tab/Container Offsets:'
                 FocusControl = edtTabOffsetTop
@@ -985,7 +985,7 @@ object frmMain: TfrmMain
               object Label51: TLabel
                 Left = 283
                 Top = 131
-                Width = 115
+                Width = 114
                 Height = 15
                 Caption = 'Tab Content Margins:'
                 FocusControl = edtTabOffsetTop
@@ -993,7 +993,7 @@ object frmMain: TfrmMain
               object Label71: TLabel
                 Left = 108
                 Top = 76
-                Width = 67
+                Width = 66
                 Height = 15
                 Caption = 'Tab Overlap:'
                 FocusControl = edtTabOverlap
@@ -1233,7 +1233,7 @@ object frmMain: TfrmMain
                 object Label54: TLabel
                   Left = 227
                   Top = 50
-                  Width = 77
+                  Width = 76
                   Height = 15
                   Caption = 'Vertical Offset:'
                   FocusControl = edtModifiedGlowVerticalOffset
@@ -1265,7 +1265,7 @@ object frmMain: TfrmMain
                 object Label78: TLabel
                   Left = 163
                   Top = 2
-                  Width = 114
+                  Width = 113
                   Height = 15
                   Caption = 'Animation Ease Type:'
                   FocusControl = cbModifiedGlowEaseType
@@ -1398,7 +1398,7 @@ object frmMain: TfrmMain
                   object Label9: TLabel
                     Left = 233
                     Top = -1
-                    Width = 77
+                    Width = 76
                     Height = 15
                     Caption = 'Vertical Offset:'
                     FocusControl = edtMouseGlowVerticalOffset
@@ -1800,7 +1800,7 @@ object frmMain: TfrmMain
               object Label14: TLabel
                 Left = 8
                 Top = 20
-                Width = 157
+                Width = 156
                 Height = 15
                 Caption = 'Default Text Rendering Mode:'
                 FocusControl = cbFontHintMode
@@ -1907,7 +1907,7 @@ object frmMain: TfrmMain
               object Label67: TLabel
                 Left = 13
                 Top = 99
-                Width = 90
+                Width = 89
                 Height = 15
                 Caption = 'Trimming Mode:'
                 FocusControl = cbTextTrimming
@@ -1923,7 +1923,7 @@ object frmMain: TfrmMain
               object Label52: TLabel
                 Left = 174
                 Top = 51
-                Width = 101
+                Width = 100
                 Height = 15
                 Caption = 'Vertical Alignment:'
                 FocusControl = cbTextVerticalAlignment
@@ -2032,7 +2032,7 @@ object frmMain: TfrmMain
                 object Label42: TLabel
                   Left = 235
                   Top = 56
-                  Width = 77
+                  Width = 76
                   Height = 15
                   Caption = 'Vertical Offset:'
                   FocusControl = edtCloseButtonVerticalOffset
@@ -2174,7 +2174,7 @@ object frmMain: TfrmMain
                 object Label37: TLabel
                   Left = 235
                   Top = 56
-                  Width = 77
+                  Width = 76
                   Height = 15
                   Caption = 'Vertical Offset:'
                   FocusControl = edtAddButtonVerticalOffset
@@ -2342,7 +2342,7 @@ object frmMain: TfrmMain
                   object Label40: TLabel
                     Left = 235
                     Top = 20
-                    Width = 77
+                    Width = 76
                     Height = 15
                     Caption = 'Vertical Offset:'
                     FocusControl = edtLeftScrollButtonsVerticalOffset
@@ -2426,7 +2426,7 @@ object frmMain: TfrmMain
                   object Label58: TLabel
                     Left = 235
                     Top = 20
-                    Width = 77
+                    Width = 76
                     Height = 15
                     Caption = 'Vertical Offset:'
                     FocusControl = edtRightScrollButtonVerticalOffset
@@ -2863,7 +2863,7 @@ object frmMain: TfrmMain
               object Label70: TLabel
                 Left = 164
                 Top = 76
-                Width = 157
+                Width = 156
                 Height = 15
                 Caption = 'Default Movement Ease Type:'
                 FocusControl = cbMovementEaseType
@@ -2871,7 +2871,7 @@ object frmMain: TfrmMain
               object Label72: TLabel
                 Left = 164
                 Top = 127
-                Width = 124
+                Width = 123
                 Height = 15
                 Caption = 'Default Style Ease Type:'
                 FocusControl = cbStyleEaseType
@@ -3007,7 +3007,7 @@ object frmMain: TfrmMain
                 object Label73: TLabel
                   Left = 24
                   Top = 103
-                  Width = 116
+                  Width = 115
                   Height = 15
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbMoveTabEase
@@ -3087,7 +3087,7 @@ object frmMain: TfrmMain
                 object Label75: TLabel
                   Left = 24
                   Top = 103
-                  Width = 116
+                  Width = 115
                   Height = 15
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbDeleteTabEase
@@ -3167,7 +3167,7 @@ object frmMain: TfrmMain
                 object Label77: TLabel
                   Left = 24
                   Top = 103
-                  Width = 116
+                  Width = 115
                   Height = 15
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbAddTabEase
@@ -3532,15 +3532,15 @@ object frmMain: TfrmMain
         object Label7: TLabel
           Left = 16
           Top = 8
-          Width = 117
+          Width = 116
           Height = 15
           Caption = 'Tab Container Height:'
           FocusControl = edtTabHeight
         end
         object Label5: TLabel
-          Left = 30
+          Left = 31
           Top = 88
-          Width = 90
+          Width = 89
           Height = 15
           Alignment = taRightJustify
           Caption = 'Glass Height Top'
@@ -3733,7 +3733,7 @@ object frmMain: TfrmMain
           end
         end
       end
-      object TabSheetDebug: TTabSheet
+      object tabDebug: TTabSheet
         Caption = 'Debug'
         ImageIndex = 2
         object Panel10: TPanel

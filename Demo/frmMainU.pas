@@ -57,7 +57,7 @@ uses
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog, System.Actions;
+  ChromeTabsLog;
 
 type
   TFormType = {$IFDEF USE_GLASS_FORM}
@@ -381,7 +381,7 @@ type
     TabSheet7: TTabSheet;
     TabSheet8: TTabSheet;
     TabSheet9: TTabSheet;
-    TabSheetDebug: TTabSheet;
+    tabDebug: TTabSheet;
     TabSheetEvents: TTabSheet;
     TabSheetGeneral: TTabSheet;
     TabSheetLookAndFeel: TTabSheet;
@@ -1474,7 +1474,7 @@ begin
 
       ChromeTabs.BiDiMode := TBiDiMode(cbBidiMode.ItemIndex);
 
-      ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRende3ringMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
+      ChromeTabs.LookAndFeel.Tabs.DefaultFont.TextRenderingMode := TTextRenderingHint(cbFontHintMode.ItemIndex);
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.Name := cbFontName.Text;
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.Size := edtFontSize.Value;
       ChromeTabs.LookAndFeel.Tabs.DefaultFont.Color := edtFontColor.Selected;
