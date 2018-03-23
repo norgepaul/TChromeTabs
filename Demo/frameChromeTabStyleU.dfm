@@ -414,7 +414,7 @@ object frameChromeTabStyle: TframeChromeTabStyle
         Top = 4
         Width = 82
         Height = 13
-        Caption = 'Rendoring Mode:'
+        Caption = 'Rendering Mode:'
         FocusControl = cbFontHintMode
       end
       object Label8: TLabel

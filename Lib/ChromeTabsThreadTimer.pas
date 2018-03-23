@@ -25,15 +25,15 @@ interface
 
 uses
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,System.Types,System.Math,
-  Vcl.Graphics,Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
-  Vcl.Dialogs,
-  WinApi.Windows, WinApi.Messages,WinApi.MMSystem;
+  System.SysUtils, System.Classes, System.Types, System.Math,
+  Vcl.Graphics, Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil,
+  Vcl.ImgList, Vcl.Dialogs,
+  WinApi.Windows, WinApi.Messages, WinApi.MMSystem;
   {$ELSE}
-  SysUtils,Classes,Math,
-  Graphics,Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
-  Windows,Messages,MMSystem;
-  {$ifend}
+  SysUtils, Classes, Math,
+  Graphics, Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs,
+  Windows, Messages, MMSystem;
+  {$IFEND}
 
 type
   TThreadTimer = class;
@@ -154,11 +154,11 @@ begin
     FTimerThread := TTimerThread.CreateTimerThread(Self);
     FTimerThread.FreeOnTerminate := FALSE;
 
-    {$if CompilerVersion >= 18.0}
+    {$IF CompilerVersion >= 18.0}
       FTimerThread.Start;
     {$else}
       FTimerThread.Resume;
-    {$ifend}
+    {$IFEND}
   end;
 
   FRunning := TRUE;

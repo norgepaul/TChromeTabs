@@ -28,16 +28,16 @@ interface
 
 uses
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils,System.Classes,System.Types,System.Math,
-  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
-  WinApi.Windows, WinApi.Messages,WinApi.ActiveX,
+  System.SysUtils, System.Classes, System.Types, System.Math,
+  Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil, Vcl.ImgList,
+  WinApi.Windows, WinApi.Messages, WinApi.ActiveX,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils,Classes,Math,
-  Controls,ExtCtrls,Forms,GraphUtil,ImgList,
-  Windows,Messages,ActiveX,
+  SysUtils, Classes, Math,
+  Controls, ExtCtrls, Forms, GraphUtil, ImgList,
+  Windows, Messages, ActiveX,
   Graphics,
-  {$ifend}
+  {$IFEND}
 
   {$IFDEF USE_PNGIMAGE}
   pngImage,
@@ -434,14 +434,14 @@ begin
 end;
 
 procedure ScaleImage(Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap; ScaleFactor: Real);
-{$if CompilerVersion < 18.0}
+{$IF CompilerVersion < 18.0}
 var
   NewHeight, NewWidth: Integer;
-{$ifend}
+{$IFEND}
 begin
-  {$if CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
+  {$IF CompilerVersion >= 18.0} //{$IFDEF DELPHI2006_UP}
     {$IF CompilerVersion >= 23.0}Vcl.{$IFEND}GraphUtil.ScaleImage(Bitmap, ScaledBitmap, ScaleFactor);
-  {$else}
+  {$ELSE}
     NewWidth := Round(Bitmap.Width * ScaleFactor);
     NewHeight := Round(Bitmap.Height * ScaleFactor);
 
@@ -449,7 +449,7 @@ begin
     ScaledBitmap.Height := NewHeight;
 
     ScaledBitmap.Canvas.StretchDraw(Rect(0, 0, NewWidth, NewHeight), Bitmap);
-  {$ifend}
+  {$IFEND}
 end;
 
 procedure SetTabClipRegionFromPolygon(GPGraphics: TGPGraphics; Polygon: TPolygon; CombineMode: TCombineMode);
