@@ -19,4 +19,4 @@ https://github.com/DomenicoMammola/TChromeTabs
 
 ## Contribution
 
-We love active participants and pull requests from everyone. If wat to try just read this guidance (CONTRIBUTING.md)[./CONTRIBUTING.md]
+We love active participants and pull requests from everyone. If wat to try just read this guidance [CONTRIBUTING.md](./CONTRIBUTING.md)
