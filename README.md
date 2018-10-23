@@ -16,3 +16,7 @@ TChromeTabs has been tested under Delphi 6 and Delphi 10.2 Tokyo. To install:
 Current maintained Freepascal/Lazarus-version of TChromeTabs.
 
 https://github.com/DomenicoMammola/TChromeTabs
+
+## Contribution
+
+We love active participants and pull requests from everyone. If wat to try just read this guidance [CONTRIBUTING.md](./CONTRIBUTING.md)
