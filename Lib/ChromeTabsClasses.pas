@@ -1691,7 +1691,7 @@ begin
   if GetChromeTabInterface <> nil then
     case Action of
       //cnDeleting: GetChromeTabInterface.Invalidate;
-      cnAdded: GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcAdded);
+      {$IF CompilerVersion >= 23.0}TCollectionNotification.{$IFEND}cnAdded: GetChromeTabInterface.DoOnChange(TChromeTab(Item), tcAdded);
     end;
 end;
 

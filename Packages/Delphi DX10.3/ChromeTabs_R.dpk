@@ -1,0 +1,50 @@
+package ChromeTabs_R;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE RELEASE}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Chrome Tabs'}
+{$LIBVERSION '260'}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  vclimg;
+
+contains
+  ChromeTabsUtils in '..\..\Lib\ChromeTabsUtils.pas',
+  ChromeTabsTypes in '..\..\Lib\ChromeTabsTypes.pas',
+  ChromeTabsThreadTimer in '..\..\Lib\ChromeTabsThreadTimer.pas',
+  ChromeTabs in '..\..\Lib\ChromeTabs.pas',
+  ChromeTabsControls in '..\..\Lib\ChromeTabsControls.pas',
+  ChromeTabsClasses in '..\..\Lib\ChromeTabsClasses.pas',
+  ChromeTabsGlassForm in '..\..\Lib\ChromeTabsGlassForm.pas',
+  DirectDraw in '..\..\GDIPlus\DirectDraw.pas',
+  GDIPAPI in '..\..\GDIPlus\GDIPAPI.pas',
+  GDIPObj in '..\..\GDIPlus\GDIPObj.pas';
+
+end.

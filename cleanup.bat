@@ -12,6 +12,8 @@ del /q /s *.ico
 del /q /s *.otares
 del /q /s *.stat
 
+rmdir /Q /S Demo\__history
+rmdir /Q /S Demo\__recovery
 rmdir /Q /S Lib\__history
 rmdir /Q /S Lib\__recovery
 rmdir /Q /S GDIPlus\__history
@@ -20,6 +22,10 @@ rmdir /Q /S "Packages\Delphi DX10\__history"
 rmdir /Q /S "Packages\Delphi DX10\__recovery"
 rmdir /Q /S "Packages\Delphi DX10.1\__history"
 rmdir /Q /S "Packages\Delphi DX10.1\__recovery"
+rmdir /Q /S "Packages\Delphi DX10.2\__history"
+rmdir /Q /S "Packages\Delphi DX10.2\__recovery"
+rmdir /Q /S "Packages\Delphi DX10.3\__history"
+rmdir /Q /S "Packages\Delphi DX10.3\__recovery"
 
 rmdir /Q /S bin
 pause
