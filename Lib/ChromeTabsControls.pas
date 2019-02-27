@@ -491,13 +491,13 @@ begin
     Result := TChromeTabPolygons.Create;
 
     Result.AddPolygon(BidiPolygon(
-                      NewPolygon(BidiControlRect, [Point(7, RectHeight(BidiControlRect)),
-                                 Point(4, RectHeight(BidiControlRect) - 2),
-                                 Point(0, 2),
-                                 Point(1, 0),
-                                 Point(RectWidth(BidiControlRect) - 7, 0),
-                                 Point(RectWidth(BidiControlRect) - 4, 2),
-                                 Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - 2),
+                      NewPolygon(BidiControlRect, [Point(MulDiv(7,Screen.PixelsPerInch,96), RectHeight(BidiControlRect)),
+                                 Point(MulDiv(4,Screen.PixelsPerInch,96), RectHeight(BidiControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
+                                 Point(0, MulDiv(2,Screen.PixelsPerInch,96)),
+                                 Point(MulDiv(1,Screen.PixelsPerInch,96), 0),
+                                 Point(RectWidth(BidiControlRect) - MulDiv(7,Screen.PixelsPerInch,96), 0),
+                                 Point(RectWidth(BidiControlRect) - MulDiv(4,Screen.PixelsPerInch,96), MulDiv(2,Screen.PixelsPerInch,96)),
+                                 Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
                                  Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect))],
                       ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                       GetButtonBrush,
@@ -505,27 +505,27 @@ begin
 
     if ChromeTabs.GetOptions.Display.AddButton.ShowPlusSign then
     begin
-      LeftOffset := (ChromeTabs.GetOptions.Display.AddButton.Width div 2) - 4;
-      TopOffset := (ChromeTabs.GetOptions.Display.AddButton.Height div 2) - 4;
+      LeftOffset := (ChromeTabs.GetOptions.Display.AddButton.Width div 2) - MulDiv(4,Screen.PixelsPerInch,96);
+      TopOffset := (ChromeTabs.GetOptions.Display.AddButton.Height div 2) - MulDiv(4,Screen.PixelsPerInch,96);
 
       Result.AddPolygon(BidiPolygon(
                         NewPolygon(Rect(BidiControlRect.Left + LeftOffset,
                                    BidiControlRect.Top + TopOffset,
                                    BidiControlRect.Right - LeftOffset,
                                    BidiControlRect.Bottom - TopOffset),
-                                  [Point(0, 3),
-                                   Point(3, 3),
-                                   Point(3, 0),
-                                   Point(6, 0),
-                                   Point(6, 3),
-                                   Point(9, 3),
-                                   Point(9, 6),
-                                   Point(6, 6),
-                                   Point(6, 9),
-                                   Point(3, 9),
-                                   Point(3, 6),
-                                   Point(0, 6),
-                                   Point(0, 3)],
+                                  [Point(0, MulDiv(3,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(3,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(3,Screen.PixelsPerInch,96), 0),
+                                   Point(MulDiv(6,Screen.PixelsPerInch,96), 0),
+                                   Point(MulDiv(6,Screen.PixelsPerInch,96), MulDiv(3,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(9,Screen.PixelsPerInch,96), MulDiv(3,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(9,Screen.PixelsPerInch,96), MulDiv(6,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(6,Screen.PixelsPerInch,96), MulDiv(6,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(6,Screen.PixelsPerInch,96), MulDiv(9,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(9,Screen.PixelsPerInch,96)),
+                                   Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(6,Screen.PixelsPerInch,96)),
+                                   Point(0, MulDiv(6,Screen.PixelsPerInch,96)),
+                                   Point(0, MulDiv(3,Screen.PixelsPerInch,96))],
                                ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                GetSymbolBrush,
                                GetSymbolPen);
@@ -558,7 +558,6 @@ end;
 constructor TAddButtonControl.Create(ChromeTabs: IChromeTabs);
 begin
   inherited Create(ChromeTabs);
-
   FControlType := itAddButton;
 
   FButtonStyle := ChromeTabs.GetLookAndFeel.AddButton.Button.Normal;
@@ -813,16 +812,16 @@ begin
     Result := TChromeTabPolygons.Create;
 
     Result.AddPolygon(NewPolygon(BidiControlRect, [Point(0, RectHeight(ControlRect)),
-                                       Point(4, RectHeight(ControlRect) - 3),
-                                       Point(12, 3),
-                                       Point(13, 2),
-                                       Point(14, 1),
-                                       Point(16, 0),
-                                       Point(RectWidth(ControlRect) - 16, 0),
-                                       Point(RectWidth(ControlRect) - 14, 1),
-                                       Point(RectWidth(ControlRect) - 13, 2),
-                                       Point(RectWidth(ControlRect) - 12, 3),
-                                       Point(RectWidth(ControlRect) - 4, RectHeight(ControlRect) - 3),
+                                       Point(MulDiv( 4, Screen.PixelsPerInch, 96 ), RectHeight(ControlRect) - MulDiv( 3, Screen.PixelsPerInch, 96 )),
+                                       Point(MulDiv( 12, Screen.PixelsPerInch, 96 ), MulDiv( 3, Screen.PixelsPerInch, 96 )),
+                                       Point(MulDiv( 13, Screen.PixelsPerInch, 96 ), MulDiv( 2, Screen.PixelsPerInch, 96 )),
+                                       Point(MulDiv( 14, Screen.PixelsPerInch, 96 ), MulDiv( 1, Screen.PixelsPerInch, 96 )),
+                                       Point(MulDiv( 16, Screen.PixelsPerInch, 96 ), 0),
+                                       Point(RectWidth(ControlRect) - MulDiv( 16, Screen.PixelsPerInch, 96 ), 0),
+                                       Point(RectWidth(ControlRect) - MulDiv( 14, Screen.PixelsPerInch, 96 ), MulDiv( 1, Screen.PixelsPerInch, 96 )),
+                                       Point(RectWidth(ControlRect) - MulDiv( 13, Screen.PixelsPerInch, 96 ), MulDiv( 2, Screen.PixelsPerInch, 96 )),
+                                       Point(RectWidth(ControlRect) - MulDiv( 12, Screen.PixelsPerInch, 96 ), MulDiv( 3, Screen.PixelsPerInch, 96 )),
+                                       Point(RectWidth(ControlRect) - MulDiv( 4, Screen.PixelsPerInch, 96 ), RectHeight(ControlRect) - MulDiv( 3, Screen.PixelsPerInch, 96 )),
                                        Point(RectWidth(ControlRect), RectHeight(ControlRect))],
                                  ChromeTabs.GetOptions.Display.Tabs.Orientation),
                       GetTabBrush,
@@ -958,7 +957,7 @@ begin
 
   if CloseButtonVisible then
   begin
-    RightOffset := CloseButtonRect.Left - 1
+    RightOffset := CloseButtonRect.Left - MulDiv(1,Screen.PixelsPerInch,96)
   end
   else
   begin
@@ -1034,14 +1033,14 @@ begin
                         LeftOffset + ImageWidth,
                         (ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2)) + ImageHeight);
 
-      LeftOffset := LeftOffset + ImageWidth + 1;
+      LeftOffset := LeftOffset + ImageWidth + MulDiv(1,Screen.PixelsPerInch,96);
     end;
   end;
 
   // Does the Text fit?
   TextVisible := ((not ChromeTab.GetPinned) or
                   (ChromeTabs.GetOptions.Display.Tabs.ShowPinnedTabText)) and
-                 (RightOffset - LeftOffset >= 5);
+                 (RightOffset - LeftOffset >= MulDiv(5,Screen.PixelsPerInch,96));
 
   if TextVisible then
   begin
@@ -1619,10 +1618,10 @@ begin
       drLeft:
         begin
           Result.AddPolygon(BidiPolygon(
-                            NewPolygon(BidiControlRect, [Point(3, RectHeight(ControlRect) div 2),
-                                                     Point(RectWidth(ControlRect) - 3, 2),
-                                                     Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) - 2),
-                                                     Point(3, RectHeight(ControlRect) div 2)],
+                            NewPolygon(BidiControlRect, [Point(MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2),
+                                                     Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), MulDiv(2,Screen.PixelsPerInch,96)),
+                                                     Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
+                                                     Point(MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2)],
                                        ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                        GetSymbolBrush,
                                        GetSymbolPen);
@@ -1631,10 +1630,10 @@ begin
       drRight:
         begin
           Result.AddPolygon(BidiPolygon(
-                            NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2),
-                                                     Point(3, 2),
-                                                     Point(3, RectHeight(ControlRect) - 2),
-                                                     Point(RectWidth(ControlRect) - 3, RectHeight(ControlRect) div 2)],
+                            NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2),
+                                                     Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(2,Screen.PixelsPerInch,96)),
+                                                     Point(MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
+                                                     Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2)],
                                        ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                        GetSymbolBrush,
                                        GetSymbolPen);
