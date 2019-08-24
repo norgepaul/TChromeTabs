@@ -1,4 +1,4 @@
-TChromeTabs 2.5 Beta
+TChromeTabs 2.5
 
 22-11-2018
 Update: DX10.3 Rio Support
