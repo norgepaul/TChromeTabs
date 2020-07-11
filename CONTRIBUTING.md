@@ -3,7 +3,7 @@
 This project is open for any contribution activities. We love active participants and pull requests from everyone. Delphi developers is not used to participate in the Open Source projects. They have the impression that it is too difficult for them, but is not so much. Try with us and you can fall in love with new experience. You can build your professional skills and allow great companies to get to know you.
 
 We will be more than happy if you:
-* correct any grammatical errors in this file, in the REDME.md or in any file
+* correct any grammatical errors in this file, in the README.md, or in any file
 * add new demos into the demos folder, 
 * improve project documentation (using XML Documentation inside source PAS files or adding MD files into doc folder)
 * fix bugs (for first time we recommend to look on the issues with "good first time issues" label).
