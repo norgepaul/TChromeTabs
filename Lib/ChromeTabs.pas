@@ -442,6 +442,7 @@ type
     procedure SetDefaultLookAndFeel;
     procedure SetDefaultOptions;
     procedure InvalidateAllControls;
+    function ScaledPixels(pPixels: Integer): Integer;
 
     property ActiveDragTabObject: IDragTabObject read FActiveDragTabObject;
     property TabControls[Index: Integer]: TChromeTabControl read GetTabControl;
@@ -2683,6 +2684,11 @@ begin
   end;
 end;
 
+function TCustomChromeTabs.ScaledPixels(pPixels: Integer): Integer;
+begin
+  Result := MulDiv(pPixels, {$if CompilerVersion > 31}Self.FCurrentPPI{$else}Screen.PixelsPerInch{$ifend}, 96);
+end;
+
 function TCustomChromeTabs.ScrollButtonLeftVisible: Boolean;
 begin
   Result := ((ScrollingActive) or (not FOptions.Scrolling.AutoHideButtons)) and
@@ -4086,29 +4092,29 @@ end;
 
 procedure TCustomChromeTabs.SetDefaultOptions;
 begin
-  FOptions.Display.CloseButton.Offsets.Vertical := MulDiv( 6, Screen.PixelsPerInch, 96 );
-  FOptions.Display.CloseButton.Offsets.Horizontal := MulDiv( 2, Screen.PixelsPerInch, 96 );
-  FOptions.Display.CloseButton.Height := MulDiv( 14, Screen.PixelsPerInch, 96 );
-  FOptions.Display.CloseButton.Width := MulDiv( 14, Screen.PixelsPerInch, 96 );
+  FOptions.Display.CloseButton.Offsets.Vertical2 := 6;
+  FOptions.Display.CloseButton.Offsets.Horizontal2 := 2;
+  FOptions.Display.CloseButton.Height2 := 14;
+  FOptions.Display.CloseButton.Width2 := 14;
   FOptions.Display.CloseButton.AutoHide := True;
   FOptions.Display.CloseButton.Visibility := bvAll;
-  FOptions.Display.CloseButton.AutoHideWidth := MulDiv( 20, Screen.PixelsPerInch, 96 );
-  FOptions.Display.CloseButton.CrossRadialOffset := MulDiv( 4, Screen.PixelsPerInch, 96 );
-  FOptions.Display.AddButton.Offsets.Vertical := MulDiv( 10, Screen.PixelsPerInch, 96 );
-  FOptions.Display.AddButton.Offsets.Horizontal := MulDiv( 2, Screen.PixelsPerInch, 96 );
-  FOptions.Display.AddButton.HorizontalOffsetFloating := MulDiv( -3, Screen.PixelsPerInch, 96 );
-  FOptions.Display.AddButton.Height := MulDiv( 14, Screen.PixelsPerInch, 96 );
-  FOptions.Display.AddButton.Width := MulDiv( 31, Screen.PixelsPerInch, 96 );
+  FOptions.Display.CloseButton.AutoHideWidth2 := 20;
+  FOptions.Display.CloseButton.CrossRadialOffset2 := 4;
+  FOptions.Display.AddButton.Offsets.Vertical2 := 10;
+  FOptions.Display.AddButton.Offsets.Horizontal2 := 2;
+  FOptions.Display.AddButton.HorizontalOffsetFloating2 := -3;
+  FOptions.Display.AddButton.Height2 := 14;
+  FOptions.Display.AddButton.Width2 := 31;
   FOptions.Display.AddButton.ShowPlusSign := False;
   FOptions.Display.AddButton.Visibility := avRightFloating;
-  FOptions.Display.ScrollButtonLeft.Offsets.Vertical := MulDiv( 10, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonLeft.Offsets.Horizontal := MulDiv( 1, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonLeft.Height := MulDiv( 15, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonLeft.Width := MulDiv( 15, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonRight.Offsets.Vertical := MulDiv( 10, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonRight.Offsets.Horizontal := MulDiv( 1, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonRight.Height := MulDiv( 15, Screen.PixelsPerInch, 96 );
-  FOptions.Display.ScrollButtonRight.Width := MulDiv( 15, Screen.PixelsPerInch, 96 );
+  FOptions.Display.ScrollButtonLeft.Offsets.Vertical2 := 10;
+  FOptions.Display.ScrollButtonLeft.Offsets.Horizontal2 := 1;
+  FOptions.Display.ScrollButtonLeft.Height2 := 15;
+  FOptions.Display.ScrollButtonLeft.Width2 := 15;
+  FOptions.Display.ScrollButtonRight.Offsets.Vertical2 := 10;
+  FOptions.Display.ScrollButtonRight.Offsets.Horizontal2 := 1;
+  FOptions.Display.ScrollButtonRight.Height2 := 15;
+  FOptions.Display.ScrollButtonRight.Width2 := 15;
   FOptions.Display.TabModifiedGlow.Style := msRightToLeft;
   FOptions.Display.TabModifiedGlow.VerticalOffset := MulDiv( -6, Screen.PixelsPerInch, 96 );
   FOptions.Display.TabModifiedGlow.Height := MulDiv( 30, Screen.PixelsPerInch, 96 );
@@ -4139,10 +4145,10 @@ begin
   FOptions.Display.TabContainer.OverlayButtons := True;
   FOptions.Display.TabContainer.PaddingLeft := 0;
   FOptions.Display.TabContainer.PaddingRight := 0;
-  FOptions.Display.TabMouseGlow.Offsets.Vertical := 0;
-  FOptions.Display.TabMouseGlow.Offsets.Horizontal := 0;
-  FOptions.Display.TabMouseGlow.Height := MulDiv( 200, Screen.PixelsPerInch, 96 );
-  FOptions.Display.TabMouseGlow.Width := MulDiv( 200, Screen.PixelsPerInch, 96 );
+  FOptions.Display.TabMouseGlow.Offsets.Vertical2 := 0;
+  FOptions.Display.TabMouseGlow.Offsets.Horizontal2 := 0;
+  FOptions.Display.TabMouseGlow.Height2 := 200;
+  FOptions.Display.TabMouseGlow.Width2 := 200;
   FOptions.Display.TabMouseGlow.Visible := True;
   FOptions.DragDrop.DragType := dtBetweenContainers;
   FOptions.DragDrop.DragOutsideImageAlpha := 220;

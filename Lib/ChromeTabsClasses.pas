@@ -1186,6 +1186,7 @@ type
     procedure Invalidate;
     function GetComponentState: TComponentState;
     function IsDragging: Boolean;
+    function ScaledPixels(pPixels: Integer): Integer;
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;

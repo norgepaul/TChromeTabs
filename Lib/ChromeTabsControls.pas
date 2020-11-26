@@ -180,7 +180,7 @@ type
     procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
-    function GetCloseButonRect: TRect;
+    function GetCloseButtonRect: TRect;
     function GetCloseButtonCrossRect: TRect;
     procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
     function GetTabWidthByContent: Integer;
@@ -617,7 +617,7 @@ begin
 
   if CloseButtonVisible then
   begin
-    CloseRect := ChromeTabs.ScrollRect(BidiRect(GetCloseButonRect));
+    CloseRect := ChromeTabs.ScrollRect(BidiRect(GetCloseButtonRect));
 
     if PtInRect(CloseRect, Point(MouseX, MouseY)) then
     begin
@@ -952,7 +952,7 @@ var
   LeftOffset, RightOffset, ImageWidth, ImageHeight: Integer;
 begin
   // Get the close button rect
-  CloseButtonRect := GetCloseButonRect;
+  CloseButtonRect := GetCloseButtonRect;
   CloseButtonCrossRect := GetCloseButtonCrossRect;
 
   if CloseButtonVisible then
