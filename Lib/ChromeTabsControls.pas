@@ -1006,10 +1006,10 @@ begin
 
   if OverlayImageVisible then
   begin
-    if ChromeTabs.GetImagesOverlay.Width > ChromeTabs.GetImagesOverlay.Width then
+    if ChromeTabs.GetImagesOverlay.Width > ChromeTabs.GetImages.Width then
       ImageWidth := ChromeTabs.GetImagesOverlay.Width;
 
-    if ChromeTabs.GetImagesOverlay.Height > ChromeTabs.GetImagesOverlay.Height then
+    if ChromeTabs.GetImagesOverlay.Height > ChromeTabs.GetImages.Height then
       ImageHeight := ChromeTabs.GetImagesOverlay.Height;
   end;
 
