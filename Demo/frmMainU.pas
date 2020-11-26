@@ -27,15 +27,6 @@ interface
   {$DEFINE USE_GLASS_FORM}
 {$ifend}
 
-// Fix to workaround compiler bug that re-introduces System.Actions
-{$if CompilerVersion >= 28.0}
-  {$DEFINE USE_SYSTEM_ACTIONS}
-{$endif}
-
-{$if CompilerVersion >= 29.0}
-  {$DEFINE USE_SYSTEM_IMAGELIST}
-{$ifend}
-
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, ComCtrls, Spin, Contnrs,
@@ -47,17 +38,12 @@ uses
 
   {$IFDEF USE_GLASS_FORM}ChromeTabsGlassForm,{$ENDIF}
 
-(* NOTE - If you get "unit xxx is redeclared errors", comment out the IFDEF lines
-   below. This is due to a Delphi bug with the {$if CompilerVersion .. } *)
-  {$IFDEF USE_SYSTEM_ACTIONS}System.Actions,{$ENDIF}
-  {$IFDEF USE_SYSTEM_IMAGELIST}System.ImageList,{$ENDIF}
-
   ChromeTabs,
   ChromeTabsTypes,
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog;
+  ChromeTabsLog, Actions, ImageList;
 
 type
   TFormType = {$IFDEF USE_GLASS_FORM}

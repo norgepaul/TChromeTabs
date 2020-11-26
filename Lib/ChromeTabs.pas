@@ -955,7 +955,7 @@ begin
   Result := FScrollWidth - RectWidth(TabContainerRect);
 
   if (Tabs.Count > 1) and (FScrollWidth > 0) then
-    Result := Result + FOptions.Display.Tabs.TabOverlap;
+    Result := Result + ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
   if Result < 0 then
     Result := 0;
@@ -1167,7 +1167,7 @@ begin
      (FOptions.DragDrop.DragType <> dtNone) then
   begin
     DragRect := BidiRect(TabContainerRect);
-    RectInflate(DragRect, FOptions.DragDrop.DragOutsideDistancePixels);
+    RectInflate(DragRect, ScaledPixels(FOptions.DragDrop.DragOutsideDistancePixels));
 
     Result := PtInRect(DragRect, Point(MouseX, MouseY));
   end;
@@ -1229,17 +1229,17 @@ begin
           LastVisibleTabIndex := GetLastVisibleTabIndex(Tabs.Count - 2); // Skip the new tab
 
           if LastVisibleTabIndex <> -1 then
-            NewTabLeft := TabControls[LastVisibleTabIndex].ControlRect.Right - FOptions.Display.Tabs.TabOverlap
+            NewTabLeft := TabControls[LastVisibleTabIndex].ControlRect.Right - ScaledPixels(FOptions.Display.Tabs.TabOverlap)
           else
-            NewTabLeft := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
+            NewTabLeft := ScaledPixels(FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft);
 
           SetMovementAnimation(FOptions.Animation.MovementAnimations.TabAdd);
 
           SetControlPosition(NewTabControl,
                              Rect(NewTabLeft,
-                                  FOptions.Display.Tabs.OffsetTop,
-                                  NewTabLeft + FOptions.Animation.MinimumTabAnimationWidth,
-                                  ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                                  ScaledPixels(FOptions.Display.Tabs.OffsetTop),
+                                  NewTabLeft + ScaledPixels(FOptions.Animation.MinimumTabAnimationWidth),
+                                  ClientHeight - ScaledPixels(FOptions.Display.Tabs.OffsetBottom)),
                                   FALSE);
         end;
 
@@ -1330,7 +1330,7 @@ begin
                 begin
                   AddState(stsAnimatingCloseTab);
 
-                  TabControls[ATab.Index].SetWidth(FOptions.Animation.MinimumTabAnimationWidth,
+                  TabControls[ATab.Index].SetWidth(ScaledPixels(FOptions.Animation.MinimumTabAnimationWidth),
                                                    FOptions.Animation.GetMovementAnimationTime(FOptions.Animation.MovementAnimations.TabDelete),
                                                    FOptions.Animation.GetMovementAnimationEaseType(FOptions.Animation.MovementAnimations.TabDelete));
                 end;
@@ -1578,7 +1578,7 @@ begin
   begin
     FScrollDirection := ScrollDirection;
 
-    IncValue := FOptions.Scrolling.ScrollStep;
+    IncValue := ScaledPixels(FOptions.Scrolling.ScrollStep);
 
     if BiDiMode in BidiRightToLeftTabModes then
       IncValue := -IncValue;
@@ -1665,7 +1665,7 @@ begin
         AddState(stsControlPositionsInvalidated);
         AddState(stsAnimatingMovement);
 
-        if RectWidth(TabControls[i].ControlRect) <= FOptions.Animation.MinimumTabAnimationWidth then
+        if RectWidth(TabControls[i].ControlRect) <= ScaledPixels(FOptions.Animation.MinimumTabAnimationWidth) then
         begin
           DeleteTab(i);
 
@@ -2020,10 +2020,10 @@ begin
          (FMouseDownHitTest.HitTestArea = htTab) and
          (FMouseButton = mbLeft) and
          (HitTestResult.HitTestArea = htTab) and
-         ((FMouseDownPoint.X >= x + FOptions.DragDrop.DragStartPixels) or
-          (FMouseDownPoint.X <= x - FOptions.DragDrop.DragStartPixels) or
-          (FMouseDownPoint.Y >= y + FOptions.DragDrop.DragStartPixels) or
-          (FMouseDownPoint.Y <= y - FOptions.DragDrop.DragStartPixels)) then
+         ((FMouseDownPoint.X >= x + ScaledPixels(FOptions.DragDrop.DragStartPixels)) or
+          (FMouseDownPoint.X <= x - ScaledPixels(FOptions.DragDrop.DragStartPixels)) or
+          (FMouseDownPoint.Y >= y + ScaledPixels(FOptions.DragDrop.DragStartPixels)) or
+          (FMouseDownPoint.Y <= y - ScaledPixels(FOptions.DragDrop.DragStartPixels))) then
       begin
         AllowDrag := TRUE;
 
@@ -2053,7 +2053,7 @@ begin
           ScreenPoint := Mouse.CursorPos;
 
           // Find the VCL Control under the cursor
-          CursorWinControl := FindChromeTabsControlWithinRange(ScreenPoint, FOptions.DragDrop.DragOutsideDistancePixels);
+          CursorWinControl := FindChromeTabsControlWithinRange(ScreenPoint, ScaledPixels(FOptions.DragDrop.DragOutsideDistancePixels));
 
           Accept := FALSE;
 
@@ -2265,9 +2265,9 @@ begin
 
           if ActualDragDisplay in [ddControl, ddTabAndControl] then
           begin
-            BorderPen := TGPPen.Create(MakeGDIPColor(FOptions.DragDrop.DragFormBorderColor, 255), FOptions.DragDrop.DragFormBorderWidth);
+            BorderPen := TGPPen.Create(MakeGDIPColor(FOptions.DragDrop.DragFormBorderColor, 255), ScaledPixels(FOptions.DragDrop.DragFormBorderWidth));
             try
-              BorderOffset := FOptions.DragDrop.DragFormBorderWidth div 2;
+              BorderOffset := ScaledPixels(FOptions.DragDrop.DragFormBorderWidth) div 2;
 
               case FOptions.Display.Tabs.Orientation of
                 toTop:
@@ -2706,8 +2706,8 @@ var
   RightOffset, LeftOffset, ScrollDelta: Integer;
 begin
   // Add the left offset first
-  LeftOffset := FOptions.Display.TabContainer.PaddingLeft;
-  RightOffset := CorrectedClientWidth - FOptions.Display.TabContainer.PaddingRight;
+  LeftOffset := ScaledPixels(FOptions.Display.TabContainer.PaddingLeft);
+  RightOffset := CorrectedClientWidth - ScaledPixels(FOptions.Display.TabContainer.PaddingRight);
 
   // Clear Rects
   SetControlPosition(FScrollButtonLeftControl, Rect(0,0,0,0), FALSE);
@@ -2719,13 +2719,13 @@ begin
      (FOptions.Scrolling.ScrollButtons in [csbLeft, csbLeftAndRight]) then
   begin
     SetControlPosition(FScrollButtonLeftControl,
-                       Rect(LeftOffset + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
-                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical,
-                            LeftOffset + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + FOptions.Display.ScrollButtonLeft.Width,
-                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height),
+                       Rect(LeftOffset + ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Vertical),
+                            LeftOffset + ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + FOptions.Display.ScrollButtonLeft.Width),
+                            ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height)),
                             FALSE);
 
-    Inc(LeftOffset, RectWidth(FScrollButtonLeftControl.ControlRect) + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + 1);
+    Inc(LeftOffset, RectWidth(FScrollButtonLeftControl.ControlRect) + ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + 1));
   end;
 
   // If the scroll Right button is visible on the left, calculate it's rect
@@ -2733,25 +2733,25 @@ begin
      (FOptions.Scrolling.ScrollButtons in [csbLeft]) then
   begin
     SetControlPosition(FScrollButtonRightControl,
-                       Rect(LeftOffset + FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
-                            FOptions.Display.ScrollButtonRight.Offsets.Vertical,
-                            LeftOffset + FOptions.Display.ScrollButtonRight.Offsets.Horizontal + FOptions.Display.ScrollButtonRight.Width,
-                            FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height),
+                       Rect(LeftOffset + ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Vertical),
+                            LeftOffset + ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Horizontal + FOptions.Display.ScrollButtonRight.Width),
+                            ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height)),
                        FALSE);
 
-    Inc(LeftOffset, RectWidth(FScrollButtonRightControl.ControlRect) + FOptions.Display.ScrollButtonRight.Offsets.Horizontal + 1);
+    Inc(LeftOffset, RectWidth(FScrollButtonRightControl.ControlRect) + ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Horizontal + 1));
   end;
 
   if FOptions.Display.AddButton.Visibility in [avLeft] then
   begin
     SetControlPosition(FAddButtonControl,
-                       Rect(LeftOffset + FOptions.Display.AddButton.Offsets.Horizontal,
-                            FOptions.Display.AddButton.Offsets.Vertical,
-                            LeftOffset + FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.AddButton.Width,
-                            FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
+                       Rect(LeftOffset + ScaledPixels(FOptions.Display.AddButton.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.AddButton.Offsets.Vertical),
+                            LeftOffset + ScaledPixels(FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.AddButton.Width),
+                            ScaledPixels(FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical)),
                        FALSE);
 
-    Inc(LeftOffset, FOptions.Display.AddButton.Width + FOptions.Display.AddButton.Offsets.Horizontal + 1);
+    Inc(LeftOffset, ScaledPixels(FOptions.Display.AddButton.Width + FOptions.Display.AddButton.Offsets.Horizontal + 1));
   end;
 
   // Calculate the right offset
@@ -2759,42 +2759,42 @@ begin
      (FOptions.Scrolling.ScrollButtons in [csbRight, csbLeftAndRight]) then
   begin
     SetControlPosition(FScrollButtonRightControl,
-                       Rect(RightOffset - FOptions.Display.ScrollButtonRight.Width - FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
-                            FOptions.Display.ScrollButtonRight.Offsets.Vertical,
-                            RightOffset - FOptions.Display.ScrollButtonRight.Offsets.Horizontal,
-                            FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height),
+                       Rect(RightOffset - ScaledPixels(FOptions.Display.ScrollButtonRight.Width) - ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Vertical),
+                            RightOffset - ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Vertical + FOptions.Display.ScrollButtonRight.Height)),
                        FALSE);
 
-    Dec(RightOffset, RectWidth(FScrollButtonRightControl.ControlRect) + 1 + FOptions.Display.ScrollButtonRight.Offsets.Horizontal);
+    Dec(RightOffset, RectWidth(FScrollButtonRightControl.ControlRect) + ScaledPixels(FOptions.Display.ScrollButtonRight.Offsets.Horizontal + 1));
   end;
 
   if (ScrollButtonLeftVisible) and
      (FOptions.Scrolling.ScrollButtons in [csbRight]) then
   begin
     SetControlPosition(FScrollButtonLeftControl,
-                       Rect(RightOffset - FOptions.Display.ScrollButtonLeft.Width - FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
-                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical,
-                            RightOffset - FOptions.Display.ScrollButtonLeft.Offsets.Horizontal,
-                            FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height),
+                       Rect(RightOffset - ScaledPixels(FOptions.Display.ScrollButtonLeft.Width) - ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Vertical),
+                            RightOffset - ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Horizontal),
+                            ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Vertical + FOptions.Display.ScrollButtonLeft.Height)),
                        FALSE);
 
-    Dec(RightOffset, RectWidth(FScrollButtonLeftControl.ControlRect) + 1 + FOptions.Display.ScrollButtonLeft.Offsets.Horizontal);
+    Dec(RightOffset, RectWidth(FScrollButtonLeftControl.ControlRect) + ScaledPixels(FOptions.Display.ScrollButtonLeft.Offsets.Horizontal + 1));
   end;
 
   if (FOptions.Display.AddButton.Visibility = avRightFixed) or
      (FOptions.Display.AddButton.Visibility = avRightFloating) then
   begin
-    FMaxAddButtonRight := RightOffset - FOptions.Display.AddButton.Width - FOptions.Display.AddButton.Offsets.Horizontal;
+    FMaxAddButtonRight := RightOffset - ScaledPixels(FOptions.Display.AddButton.Width) - ScaledPixels(FOptions.Display.AddButton.Offsets.Horizontal);
 
     if FOptions.Display.AddButton.Visibility <> avRightFloating then
       SetControlPosition(FAddButtonControl,
                          Rect(FMaxAddButtonRight,
-                              FOptions.Display.AddButton.Offsets.Vertical,
-                              RightOffset - FOptions.Display.AddButton.Offsets.Horizontal,
-                              FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
+                              ScaledPixels(FOptions.Display.AddButton.Offsets.Vertical),
+                              RightOffset - ScaledPixels(FOptions.Display.AddButton.Offsets.Horizontal),
+                              ScaledPixels(FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical)),
                          FALSE);
 
-    Dec(RightOffset, FOptions.Display.AddButton.Width + 1 + FOptions.Display.AddButton.Offsets.Horizontal);
+    Dec(RightOffset, ScaledPixels(FOptions.Display.AddButton.Width + 1 + FOptions.Display.AddButton.Offsets.Horizontal));
   end;
 
   // Remaining space is the TabContainerRect
@@ -2804,27 +2804,27 @@ begin
   begin
     ScrollDelta := FScrollOffset;
 
-    FScrollOffset := FScrollOffset - RectWidth(FClosedTabRect) + FOptions.Display.Tabs.TabOverlap;
+    FScrollOffset := FScrollOffset - RectWidth(FClosedTabRect) + ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
     if FScrollOffset < 0 then
       FScrollOffset := 0;
 
     ScrollDelta := ScrollDelta - FScrollOffset;
 
-    FTabContainerRect := Rect(LeftOffset + FOptions.Display.Tabs.OffsetLeft,
-                              FOptions.Display.Tabs.OffsetTop,
+    FTabContainerRect := Rect(LeftOffset + ScaledPixels(FOptions.Display.Tabs.OffsetLeft),
+                              ScaledPixels(FOptions.Display.Tabs.OffsetTop),
                               FClosedTabRect.Right - ScrollDelta,
-                              ClientHeight - FOptions.Display.Tabs.OffsetBottom);
+                              ClientHeight - ScaledPixels(FOptions.Display.Tabs.OffsetBottom));
 
     if ScrollDelta > 0 then
       RemoveState(stsEndTabDeleted);
   end
   else
   begin
-    FTabContainerRect := Rect(LeftOffset + FOptions.Display.Tabs.OffsetLeft,
-                              FOptions.Display.Tabs.OffsetTop,
-                              RightOffset - FOptions.Display.Tabs.OffsetRight,
-                              ClientHeight - FOptions.Display.Tabs.OffsetBottom);
+    FTabContainerRect := Rect(LeftOffset + ScaledPixels(FOptions.Display.Tabs.OffsetLeft),
+                              ScaledPixels(FOptions.Display.Tabs.OffsetTop),
+                              RightOffset - ScaledPixels(FOptions.Display.Tabs.OffsetRight),
+                              ClientHeight - ScaledPixels(FOptions.Display.Tabs.OffsetBottom));
   end;
 end;
 
@@ -2893,10 +2893,10 @@ function TCustomChromeTabs.GetTabWidthByContent(TabControl: TChromeTabControl): 
 begin
   Result := TabControl.GetTabWidthByContent;
 
-  if Result > FOptions.Display.Tabs.MaxWidth then
-    Result := FOptions.Display.Tabs.MaxWidth else
-  if Result < FOptions.Display.Tabs.MinWidth then
-    Result := FOptions.Display.Tabs.MinWidth;
+  if Result > ScaledPixels(FOptions.Display.Tabs.MaxWidth) then
+    Result := ScaledPixels(FOptions.Display.Tabs.MaxWidth) else
+  if Result < ScaledPixels(FOptions.Display.Tabs.MinWidth) then
+    Result := ScaledPixels(FOptions.Display.Tabs.MinWidth);
 
   DoOnSetTabWidth(TabControl, Result);
 end;
@@ -2932,17 +2932,17 @@ procedure TCustomChromeTabs.CalculateTabRects;
 
     if FOptions.Display.Tabs.ShowPinnedTabText then
     begin
-      TabClientWidth := RectWidth(TabClientRect) - FOptions.Display.Tabs.TabOverlap;
+      TabClientWidth := RectWidth(TabClientRect) - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
       // PinnedTabWidth := TabClientWidth; {Removed 03.09.2014}
     end
     else
     begin
-      PinnedTabWidth := VisiblePinnedTabCount * FOptions.Display.Tabs.PinnedWidth;
-      TabClientWidth := RectWidth(TabClientRect) - PinnedTabWidth - FOptions.Display.Tabs.TabOverlap;
+      PinnedTabWidth := VisiblePinnedTabCount * ScaledPixels(FOptions.Display.Tabs.PinnedWidth);
+      TabClientWidth := RectWidth(TabClientRect) - PinnedTabWidth - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
     end;
 
     if FDragTabControl <> nil then
-      TabClientWidth := TabClientWidth + FOptions.Display.Tabs.TabOverlap;
+      TabClientWidth := TabClientWidth + ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
     TabWidth := 0;
 
@@ -2961,15 +2961,15 @@ procedure TCustomChromeTabs.CalculateTabRects;
       TabEndSpace := TabClientWidth mod VisibleTabCount;
     end;
 
-    if TabWidth < FOptions.Display.Tabs.MinWidth then
+    if TabWidth < ScaledPixels(FOptions.Display.Tabs.MinWidth) then
     begin
-      TabWidth := FOptions.Display.Tabs.MinWidth;
+      TabWidth := ScaledPixels(FOptions.Display.Tabs.MinWidth);
       TabEndSpace := 0;
     end;
 
-    if TabWidth > FOptions.Display.Tabs.MaxWidth then
+    if TabWidth > ScaledPixels(FOptions.Display.Tabs.MaxWidth) then
     begin
-      TabWidth := FOptions.Display.Tabs.MaxWidth;
+      TabWidth := ScaledPixels(FOptions.Display.Tabs.MaxWidth);
 
       TabEndSpace := 0;
     end;
@@ -3012,13 +3012,13 @@ procedure TCustomChromeTabs.CalculateTabRects;
         // Set the position of the tabs
         SetControlPosition(TabControl,
                            Rect(TabLeft,
-                                FOptions.Display.Tabs.OffsetTop,
+                                ScaledPixels(FOptions.Display.Tabs.OffsetTop),
                                 TabLeft + TabWidth,
-                                ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                                ClientHeight - ScaledPixels(FOptions.Display.Tabs.OffsetBottom)),
                            TRUE);
       end;
 
-      TabLeft := TabLeft + TabWidth - FOptions.Display.Tabs.TabOverlap;
+      TabLeft := TabLeft + TabWidth - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
       FScrollWidth := TabLeft;
     end;
@@ -3053,16 +3053,16 @@ procedure TCustomChromeTabs.CalculateTabRects;
       if FOptions.Display.Tabs.TabWidthFromContent then
       begin
         if FDragTabControl <> nil then
-          DragTabWidth := GetTabWidthByContent(FDragTabControl) + FOptions.Display.Tabs.TabOverlap
+          DragTabWidth := GetTabWidthByContent(FDragTabControl) + ScaledPixels(FOptions.Display.Tabs.TabOverlap)
         else
           DragTabWidth := 0;
       end
       else
       begin
-        DragTabWidth := TabWidth + FOptions.Display.Tabs.TabOverlap;
+        DragTabWidth := TabWidth + ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
-        if DragTabWidth < FOptions.Display.Tabs.MinWidth then
-          DragTabWidth := FOptions.Display.Tabs.MinWidth;
+        if DragTabWidth < ScaledPixels(FOptions.Display.Tabs.MinWidth) then
+          DragTabWidth := ScaledPixels(FOptions.Display.Tabs.MinWidth);
       end;
 
       DragTabControl := FDragTabControl;
@@ -3077,8 +3077,8 @@ procedure TCustomChromeTabs.CalculateTabRects;
     begin
       DragCursorXOffset := FActiveDragTabObject.DragCursorOffset.X;
 
-      if DragCursorXOffset > DragTabWidth - FOptions.Display.Tabs.TabOverlap then
-        DragCursorXOffset := DragTabWidth - FOptions.Display.Tabs.TabOverlap;      
+      if DragCursorXOffset > DragTabWidth - ScaledPixels(FOptions.Display.Tabs.TabOverlap) then
+        DragCursorXOffset := DragTabWidth - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
       if not SameBidiTabMode(BiDiMode, FActiveDragTabObject.SourceControl.GetBidiMode) then
         DragCursorXOffset := -DragCursorXOffset;
@@ -3092,19 +3092,19 @@ procedure TCustomChromeTabs.CalculateTabRects;
         MaxRight := TabContainerRect.Right;
 
         if FOptions.Display.AddButton.Visibility = avRightFloating then
-          MaxRight := MaxRight + FOptions.Display.AddButton.Width + FOptions.Display.AddButton.Offsets.Horizontal;
+          MaxRight := MaxRight + ScaledPixels(FOptions.Display.AddButton.Width + FOptions.Display.AddButton.Offsets.Horizontal);
 
         if DragTabX + RectWidth(DragTabControl.ControlRect) > MaxRight then
           DragTabX := MaxRight - RectWidth(DragTabControl.ControlRect) else
-        if DragTabX < FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft then
-          DragTabX := FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft;
+        if DragTabX < ScaledPixels(FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft) then
+          DragTabX := ScaledPixels(FOptions.Display.Tabs.OffsetLeft + FOptions.Display.TabContainer.PaddingLeft);
       end;
 
       SetControlPosition(DragTabControl,
                          Rect(DragTabX,
-                              ControlRect.Top + FOptions.Display.Tabs.OffsetTop,
+                              ControlRect.Top + ScaledPixels(FOptions.Display.Tabs.OffsetTop),
                               DragTabX + DragTabWidth,
-                              ControlRect.Bottom - FOptions.Display.Tabs.OffsetBottom),
+                              ControlRect.Bottom - ScaledPixels(FOptions.Display.Tabs.OffsetBottom)),
                          FALSE);
     end;
 
@@ -3128,15 +3128,15 @@ procedure TCustomChromeTabs.CalculateTabRects;
          (DragTabControl.ControlRect.Left +
           ScrollOffset +
           (RectWidth(DragTabControl.ControlRect) div 2) +
-          (FOptions.Display.Tabs.TabOverlap div 2) < TabLeft + RectWidth(DragTabControl.ControlRect)) then
+          (ScaledPixels(FOptions.Display.Tabs.TabOverlap)  div 2) < TabLeft + RectWidth(DragTabControl.ControlRect)) then
       begin
         // If the Dock control is this tab set, insert the drag tab into the control
         if (ActiveDragTabObject.DockControl <> nil) and
            (ActiveDragTabObject.DockControl.GetControl = Self) then
         begin
           // Only shift the other tabs if the drag tab is visible
-          TabLeft := TabLeft + RectWidth(DragTabControl.ControlRect) - FOptions.Display.Tabs.TabOverlap;
-          FScrollWidth := FScrollWidth + RectWidth(DragTabControl.ControlRect) - FOptions.Display.Tabs.TabOverlap;
+          TabLeft := TabLeft + RectWidth(DragTabControl.ControlRect) - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
+          FScrollWidth := FScrollWidth + RectWidth(DragTabControl.ControlRect) - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
         end;
 
         // Do we need to hide the New Button?
@@ -3188,16 +3188,16 @@ procedure TCustomChromeTabs.CalculateTabRects;
               (FOptions.Display.Tabs.ShowPinnedTabText)) then
             TabWidth := GetTabWidthByContent(TabControl);
 
-          TabRight := TabLeft + TabWidth + ExtraTabWidth + FOptions.Display.Tabs.TabOverlap;
+          TabRight := TabLeft + TabWidth + ExtraTabWidth + ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
 //          if TabRight > FTabContainerRect.Right - FOptions.Display.Tabs.TabOverlap then
 //            TabRight := FTabContainerRect.Right - FOptions.Display.Tabs.TabOverlap;
 
           SetControlPosition(TabControl,
                              Rect(TabLeft - ExtraTabWidth,
-                                  FOptions.Display.Tabs.OffsetTop,
+                                  ScaledPixels(FOptions.Display.Tabs.OffsetTop),
                                   TabRight,
-                                  ClientHeight - FOptions.Display.Tabs.OffsetBottom),
+                                  ClientHeight - ScaledPixels(FOptions.Display.Tabs.OffsetBottom)),
                              TRUE);
 
           TabLeft := TabLeft + TabWidth + TabWidthAddition;
@@ -3220,7 +3220,7 @@ procedure TCustomChromeTabs.CalculateTabRects;
       // If we're dragging a pinned tab, we need to leave a space at the end of the pinned tabs
       if (PinnedTabs) and (ActiveDragTabObject.DragTab.Pinned) then
       begin
-        TabLeft := TabLeft + RectWidth(DragTabControl.ControlRect) - FOptions.Display.Tabs.TabOverlap;
+        TabLeft := TabLeft + RectWidth(DragTabControl.ControlRect) - ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 
         if Tabs.Count = GetPinnedTabCount  then
           FActiveDragTabObject.HideAddButton := FOptions.Display.AddButton.Visibility = avRightFloating;
@@ -3267,7 +3267,7 @@ begin
       end
       else
       begin
-        SetTabPositions(TabLeft, FOptions.Display.Tabs.PinnedWidth, 0, TRUE);
+        SetTabPositions(TabLeft, ScaledPixels(FOptions.Display.Tabs.PinnedWidth), 0, TRUE);
       end;
 
       SetTabPositions(TabLeft, FAdjustedTabWidth, FTabEndSpace, FALSE);
@@ -3276,15 +3276,15 @@ begin
     if FOptions.Display.AddButton.Visibility = avRightFloating then
     begin
       if GetVisibleTabCount(TRUE) = 0 then
-        AddButtonLeft := FOptions.Display.TabContainer.PaddingLeft
+        AddButtonLeft := ScaledPixels(FOptions.Display.TabContainer.PaddingLeft)
       else
       begin
         if HasState(stsEndTabDeleted) then
           AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].EndRect.Right +
-                         FOptions.Display.AddButton.HorizontalOffsetFloating
+                         ScaledPixels(FOptions.Display.AddButton.HorizontalOffsetFloating)
         else
           AddButtonLeft := TabControls[GetLastVisibleTabIndex(pred(FTabs.Count))].ControlRect.Right +
-                           FOptions.Display.AddButton.HorizontalOffsetFloating;
+                           ScaledPixels(FOptions.Display.AddButton.HorizontalOffsetFloating);
       end;
 
       if ((GetTabDisplayState <> tdNormal) and (not HasState(stsEndTabDeleted))) or
@@ -3294,9 +3294,9 @@ begin
 
       SetControlPosition(FAddButtonControl,
                          Rect(AddButtonLeft,
-                              FOptions.Display.AddButton.Offsets.Vertical,
-                              AddButtonLeft +FOptions.Display.AddButton.Width,
-                              FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical),
+                              ScaledPixels(FOptions.Display.AddButton.Offsets.Vertical),
+                              AddButtonLeft +ScaledPixels(FOptions.Display.AddButton.Width),
+                              ScaledPixels(FOptions.Display.AddButton.Height + FOptions.Display.AddButton.Offsets.Vertical)),
                          FALSE);
     end;
 
@@ -3311,7 +3311,7 @@ begin
     else
       TabLeft := TabControls[Tabs.Count - 1].ControlRect.Right;
 
-    TabLeft := FScrollWidth + FOptions.Display.Tabs.TabOverlap + FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.Tabs.OffsetLeft;
+    TabLeft := FScrollWidth + ScaledPixels(FOptions.Display.Tabs.TabOverlap + FOptions.Display.AddButton.Offsets.Horizontal + FOptions.Display.Tabs.OffsetLeft);
   finally
     // Reset the drag status now we're drawn everything
     if (HasState(stsCancellingDrag)) or
@@ -3612,16 +3612,16 @@ begin
        (FOptions.Scrolling.Enabled) and
        (FOptions.Scrolling.DragScroll) then
     begin
-      DoOnDebugLog('Drag - X: %d, Bidi Left: %d, Offset: %d', [X, BidiRect(FTabContainerRect).Left, FOptions.Scrolling.DragScrollOffset]);
+      DoOnDebugLog('Drag - X: %d, Bidi Left: %d, Offset: %d', [X, BidiRect(FTabContainerRect).Left, ScaledPixels(FOptions.Scrolling.DragScrollOffset)]);
 
       if //(X <= BidiRect(FTabContainerRect).Right) and
-         (X >= BidiRect(FTabContainerRect).Right - FOptions.Scrolling.DragScrollOffset) then
+         (X >= BidiRect(FTabContainerRect).Right - ScaledPixels(FOptions.Scrolling.DragScrollOffset)) then
       begin
         ScrollTabs(mdsRight);
       end else
 
       if //(X >= BidiRect(FTabContainerRect).Left) and
-         (X <= BidiRect(FTabContainerRect).Left + FOptions.Scrolling.DragScrollOffset) then
+         (X <= BidiRect(FTabContainerRect).Left + ScaledPixels(FOptions.Scrolling.DragScrollOffset)) then
       begin
         ScrollTabs(mdsLeft);
       end
@@ -3835,10 +3835,10 @@ var
     // Set the clip region while re're drawing the tabs if we're not
     // overlaying the buttons
     if FOptions.Display.TabContainer.OverlayButtons then
-      TabCanvas.SetClip(RectToGPRectF(BidiRect(Rect(FOptions.Display.Tabs.OffsetLeft,
-                                               FOptions.Display.Tabs.OffsetTop,
-                                               CorrectedClientWidth - FOptions.Display.Tabs.OffsetRight,
-                                               ClientHeight - FOptions.Display.Tabs.OffsetBottom))))
+      TabCanvas.SetClip(RectToGPRectF(BidiRect(Rect(ScaledPixels(FOptions.Display.Tabs.OffsetLeft),
+                                               ScaledPixels(FOptions.Display.Tabs.OffsetTop),
+                                               CorrectedClientWidth - ScaledPixels(FOptions.Display.Tabs.OffsetRight),
+                                               ClientHeight - ScaledPixels(FOptions.Display.Tabs.OffsetBottom)))))
     else
       TabCanvas.SetClip(RectToGPRectF(BidiRect(TabContainerRect)));
   end;
@@ -4045,7 +4045,7 @@ begin
     ScrollOffset := TabControls[Tab.Index].EndRect.Left else
 
   if TabControls[Tab.Index].EndRect.Right > TabContainerRect.Right + ScrollOffset then
-    ScrollOffset := TabControls[Tab.Index].EndRect.Right - RectWidth(TabContainerRect) + FOptions.Display.Tabs.TabOverlap;
+    ScrollOffset := TabControls[Tab.Index].EndRect.Right - RectWidth(TabContainerRect) + ScaledPixels(FOptions.Display.Tabs.TabOverlap);
 end;
 
 function TCustomChromeTabs.ScrollRect(ALeft, ATop, ARight, ABottom: Integer): TRect;
@@ -4092,48 +4092,48 @@ end;
 
 procedure TCustomChromeTabs.SetDefaultOptions;
 begin
-  FOptions.Display.CloseButton.Offsets.Vertical2 := 6;
-  FOptions.Display.CloseButton.Offsets.Horizontal2 := 2;
-  FOptions.Display.CloseButton.Height2 := 14;
-  FOptions.Display.CloseButton.Width2 := 14;
+  FOptions.Display.CloseButton.Offsets.Vertical := 6;
+  FOptions.Display.CloseButton.Offsets.Horizontal := 2;
+  FOptions.Display.CloseButton.Height := 14;
+  FOptions.Display.CloseButton.Width := 14;
   FOptions.Display.CloseButton.AutoHide := True;
   FOptions.Display.CloseButton.Visibility := bvAll;
-  FOptions.Display.CloseButton.AutoHideWidth2 := 20;
-  FOptions.Display.CloseButton.CrossRadialOffset2 := 4;
-  FOptions.Display.AddButton.Offsets.Vertical2 := 10;
-  FOptions.Display.AddButton.Offsets.Horizontal2 := 2;
-  FOptions.Display.AddButton.HorizontalOffsetFloating2 := -3;
-  FOptions.Display.AddButton.Height2 := 14;
-  FOptions.Display.AddButton.Width2 := 31;
+  FOptions.Display.CloseButton.AutoHideWidth := 20;
+  FOptions.Display.CloseButton.CrossRadialOffset := 4;
+  FOptions.Display.AddButton.Offsets.Vertical := 10;
+  FOptions.Display.AddButton.Offsets.Horizontal := 2;
+  FOptions.Display.AddButton.HorizontalOffsetFloating := -3;
+  FOptions.Display.AddButton.Height := 14;
+  FOptions.Display.AddButton.Width := 31;
   FOptions.Display.AddButton.ShowPlusSign := False;
   FOptions.Display.AddButton.Visibility := avRightFloating;
-  FOptions.Display.ScrollButtonLeft.Offsets.Vertical2 := 10;
-  FOptions.Display.ScrollButtonLeft.Offsets.Horizontal2 := 1;
-  FOptions.Display.ScrollButtonLeft.Height2 := 15;
-  FOptions.Display.ScrollButtonLeft.Width2 := 15;
-  FOptions.Display.ScrollButtonRight.Offsets.Vertical2 := 10;
-  FOptions.Display.ScrollButtonRight.Offsets.Horizontal2 := 1;
-  FOptions.Display.ScrollButtonRight.Height2 := 15;
-  FOptions.Display.ScrollButtonRight.Width2 := 15;
+  FOptions.Display.ScrollButtonLeft.Offsets.Vertical := 10;
+  FOptions.Display.ScrollButtonLeft.Offsets.Horizontal := 1;
+  FOptions.Display.ScrollButtonLeft.Height := 15;
+  FOptions.Display.ScrollButtonLeft.Width := 15;
+  FOptions.Display.ScrollButtonRight.Offsets.Vertical := 10;
+  FOptions.Display.ScrollButtonRight.Offsets.Horizontal := 1;
+  FOptions.Display.ScrollButtonRight.Height := 15;
+  FOptions.Display.ScrollButtonRight.Width := 15;
   FOptions.Display.TabModifiedGlow.Style := msRightToLeft;
-  FOptions.Display.TabModifiedGlow.VerticalOffset := MulDiv( -6, Screen.PixelsPerInch, 96 );
-  FOptions.Display.TabModifiedGlow.Height := MulDiv( 30, Screen.PixelsPerInch, 96 );
-  FOptions.Display.TabModifiedGlow.Width := MulDiv( 100, Screen.PixelsPerInch, 96 );
+  FOptions.Display.TabModifiedGlow.VerticalOffset := -6;
+  FOptions.Display.TabModifiedGlow.Height := 30;
+  FOptions.Display.TabModifiedGlow.Width := 100;
   FOptions.Display.TabModifiedGlow.AnimationPeriodMS := 4000;
   FOptions.Display.TabModifiedGlow.EaseType := ttEaseInOutQuad;
   FOptions.Display.TabModifiedGlow.AnimationUpdateMS := 50;
   FOptions.Display.Tabs.SeeThroughTabs := False;
-  FOptions.Display.Tabs.TabOverlap := MulDiv( 15, Screen.PixelsPerInch, 96 );
-  FOptions.Display.Tabs.ContentOffsetLeft := MulDiv( 18, Screen.PixelsPerInch, 96 );
-  FOptions.Display.Tabs.ContentOffsetRight := MulDiv( 16, Screen.PixelsPerInch, 96 );
+  FOptions.Display.Tabs.TabOverlap := 15;
+  FOptions.Display.Tabs.ContentOffsetLeft := 18;
+  FOptions.Display.Tabs.ContentOffsetRight := 16;
   FOptions.Display.Tabs.OffsetLeft := 0;
-  FOptions.Display.Tabs.OffsetTop := MulDiv( 4, Screen.PixelsPerInch, 96 );
+  FOptions.Display.Tabs.OffsetTop := 4;
   FOptions.Display.Tabs.OffsetRight := 0;
   FOptions.Display.Tabs.OffsetBottom := 0;
-  FOptions.Display.Tabs.MinWidth := MulDiv( 25, Screen.PixelsPerInch, 96 );
-  FOptions.Display.Tabs.MaxWidth := MulDiv( 200, Screen.PixelsPerInch, 96 );
-  FOptions.Display.Tabs.PinnedWidth := MulDiv( 39, Screen.PixelsPerInch, 96 );
-  FOptions.Display.Tabs.ImageOffsetLeft := MulDiv( 13, Screen.PixelsPerInch, 96 );
+  FOptions.Display.Tabs.MinWidth := 25;
+  FOptions.Display.Tabs.MaxWidth := 200;
+  FOptions.Display.Tabs.PinnedWidth := 39;
+  FOptions.Display.Tabs.ImageOffsetLeft := 13;
   FOptions.Display.Tabs.TextTrimType := tttFade;
   FOptions.Display.Tabs.Orientation := toTop;
   FOptions.Display.Tabs.BaseLineTabRegionOnly := False;
@@ -4145,24 +4145,24 @@ begin
   FOptions.Display.TabContainer.OverlayButtons := True;
   FOptions.Display.TabContainer.PaddingLeft := 0;
   FOptions.Display.TabContainer.PaddingRight := 0;
-  FOptions.Display.TabMouseGlow.Offsets.Vertical2 := 0;
-  FOptions.Display.TabMouseGlow.Offsets.Horizontal2 := 0;
-  FOptions.Display.TabMouseGlow.Height2 := 200;
-  FOptions.Display.TabMouseGlow.Width2 := 200;
+  FOptions.Display.TabMouseGlow.Offsets.Vertical := 0;
+  FOptions.Display.TabMouseGlow.Offsets.Horizontal := 0;
+  FOptions.Display.TabMouseGlow.Height := 200;
+  FOptions.Display.TabMouseGlow.Width := 200;
   FOptions.Display.TabMouseGlow.Visible := True;
   FOptions.DragDrop.DragType := dtBetweenContainers;
   FOptions.DragDrop.DragOutsideImageAlpha := 220;
-  FOptions.DragDrop.DragOutsideDistancePixels := MulDiv( 30, Screen.PixelsPerInch, 96 );
-  FOptions.DragDrop.DragStartPixels := MulDiv( 20, Screen.PixelsPerInch, 96 );
+  FOptions.DragDrop.DragOutsideDistancePixels := 30;
+  FOptions.DragDrop.DragStartPixels := 20;
   FOptions.DragDrop.DragControlImageResizeFactor := 0.5;
   FOptions.DragDrop.DragCursor := crDefault;
   FOptions.DragDrop.DragDisplay := ddTabAndControl;
-  FOptions.DragDrop.DragFormBorderWidth := MulDiv( 2, Screen.PixelsPerInch, 96 );
+  FOptions.DragDrop.DragFormBorderWidth := 2;
   FOptions.DragDrop.DragFormBorderColor := 8421504;
   FOptions.Animation.DefaultMovementAnimationTimeMS := 100;
   FOptions.Animation.DefaultStyleAnimationTimeMS := 300;
   FOptions.Animation.AnimationTimerInterval := 15;
-  FOptions.Animation.MinimumTabAnimationWidth := MulDiv( 40, Screen.PixelsPerInch, 96 );
+  FOptions.Animation.MinimumTabAnimationWidth := 40;
   FOptions.Animation.DefaultMovementEaseType := ttLinearTween;
   FOptions.Animation.DefaultStyleEaseType := ttLinearTween;
   FOptions.Animation.MovementAnimations.TabAdd.UseDefaultEaseType := True;
@@ -4188,11 +4188,11 @@ begin
   FOptions.Behaviour.IgnoreDoubleClicksWhileAnimatingMovement := True;
   FOptions.Scrolling.Enabled := True;
   FOptions.Scrolling.ScrollButtons := csbRight;
-  FOptions.Scrolling.ScrollStep := MulDiv( 20, Screen.PixelsPerInch, 96 );
+  FOptions.Scrolling.ScrollStep := 20;
   FOptions.Scrolling.ScrollRepeatDelay := 20;
   FOptions.Scrolling.AutoHideButtons := False;
   FOptions.Scrolling.DragScroll := True;
-  FOptions.Scrolling.DragScrollOffset := MulDiv( 50, Screen.PixelsPerInch, 96 );
+  FOptions.Scrolling.DragScrollOffset := 50;
   FOptions.Scrolling.MouseWheelScroll := True;
 end;
 
