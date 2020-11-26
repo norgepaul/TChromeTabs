@@ -11,6 +11,7 @@ object frmMain: TfrmMain
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesktopCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 15

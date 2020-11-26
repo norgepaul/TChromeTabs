@@ -1,6 +1,6 @@
 unit ChromeTabs;
 
-// Version 2.3
+// Version 2.6
 //
 // TChromeTabs - A Chome Tab component for Delphi that includes ALL the
 //               features seen in the Google Chrome tab control along with
@@ -65,6 +65,7 @@ unit ChromeTabs;
 // - Generate look and feel/options Delphi code
 // - Tab Spinner support - both rendered and bitmap animation.
 // - Lots of events
+// - High-DPI Support
 
 // - Demo includes look and feel editor and GUI access to all tab properties and features
 
