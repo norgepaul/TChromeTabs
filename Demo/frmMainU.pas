@@ -27,15 +27,6 @@ interface
   {$DEFINE USE_GLASS_FORM}
 {$ifend}
 
-// Fix to workaround compiler bug that re-introduces System.Actions
-{$if CompilerVersion >= 28.0}
-  {$DEFINE USE_SYSTEM_ACTIONS}
-{$endif}
-
-{$if CompilerVersion >= 29.0}
-  {$DEFINE USE_SYSTEM_IMAGELIST}
-{$ifend}
-
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, ComCtrls, Spin, Contnrs,
@@ -47,17 +38,12 @@ uses
 
   {$IFDEF USE_GLASS_FORM}ChromeTabsGlassForm,{$ENDIF}
 
-(* NOTE - If you get "unit xxx is redeclared errors", comment out the IFDEF lines
-   below. This is due to a Delphi bug with the {$if CompilerVersion .. } *)
-  {$IFDEF USE_SYSTEM_ACTIONS}System.Actions,{$ENDIF}
-  {$IFDEF USE_SYSTEM_IMAGELIST}System.ImageList,{$ENDIF}
-
   ChromeTabs,
   ChromeTabsTypes,
   ChromeTabsUtils,
   ChromeTabsControls,
   ChromeTabsClasses,
-  ChromeTabsLog;
+  ChromeTabsLog, Actions, ImageList;
 
 type
   TFormType = {$IFDEF USE_GLASS_FORM}
@@ -387,6 +373,8 @@ type
     TabSheetLookAndFeel: TTabSheet;
     TabSheetOptions: TTabSheet;
     tvLookAndFeelItems: TTreeView;
+    btnSetActivePageIndex: TButton;
+    chkActiveNewTab: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -472,6 +460,7 @@ type
     procedure ChromeTabs2TabDragDrop(Sender: TObject; X, Y: Integer;
       DragTabObject: IDragTabObject; Cancelled: Boolean;
       var TabDropOptions: TTabDropOptions);
+    procedure btnSetActivePageIndexClick(Sender: TObject);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -689,6 +678,12 @@ end;
 procedure TfrmMain.btnOpenFormClick(Sender: TObject);
 begin
   TfrmMain.Create(Application).Show;
+end;
+
+procedure TfrmMain.btnSetActivePageIndexClick(Sender: TObject);
+begin
+  if FCurrentTabs <> nil then
+    FCurrentTabs.ActiveTabIndex := -1;
 end;
 
 procedure TfrmMain.BuildLookAndFeelTree;
@@ -1330,6 +1325,7 @@ begin
     chkBackgroundDoubleClickMaxmise.Checked := ChromeTabs.Options.Behaviour.BackgroundDblClickMaximiseRestoreForm;
     chkDraggingBackgoundMovesForm.Checked := ChromeTabs.Options.Behaviour.BackgroundDragMovesForm;
     chkSmartResize.Checked := ChromeTabs.Options.Behaviour.TabSmartDeleteResizing;
+    chkActiveNewTab.Checked := ChromeTabs.Options.Behaviour.ActivateNewTab;
     edtCloseButtonMouseLeaveDelay.Value := ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay;
     chkRightClickSelect.Checked := ChromeTabs.Options.Behaviour.TabRightClickSelect;
 
@@ -1485,6 +1481,7 @@ begin
       ChromeTabs.Options.Behaviour.BackgroundDblClickMaximiseRestoreForm := chkBackgroundDoubleClickMaxmise.Checked;
       ChromeTabs.Options.Behaviour.BackgroundDragMovesForm := chkDraggingBackgoundMovesForm.Checked;
       ChromeTabs.Options.Behaviour.TabSmartDeleteResizing := chkSmartResize.Checked;
+      ChromeTabs.Options.Behaviour.ActivateNewTab := chkActiveNewTab.Checked;
       ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay := edtCloseButtonMouseLeaveDelay.Value;
       ChromeTabs.Options.Behaviour.TabRightClickSelect := chkRightClickSelect.Checked;
 

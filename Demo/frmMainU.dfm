@@ -11,6 +11,7 @@ object frmMain: TfrmMain
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesktopCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 15
@@ -808,7 +809,7 @@ object frmMain: TfrmMain
           object Label2: TLabel
             Left = 11
             Top = 70
-            Width = 67
+            Width = 68
             Height = 15
             Caption = 'Image Index:'
             FocusControl = edtImageIndex
@@ -816,7 +817,7 @@ object frmMain: TfrmMain
           object Label3: TLabel
             Left = 135
             Top = 70
-            Width = 110
+            Width = 111
             Height = 15
             Caption = 'Image Overlay Index:'
             FocusControl = edtImageOverlayIndex
@@ -969,7 +970,7 @@ object frmMain: TfrmMain
               object lblMinTabWidth: TLabel
                 Left = 8
                 Top = 21
-                Width = 81
+                Width = 80
                 Height = 15
                 Caption = 'Min Tab Width:'
                 FocusControl = edtMinTabWidth
@@ -977,7 +978,7 @@ object frmMain: TfrmMain
               object Label17: TLabel
                 Left = 278
                 Top = 20
-                Width = 119
+                Width = 118
                 Height = 15
                 Caption = 'Tab/Container Offsets:'
                 FocusControl = edtTabOffsetTop
@@ -985,7 +986,7 @@ object frmMain: TfrmMain
               object Label51: TLabel
                 Left = 283
                 Top = 131
-                Width = 114
+                Width = 113
                 Height = 15
                 Caption = 'Tab Content Margins:'
                 FocusControl = edtTabOffsetTop
@@ -993,7 +994,7 @@ object frmMain: TfrmMain
               object Label71: TLabel
                 Left = 108
                 Top = 76
-                Width = 66
+                Width = 65
                 Height = 15
                 Caption = 'Tab Overlap:'
                 FocusControl = edtTabOverlap
@@ -1217,7 +1218,7 @@ object frmMain: TfrmMain
               Top = 185
               Width = 731
               Height = 216
-              ActivePage = TabSheet17
+              ActivePage = TabSheet16
               Align = alTop
               TabOrder = 1
               object TabSheet16: TTabSheet
@@ -1265,7 +1266,7 @@ object frmMain: TfrmMain
                 object Label78: TLabel
                   Left = 163
                   Top = 2
-                  Width = 113
+                  Width = 112
                   Height = 15
                   Caption = 'Animation Ease Type:'
                   FocusControl = cbModifiedGlowEaseType
@@ -1907,7 +1908,7 @@ object frmMain: TfrmMain
               object Label67: TLabel
                 Left = 13
                 Top = 99
-                Width = 89
+                Width = 88
                 Height = 15
                 Caption = 'Trimming Mode:'
                 FocusControl = cbTextTrimming
@@ -2747,7 +2748,7 @@ object frmMain: TfrmMain
             object Label80: TLabel
               Left = 16
               Top = 26
-              Width = 308
+              Width = 307
               Height = 15
               Caption = 'This feature is only supported in Delphi versions from 2010'
               Font.Charset = ANSI_CHARSET
@@ -2824,6 +2825,26 @@ object frmMain: TfrmMain
               TabOrder = 0
               OnClick = OnCommonControlPropertyChange
             end
+            object btnSetActivePageIndex: TButton
+              Left = 3
+              Top = 222
+              Width = 153
+              Height = 25
+              Caption = 'Set ActivePageIndex to -1'
+              TabOrder = 6
+              OnClick = btnSetActivePageIndexClick
+            end
+            object chkActiveNewTab: TCheckBox
+              Left = 3
+              Top = 199
+              Width = 142
+              Height = 17
+              Caption = 'Activate new Tab'
+              Checked = True
+              State = cbChecked
+              TabOrder = 7
+              OnClick = OnCommonControlPropertyChange
+            end
           end
           object TabSheet8: TTabSheet
             Caption = 'Animation'
@@ -2855,7 +2876,7 @@ object frmMain: TfrmMain
               object Label23: TLabel
                 Left = 8
                 Top = 23
-                Width = 102
+                Width = 101
                 Height = 15
                 Caption = 'Update Timer (ms):'
                 FocusControl = edtAnimationUpdate
@@ -2863,7 +2884,7 @@ object frmMain: TfrmMain
               object Label70: TLabel
                 Left = 164
                 Top = 76
-                Width = 156
+                Width = 155
                 Height = 15
                 Caption = 'Default Movement Ease Type:'
                 FocusControl = cbMovementEaseType
@@ -2871,7 +2892,7 @@ object frmMain: TfrmMain
               object Label72: TLabel
                 Left = 164
                 Top = 127
-                Width = 123
+                Width = 122
                 Height = 15
                 Caption = 'Default Style Ease Type:'
                 FocusControl = cbStyleEaseType
@@ -3007,7 +3028,7 @@ object frmMain: TfrmMain
                 object Label73: TLabel
                   Left = 24
                   Top = 103
-                  Width = 115
+                  Width = 114
                   Height = 15
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbMoveTabEase
@@ -3087,7 +3108,7 @@ object frmMain: TfrmMain
                 object Label75: TLabel
                   Left = 24
                   Top = 103
-                  Width = 115
+                  Width = 114
                   Height = 15
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbDeleteTabEase
@@ -3167,7 +3188,7 @@ object frmMain: TfrmMain
                 object Label77: TLabel
                   Left = 24
                   Top = 103
-                  Width = 115
+                  Width = 114
                   Height = 15
                   Caption = 'Movement Ease Type:'
                   FocusControl = cbAddTabEase
@@ -3269,7 +3290,7 @@ object frmMain: TfrmMain
               object Label32: TLabel
                 Left = 140
                 Top = 5
-                Width = 87
+                Width = 88
                 Height = 15
                 Caption = 'Drag Start Pixels:'
                 FocusControl = edtDragStartPixels
@@ -3277,7 +3298,7 @@ object frmMain: TfrmMain
               object Label33: TLabel
                 Left = 6
                 Top = 62
-                Width = 113
+                Width = 114
                 Height = 15
                 Caption = 'External Drag Display:'
                 FocusControl = cbExternalDragDisplay
@@ -3532,15 +3553,15 @@ object frmMain: TfrmMain
         object Label7: TLabel
           Left = 16
           Top = 8
-          Width = 116
+          Width = 115
           Height = 15
           Caption = 'Tab Container Height:'
           FocusControl = edtTabHeight
         end
         object Label5: TLabel
-          Left = 31
+          Left = 32
           Top = 88
-          Width = 89
+          Width = 88
           Height = 15
           Alignment = taRightJustify
           Caption = 'Glass Height Top'
