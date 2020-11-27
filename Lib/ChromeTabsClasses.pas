@@ -1621,12 +1621,13 @@ var
   i: Integer;
 begin
   for i := 0 to pred(Count) do
-    if Items[i] = Value then
-    begin
-      Items[i].Active := TRUE;
-
-      Break;
-    end;
+  if (Items[i] = Value) and (Value <> nil) then
+  begin
+    Items[i].Active := TRUE;
+    Break;
+  end else
+  if (Value = nil) then
+    Items[i].Active := FALSE;
 end;
 
 procedure TChromeTabsList.SetItem(Index: Integer; Value: TChromeTab);

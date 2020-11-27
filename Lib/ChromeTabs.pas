@@ -1279,6 +1279,10 @@ begin
             begin
               SetControlDrawState(TabControls[ATab.Index], dsNotActive);
 
+
+              //commented out to allow all Tabs to be inactive
+              //2020 11 27 Sven Harazim
+              {
               // Is there an active tab?
               if ActiveTab = nil then
               begin
@@ -1304,6 +1308,7 @@ begin
                     Break;
                   end;
               end;
+              }
             end;
 
           tcPinned: AddState(stsControlPositionsInvalidated);
@@ -1356,11 +1361,15 @@ begin
             end;
         end;
 
+        //commented out to allow all Tabs to be inactive
+              //2020 11 27 Sven Harazim
+        {
         if (FTabs <> nil) and
            (ActiveTabIndex = -1) and
            (FOptions.Behaviour.ActivateNewTab) and
            (GetVisibleTabCount > 0) then
           ActiveTabIndex := GetLastVisibleTabIndex(FTabs.Count - 1);
+        }
 
         Redraw;
       end;
