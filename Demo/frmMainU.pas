@@ -373,6 +373,8 @@ type
     TabSheetLookAndFeel: TTabSheet;
     TabSheetOptions: TTabSheet;
     tvLookAndFeelItems: TTreeView;
+    btnSetActivePageIndex: TButton;
+    chkActiveNewTab: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure ChromeTabs1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure CommonTabPropertyChange(Sender: TObject);
@@ -458,6 +460,7 @@ type
     procedure ChromeTabs2TabDragDrop(Sender: TObject; X, Y: Integer;
       DragTabObject: IDragTabObject; Cancelled: Boolean;
       var TabDropOptions: TTabDropOptions);
+    procedure btnSetActivePageIndexClick(Sender: TObject);
   private
     FLastMouseX: Integer;
     FLastMouseY: Integer;
@@ -675,6 +678,12 @@ end;
 procedure TfrmMain.btnOpenFormClick(Sender: TObject);
 begin
   TfrmMain.Create(Application).Show;
+end;
+
+procedure TfrmMain.btnSetActivePageIndexClick(Sender: TObject);
+begin
+  if FCurrentTabs <> nil then
+    FCurrentTabs.ActiveTabIndex := -1;
 end;
 
 procedure TfrmMain.BuildLookAndFeelTree;
@@ -1316,6 +1325,7 @@ begin
     chkBackgroundDoubleClickMaxmise.Checked := ChromeTabs.Options.Behaviour.BackgroundDblClickMaximiseRestoreForm;
     chkDraggingBackgoundMovesForm.Checked := ChromeTabs.Options.Behaviour.BackgroundDragMovesForm;
     chkSmartResize.Checked := ChromeTabs.Options.Behaviour.TabSmartDeleteResizing;
+    chkActiveNewTab.Checked := ChromeTabs.Options.Behaviour.ActivateNewTab;
     edtCloseButtonMouseLeaveDelay.Value := ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay;
     chkRightClickSelect.Checked := ChromeTabs.Options.Behaviour.TabRightClickSelect;
 
@@ -1471,6 +1481,7 @@ begin
       ChromeTabs.Options.Behaviour.BackgroundDblClickMaximiseRestoreForm := chkBackgroundDoubleClickMaxmise.Checked;
       ChromeTabs.Options.Behaviour.BackgroundDragMovesForm := chkDraggingBackgoundMovesForm.Checked;
       ChromeTabs.Options.Behaviour.TabSmartDeleteResizing := chkSmartResize.Checked;
+      ChromeTabs.Options.Behaviour.ActivateNewTab := chkActiveNewTab.Checked;
       ChromeTabs.Options.Behaviour.TabSmartDeleteResizeCancelDelay := edtCloseButtonMouseLeaveDelay.Value;
       ChromeTabs.Options.Behaviour.TabRightClickSelect := chkRightClickSelect.Checked;
 
