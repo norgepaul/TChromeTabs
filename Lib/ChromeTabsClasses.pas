@@ -61,6 +61,10 @@ type
     function GetSpinnerState: TChromeTabSpinnerState;
     function GetHideCloseButton: Boolean;
     function GetData: Pointer;
+    function GetCustomImages: TCustomImageList;
+    function GetCustomImagesOverlay: TCustomImageList;
+    function GetCustomImagesSpinnerDownload: TCustomImageList;
+    function GetCustomImagesSpinnerUpload: TCustomImageList;
     procedure SetData(const Value: Pointer);
     property Data: Pointer read GetData write SetData;
   end;
@@ -126,6 +130,10 @@ type
     FMarkedForDeletion: Boolean;
     FSpinnerState: TChromeTabSpinnerState;
     FHideCloseButton: Boolean;
+    FCustomImages: TCustomImageList;
+    FCustomImagesOverlay: TCustomImageList;
+    FCustomImagesSpinnerDownload: TCustomImageList;
+    FCustomImagesSpinnerUpload: TCustomImageList;
 
     procedure SetActive(Value: boolean);
     procedure SetCaption(Value: TCaption);
@@ -155,6 +163,14 @@ type
     function GetSpinnerState: TChromeTabSpinnerState;
     function GetHideCloseButton: Boolean;
     function GetData: Pointer;
+    procedure SetCustomImages(const Value: TCustomImageList);
+    procedure SetCustomImagesOverlay(const Value: TCustomImageList);
+    procedure SetCustomImagesSpinnerDownload(const Value: TCustomImageList);
+    procedure SetCustomImagesSpinnerUpload(const Value: TCustomImageList);
+    function GetCustomImages: TCustomImageList;
+    function GetCustomImagesOverlay: TCustomImageList;
+    function GetCustomImagesSpinnerDownload: TCustomImageList;
+    function GetCustomImagesSpinnerUpload: TCustomImageList;
   protected
     procedure DoChanged(ChangeType: TTabChangeType = tcPropertyUpdated); virtual;
     function GetDisplayName: string; override;
@@ -175,6 +191,10 @@ type
     property Caption: TCaption read GetCaption write SetCaption;
     property Active: boolean read GetActive write SetActive;
     property Tag: integer read GetTag write SetTag;
+    property CustomImages: TCustomImageList read GetCustomImages write SetCustomImages;
+    property CustomImagesOverlay: TCustomImageList read GetCustomImagesOverlay write SetCustomImagesOverlay;
+    property CustomImagesSpinnerUpload: TCustomImageList read GetCustomImagesSpinnerUpload write SetCustomImagesSpinnerUpload;
+    property CustomImagesSpinnerDownload: TCustomImageList read GetCustomImagesSpinnerDownload write SetCustomImagesSpinnerDownload;
     property ImageIndex: {$IF CompilerVersion >= 23.0}System.UITypes.{$IFEND}TImageIndex read GetImageIndex write SetImageIndex;
     property ImageIndexOverlay: {$IF CompilerVersion >= 23.0}System.UITypes.{$IFEND}TImageIndex read GetImageIndexOverlay write SetImageIndexOverlay;
     property Pinned: Boolean read GetPinned write SetPinned;
@@ -1237,6 +1257,46 @@ begin
 
   if FTabControl <> nil then
     FTabControl.Free;
+end;
+
+procedure TChromeTab.SetCustomImages(const Value: TCustomImageList);
+begin
+  FCustomImages := Value;
+end;
+
+procedure TChromeTab.SetCustomImagesOverlay(const Value: TCustomImageList);
+begin
+  FCustomImagesOverlay := Value;
+end;
+
+procedure TChromeTab.SetCustomImagesSpinnerDownload(const Value: TCustomImageList);
+begin
+  FCustomImagesSpinnerDownload := Value;
+end;
+
+procedure TChromeTab.SetCustomImagesSpinnerUpload(const Value: TCustomImageList);
+begin
+  FCustomImagesSpinnerUpload := Value;
+end;
+
+function TChromeTab.GetCustomImages : TCustomImageList;
+begin
+  Result := FCustomImages;
+end;
+
+function TChromeTab.GetCustomImagesOverlay : TCustomImageList;
+begin
+  Result := FCustomImagesOverlay;
+end;
+
+function TChromeTab.GetCustomImagesSpinnerDownload : TCustomImageList;
+begin
+  Result := FCustomImagesSpinnerDownload;
+end;
+
+function TChromeTab.GetCustomImagesSpinnerUpload : TCustomImageList;
+begin
+  Result := FCustomImagesSpinnerUpload;
 end;
 
 procedure TChromeTab.SetPinned(const Value: Boolean);

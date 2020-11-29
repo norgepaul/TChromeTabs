@@ -1199,7 +1199,7 @@ end;
 
 procedure TCustomChromeTabs.DoOnChange(ATab: TChromeTab; TabChangeType: TTabChangeType);
 var
-  i: Integer;
+  //i: Integer;
   NewTabControl: TChromeTabControl;
   NewTabLeft, LastVisibleTabIndex: Integer;
 begin

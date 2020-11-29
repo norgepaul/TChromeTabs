@@ -165,6 +165,8 @@ type
     procedure CalculateRects(var ImageRect, TextRect, CloseButtonRect,
       CloseButtonCrossRect: TRect; var NormalImageVisible, OverlayImageVisible, SpinnerVisible,
       TextVisible: Boolean);
+    function GetImageList: TCustomImageList;
+    function GetImageListOverlay: TCustomImageList;
     function GetSpinnerImageList: TCustomImageList;
   protected
     procedure SetCloseButtonState(const Value: TDrawState); virtual;
@@ -638,6 +640,20 @@ begin
   end;
 end;
 
+function TChromeTabControl.GetImageList: TCustomImageList;
+begin
+  Result := ChromeTab.GetCustomImages;
+  if Result = nil then
+    Result := ChromeTabs.GetImages;
+end;
+
+function TChromeTabControl.GetImageListOverlay: TCustomImageList;
+begin
+  Result := ChromeTab.GetCustomImagesOverlay;
+  if Result = nil then
+    Result := ChromeTabs.GetImagesOverlay;
+end;
+
 function TChromeTabControl.AnimateModified: Boolean;
 var
   TickCount: Cardinal;
@@ -685,8 +701,18 @@ end;
 function TChromeTabControl.GetSpinnerImageList: TCustomImageList;
 begin
   case ChromeTab.GetSpinnerState of
-    tssImageUpload: Result := ChromeTabs.GetImagesSpinnerUpload;
-    tssImageDownload: Result := ChromeTabs.GetImagesSpinnerDownload;
+    tssImageUpload:
+    begin
+      Result := ChromeTab.GetCustomImagesSpinnerUpload;
+      if Result = nil then
+        Result := ChromeTabs.GetImagesSpinnerUpload;
+    end;
+    tssImageDownload:
+    begin
+      Result := ChromeTab.GetCustomImagesSpinnerDownload;
+      if Result = nil then
+        Result := ChromeTabs.GetImagesSpinnerDownload;
+    end
   else
     Result := nil;
   end;
@@ -971,8 +997,8 @@ begin
   LeftOffset := ControlRect.Left +
                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft);
 
-  NormalImageVisible := ImageVisible(ChromeTabs.GetImages, ChromeTab.GetImageIndex);
-  OverlayImageVisible := ImageVisible(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay);
+  NormalImageVisible := ImageVisible(GetImageList, ChromeTab.GetImageIndex);
+  OverlayImageVisible := ImageVisible(GetImageListOverlay, ChromeTab.GetImageIndexOverlay);
   SpinnerVisible := (ChromeTab.GetSpinnerState <> tssNone) and (not (csDesigning in ChromeTabs.GetComponentState));
 
   ImageWidth := 0;
@@ -997,20 +1023,20 @@ begin
      (NormalImageVisible) or
      (OverlayImageVisible) then
   begin
-    if ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Width) > ImageWidth then
-      ImageWidth := ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Width);
+    if ChromeTabs.ScaledPixels(GetImageList.Width) > ImageWidth then
+      ImageWidth := ChromeTabs.ScaledPixels(GetImageList.Width);
 
-    if ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Height) > ImageHeight then
-      ImageHeight := ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Height);
+    if ChromeTabs.ScaledPixels(GetImageList.Height) > ImageHeight then
+      ImageHeight := ChromeTabs.ScaledPixels(GetImageList.Height);
   end;
 
   if OverlayImageVisible then
   begin
-    if ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Width) > ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Width) then
-      ImageWidth := ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Width);
+    if ChromeTabs.ScaledPixels(GetImageListOverlay.Width) > ChromeTabs.ScaledPixels(GetImageList.Width) then
+      ImageWidth := ChromeTabs.ScaledPixels(GetImageListOverlay.Width);
 
-    if ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Height) > ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Height) then
-      ImageHeight := ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Height);
+    if ChromeTabs.ScaledPixels(GetImageListOverlay.Height) > ChromeTabs.ScaledPixels(GetImageList.Height) then
+      ImageHeight := ChromeTabs.ScaledPixels(GetImageListOverlay.Height);
   end;
 
   // Does the image fit between the left margin and the close button?
@@ -1521,10 +1547,10 @@ begin
          (not ChromeTabs.GetOptions.Display.TabSpinners.HideImagesWhenSpinnerVisible) then
       begin
         if NormalImageVisible then
-          DrawImage(ChromeTabs.GetImages, ChromeTab.GetImageIndex, ImageRect, itTabImage);
+          DrawImage(GetImageList, ChromeTab.GetImageIndex, ImageRect, itTabImage);
 
         if OverlayImageVisible then
-          DrawImage(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
+          DrawImage(GetImageListOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
       end;
 
       // Draw the spinner image
