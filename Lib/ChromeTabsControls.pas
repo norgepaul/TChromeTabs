@@ -997,20 +997,20 @@ begin
      (NormalImageVisible) or
      (OverlayImageVisible) then
   begin
-    if ChromeTabs.GetImages.Width > ImageWidth then
-      ImageWidth := ChromeTabs.GetImages.Width;
+    if ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Width) > ImageWidth then
+      ImageWidth := ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Width);
 
-    if ChromeTabs.GetImages.Height > ImageHeight then
-      ImageHeight := ChromeTabs.GetImages.Height;
+    if ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Height) > ImageHeight then
+      ImageHeight := ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Height);
   end;
 
   if OverlayImageVisible then
   begin
-    if ChromeTabs.GetImagesOverlay.Width > ChromeTabs.GetImages.Width then
-      ImageWidth := ChromeTabs.GetImagesOverlay.Width;
+    if ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Width) > ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Width) then
+      ImageWidth := ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Width);
 
-    if ChromeTabs.GetImagesOverlay.Height > ChromeTabs.GetImages.Height then
-      ImageHeight := ChromeTabs.GetImagesOverlay.Height;
+    if ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Height) > ChromeTabs.ScaledPixels(ChromeTabs.GetImages.Height) then
+      ImageHeight := ChromeTabs.ScaledPixels(ChromeTabs.GetImagesOverlay.Height);
   end;
 
   // Does the image fit between the left margin and the close button?
@@ -1255,7 +1255,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     begin
       ImageBitmap := ImageListToTGPImage(Images, ImageIndex);
       try
-        TabCanvas.DrawImage(ImageBitmap, ImageRect.Left, ImageRect.Top);
+        TabCanvas.DrawImage(ImageBitmap, ImageRect.Left, ImageRect.Top, ImageRect.Right-ImageRect.Left, ImageRect.Bottom-ImageRect.Top);
       finally
         FreeAndNil(ImageBitmap);
       end;
@@ -1331,7 +1331,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
           SpinnerLookAndFeel := ChromeTabs.GetLookAndFeel.Tabs.Spinners.Download;
         end;
 
-        Offset := SpinnerLookAndFeel.Thickness / 2; //TODO scale Thickness??? ChromeTabs.ScaledPixels ????
+        Offset := SpinnerLookAndFeel.Thickness / 2;
 
         SpinPen := TGPPen.Create(MakeGDIPColor(SpinnerLookAndFeel.Color, SpinnerLookAndFeel.Alpha), SpinnerLookAndFeel.Thickness);
         try
