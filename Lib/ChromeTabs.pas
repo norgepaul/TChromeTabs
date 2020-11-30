@@ -69,6 +69,23 @@ unit ChromeTabs;
 
 // - Demo includes look and feel editor and GUI access to all tab properties and features
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  {$DEFINE ADDITIONAL_MOUSE_EVENTS}
+  {$DEFINE EXPLICIT_DRAW_STATE}
+{$ELSE}
+  {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+  {$IF CompilerVersion >= 31.0}
+    {$DEFINE CURRENT_PPI_SUPPORT}
+  {$ENDIF}
+  {$if CompilerVersion >= 18.0}
+    {$DEFINE ADDITIONAL_MOUSE_EVENTS}
+    {$DEFINE EXPLICIT_DRAW_STATE}
+  {$ENDIF}
+{$ENDIF}
+
 interface
 
 { TODO -cImprovement : Selective invalidation of tabs }
@@ -78,18 +95,23 @@ interface
 { TODO -cBug : Why does setting a pen thinckess to a fraction (e.g. 1.5) not have any effect? }
 
 uses
-  {$IF CompilerVersion >= 23.0}
-  System.SysUtils, System.Classes, System.Types, System.Math,
-  Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil, Vcl.ImgList,
-  Vcl.Dialogs, Vcl.Menus,
+  {$IFDEF UNIT_SCOPE_NAMES}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  Vcl.Dialogs,Vcl.Menus,
   WinApi.Windows, WinApi.Messages,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils, Classes, Math,
-  Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs, Menus,
-  Windows, Messages,
+  SysUtils,Math,
+  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,Menus,
+  Windows,Messages,
   Graphics,
+  Classes, // for FPC Classes must be listed after Windows
   {$ifend}
+
+  {$IFDEF FPC}
+  LMessages,
+  {$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -199,8 +221,8 @@ type
     FDragTabObject: IDragTabObject;
     FActiveDragTabObject: IDragTabObject;
 
-    FCanvasBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
-    FBackgroundBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+    FCanvasBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
+    FBackgroundBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
     FTabPopupMenu: TPopupMenu;
     FImages: TCustomImageList;
     FImagesOverlay: TCustomImageList;
@@ -332,7 +354,9 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure WndProc(var Message: TMessage); override;
     procedure SetBiDiMode(Value: TBiDiMode); override;
+    {$IFNDEF LCL}
     procedure CreateWindowHandle(const Params: TCreateParams); override;
+    {$ENDIF}
 
     // Virtual
     procedure DoOnActiveTabChanged(ATab: TChromeTab); virtual;
@@ -519,10 +543,10 @@ type
     property OnResize;
     property TabOrder;
 
-    {$IF CompilerVersion >= 18.0}
+    {$ifdef ADDITIONAL_MOUSE_EVENTS}
     property OnMouseEnter;
     property OnMouseLeave;
-    {$IFEND}
+    {$ifend}
   end;
 
 implementation
@@ -657,10 +681,10 @@ procedure TCustomChromeTabs.CMMouseEnter(var Msg: TMessage);
 begin
   FCancelTabSmartResizeTimer.Enabled := FALSE;
 
-  {$IF CompilerVersion >= 18.0}
+  {$ifdef ADDITIONAL_MOUSE_EVENTS}
   if Assigned(OnMouseEnter) then
     OnMouseEnter(Self);
-  {$IFEND}
+  {$ifend}
 end;
 
 procedure TCustomChromeTabs.CMMouseLeave(var Msg: TMessage);
@@ -703,10 +727,10 @@ procedure TCustomChromeTabs.DoOnMouseLeave;
 begin
   //SetControlDrawStates(TRUE);
 
-  {$IF CompilerVersion >= 18.0}
+  {$ifdef ADDITIONAL_MOUSE_EVENTS}
   if Assigned(OnMouseLeave) then
     OnMouseLeave(Self);
-  {$IFEND}
+  {$ifend}
 end;
 
 function TCustomChromeTabs.InsertDroppedTab: TChromeTab;
@@ -771,6 +795,27 @@ end;
 procedure TCustomChromeTabs.AfterConstruction;
 begin
   inherited;
+
+  {$IFDEF LCL}
+  // Set the intial scroll position
+  ScrollOffset := 0;
+
+  // Fix the draw states
+  if FAddButtonControl.DrawState = dsUnknown then
+    FAddButtonControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  if FScrollButtonLeftControl.DrawState = dsUnknown then
+    FScrollButtonLeftControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  if FScrollButtonRightControl.DrawState = dsUnknown then
+    FScrollButtonRightControl.SetDrawState(dsNotActive, 0, ttNone, TRUE);
+
+  SetControlDrawStates(TRUE);
+
+  // Make sure we reset all the control positions
+  AddState(stsControlPositionsInvalidated);
+  AddState(stsFirstPaint);
+  {$ENDIF}
 
   FControlConstructed := TRUE;
 end;
@@ -1493,10 +1538,10 @@ begin
                                   csCaptureMouse];
 
   // Canvas Bitmaps
-  FCanvasBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FCanvasBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FCanvasBmp.PixelFormat := pf32Bit;
 
-  FBackgroundBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FBackgroundBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FBackgroundBmp.PixelFormat := pf32bit;
 
   // Options
@@ -2150,7 +2195,7 @@ const
 var
   DragControl: TWinControl;
   DragCanvas: TGPGraphics;
-  Bitmap, ScaledBitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+  Bitmap, ScaledBitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
   TempRect: TRect;
   TabTop, ControlTop, TabEndX, BorderOffset: Integer;
   ActualDragDisplay: TChromeTabDragDisplay;
@@ -2190,7 +2235,7 @@ begin
         FDragTabObject.DragFormOffset := Point(Round(BiDiX * FOptions.DragDrop.DragControlImageResizeFactor),
                                                Round(FDragTabObject.DragCursorOffset.Y * FOptions.DragDrop.DragControlImageResizeFactor));
 
-      Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+      Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
       try
         TabTop := 0;
         ControlTop := 0;
@@ -2305,7 +2350,7 @@ begin
           FreeAndNil(DragCanvas);
         end;
 
-        ScaledBitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+        ScaledBitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
         try
           // Scale the image
           if ActualDragDisplay = ddTab then
@@ -2343,6 +2388,7 @@ begin
   end;
 end;
 
+{$IFNDEF LCL}
 procedure TCustomChromeTabs.CreateWindowHandle(const Params: TCreateParams);
 begin
   inherited;
@@ -2369,6 +2415,7 @@ begin
   // Force a redraw
   Redraw;
 end;
+{$ENDIF}
 
 procedure TCustomChromeTabs.DoOnButtonAddClick;
 var
@@ -2655,7 +2702,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    {$IF CompilerVersion >= 23.0}System.{$IFEND}SysUtils.DeleteFile(Filename);
+    {$IFDEF UNIT_SCOPE_NAMES}System.{$IFEND}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -2670,7 +2717,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    {$IF CompilerVersion >= 23.0}System.{$IFEND}SysUtils.DeleteFile(Filename);
+    {$IFDEF UNIT_SCOPE_NAMES}System.{$IFEND}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -2710,7 +2757,7 @@ end;
 
 function TCustomChromeTabs.ScaledPixels(pPixels: Integer): Integer;
 begin
-  Result := MulDiv(pPixels, {$if CompilerVersion > 31}Self.FCurrentPPI{$else}Screen.PixelsPerInch{$ifend}, 96);
+  Result := MulDiv(pPixels, {$ifdef CURRENT_PPI_SUPPORT}Self.FCurrentPPI{$else}Screen.PixelsPerInch{$ifend}, 96);
 end;
 
 function TCustomChromeTabs.ScrollButtonLeftVisible: Boolean;
@@ -3500,7 +3547,7 @@ begin
   // Make sure the active tab is drawn correctly
   if ActiveTab <> nil then
   begin
-    TabControls[ActiveTabIndex].SetDrawState({$IF CompilerVersion >= 18.0}TDrawState.{$IFEND}dsActive, 0, {$IF CompilerVersion >= 18.0}TChromeTabsEaseType.{$IFEND}ttNone, True);
+    TabControls[ActiveTabIndex].SetDrawState({$IFDEF EXPLICIT_DRAW_STATE}TDrawState.{$IFEND}dsActive, 0, {$IFDEF EXPLICIT_DRAW_STATE}TChromeTabsEaseType.{$IFEND}ttNone, True);
   end;
 end;
 
@@ -3782,7 +3829,7 @@ end;
 
 procedure TCustomChromeTabs.WMPaint(var Message: TWMPaint);
 begin
-  PaintHandler(Message);
+  PaintHandler({$IFDEF FPC}TLMPaint(Message){$ELSE}Message{$ENDIF});
 end;
 
 procedure TCustomChromeTabs.WMWindowPosChanged(var Message: TWMWindowPosChanged);
@@ -4178,7 +4225,7 @@ begin
   FOptions.DragDrop.DragOutsideImageAlpha := 220;
   FOptions.DragDrop.DragOutsideDistancePixels := 30;
   FOptions.DragDrop.DragStartPixels := 20;
-  FOptions.DragDrop.DragControlImageResizeFactor := 0.5;
+  FOptions.DragDrop.DragControlImageResizeFactor := 0.500000000000000000;
   FOptions.DragDrop.DragCursor := crDefault;
   FOptions.DragDrop.DragDisplay := ddTabAndControl;
   FOptions.DragDrop.DragFormBorderWidth := 2;
@@ -4231,7 +4278,7 @@ begin
     FLookAndFeel.TabsContainer.OutlineColor := 14520930;
     FLookAndFeel.TabsContainer.OutlineAlpha := 0;
     FLookAndFeel.Tabs.BaseLine.Color := 11110509;
-    FLookAndFeel.Tabs.BaseLine.Thickness := 1.0;
+    FLookAndFeel.Tabs.BaseLine.Thickness := 1.000000000000000000;
     FLookAndFeel.Tabs.BaseLine.Alpha := 255;
     FLookAndFeel.Tabs.Modified.CentreColor := clWhite;
     FLookAndFeel.Tabs.Modified.OutsideColor := clWhite;
@@ -4257,7 +4304,7 @@ begin
     FLookAndFeel.Tabs.Active.Style.StartAlpha := 255;
     FLookAndFeel.Tabs.Active.Style.StopAlpha := 255;
     FLookAndFeel.Tabs.Active.Style.OutlineColor := 10189918;
-    FLookAndFeel.Tabs.Active.Style.OutlineSize := 1.0;
+    FLookAndFeel.Tabs.Active.Style.OutlineSize := 1.000000000000000000;
     FLookAndFeel.Tabs.Active.Style.OutlineAlpha := 255;
     FLookAndFeel.Tabs.NotActive.Font.Name := 'Segoe UI';
     FLookAndFeel.Tabs.NotActive.Font.Color := 4603477;
@@ -4270,7 +4317,7 @@ begin
     FLookAndFeel.Tabs.NotActive.Style.StartAlpha := 210;
     FLookAndFeel.Tabs.NotActive.Style.StopAlpha := 210;
     FLookAndFeel.Tabs.NotActive.Style.OutlineColor := 13546390;
-    FLookAndFeel.Tabs.NotActive.Style.OutlineSize := 1.0;
+    FLookAndFeel.Tabs.NotActive.Style.OutlineSize := 1.000000000000000000;
     FLookAndFeel.Tabs.NotActive.Style.OutlineAlpha := 215;
     FLookAndFeel.Tabs.Hot.Font.Name := 'Segoe UI';
     FLookAndFeel.Tabs.Hot.Font.Color := 4210752;
@@ -4283,135 +4330,135 @@ begin
     FLookAndFeel.Tabs.Hot.Style.StartAlpha := 255;
     FLookAndFeel.Tabs.Hot.Style.StopAlpha := 255;
     FLookAndFeel.Tabs.Hot.Style.OutlineColor := 12423799;
-    FLookAndFeel.Tabs.Hot.Style.OutlineSize := 1.0;
+    FLookAndFeel.Tabs.Hot.Style.OutlineSize := 1.000000000000000000;
     FLookAndFeel.Tabs.Hot.Style.OutlineAlpha := 235;
     FLookAndFeel.CloseButton.Cross.Normal.Color := 6643031;
-    FLookAndFeel.CloseButton.Cross.Normal.Thickness := 1.5;
+    FLookAndFeel.CloseButton.Cross.Normal.Thickness := 1.500000000000000000;
     FLookAndFeel.CloseButton.Cross.Normal.Alpha := 255;
     FLookAndFeel.CloseButton.Cross.Down.Color := 15461369;
-    FLookAndFeel.CloseButton.Cross.Down.Thickness := 2.0;
+    FLookAndFeel.CloseButton.Cross.Down.Thickness := 2.000000000000000000;
     FLookAndFeel.CloseButton.Cross.Down.Alpha := 220;
     FLookAndFeel.CloseButton.Cross.Hot.Color := clWhite;
-    FLookAndFeel.CloseButton.Cross.Hot.Thickness := 2.0;
+    FLookAndFeel.CloseButton.Cross.Hot.Thickness := 2.000000000000000000;
     FLookAndFeel.CloseButton.Cross.Hot.Alpha := 220;
     FLookAndFeel.CloseButton.Circle.Normal.StartColor := clGradientActiveCaption;
     FLookAndFeel.CloseButton.Circle.Normal.StopColor := clNone;
     FLookAndFeel.CloseButton.Circle.Normal.StartAlpha := 0;
     FLookAndFeel.CloseButton.Circle.Normal.StopAlpha := 0;
     FLookAndFeel.CloseButton.Circle.Normal.OutlineColor := clGray;
-    FLookAndFeel.CloseButton.Circle.Normal.OutlineSize := 1.0;
+    FLookAndFeel.CloseButton.Circle.Normal.OutlineSize := 1.000000000000000000;
     FLookAndFeel.CloseButton.Circle.Normal.OutlineAlpha := 0;
     FLookAndFeel.CloseButton.Circle.Down.StartColor := 3487169;
     FLookAndFeel.CloseButton.Circle.Down.StopColor := 3487169;
     FLookAndFeel.CloseButton.Circle.Down.StartAlpha := 255;
     FLookAndFeel.CloseButton.Circle.Down.StopAlpha := 255;
     FLookAndFeel.CloseButton.Circle.Down.OutlineColor := clGray;
-    FLookAndFeel.CloseButton.Circle.Down.OutlineSize := 1.0;
+    FLookAndFeel.CloseButton.Circle.Down.OutlineSize := 1.000000000000000000;
     FLookAndFeel.CloseButton.Circle.Down.OutlineAlpha := 255;
     FLookAndFeel.CloseButton.Circle.Hot.StartColor := 9408475;
     FLookAndFeel.CloseButton.Circle.Hot.StopColor := 9803748;
     FLookAndFeel.CloseButton.Circle.Hot.StartAlpha := 255;
     FLookAndFeel.CloseButton.Circle.Hot.StopAlpha := 255;
     FLookAndFeel.CloseButton.Circle.Hot.OutlineColor := 6054595;
-    FLookAndFeel.CloseButton.Circle.Hot.OutlineSize := 1.0;
+    FLookAndFeel.CloseButton.Circle.Hot.OutlineSize := 1.000000000000000000;
     FLookAndFeel.CloseButton.Circle.Hot.OutlineAlpha := 255;
     FLookAndFeel.AddButton.Button.Normal.StartColor := 14340292;
     FLookAndFeel.AddButton.Button.Normal.StopColor := 14340035;
     FLookAndFeel.AddButton.Button.Normal.StartAlpha := 255;
     FLookAndFeel.AddButton.Button.Normal.StopAlpha := 255;
     FLookAndFeel.AddButton.Button.Normal.OutlineColor := 13088421;
-    FLookAndFeel.AddButton.Button.Normal.OutlineSize := 1.0;
+    FLookAndFeel.AddButton.Button.Normal.OutlineSize := 1.000000000000000000;
     FLookAndFeel.AddButton.Button.Normal.OutlineAlpha := 255;
     FLookAndFeel.AddButton.Button.Down.StartColor := 13417645;
     FLookAndFeel.AddButton.Button.Down.StopColor := 13417644;
     FLookAndFeel.AddButton.Button.Down.StartAlpha := 255;
     FLookAndFeel.AddButton.Button.Down.StopAlpha := 255;
     FLookAndFeel.AddButton.Button.Down.OutlineColor := 10852748;
-    FLookAndFeel.AddButton.Button.Down.OutlineSize := 1.0;
+    FLookAndFeel.AddButton.Button.Down.OutlineSize := 1.000000000000000000;
     FLookAndFeel.AddButton.Button.Down.OutlineAlpha := 255;
     FLookAndFeel.AddButton.Button.Hot.StartColor := 15524314;
     FLookAndFeel.AddButton.Button.Hot.StopColor := 15524314;
     FLookAndFeel.AddButton.Button.Hot.StartAlpha := 255;
     FLookAndFeel.AddButton.Button.Hot.StopAlpha := 255;
     FLookAndFeel.AddButton.Button.Hot.OutlineColor := 14927787;
-    FLookAndFeel.AddButton.Button.Hot.OutlineSize := 1.0;
+    FLookAndFeel.AddButton.Button.Hot.OutlineSize := 1.000000000000000000;
     FLookAndFeel.AddButton.Button.Hot.OutlineAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Normal.StartColor := clWhite;
     FLookAndFeel.AddButton.PlusSign.Normal.StopColor := clWhite;
     FLookAndFeel.AddButton.PlusSign.Normal.StartAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Normal.StopAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Normal.OutlineColor := clGray;
-    FLookAndFeel.AddButton.PlusSign.Normal.OutlineSize := 1.0;
+    FLookAndFeel.AddButton.PlusSign.Normal.OutlineSize := 1.000000000000000000;
     FLookAndFeel.AddButton.PlusSign.Normal.OutlineAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Down.StartColor := clWhite;
     FLookAndFeel.AddButton.PlusSign.Down.StopColor := clWhite;
     FLookAndFeel.AddButton.PlusSign.Down.StartAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Down.StopAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Down.OutlineColor := clGray;
-    FLookAndFeel.AddButton.PlusSign.Down.OutlineSize := 1.0;
+    FLookAndFeel.AddButton.PlusSign.Down.OutlineSize := 1.000000000000000000;
     FLookAndFeel.AddButton.PlusSign.Down.OutlineAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Hot.StartColor := clWhite;
     FLookAndFeel.AddButton.PlusSign.Hot.StopColor := clWhite;
     FLookAndFeel.AddButton.PlusSign.Hot.StartAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Hot.StopAlpha := 255;
     FLookAndFeel.AddButton.PlusSign.Hot.OutlineColor := clGray;
-    FLookAndFeel.AddButton.PlusSign.Hot.OutlineSize := 1.0;
+    FLookAndFeel.AddButton.PlusSign.Hot.OutlineSize := 1.000000000000000000;
     FLookAndFeel.AddButton.PlusSign.Hot.OutlineAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Normal.StartColor := 14735310;
     FLookAndFeel.ScrollButtons.Button.Normal.StopColor := 14274499;
     FLookAndFeel.ScrollButtons.Button.Normal.StartAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Normal.StopAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Normal.OutlineColor := 11507842;
-    FLookAndFeel.ScrollButtons.Button.Normal.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Button.Normal.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Button.Normal.OutlineAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Down.StartColor := 13417645;
     FLookAndFeel.ScrollButtons.Button.Down.StopColor := 13417644;
     FLookAndFeel.ScrollButtons.Button.Down.StartAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Down.StopAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Down.OutlineColor := 10852748;
-    FLookAndFeel.ScrollButtons.Button.Down.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Button.Down.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Button.Down.OutlineAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Hot.StartColor := 15524314;
     FLookAndFeel.ScrollButtons.Button.Hot.StopColor := 15524313;
     FLookAndFeel.ScrollButtons.Button.Hot.StartAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Hot.StopAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Hot.OutlineColor := 14927788;
-    FLookAndFeel.ScrollButtons.Button.Hot.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Button.Hot.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Button.Hot.OutlineAlpha := 255;
     FLookAndFeel.ScrollButtons.Button.Disabled.StartColor := 14340036;
     FLookAndFeel.ScrollButtons.Button.Disabled.StopColor := 14274499;
     FLookAndFeel.ScrollButtons.Button.Disabled.StartAlpha := 150;
     FLookAndFeel.ScrollButtons.Button.Disabled.StopAlpha := 150;
     FLookAndFeel.ScrollButtons.Button.Disabled.OutlineColor := 11113341;
-    FLookAndFeel.ScrollButtons.Button.Disabled.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Button.Disabled.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Button.Disabled.OutlineAlpha := 100;
     FLookAndFeel.ScrollButtons.Arrow.Normal.StartColor := clWhite;
     FLookAndFeel.ScrollButtons.Arrow.Normal.StopColor := clWhite;
     FLookAndFeel.ScrollButtons.Arrow.Normal.StartAlpha := 255;
     FLookAndFeel.ScrollButtons.Arrow.Normal.StopAlpha := 255;
     FLookAndFeel.ScrollButtons.Arrow.Normal.OutlineColor := clGray;
-    FLookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Arrow.Normal.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Arrow.Normal.OutlineAlpha := 200;
     FLookAndFeel.ScrollButtons.Arrow.Down.StartColor := clWhite;
     FLookAndFeel.ScrollButtons.Arrow.Down.StopColor := clWhite;
     FLookAndFeel.ScrollButtons.Arrow.Down.StartAlpha := 255;
     FLookAndFeel.ScrollButtons.Arrow.Down.StopAlpha := 255;
     FLookAndFeel.ScrollButtons.Arrow.Down.OutlineColor := clGray;
-    FLookAndFeel.ScrollButtons.Arrow.Down.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Arrow.Down.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Arrow.Down.OutlineAlpha := 200;
     FLookAndFeel.ScrollButtons.Arrow.Hot.StartColor := clWhite;
     FLookAndFeel.ScrollButtons.Arrow.Hot.StopColor := clWhite;
     FLookAndFeel.ScrollButtons.Arrow.Hot.StartAlpha := 255;
     FLookAndFeel.ScrollButtons.Arrow.Hot.StopAlpha := 255;
     FLookAndFeel.ScrollButtons.Arrow.Hot.OutlineColor := clGray;
-    FLookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Arrow.Hot.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Arrow.Hot.OutlineAlpha := 200;
     FLookAndFeel.ScrollButtons.Arrow.Disabled.StartColor := clSilver;
     FLookAndFeel.ScrollButtons.Arrow.Disabled.StopColor := clSilver;
     FLookAndFeel.ScrollButtons.Arrow.Disabled.StartAlpha := 150;
     FLookAndFeel.ScrollButtons.Arrow.Disabled.StopAlpha := 150;
     FLookAndFeel.ScrollButtons.Arrow.Disabled.OutlineColor := clGray;
-    FLookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize := 1.0;
+    FLookAndFeel.ScrollButtons.Arrow.Disabled.OutlineSize := 1.000000000000000000;
     FLookAndFeel.ScrollButtons.Arrow.Disabled.OutlineAlpha := 200;
   finally
     EndUpdate;

@@ -23,18 +23,28 @@ unit ChromeTabsControls;
 
 interface
 
-uses
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ELSE}
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils, System.Classes, System.Types, System.Math,
-  Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil, Vcl.ImgList,
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+{$ENDIF}
+
+uses
+  {$IFDEF UNIT_SCOPE_NAMES}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
   Vcl.Dialogs,
   WinApi.Windows, WinApi.Messages,
   Vcl.Graphics,
   {$ELSE}
-  SysUtils, Classes,Math,
-  Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs,
-  Windows, Messages, Graphics,
-  {$IFEND}
+  SysUtils,Math,
+  Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
+  Windows,Messages,
+  Graphics,
+  Classes, // for FPC Classes must be listed after Windows
+  {$ifend}
 
   GDIPObj, GDIPAPI,
 
@@ -143,7 +153,7 @@ type
   TChromeTabControl = class(TBaseChromeTabsControl)
   private
     FChromeTab: IChromeTab;
-    FBmp: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+    FBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
     FCloseButtonState: TDrawState;
     FChromeTabControlPropertyItems: TChromeTabControlPropertyItems;
     FTabProperties: TChromeTabsLookAndFeelStyleProperties;
@@ -586,7 +596,7 @@ begin
 
   FChromeTabControlPropertyItems := TChromeTabControlPropertyItems.Create;
 
-  FBmp := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
   FBmp.PixelFormat := pf32Bit;
 
   FControlType := itTab;
@@ -921,13 +931,13 @@ var
   TabsFont: TGPFont;
   TxtFormat: TGPStringFormat;
   GPRectF: TGPRectF;
-  Bitmap: {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap;
+  Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
   ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
   NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible: Boolean;
   RightOffset: Integer;
   ScrolledRect: TRect;
 begin
-  Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
   try
     Bitmap.Width := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.MaxWidth);
     Bitmap.Height := RectHeight(ControlRect);

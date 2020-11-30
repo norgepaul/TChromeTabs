@@ -23,17 +23,29 @@ unit ChromeTabsThreadTimer;
 
 interface
 
-uses
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  {$DEFINE MODERN_THREAD}
+{$ELSE}
   {$IF CompilerVersion >= 23.0}
-  System.SysUtils, System.Classes, System.Types, System.Math,
-  Vcl.Graphics, Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.GraphUtil,
-  Vcl.ImgList, Vcl.Dialogs,
-  WinApi.Windows, WinApi.Messages, WinApi.MMSystem;
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+  {$if CompilerVersion >= 18.0}
+    {$DEFINE MODERN_THREAD}
+  {$ENDIF}
+{$ENDIF}
+
+uses
+  {$IFDEF UNIT_SCOPE_NAMES}
+  System.SysUtils,System.Classes,System.Types,System.Math,
+  Vcl.Graphics,Vcl.Controls,Vcl.ExtCtrls,Vcl.Forms,Vcl.GraphUtil,Vcl.ImgList,
+  Vcl.Dialogs,
+  WinApi.Windows, WinApi.Messages,WinApi.MMSystem;
   {$ELSE}
-  SysUtils, Classes, Math,
-  Graphics, Controls, ExtCtrls, Forms, GraphUtil, ImgList, Dialogs,
-  Windows, Messages, MMSystem;
-  {$IFEND}
+  SysUtils,Classes,Math,
+  Graphics,Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
+  Windows,Messages,MMSystem;
+  {$ifend}
 
 type
   TThreadTimer = class;
@@ -154,11 +166,11 @@ begin
     FTimerThread := TTimerThread.CreateTimerThread(Self);
     FTimerThread.FreeOnTerminate := FALSE;
 
-    {$IF CompilerVersion >= 18.0}
+    {$ifdef MODERN_THREAD}
       FTimerThread.Start;
     {$else}
       FTimerThread.Resume;
-    {$IFEND}
+    {$ifend}
   end;
 
   FRunning := TRUE;

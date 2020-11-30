@@ -21,10 +21,19 @@
 
 unit GDIPOBJ;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ELSE}
+  {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+{$ENDIF}
+
+
 interface
 
 uses
-  {$IF CompilerVersion >= 23.0}
+  {$IFDEF UNIT_SCOPE_NAMES}
   WinApi.Windows, WinApi.ActiveX,
   {$ELSE}
   Windows,ActiveX,

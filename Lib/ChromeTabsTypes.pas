@@ -23,25 +23,37 @@ unit ChromeTabsTypes;
 
 interface
 
-uses
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  {$DEFINE MISSING_VERTICAL_ALIGNMENT}
+{$ELSE}
   {$IF CompilerVersion >= 23.0}
+    {$DEFINE UNIT_SCOPE_NAMES}
+  {$ENDIF}
+  {$if CompilerVersion < 18.0}
+     {$DEFINE MISSING_VERTICAL_ALIGNMENT}
+  {$ENDIF}
+{$ENDIF}
+
+uses
+  {$IFDEF UNIT_SCOPE_NAMES}
   System.Classes,
   WinApi.Windows,
   {$ELSE}
   Classes,
   Windows,
-  {$IFEND}
+  {$ENDIF}
 
   GDIPAPI;
 
 type
-  {$IF CompilerVersion < 18.0} //{$IFNDEF DELPHI2006_UP}
+  {$ifdef MISSING_VERTICAL_ALIGNMENT} //{$IFNDEF DELPHI2006_UP}
   TVerticalAlignment = (
     taAlignTop,
     taAlignBottom,
     taVerticalCenter
   );
-  {$IFEND}
+  {$ifend}
 
   TChromeTabDirection = (
     drLeft,
