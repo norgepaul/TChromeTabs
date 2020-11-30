@@ -2021,7 +2021,7 @@ begin
 
   if (ChromeTabs2.Tabs.Count = 0) and (ItemType = itTabContainer) and (ChromeTabs2.ActiveDragTabObject = nil) then
   begin
-    TabsFont := TGPFont.Create(ChromeTabs2.LookAndFeel.Tabs.DefaultFont.Name, 11);
+    TabsFont := TGPFont.Create(ChromeTabs2.LookAndFeel.Tabs.DefaultFont.Name, ChromeTabs2.ScaledFontSize(11));
     TabsTxtBrush := TGPSolidBrush.Create(MakeGDIPColor(clWhite, 255));
     try
       TargetCanvas.SetSmoothingMode(ChromeTabs2.Options.Display.Tabs.CanvasSmoothingMode);

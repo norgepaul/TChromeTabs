@@ -2837,9 +2837,9 @@ object frmMain: TfrmMain
             object chkActiveNewTab: TCheckBox
               Left = 3
               Top = 199
-              Width = 142
+              Width = 371
               Height = 17
-              Caption = 'Activate new Tab'
+              Caption = 'ActivateNewTag'
               Checked = True
               State = cbChecked
               TabOrder = 7

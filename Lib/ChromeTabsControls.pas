@@ -165,6 +165,8 @@ type
     procedure CalculateRects(var ImageRect, TextRect, CloseButtonRect,
       CloseButtonCrossRect: TRect; var NormalImageVisible, OverlayImageVisible, SpinnerVisible,
       TextVisible: Boolean);
+    function GetImageList: TCustomImageList;
+    function GetImageListOverlay: TCustomImageList;
     function GetSpinnerImageList: TCustomImageList;
   protected
     procedure SetCloseButtonState(const Value: TDrawState); virtual;
@@ -180,7 +182,7 @@ type
     procedure DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integer; ClipPolygons: IChromeTabPolygons = nil); override;
     function GetPolygons: IChromeTabPolygons; override;
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
-    function GetCloseButonRect: TRect;
+    function GetCloseButtonRect: TRect;
     function GetCloseButtonCrossRect: TRect;
     procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
     function GetTabWidthByContent: Integer;
@@ -491,13 +493,13 @@ begin
     Result := TChromeTabPolygons.Create;
 
     Result.AddPolygon(BidiPolygon(
-                      NewPolygon(BidiControlRect, [Point(MulDiv(7,Screen.PixelsPerInch,96), RectHeight(BidiControlRect)),
-                                 Point(MulDiv(4,Screen.PixelsPerInch,96), RectHeight(BidiControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
-                                 Point(0, MulDiv(2,Screen.PixelsPerInch,96)),
-                                 Point(MulDiv(1,Screen.PixelsPerInch,96), 0),
-                                 Point(RectWidth(BidiControlRect) - MulDiv(7,Screen.PixelsPerInch,96), 0),
-                                 Point(RectWidth(BidiControlRect) - MulDiv(4,Screen.PixelsPerInch,96), MulDiv(2,Screen.PixelsPerInch,96)),
-                                 Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
+                      NewPolygon(BidiControlRect, [Point(ChromeTabs.ScaledPixels(7), RectHeight(BidiControlRect)),
+                                 Point(ChromeTabs.ScaledPixels(4), RectHeight(BidiControlRect) - ChromeTabs.ScaledPixels(2)),
+                                 Point(0, ChromeTabs.ScaledPixels(2)),
+                                 Point(ChromeTabs.ScaledPixels(1), 0),
+                                 Point(RectWidth(BidiControlRect) - ChromeTabs.ScaledPixels(7), 0),
+                                 Point(RectWidth(BidiControlRect) - ChromeTabs.ScaledPixels(4), ChromeTabs.ScaledPixels(2)),
+                                 Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect) - ChromeTabs.ScaledPixels(2)),
                                  Point(RectWidth(BidiControlRect), RectHeight(BidiControlRect))],
                       ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                       GetButtonBrush,
@@ -505,27 +507,27 @@ begin
 
     if ChromeTabs.GetOptions.Display.AddButton.ShowPlusSign then
     begin
-      LeftOffset := (ChromeTabs.GetOptions.Display.AddButton.Width div 2) - MulDiv(4,Screen.PixelsPerInch,96);
-      TopOffset := (ChromeTabs.GetOptions.Display.AddButton.Height div 2) - MulDiv(4,Screen.PixelsPerInch,96);
+      LeftOffset := (ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.AddButton.Width) div 2) - ChromeTabs.ScaledPixels(4);
+      TopOffset := (ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.AddButton.Height) div 2) - ChromeTabs.ScaledPixels(4);
 
       Result.AddPolygon(BidiPolygon(
                         NewPolygon(Rect(BidiControlRect.Left + LeftOffset,
                                    BidiControlRect.Top + TopOffset,
                                    BidiControlRect.Right - LeftOffset,
                                    BidiControlRect.Bottom - TopOffset),
-                                  [Point(0, MulDiv(3,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(3,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(3,Screen.PixelsPerInch,96), 0),
-                                   Point(MulDiv(6,Screen.PixelsPerInch,96), 0),
-                                   Point(MulDiv(6,Screen.PixelsPerInch,96), MulDiv(3,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(9,Screen.PixelsPerInch,96), MulDiv(3,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(9,Screen.PixelsPerInch,96), MulDiv(6,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(6,Screen.PixelsPerInch,96), MulDiv(6,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(6,Screen.PixelsPerInch,96), MulDiv(9,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(9,Screen.PixelsPerInch,96)),
-                                   Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(6,Screen.PixelsPerInch,96)),
-                                   Point(0, MulDiv(6,Screen.PixelsPerInch,96)),
-                                   Point(0, MulDiv(3,Screen.PixelsPerInch,96))],
+                                  [Point(0, ChromeTabs.ScaledPixels(3)),
+                                   Point(ChromeTabs.ScaledPixels(3), ChromeTabs.ScaledPixels(3)),
+                                   Point(ChromeTabs.ScaledPixels(3), 0),
+                                   Point(ChromeTabs.ScaledPixels(6), 0),
+                                   Point(ChromeTabs.ScaledPixels(6), ChromeTabs.ScaledPixels(3)),
+                                   Point(ChromeTabs.ScaledPixels(9), ChromeTabs.ScaledPixels(3)),
+                                   Point(ChromeTabs.ScaledPixels(9), ChromeTabs.ScaledPixels(6)),
+                                   Point(ChromeTabs.ScaledPixels(6), ChromeTabs.ScaledPixels(6)),
+                                   Point(ChromeTabs.ScaledPixels(6), ChromeTabs.ScaledPixels(9)),
+                                   Point(ChromeTabs.ScaledPixels(3), ChromeTabs.ScaledPixels(9)),
+                                   Point(ChromeTabs.ScaledPixels(3), ChromeTabs.ScaledPixels(6)),
+                                   Point(0, ChromeTabs.ScaledPixels(6)),
+                                   Point(0, ChromeTabs.ScaledPixels(3))],
                                ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                GetSymbolBrush,
                                GetSymbolPen);
@@ -617,7 +619,7 @@ begin
 
   if CloseButtonVisible then
   begin
-    CloseRect := ChromeTabs.ScrollRect(BidiRect(GetCloseButonRect));
+    CloseRect := ChromeTabs.ScrollRect(BidiRect(GetCloseButtonRect));
 
     if PtInRect(CloseRect, Point(MouseX, MouseY)) then
     begin
@@ -636,6 +638,20 @@ begin
       Break;
     end;
   end;
+end;
+
+function TChromeTabControl.GetImageList: TCustomImageList;
+begin
+  Result := ChromeTab.GetCustomImages;
+  if Result = nil then
+    Result := ChromeTabs.GetImages;
+end;
+
+function TChromeTabControl.GetImageListOverlay: TCustomImageList;
+begin
+  Result := ChromeTab.GetCustomImagesOverlay;
+  if Result = nil then
+    Result := ChromeTabs.GetImagesOverlay;
 end;
 
 function TChromeTabControl.AnimateModified: Boolean;
@@ -663,7 +679,7 @@ begin
 
     ScrolledRect := ScrollRect(ControlRect);
 
-    LowX := ScrolledRect.Left - (ChromeTabs.GetOptions.Display.TabModifiedGlow.Width);
+    LowX := ScrolledRect.Left - ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabModifiedGlow.Width);
     HighX := ScrolledRect.Right;
 
     Distance := Round(CalculateEase(TickCount - FModifiedStartTicks,
@@ -685,8 +701,18 @@ end;
 function TChromeTabControl.GetSpinnerImageList: TCustomImageList;
 begin
   case ChromeTab.GetSpinnerState of
-    tssImageUpload: Result := ChromeTabs.GetImagesSpinnerUpload;
-    tssImageDownload: Result := ChromeTabs.GetImagesSpinnerDownload;
+    tssImageUpload:
+    begin
+      Result := ChromeTab.GetCustomImagesSpinnerUpload;
+      if Result = nil then
+        Result := ChromeTabs.GetImagesSpinnerUpload;
+    end;
+    tssImageDownload:
+    begin
+      Result := ChromeTab.GetCustomImagesSpinnerDownload;
+      if Result = nil then
+        Result := ChromeTabs.GetImagesSpinnerDownload;
+    end
   else
     Result := nil;
   end;
@@ -764,8 +790,9 @@ function TChromeTabControl.CloseButtonVisible: Boolean;
 begin
   if (not ChromeTab.GetActive) and
      (RectWidth(ControlRect) -
-      ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight -
-      ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft <= ChromeTabs.GetOptions.Display.CloseButton.AutoHideWidth) then
+      ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight -
+      ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft) <=
+      ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.AutoHideWidth)) then
     Result := FALSE
   else
   begin
@@ -812,16 +839,16 @@ begin
     Result := TChromeTabPolygons.Create;
 
     Result.AddPolygon(NewPolygon(BidiControlRect, [Point(0, RectHeight(ControlRect)),
-                                       Point(MulDiv( 4, Screen.PixelsPerInch, 96 ), RectHeight(ControlRect) - MulDiv( 3, Screen.PixelsPerInch, 96 )),
-                                       Point(MulDiv( 12, Screen.PixelsPerInch, 96 ), MulDiv( 3, Screen.PixelsPerInch, 96 )),
-                                       Point(MulDiv( 13, Screen.PixelsPerInch, 96 ), MulDiv( 2, Screen.PixelsPerInch, 96 )),
-                                       Point(MulDiv( 14, Screen.PixelsPerInch, 96 ), MulDiv( 1, Screen.PixelsPerInch, 96 )),
-                                       Point(MulDiv( 16, Screen.PixelsPerInch, 96 ), 0),
-                                       Point(RectWidth(ControlRect) - MulDiv( 16, Screen.PixelsPerInch, 96 ), 0),
-                                       Point(RectWidth(ControlRect) - MulDiv( 14, Screen.PixelsPerInch, 96 ), MulDiv( 1, Screen.PixelsPerInch, 96 )),
-                                       Point(RectWidth(ControlRect) - MulDiv( 13, Screen.PixelsPerInch, 96 ), MulDiv( 2, Screen.PixelsPerInch, 96 )),
-                                       Point(RectWidth(ControlRect) - MulDiv( 12, Screen.PixelsPerInch, 96 ), MulDiv( 3, Screen.PixelsPerInch, 96 )),
-                                       Point(RectWidth(ControlRect) - MulDiv( 4, Screen.PixelsPerInch, 96 ), RectHeight(ControlRect) - MulDiv( 3, Screen.PixelsPerInch, 96 )),
+                                       Point(ChromeTabs.ScaledPixels( 4), RectHeight(ControlRect) - ChromeTabs.ScaledPixels( 3)),
+                                       Point(ChromeTabs.ScaledPixels( 12), ChromeTabs.ScaledPixels( 3)),
+                                       Point(ChromeTabs.ScaledPixels( 13), ChromeTabs.ScaledPixels( 2)),
+                                       Point(ChromeTabs.ScaledPixels( 14), ChromeTabs.ScaledPixels( 1)),
+                                       Point(ChromeTabs.ScaledPixels( 16), 0),
+                                       Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels( 16), 0),
+                                       Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels( 14), ChromeTabs.ScaledPixels( 1)),
+                                       Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels( 13), ChromeTabs.ScaledPixels( 2)),
+                                       Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels( 12), ChromeTabs.ScaledPixels( 3)),
+                                       Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels( 4), RectHeight(ControlRect) - ChromeTabs.ScaledPixels( 3)),
                                        Point(RectWidth(ControlRect), RectHeight(ControlRect))],
                                  ChromeTabs.GetOptions.Display.Tabs.Orientation),
                       GetTabBrush,
@@ -829,28 +856,28 @@ begin
   end;
 end;
 
-function TChromeTabControl.GetCloseButonRect: TRect;
+function TChromeTabControl.GetCloseButtonRect: TRect;
 begin
   Result.Left := ControlRect.Right -
-                 ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight -
-                 ChromeTabs.GetOptions.Display.CloseButton.Width -
-                 ChromeTabs.GetOptions.Display.CloseButton.Offsets.Horizontal;
-  Result.Top := ControlRect.Top +
-                ChromeTabs.GetOptions.Display.CloseButton.Offsets.Vertical;
-  Result.Right := Result.Left +
-                  ChromeTabs.GetOptions.Display.CloseButton.Width;
-  Result.Bottom := Result.Top +
-                   ChromeTabs.GetOptions.Display.CloseButton.Height;
+                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight) -
+                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.Width) -
+                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.Offsets.Horizontal);
+  Result.Top :=  ControlRect.Top +
+                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.Offsets.Vertical);
+  Result.Right :=Result.Left +
+                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.Width);
+  Result.Bottom:=Result.Top +
+                 ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.Height);
 end;
 
 function TChromeTabControl.GetCloseButtonCrossRect: TRect;
 begin
-  Result := GetCloseButonRect;
+  Result := GetCloseButtonRect;
 
-  Result := Rect(Result.Left + ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset,
-                 Result.Top + ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset,
-                 Result.Right - ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset,
-                 Result.Bottom - ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset);
+  Result := Rect(Result.Left + ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset),
+                 Result.Top + ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset),
+                 Result.Right - ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset),
+                 Result.Bottom - ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset));
 end;
 
 function TChromeTabControl.GetTabBrush: TGPLinearGradientBrush;
@@ -902,12 +929,12 @@ var
 begin
   Bitmap := {$IF CompilerVersion >= 23.0}Vcl.Graphics.{$IFEND}TBitmap.Create;
   try
-    Bitmap.Width := ChromeTabs.GetOptions.Display.Tabs.MaxWidth;
+    Bitmap.Width := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.MaxWidth);
     Bitmap.Height := RectHeight(ControlRect);
 
     TabCanvas := TGPGraphics.Create(Bitmap.Canvas.Handle);
     TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName,
-                               FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
+                               FChromeTabs.ScaledFontSize(FChromeTabControlPropertyItems.CurrentTabProperties.FontSize));
     TxtFormat := TGPStringFormat.Create;
     try
       TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRenderingMode);
@@ -928,13 +955,13 @@ begin
       if NormalImageVisible or OverlayImageVisible or SpinnerVisible then
         RightOffset := ImageRect.Right
       else
-        RightOffset := ScrolledRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
+        RightOffset := ScrolledRect.Left + ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft);
 
       Result :=
         Round(GPRectF.Width) +
         (RightOffset - ScrolledRect.Left) +
         (ScrolledRect.Right - CloseButtonRect.Left) -
-        (ChromeTabs.GetOptions.Display.Tabs.TabOverlap);
+        ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.TabOverlap);
     finally
       FreeAndNil(TabCanvas);
       FreeAndNil(TabsFont);
@@ -952,24 +979,26 @@ var
   LeftOffset, RightOffset, ImageWidth, ImageHeight: Integer;
 begin
   // Get the close button rect
-  CloseButtonRect := GetCloseButonRect;
+  CloseButtonRect := GetCloseButtonRect;
   CloseButtonCrossRect := GetCloseButtonCrossRect;
 
   if CloseButtonVisible then
   begin
-    RightOffset := CloseButtonRect.Left - MulDiv(1,Screen.PixelsPerInch,96)
+    RightOffset := CloseButtonRect.Left - ChromeTabs.ScaledPixels(1)
   end
   else
   begin
-    RightOffset := ControlRect.Right - ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight;
+    RightOffset := ControlRect.Right -
+                   ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.ContentOffsetRight);
     CloseButtonRect.Left := CloseButtonRect.Right;
   end;
 
   // Get image size
-  LeftOffset := ControlRect.Left + ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft;
+  LeftOffset := ControlRect.Left +
+                ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.ContentOffsetLeft);
 
-  NormalImageVisible := ImageVisible(ChromeTabs.GetImages, ChromeTab.GetImageIndex);
-  OverlayImageVisible := ImageVisible(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay);
+  NormalImageVisible := ImageVisible(GetImageList, ChromeTab.GetImageIndex);
+  OverlayImageVisible := ImageVisible(GetImageListOverlay, ChromeTab.GetImageIndexOverlay);
   SpinnerVisible := (ChromeTab.GetSpinnerState <> tssNone) and (not (csDesigning in ChromeTabs.GetComponentState));
 
   ImageWidth := 0;
@@ -979,13 +1008,13 @@ begin
   begin
     if ChromeTab.GetSpinnerState = tssRenderedUpload then
     begin
-      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Position.Width;
-      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Upload.Position.Height;
+      ImageWidth := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabSpinners.Upload.Position.Width);
+      ImageHeight := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabSpinners.Upload.Position.Height);
     end
     else
     begin
-      ImageWidth := ChromeTabs.GetOptions.Display.TabSpinners.Download.Position.Width;
-      ImageHeight := ChromeTabs.GetOptions.Display.TabSpinners.Download.Position.Height;
+      ImageWidth := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabSpinners.Download.Position.Width);
+      ImageHeight := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabSpinners.Download.Position.Height);
     end;
   end;
 
@@ -994,20 +1023,20 @@ begin
      (NormalImageVisible) or
      (OverlayImageVisible) then
   begin
-    if ChromeTabs.GetImages.Width > ImageWidth then
-      ImageWidth := ChromeTabs.GetImages.Width;
+    if ChromeTabs.ScaledPixels(GetImageList.Width) > ImageWidth then
+      ImageWidth := ChromeTabs.ScaledPixels(GetImageList.Width);
 
-    if ChromeTabs.GetImages.Height > ImageHeight then
-      ImageHeight := ChromeTabs.GetImages.Height;
+    if ChromeTabs.ScaledPixels(GetImageList.Height) > ImageHeight then
+      ImageHeight := ChromeTabs.ScaledPixels(GetImageList.Height);
   end;
 
   if OverlayImageVisible then
   begin
-    if ChromeTabs.GetImagesOverlay.Width > ChromeTabs.GetImagesOverlay.Width then
-      ImageWidth := ChromeTabs.GetImagesOverlay.Width;
+    if ChromeTabs.ScaledPixels(GetImageListOverlay.Width) > ChromeTabs.ScaledPixels(GetImageList.Width) then
+      ImageWidth := ChromeTabs.ScaledPixels(GetImageListOverlay.Width);
 
-    if ChromeTabs.GetImagesOverlay.Height > ChromeTabs.GetImagesOverlay.Height then
-      ImageHeight := ChromeTabs.GetImagesOverlay.Height;
+    if ChromeTabs.ScaledPixels(GetImageListOverlay.Height) > ChromeTabs.ScaledPixels(GetImageList.Height) then
+      ImageHeight := ChromeTabs.ScaledPixels(GetImageListOverlay.Height);
   end;
 
   // Does the image fit between the left margin and the close button?
@@ -1033,14 +1062,14 @@ begin
                         LeftOffset + ImageWidth,
                         (ControlRect.Top + (RectHeight(ControlRect) div 2) - (ImageHeight div 2)) + ImageHeight);
 
-      LeftOffset := LeftOffset + ImageWidth + MulDiv(1,Screen.PixelsPerInch,96);
+      LeftOffset := LeftOffset + ImageWidth + ChromeTabs.ScaledPixels(1);
     end;
   end;
 
   // Does the Text fit?
   TextVisible := ((not ChromeTab.GetPinned) or
                   (ChromeTabs.GetOptions.Display.Tabs.ShowPinnedTabText)) and
-                 (RightOffset - LeftOffset >= MulDiv(5,Screen.PixelsPerInch,96));
+                 (RightOffset - LeftOffset >= ChromeTabs.ScaledPixels(5));
 
   if TextVisible then
   begin
@@ -1091,9 +1120,9 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     BlendFactorsFade: array[0..2] of Single;
   begin
     if ChromeTabs.GetOptions.Behaviour.DebugMode then
-      TextSize := 7
+      TextSize := FChromeTabs.ScaledFontSize(7)
     else
-      TextSize := FChromeTabControlPropertyItems.CurrentTabProperties.FontSize;
+      TextSize := FChromeTabs.ScaledFontSize(FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
 
     TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName, TextSize);
     try
@@ -1125,7 +1154,9 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
 
           // Set the text trim mode
           if (ChromeTabs.GetOptions.Display.Tabs.TabWidthFromContent) and
-             (RectWidth(ControlRect) < ChromeTabs.GetOptions.Display.Tabs.MaxWidth + ChromeTabs.GetOptions.Display.Tabs.TabOverlap) then
+             (RectWidth(ControlRect) <
+              ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.MaxWidth +
+                                      ChromeTabs.GetOptions.Display.Tabs.TabOverlap)) then
           begin
             TxtFormat.SetTrimming(StringTrimmingNone);
 
@@ -1250,7 +1281,7 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     begin
       ImageBitmap := ImageListToTGPImage(Images, ImageIndex);
       try
-        TabCanvas.DrawImage(ImageBitmap, ImageRect.Left, ImageRect.Top);
+        TabCanvas.DrawImage(ImageBitmap, ImageRect.Left, ImageRect.Top, ImageRect.Right-ImageRect.Left, ImageRect.Bottom-ImageRect.Top);
       finally
         FreeAndNil(ImageBitmap);
       end;
@@ -1331,10 +1362,10 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
         SpinPen := TGPPen.Create(MakeGDIPColor(SpinnerLookAndFeel.Color, SpinnerLookAndFeel.Alpha), SpinnerLookAndFeel.Thickness);
         try
           TabCanvas.DrawArc(SpinPen,
-                            ImageRect.Left + Offset + SpinnerOptions.Position.Offsets.Horizontal,
-                            ImageRect.Top + Offset + SpinnerOptions.Position.Offsets.Vertical,
-                            SpinnerOptions.Position.Width - (Offset * 2),
-                            SpinnerOptions.Position.Height - (Offset * 2),
+                            ImageRect.Left + Offset + ChromeTabs.ScaledPixels(SpinnerOptions.Position.Offsets.Horizontal),
+                            ImageRect.Top + Offset + ChromeTabs.ScaledPixels(SpinnerOptions.Position.Offsets.Vertical),
+                            ChromeTabs.ScaledPixels(SpinnerOptions.Position.Width) - (Offset * 2),
+                            ChromeTabs.ScaledPixels(SpinnerOptions.Position.Height) - (Offset * 2),
                             FSpinnerRenderedDegrees,
                             SpinnerOptions.SweepAngle);
         finally
@@ -1403,15 +1434,15 @@ begin
         if not Handled then
         begin
           case ChromeTabs.GetOptions.Display.Tabs.Orientation of
-            toTop: ModifiedTop := ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
+            toTop: ModifiedTop := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset);
           else
-            ModifiedTop := ControlRect.Bottom - ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset;
+            ModifiedTop := ControlRect.Bottom - ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset);
           end;
 
           DrawGlow(BidiRect(Rect(FModifiedPosition,
                         ModifiedTop,
-                        ChromeTabs.GetOptions.Display.TabModifiedGlow.Width + FModifiedPosition,
-                        ChromeTabs.GetOptions.Display.TabModifiedGlow.Height + ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset)),
+                        ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabModifiedGlow.Width) + FModifiedPosition,
+                        ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabModifiedGlow.Height + ChromeTabs.GetOptions.Display.TabModifiedGlow.VerticalOffset))),
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreColor,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.OutsideColor,
                         ChromeTabs.GetLookAndFeel.Tabs.Modified.CentreAlpha,
@@ -1429,10 +1460,10 @@ begin
 
         if not Handled then
         begin
-          DrawGlow(Rect(MouseX - (ChromeTabs.GetOptions.Display.TabMouseGlow.Width div 2),
-                        MouseY - (ChromeTabs.GetOptions.Display.TabMouseGlow.Height div 2),
-                        MouseX + (ChromeTabs.GetOptions.Display.TabMouseGlow.Width div 2),
-                        MouseY + (ChromeTabs.GetOptions.Display.TabMouseGlow.Height div 2)),
+          DrawGlow(Rect(MouseX - (ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabMouseGlow.Width) div 2),
+                        MouseY - (ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabMouseGlow.Height) div 2),
+                        MouseX + (ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabMouseGlow.Width) div 2),
+                        MouseY + (ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.TabMouseGlow.Height) div 2)),
                         ChromeTabs.GetLookAndFeel.Tabs.MouseGlow.CentreColor,
                         ChromeTabs.GetLookAndFeel.Tabs.MouseGlow.OutsideColor,
                         ChromeTabs.GetLookAndFeel.Tabs.MouseGlow.CentreAlpha,
@@ -1516,10 +1547,10 @@ begin
          (not ChromeTabs.GetOptions.Display.TabSpinners.HideImagesWhenSpinnerVisible) then
       begin
         if NormalImageVisible then
-          DrawImage(ChromeTabs.GetImages, ChromeTab.GetImageIndex, ImageRect, itTabImage);
+          DrawImage(GetImageList, ChromeTab.GetImageIndex, ImageRect, itTabImage);
 
         if OverlayImageVisible then
-          DrawImage(ChromeTabs.GetImagesOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
+          DrawImage(GetImageListOverlay, ChromeTab.GetImageIndexOverlay, ImageRect, itTabImageOverlay);
       end;
 
       // Draw the spinner image
@@ -1618,10 +1649,10 @@ begin
       drLeft:
         begin
           Result.AddPolygon(BidiPolygon(
-                            NewPolygon(BidiControlRect, [Point(MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2),
-                                                     Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), MulDiv(2,Screen.PixelsPerInch,96)),
-                                                     Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
-                                                     Point(MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2)],
+                            NewPolygon(BidiControlRect, [Point(ChromeTabs.ScaledPixels(3), RectHeight(ControlRect) div 2),
+                                                     Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels(3), ChromeTabs.ScaledPixels(2)),
+                                                     Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels(3), RectHeight(ControlRect) - ChromeTabs.ScaledPixels(2)),
+                                                     Point(ChromeTabs.ScaledPixels(3), RectHeight(ControlRect) div 2)],
                                        ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                        GetSymbolBrush,
                                        GetSymbolPen);
@@ -1630,10 +1661,10 @@ begin
       drRight:
         begin
           Result.AddPolygon(BidiPolygon(
-                            NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2),
-                                                     Point(MulDiv(3,Screen.PixelsPerInch,96), MulDiv(2,Screen.PixelsPerInch,96)),
-                                                     Point(MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) - MulDiv(2,Screen.PixelsPerInch,96)),
-                                                     Point(RectWidth(ControlRect) - MulDiv(3,Screen.PixelsPerInch,96), RectHeight(ControlRect) div 2)],
+                            NewPolygon(BidiControlRect, [Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels(3), RectHeight(ControlRect) div 2),
+                                                     Point(ChromeTabs.ScaledPixels(3), ChromeTabs.ScaledPixels(2)),
+                                                     Point(ChromeTabs.ScaledPixels(3), RectHeight(ControlRect) - ChromeTabs.ScaledPixels(2)),
+                                                     Point(RectWidth(ControlRect) - ChromeTabs.ScaledPixels(3), RectHeight(ControlRect) div 2)],
                                        ChromeTabs.GetOptions.Display.Tabs.Orientation)),
                                        GetSymbolBrush,
                                        GetSymbolPen);
