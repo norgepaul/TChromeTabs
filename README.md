@@ -1,6 +1,6 @@
 # TChromeTabs
 
-TChromeTabs is a comprehensive implementation of Google Chrome's tabs for Delphi 6 - Delphi DX10.4 Sydney
+TChromeTabs is a comprehensive implementation of Google Chrome's tabs for Delphi 6 - Delphi DX10.4 Sydney with High-DPI support
 
 Delphinus-Support
 

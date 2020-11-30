@@ -1207,6 +1207,7 @@ type
     function GetComponentState: TComponentState;
     function IsDragging: Boolean;
     function ScaledPixels(pPixels: Integer): Integer;
+    function ScaledFontSize(fFontSize : Integer) : Integer;
 
     function GetLookAndFeel: TChromeTabsLookAndFeel;
     function GetOptions: TOptions;

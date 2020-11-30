@@ -934,7 +934,7 @@ begin
 
     TabCanvas := TGPGraphics.Create(Bitmap.Canvas.Handle);
     TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName,
-                               FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
+                               FChromeTabs.ScaledFontSize(FChromeTabControlPropertyItems.CurrentTabProperties.FontSize));
     TxtFormat := TGPStringFormat.Create;
     try
       TabCanvas.SetTextRenderingHint(FChromeTabControlPropertyItems.StopTabProperties.TextRenderingMode);
@@ -1120,9 +1120,9 @@ procedure TChromeTabControl.DrawTo(TabCanvas: TGPGraphics; MouseX, MouseY: Integ
     BlendFactorsFade: array[0..2] of Single;
   begin
     if ChromeTabs.GetOptions.Behaviour.DebugMode then
-      TextSize := 7
+      TextSize := FChromeTabs.ScaledFontSize(7)
     else
-      TextSize := FChromeTabControlPropertyItems.CurrentTabProperties.FontSize;
+      TextSize := FChromeTabs.ScaledFontSize(FChromeTabControlPropertyItems.CurrentTabProperties.FontSize);
 
     TabsFont := TGPFont.Create(FChromeTabControlPropertyItems.StopTabProperties.FontName, TextSize);
     try

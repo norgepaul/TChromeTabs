@@ -444,6 +444,7 @@ type
     procedure SetDefaultOptions;
     procedure InvalidateAllControls;
     function ScaledPixels(pPixels: Integer): Integer;
+    function ScaledFontSize(fFontSize : Integer) : Integer;
 
     property ActiveDragTabObject: IDragTabObject read FActiveDragTabObject;
     property TabControls[Index: Integer]: TChromeTabControl read GetTabControl;
@@ -2690,6 +2691,20 @@ begin
     SaveComponentToStream(TabsOptions, Stream);
   finally
     FreeAndNil(TabsOptions);
+  end;
+end;
+
+function TCustomChromeTabs.ScaledFontSize(fFontSize: Integer): Integer;
+var
+  font : TFont;
+begin
+  font := TFont.Create;
+  try
+    font.Size := fFontSize;
+    font.Height := ScaledPixels(font.Height);
+    Result := font.Size;
+  finally
+    font.Free;
   end;
 end;
 
