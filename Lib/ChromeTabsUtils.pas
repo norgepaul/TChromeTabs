@@ -701,17 +701,19 @@ function ColorBetween(const ColorA, ColorB: TColor; const Percent: Integer): TCo
 var
   R1, G1, B1: Byte;
   R2, G2, B2: Byte;
+  LColorA,LColorB:TColor;
 begin
-  R1:= GetRValue(ColorA);
-  G1:= GetGValue(ColorA);
-  B1:= GetBValue(ColorA);
-  R2:= GetRValue(ColorB);
-  G2:= GetGValue(ColorB);
-  B2:= GetBValue(ColorB);
-
-  Result:= RGB(Percent * (R2-R1) div 100 + R1,
-               Percent * (G2-G1) div 100 + G1,
-               Percent * (B2-B1) div 100 + B1);
+  LColorA := ColorToRGB(ColorA);
+  LColorB := ColorToRGB(ColorB);
+  R1 := GetRValue(LColorA);
+  G1 := GetGValue(LColorA);
+  B1 := GetBValue(LColorA);
+  R2 := GetRValue(LColorB);
+  G2 := GetGValue(LColorB);
+  B2 := GetBValue(LColorB);
+  Result := RGB(Percent * (R2 - R1) div 100 + R1,
+                Percent * (G2 - G1) div 100 + G1,
+                Percent * (B2 - B1) div 100 + B1);
 end;
 
 function SameRect(Rect1, Rect2: TRect): Boolean;
