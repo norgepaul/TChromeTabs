@@ -30,7 +30,7 @@ unit GDIPAPI;
 {$ELSE}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 interface

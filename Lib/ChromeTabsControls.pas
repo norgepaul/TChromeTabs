@@ -28,7 +28,7 @@ interface
 {$ELSE}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 uses
@@ -44,7 +44,7 @@ uses
   Windows,Messages,
   Graphics,
   Classes, // for FPC Classes must be listed after Windows
-  {$ifend}
+  {$ENDIF}
 
   GDIPObj, GDIPAPI,
 
@@ -153,7 +153,7 @@ type
   TChromeTabControl = class(TBaseChromeTabsControl)
   private
     FChromeTab: IChromeTab;
-    FBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
+    FBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap;
     FCloseButtonState: TDrawState;
     FChromeTabControlPropertyItems: TChromeTabControlPropertyItems;
     FTabProperties: TChromeTabsLookAndFeelStyleProperties;
@@ -596,7 +596,7 @@ begin
 
   FChromeTabControlPropertyItems := TChromeTabControlPropertyItems.Create;
 
-  FBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap.Create;
   FBmp.PixelFormat := pf32Bit;
 
   FControlType := itTab;
@@ -931,13 +931,13 @@ var
   TabsFont: TGPFont;
   TxtFormat: TGPStringFormat;
   GPRectF: TGPRectF;
-  Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
+  Bitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap;
   ImageRect, TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
   NormalImageVisible, OverlayImageVisible, SpinnerVisible, TextVisible: Boolean;
   RightOffset: Integer;
   ScrolledRect: TRect;
 begin
-  Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap.Create;
   try
     Bitmap.Width := ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.Tabs.MaxWidth);
     Bitmap.Height := RectHeight(ControlRect);

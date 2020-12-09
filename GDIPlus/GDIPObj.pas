@@ -26,7 +26,7 @@ unit GDIPOBJ;
 {$ELSE}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 
@@ -37,7 +37,7 @@ uses
   WinApi.Windows, WinApi.ActiveX,
   {$ELSE}
   Windows,ActiveX,
-  {$ifend}
+  {$ENDIF}
   DirectDraw,
   GDIPAPI;
 

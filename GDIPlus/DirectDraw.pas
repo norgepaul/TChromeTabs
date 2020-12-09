@@ -70,7 +70,7 @@ interface
 {$IFNDEF FPC}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 {$I DirectX.inc}
@@ -1540,7 +1540,7 @@ type
     function Lock(lpDestRect: PRect;
         out lpDDSurfaceDesc: TDDSurfaceDesc; dwFlags: DWORD;
         hEvent: THandle): HResult; stdcall;
-    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$IFEND}Windows.HDC): HResult; stdcall;
+    function ReleaseDC(hDC: {$IFDEF UNIT_SCOPE_NAMES}WinApi.{$ENDIF}Windows.HDC): HResult; stdcall;
     function _Restore: HResult; stdcall;
     function SetClipper(lpDDClipper: IDirectDrawClipper): HResult; stdcall;
     function SetColorKey(dwFlags: DWORD; lpDDColorKey: PDDColorKey) :

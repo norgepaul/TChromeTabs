@@ -29,10 +29,10 @@ interface
 {$ELSE}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
   {$if CompilerVersion >= 18.0}
     {$DEFINE MODERN_THREAD}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 uses
@@ -45,7 +45,7 @@ uses
   SysUtils,Classes,Math,
   Graphics,Controls,ExtCtrls,Forms,GraphUtil,ImgList,Dialogs,
   Windows,Messages,MMSystem;
-  {$ifend}
+  {$ENDIF}
 
 type
   TThreadTimer = class;
@@ -170,7 +170,7 @@ begin
       FTimerThread.Start;
     {$else}
       FTimerThread.Resume;
-    {$ifend}
+    {$ENDIF}
   end;
 
   FRunning := TRUE;

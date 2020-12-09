@@ -29,10 +29,10 @@ interface
 {$ELSE}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
   {$if CompilerVersion < 18.0}
      {$DEFINE MISSING_VERTICAL_ALIGNMENT}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 uses
@@ -53,7 +53,7 @@ type
     taAlignBottom,
     taVerticalCenter
   );
-  {$ifend}
+  {$ENDIF}
 
   TChromeTabDirection = (
     drLeft,

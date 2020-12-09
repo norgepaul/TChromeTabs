@@ -76,14 +76,14 @@ unit ChromeTabs;
 {$ELSE}
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
-  {$ENDIF}
+  {$IFEND}
   {$IF CompilerVersion >= 31.0}
     {$DEFINE CURRENT_PPI_SUPPORT}
-  {$ENDIF}
+  {$IFEND}
   {$if CompilerVersion >= 18.0}
     {$DEFINE ADDITIONAL_MOUSE_EVENTS}
     {$DEFINE EXPLICIT_DRAW_STATE}
-  {$ENDIF}
+  {$IFEND}
 {$ENDIF}
 
 interface
@@ -107,7 +107,7 @@ uses
   Windows,Messages,
   Graphics,
   Classes, // for FPC Classes must be listed after Windows
-  {$ifend}
+  {$ENDIF}
 
   {$IFDEF FPC}
   LMessages,
@@ -221,8 +221,8 @@ type
     FDragTabObject: IDragTabObject;
     FActiveDragTabObject: IDragTabObject;
 
-    FCanvasBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
-    FBackgroundBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
+    FCanvasBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap;
+    FBackgroundBmp: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap;
     FTabPopupMenu: TPopupMenu;
     FImages: TCustomImageList;
     FImagesOverlay: TCustomImageList;
@@ -546,7 +546,7 @@ type
     {$ifdef ADDITIONAL_MOUSE_EVENTS}
     property OnMouseEnter;
     property OnMouseLeave;
-    {$ifend}
+    {$ENDIF}
   end;
 
 implementation
@@ -684,7 +684,7 @@ begin
   {$ifdef ADDITIONAL_MOUSE_EVENTS}
   if Assigned(OnMouseEnter) then
     OnMouseEnter(Self);
-  {$ifend}
+  {$ENDIF}
 end;
 
 procedure TCustomChromeTabs.CMMouseLeave(var Msg: TMessage);
@@ -730,7 +730,7 @@ begin
   {$ifdef ADDITIONAL_MOUSE_EVENTS}
   if Assigned(OnMouseLeave) then
     OnMouseLeave(Self);
-  {$ifend}
+  {$ENDIF}
 end;
 
 function TCustomChromeTabs.InsertDroppedTab: TChromeTab;
@@ -1538,10 +1538,10 @@ begin
                                   csCaptureMouse];
 
   // Canvas Bitmaps
-  FCanvasBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FCanvasBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap.Create;
   FCanvasBmp.PixelFormat := pf32Bit;
 
-  FBackgroundBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
+  FBackgroundBmp := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap.Create;
   FBackgroundBmp.PixelFormat := pf32bit;
 
   // Options
@@ -2195,7 +2195,7 @@ const
 var
   DragControl: TWinControl;
   DragCanvas: TGPGraphics;
-  Bitmap, ScaledBitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap;
+  Bitmap, ScaledBitmap: {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap;
   TempRect: TRect;
   TabTop, ControlTop, TabEndX, BorderOffset: Integer;
   ActualDragDisplay: TChromeTabDragDisplay;
@@ -2235,7 +2235,7 @@ begin
         FDragTabObject.DragFormOffset := Point(Round(BiDiX * FOptions.DragDrop.DragControlImageResizeFactor),
                                                Round(FDragTabObject.DragCursorOffset.Y * FOptions.DragDrop.DragControlImageResizeFactor));
 
-      Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
+      Bitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap.Create;
       try
         TabTop := 0;
         ControlTop := 0;
@@ -2350,7 +2350,7 @@ begin
           FreeAndNil(DragCanvas);
         end;
 
-        ScaledBitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$IFEND}TBitmap.Create;
+        ScaledBitmap := {$IFDEF UNIT_SCOPE_NAMES}Vcl.Graphics.{$ENDIF}TBitmap.Create;
         try
           // Scale the image
           if ActualDragDisplay = ddTab then
@@ -2702,7 +2702,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    {$IFDEF UNIT_SCOPE_NAMES}System.{$IFEND}SysUtils.DeleteFile(Filename);
+    {$IFDEF UNIT_SCOPE_NAMES}System.{$ENDIF}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -2717,7 +2717,7 @@ var
   FileStream: TFileStream;
 begin
   if FileExists(Filename) then
-    {$IFDEF UNIT_SCOPE_NAMES}System.{$IFEND}SysUtils.DeleteFile(Filename);
+    {$IFDEF UNIT_SCOPE_NAMES}System.{$ENDIF}SysUtils.DeleteFile(Filename);
 
   FileStream := TFileStream.Create(Filename, fmCreate);
   try
@@ -2757,7 +2757,7 @@ end;
 
 function TCustomChromeTabs.ScaledPixels(pPixels: Integer): Integer;
 begin
-  Result := MulDiv(pPixels, {$ifdef CURRENT_PPI_SUPPORT}Self.FCurrentPPI{$else}Screen.PixelsPerInch{$ifend}, 96);
+  Result := MulDiv(pPixels, {$ifdef CURRENT_PPI_SUPPORT}Self.FCurrentPPI{$else}Screen.PixelsPerInch{$ENDIF}, 96);
 end;
 
 function TCustomChromeTabs.ScrollButtonLeftVisible: Boolean;
@@ -3547,7 +3547,7 @@ begin
   // Make sure the active tab is drawn correctly
   if ActiveTab <> nil then
   begin
-    TabControls[ActiveTabIndex].SetDrawState({$IFDEF EXPLICIT_DRAW_STATE}TDrawState.{$IFEND}dsActive, 0, {$IFDEF EXPLICIT_DRAW_STATE}TChromeTabsEaseType.{$IFEND}ttNone, True);
+    TabControls[ActiveTabIndex].SetDrawState({$IFDEF EXPLICIT_DRAW_STATE}TDrawState.{$ENDIF}dsActive, 0, {$IFDEF EXPLICIT_DRAW_STATE}TChromeTabsEaseType.{$ENDIF}ttNone, True);
   end;
 end;
 
