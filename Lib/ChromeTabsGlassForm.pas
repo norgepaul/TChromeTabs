@@ -95,6 +95,8 @@ type
     procedure WndProc(var Message: TMessage); override;
 
     procedure DoOnAeroStatusChanged(AeroEnabled: Boolean); virtual;
+  private
+    function GetSysIconRect : TRect;
   public
     constructor Create(AOwner: TComponent); override;
 
@@ -283,6 +285,7 @@ begin
     else
     begin
       ClientPos := ScreenToClient(Point(Message.XPos, Message.YPos));
+      IconRect := GetSysIconRect;
 
       if ClientPos.Y <= GlassFrame.Top then
       begin
@@ -404,6 +407,23 @@ begin
     RecalcGlassFrameBounds(TRUE);
 
     Invalidate;
+  end;
+end;
+
+function TChromeTabsGlassForm.GetSysIconRect: TRect;
+begin
+  if not (biSystemMenu in BorderIcons) or not (BorderStyle in [bsSingle, bsSizeable]) then
+    SetRectEmpty(Result)
+  else
+  begin
+    Result.Left := 0;
+    Result.Right := GetSystemMetrics(SM_CXSMICON);
+    Result.Bottom := GetSystemMetrics(SM_CYSMICON);
+    if WindowState = wsMaximized then
+      Result.Top := GlassFrame.Top - Result.Bottom - 2
+    else
+      Result.Top := 6;
+    Inc(Result.Bottom, Result.Top);
   end;
 end;
 
