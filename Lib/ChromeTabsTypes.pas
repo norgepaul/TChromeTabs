@@ -129,7 +129,8 @@ type
     htAddButton,
     htCloseButton,
     htScrollButtonLeft,
-    htScrollButtonRight
+    htScrollButtonRight,
+    htTabImage
   );
 
   TDrawState = (
@@ -278,7 +279,8 @@ const
     'New Button',
     'Close Button',
     'Scroll Left',
-    'Scroll Right'
+    'Scroll Right',
+    'Tab Image'
   );
 
   TabChangeTypeDescriptions: Array[TTabChangeType] of String = (

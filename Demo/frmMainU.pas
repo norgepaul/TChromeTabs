@@ -411,6 +411,7 @@ type
       TabChangeType: TTabChangeType);
     procedure ChromeTabs1ButtonCloseTabClick(Sender: TObject; ATab: TChromeTab;
       var Close: Boolean);
+    procedure ChromeTabs1TabImageClick(Sender: TObject; ATab: TChromeTab);
     procedure cbTabShapesChange(Sender: TObject);
     procedure ChromeTabs1TabDragOver(Sender: TObject; X, Y: Integer;
       State: TDragState; DragTabObject: IDragTabObject; var Accept: Boolean);
@@ -554,7 +555,7 @@ resourcestring
   StrUpload = 'Upload';
 
 const
-  EventNames: Array[0..18] of String = (
+  EventNames: Array[0..19] of String = (
     'OnActiveTabChanging',
     'OnChange',
     'OnActiveTabChanged',
@@ -573,7 +574,8 @@ const
     'OnTabDragOver',
     'OnTabDragDrop',
     '',
-    'Total Repaints'
+    'Total Repaints',
+    'OnTabImageClick'
   );
 
 {$R *.dfm}
@@ -1194,6 +1196,7 @@ begin
   FCurrentTabs.OnAfterDrawItem := ChromeTabs1AfterDrawItem;
   FCurrentTabs.OnBeforeDrawItem := ChromeTabs1BeforeDrawItem;
   FCurrentTabs.OnButtonCloseTabClick := ChromeTabs1ButtonCloseTabClick;
+  FCurrentTabs.OnTabImageClick := ChromeTabs1TabImageClick;
   FCurrentTabs.OnCreateDragForm := ChromeTabs1CreateDragForm;
   FCurrentTabs.OnEnter := ChromeTabs1Enter;
   FCurrentTabs.OnExit := ChromeTabs1Exit;
@@ -1211,6 +1214,7 @@ begin
   FCurrentTabs.OnMouseMove := ChromeTabs1MouseMove;
   FCurrentTabs.OnAnimateStyle := ChromeTabs1AnimateStyle;
   FCurrentTabs.OnAnimateMovement := ChromeTabs1AnimateMovement;
+  FCurrentTabs.OnChange := ChromeTabs1Change;
 end;
 
 procedure TfrmMain.UnHookEvents;
@@ -1219,15 +1223,15 @@ begin
   FCurrentTabs.OnActiveTabChanging := nil;
   FCurrentTabs.OnAfterDrawItem := nil;
   FCurrentTabs.OnBeforeDrawItem := nil;
-  FCurrentTabs.OnChange := nil;
+
+  FCurrentTabs.OnButtonCloseTabClick := nil;
+  FCurrentTabs.OnTabImageClick := nil;
   FCurrentTabs.OnCreateDragForm := nil;
   FCurrentTabs.OnEnter := nil;
   FCurrentTabs.OnExit := nil;
   FCurrentTabs.OnGetControlPolygons := nil;
   FCurrentTabs.OnMouseDown := nil;
   FCurrentTabs.OnMouseUp := nil;
-  FCurrentTabs.OnMouseMove := nil;
-  FCurrentTabs.OnResize := nil;
   FCurrentTabs.OnScroll := nil;
   FCurrentTabs.OnScrollWidthChanged := nil;
   FCurrentTabs.OnStateChange := nil;
@@ -1236,8 +1240,10 @@ begin
   FCurrentTabs.OnTabDragDropped := nil;
   FCurrentTabs.OnTabDragOver := nil;
   FCurrentTabs.OnTabDragStart := nil;
+  FCurrentTabs.OnMouseMove := nil;
   FCurrentTabs.OnAnimateStyle := nil;
   FCurrentTabs.OnAnimateMovement := nil;
+  FCurrentTabs.OnChange := nil;
 end;
 
 procedure TfrmMain.ChromeTabControlPropertiesToGUI(ChromeTabs: TChromeTabs);
@@ -1670,6 +1676,12 @@ procedure TfrmMain.ChromeTabs1ButtonCloseTabClick(Sender: TObject;
   ATab: TChromeTab; var Close: Boolean);
 begin
   FLogOtherEvents.Log('OnButtonCloseTabClick [TabIndex = %d]', [ATab.Index]);
+end;
+
+procedure TfrmMain.ChromeTabs1TabImageClick(Sender: TObject;
+  ATab: TChromeTab);
+begin
+  FLogOtherEvents.Log('OnTabImageClick [TabIndex = %d]', [ATab.Index]);
 end;
 
 procedure TfrmMain.ChromeTabs1Change(Sender: TObject; ATab: TChromeTab;

@@ -126,6 +126,7 @@ type
 
   TOnDebugLog = procedure(Sender: TObject; const Text: String) of object;
   TOnButtonCloseTabClick = procedure(Sender: TObject; ATab: TChromeTab; var Close: Boolean) of object;
+  TOnTabImageClick = procedure(Sender: TObject; ATab: TChromeTab) of object;
   TOnActiveTabChanging = procedure(Sender: TObject; AOldTab, ANewTab: TChromeTab; var Allow: Boolean) of object;
   TOnActiveTabChanged = procedure(Sender: TObject; ATab: TChromeTab) of object;
   TOnChange = procedure(Sender: TObject; ATab: TChromeTab; TabChangeType: TTabChangeType) of object;
@@ -185,6 +186,7 @@ type
     FOnChange: TOnChange;
     FOnButtonAddClick: TOnButtonAddClick;
     FOnButtonCloseTabClick: TOnButtonCloseTabClick;
+    FOnTabImageClick : TOnTabImageClick;
     FOnDebugLog: TOnDebugLog;
     FOnNeedDragImageControl: TOnNeedDragImageControl;
     FOnCreateDragForm: TOnCreateDragForm;
@@ -361,6 +363,7 @@ type
     // Virtual
     procedure DoOnActiveTabChanged(ATab: TChromeTab); virtual;
     procedure DoOnButtonCloseTabClick(ATab: TChromeTab; var AllowClose: Boolean); virtual;
+    procedure DoOnTabImageClick(ATab: TChromeTab); virtual;
     procedure DoOnButtonAddClick; virtual;
     procedure DoOnNeedDragImageControl(ATab: TChromeTab; var DragControl: TWinControl); virtual;
     procedure DoOnCreateDragForm(ATab: TChromeTab; var DragForm: TForm); virtual;
@@ -402,6 +405,7 @@ type
     property OnActiveTabChanged: TOnActiveTabChanged read FOnActiveTabChanged write FOnActiveTabChanged;
     property OnChange: TOnChange read FOnChange write FOnChange;
     property OnButtonCloseTabClick: TOnButtonCloseTabClick read FOnButtonCloseTabClick write FOnButtonCloseTabClick;
+    property OnTabImageClick: TOnTabImageClick read FOnTabImageClick write FOnTabImageClick;
     property OnButtonAddClick: TOnButtonAddClick read FOnButtonAddClick write FOnButtonAddClick;
     property OnDebugLog: TOnDebugLog read FOnDebugLog write FOnDebugLog;
     property OnNeedDragImageControl: TOnNeedDragImageControl read FOnNeedDragImageControl write FOnNeedDragImageControl;
@@ -492,6 +496,7 @@ type
     property OnDebugLog;
     property OnButtonAddClick;
     property OnButtonCloseTabClick;
+    property OnTabImageClick;
     property OnNeedDragImageControl;
     property OnCreateDragForm;
     property OnStateChange;
@@ -1976,9 +1981,11 @@ begin
              ((Button = mbRight) and
               (FOptions.Behaviour.TabRightClickSelect)) then
           begin
-            // Are activvating a tab?
+            // Are activating a tab?
             if ((FMouseDownHitTest.HitTestArea = htTab) or
-                ((FMouseDownHitTest.HitTestArea = htCloseButton) and (Button = mbRight))) and
+                ((FMouseDownHitTest.HitTestArea = htCloseButton) and (Button = mbRight))
+                or (FMouseDownHitTest.HitTestArea = htTabImage)
+                ) and
                (FMouseDownHitTest.TabIndex <> ActiveTabIndex) then
             begin
               Tabs[FMouseDownHitTest.TabIndex].Active := TRUE;
@@ -2180,7 +2187,7 @@ begin
       else
       begin
         // Force a redraw if we're drawing the mouse glow
-        if (FOptions.Display.TabMouseGlow.Visible) and (HitTestResult.HitTestArea in [htTab, htCloseButton]) then
+        if (FOptions.Display.TabMouseGlow.Visible) and (HitTestResult.HitTestArea in [htTab, htCloseButton, htTabImage]) then
           Redraw;
       end;
     finally
@@ -2417,6 +2424,12 @@ begin
 end;
 {$ENDIF}
 
+procedure TCustomChromeTabs.DoOnTabImageClick(ATab: TChromeTab);
+begin
+  if Assigned(FOnTabImageClick) then
+    FOnTabImageClick(Self,ATab);
+end;
+
 procedure TCustomChromeTabs.DoOnButtonAddClick;
 var
   Handled: Boolean;
@@ -2553,6 +2566,15 @@ begin
       AddState(stsControlPositionsInvalidated);
     end else
 
+    //Have we clicked the TabImage?
+    if (FMouseButton = mbLeft) and
+       (HitTestResult.HitTestArea = htTabImage) and
+       (FMouseDownHitTest.HitTestArea = htTabImage) and
+       (HitTestResult.TabIndex = FMouseDownHitTest.TabIndex) then
+    begin
+      DoOnTabImageClick(Tabs[HitTestResult.TabIndex]);
+    end
+    else
     // Have we clicked the Close button?
     if (FMouseButton = mbLeft) and
        (HitTestResult.HitTestArea = htCloseButton) and

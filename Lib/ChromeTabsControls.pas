@@ -194,6 +194,7 @@ type
     function GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
     function GetCloseButtonRect: TRect;
     function GetCloseButtonCrossRect: TRect;
+    function GetTabImageRect(out NormalImageVisible, OverlayImageVisible, SpinnerVisible: Boolean): TRect;
     procedure SetDrawState(const Value: TDrawState; AnimationTimeMS: Integer; EaseType: TChromeTabsEaseType; ForceUpdate: Boolean = FALSE); override;
     function GetTabWidthByContent: Integer;
 
@@ -620,8 +621,9 @@ end;
 function TChromeTabControl.GetHitTestArea(MouseX, MouseY: Integer): THitTestArea;
 var
   TabPolygon: IChromeTabPolygons;
-  CloseRect: TRect;
+  CloseRect,ImageRect: TRect;
   i: Integer;
+  NormalImageVisible, OverlayImageVisible, SpinnerVisible: Boolean;
 begin
   TabPolygon := GetPolygons;
 
@@ -634,6 +636,17 @@ begin
     if PtInRect(CloseRect, Point(MouseX, MouseY)) then
     begin
       Result := htCloseButton;
+
+      Exit;
+    end;
+  end;
+
+  ImageRect := GetTabImageRect(NormalImageVisible, OverlayImageVisible, SpinnerVisible);
+  if NormalImageVisible or OverlayImageVisible or SpinnerVisible then
+  begin
+    if PtInRect(ImageRect, Point(MouseX, MouseY)) then
+    begin
+      Result := htTabImage;
 
       Exit;
     end;
@@ -888,6 +901,16 @@ begin
                  Result.Top + ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset),
                  Result.Right - ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset),
                  Result.Bottom - ChromeTabs.ScaledPixels(ChromeTabs.GetOptions.Display.CloseButton.CrossRadialOffset));
+end;
+
+function TChromeTabControl.GetTabImageRect( out NormalImageVisible,
+    OverlayImageVisible, SpinnerVisible: Boolean): TRect;
+var
+  TextRect, CloseButtonRect, CloseButtonCrossRect: TRect;
+  TextVisible: Boolean;
+begin
+  CalculateRects(Result,TextRect, CloseButtonRect, CloseButtonCrossRect,
+      NormalImageVisible, OverlayImageVisible, SpinnerVisible,TextVisible);
 end;
 
 function TChromeTabControl.GetTabBrush: TGPLinearGradientBrush;
