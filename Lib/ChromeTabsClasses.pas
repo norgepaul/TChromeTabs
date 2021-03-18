@@ -2441,7 +2441,7 @@ begin
 
   FDefaultMovementAnimationTimeMS := 100;
   FDefaultStyleAnimationTimeMS := 300;
-  FAnimationTimerInterval := 25;
+  FAnimationTimerInterval := 100;
   FMinimumTabAnimationWidth := 40;
   FDefaultMovementEaseType := ttLinearTween;
   FDefaultStyleEaseType := ttLinearTween;

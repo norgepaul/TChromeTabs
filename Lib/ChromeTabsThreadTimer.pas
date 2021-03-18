@@ -102,7 +102,7 @@ var
 begin
   while (FTimer.Continue) and (not Terminated) do
   begin
-    Last := timeGetTime;
+    //Last := timeGetTime;
 
     try
       Synchronize(DoExecute);
@@ -110,7 +110,7 @@ begin
       // Just in case
     end;
 
-    SleepTime := FTimer.FInterval - Integer(timeGetTime - Last);
+    SleepTime := FTimer.FInterval;// - Integer(timeGetTime - Last);
 
     if SleepTime < 10 then
       SleepTime := 10;
