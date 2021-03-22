@@ -98,7 +98,7 @@ end;
 procedure TTimerThread.Execute;
 var
   SleepTime: Integer;
-  Last: DWORD;
+  //Last: DWORD;
 begin
   while (FTimer.Continue) and (not Terminated) do
   begin

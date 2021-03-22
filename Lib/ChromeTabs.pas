@@ -1726,95 +1726,96 @@ var
   AnimateModified: Boolean;
   AnimateSpinner: Boolean;
 begin
-  if (csDestroying in ComponentState) then
-    exit;
-
-  if not IsWindowVisibleOnScreen(self.Parent) then
-    exit;
-
-  RemoveState(stsAnimatingMovement);
-  RemoveState(stsAnimatingStyle);
-
-  TickCount := GetTickCount;
-
-  AnimateModified := FNextModifiedGlowAnimateTickCount < TickCount;
-
-  if AnimateModified then
-    FNextModifiedGlowAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabModifiedGlow.AnimationUpdateMS);
-
-  AnimateSpinner := FNextSpinnerAnimateTickCount < TickCount;
-
-  if AnimateSpinner then
-    FNextSpinnerAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabSpinners.AnimationUpdateMS);
-
-  for i := pred(Tabs.Count) downto 0 do
+  if not (csDestroying in ComponentState) then
   begin
-    if (AnimateModified) and
-       (TabControls[i].AnimateModified) then
-      AddState(stsAnimatingStyle);
+    //disabled, too many side effects
+    //if not IsWindowVisibleOnScreen(self.Parent) then
+    //  exit;
 
-    if (AnimateSpinner) and
-       (TabControls[i].AnimateSpinner) then
-      AddState(stsAnimatingStyle);
+    RemoveState(stsAnimatingMovement);
+    RemoveState(stsAnimatingStyle);
 
-    if TabControls[i].AnimateStyle then
-      AddState(stsAnimatingStyle);
+    TickCount := GetTickCount;
 
-    if TabControls[i].AnimateMovement then
+    AnimateModified := FNextModifiedGlowAnimateTickCount < TickCount;
+
+    if AnimateModified then
+      FNextModifiedGlowAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabModifiedGlow.AnimationUpdateMS);
+
+    AnimateSpinner := FNextSpinnerAnimateTickCount < TickCount;
+
+    if AnimateSpinner then
+      FNextSpinnerAnimateTickCount := TickCount + Cardinal(FOptions.Display.TabSpinners.AnimationUpdateMS);
+
+    for i := pred(Tabs.Count) downto 0 do
     begin
-      AddState(stsAnimatingMovement);
+      if (AnimateModified) and
+         (TabControls[i].AnimateModified) then
+        AddState(stsAnimatingStyle);
 
-      if (i = ActiveTabIndex) and (HasState(stsAnimatingNewTab)) then
-        ScrollIntoView(Tabs[i]);
-    end
-    else
-    begin
-      if (i = ActiveTabIndex) and (HasState(stsAnimatingNewTab)) then
+      if (AnimateSpinner) and
+         (TabControls[i].AnimateSpinner) then
+        AddState(stsAnimatingStyle);
+
+      if TabControls[i].AnimateStyle then
+        AddState(stsAnimatingStyle);
+
+      if TabControls[i].AnimateMovement then
       begin
-        RemoveState(stsAnimatingNewTab);
+        AddState(stsAnimatingMovement);
 
-        CorrectScrollOffset(TRUE);
+        if (i = ActiveTabIndex) and (HasState(stsAnimatingNewTab)) then
+          ScrollIntoView(Tabs[i]);
+      end
+      else
+      begin
+        if (i = ActiveTabIndex) and (HasState(stsAnimatingNewTab)) then
+        begin
+          RemoveState(stsAnimatingNewTab);
 
-        ScrollIntoView(Tabs[i]);
+          CorrectScrollOffset(TRUE);
+
+          ScrollIntoView(Tabs[i]);
+        end;
+      end;
+
+      // We've finshed the delete tab animation. Delete the tab now.
+      if Tabs[i].MarkedForDeletion then
+      begin
+        AddState(stsControlPositionsInvalidated);
+        AddState(stsAnimatingMovement);
+
+        if RectWidth(TabControls[i].ControlRect) <= ScaledPixels(FOptions.Animation.MinimumTabAnimationWidth) then
+        begin
+          DeleteTab(i);
+
+          RemoveState(stsAnimatingCloseTab);
+        end;
       end;
     end;
 
-    // We've finshed the delete tab animation. Delete the tab now.
-    if Tabs[i].MarkedForDeletion then
+    AnimateButtonControl(FAddButtonControl);
+    AnimateButtonControl(FScrollButtonLeftControl);
+    AnimateButtonControl(FScrollButtonRightControl);
+
+    if (HasState(stsAnimatingMovement)) or (HasState(stsAnimatingStyle)) then
     begin
-      AddState(stsControlPositionsInvalidated);
-      AddState(stsAnimatingMovement);
+      if (HasState(stsDeletingUnPinnedTabs)) and
+         (not HasState(stsDragging)) then
+        SetControlDrawStates;
 
-      if RectWidth(TabControls[i].ControlRect) <= ScaledPixels(FOptions.Animation.MinimumTabAnimationWidth) then
-      begin
-        DeleteTab(i);
-
-        RemoveState(stsAnimatingCloseTab);
-      end;
+      Redraw;
     end;
+
+    { TODO :
+      This is a bit of a hack to get the scrolling working for controls on other forms.
+      The problem is that while dragging, the message queue of the destination form
+      is not processed. }
+    if (FDragTabObject <> nil) and
+       (FDragTabObject.DockControl <> nil) and
+       (FDragTabObject.SourceControl <> FDragTabObject.DockControl) then
+      FDragTabObject.DockControl.FireScrollTimer;
   end;
-
-  AnimateButtonControl(FAddButtonControl);
-  AnimateButtonControl(FScrollButtonLeftControl);
-  AnimateButtonControl(FScrollButtonRightControl);
-
-  if (HasState(stsAnimatingMovement)) or (HasState(stsAnimatingStyle)) then
-  begin
-    if (HasState(stsDeletingUnPinnedTabs)) and
-       (not HasState(stsDragging)) then
-      SetControlDrawStates;
-
-    Redraw;
-  end;
-
-  { TODO :
-    This is a bit of a hack to get the scrolling working for controls on other forms.
-    The problem is that while dragging, the message queue of the destination form
-    is not processed. }
-  if (FDragTabObject <> nil) and
-     (FDragTabObject.DockControl <> nil) and
-     (FDragTabObject.SourceControl <> FDragTabObject.DockControl) then
-    FDragTabObject.DockControl.FireScrollTimer;
 end;
 
 destructor TCustomChromeTabs.Destroy;
