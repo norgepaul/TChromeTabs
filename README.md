@@ -16,4 +16,4 @@ TChromeTabs has been tested under Delphi 6 and Delphi 10.4 Sydney. To install:
 
 ## Contribution
 
-We love active participants and pull requests from everyone. If wat to try just read this guidance [CONTRIBUTING.md](./CONTRIBUTING.md)
+We love active participants and pull requests from everyone. If you want to try just read this guide [CONTRIBUTING.md](./CONTRIBUTING.md)
