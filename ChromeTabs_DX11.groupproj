@@ -1,12 +1,12 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{17F82C49-3DB5-4032-A63B-C118A7B20750}</ProjectGuid>
+        <ProjectGuid>{36C3BC78-218A-415D-A6B1-9121209CE146}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Packages\Delphi DX10.4\ChromeTabs_R.dproj">
+        <Projects Include="Packages\Delphi DX11\ChromeTabs_R.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Packages\Delphi DX10.4\ChromeTabs_D.dproj">
+        <Projects Include="Packages\Delphi DX11\ChromeTabs_D.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -18,22 +18,22 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="ChromeTabs_R">
-        <MSBuild Projects="Packages\Delphi DX10.4\ChromeTabs_R.dproj"/>
+        <MSBuild Projects="Packages\Delphi DX11\ChromeTabs_R.dproj"/>
     </Target>
     <Target Name="ChromeTabs_R:Clean">
-        <MSBuild Projects="Packages\Delphi DX10.4\ChromeTabs_R.dproj" Targets="Clean"/>
+        <MSBuild Projects="Packages\Delphi DX11\ChromeTabs_R.dproj" Targets="Clean"/>
     </Target>
     <Target Name="ChromeTabs_R:Make">
-        <MSBuild Projects="Packages\Delphi DX10.4\ChromeTabs_R.dproj" Targets="Make"/>
+        <MSBuild Projects="Packages\Delphi DX11\ChromeTabs_R.dproj" Targets="Make"/>
     </Target>
     <Target Name="ChromeTabs_D">
-        <MSBuild Projects="Packages\Delphi DX10.4\ChromeTabs_D.dproj"/>
+        <MSBuild Projects="Packages\Delphi DX11\ChromeTabs_D.dproj"/>
     </Target>
     <Target Name="ChromeTabs_D:Clean">
-        <MSBuild Projects="Packages\Delphi DX10.4\ChromeTabs_D.dproj" Targets="Clean"/>
+        <MSBuild Projects="Packages\Delphi DX11\ChromeTabs_D.dproj" Targets="Clean"/>
     </Target>
     <Target Name="ChromeTabs_D:Make">
-        <MSBuild Projects="Packages\Delphi DX10.4\ChromeTabs_D.dproj" Targets="Make"/>
+        <MSBuild Projects="Packages\Delphi DX11\ChromeTabs_D.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="ChromeTabs_R;ChromeTabs_D"/>
