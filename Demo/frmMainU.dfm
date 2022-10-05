@@ -10,10 +10,8 @@ object frmMain: TfrmMain
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   Position = poDesktopCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 15
   object ChromeTabs1: TChromeTabs
     Left = 0

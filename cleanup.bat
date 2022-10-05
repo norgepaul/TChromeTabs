@@ -26,7 +26,10 @@ rmdir /Q /S "Packages\Delphi DX10.2\__history"
 rmdir /Q /S "Packages\Delphi DX10.2\__recovery"
 rmdir /Q /S "Packages\Delphi DX10.3\__history"
 rmdir /Q /S "Packages\Delphi DX10.3\__recovery"
+rmdir /Q /S "Packages\Delphi DX10.4\__history"
 rmdir /Q /S "Packages\Delphi DX10.4\__recovery"
+rmdir /Q /S "Packages\Delphi DX11\__history"
+rmdir /Q /S "Packages\Delphi DX11\__recovery"
 
 rmdir /Q /S bin
 pause
