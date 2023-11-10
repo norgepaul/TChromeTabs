@@ -1,4 +1,7 @@
-TChromeTabs 2.6
+TChromeTabs 2.7
+
+10-11-2023
+Update: Delphi 12
 
 26-11-2020
 Update: High-DPI support

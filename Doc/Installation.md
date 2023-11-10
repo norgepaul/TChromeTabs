@@ -1,6 +1,6 @@
 # TChromeTabs Installation in the RAD Studio
 
-TChromeTabs is supporting: Delphi 6 and Delphi 10.2 Tokyo. 
+TChromeTabs is supporting: Delphi 6 and Delphi 12. 
 
 To install:
 

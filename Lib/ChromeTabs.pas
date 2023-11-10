@@ -1,6 +1,6 @@
 unit ChromeTabs;
 
-// Version 2.6
+// Version 2.7
 //
 // TChromeTabs - A Chome Tab component for Delphi that includes ALL the
 //               features seen in the Google Chrome tab control along with
