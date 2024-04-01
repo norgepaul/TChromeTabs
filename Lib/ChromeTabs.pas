@@ -1998,6 +1998,9 @@ begin
 end;
 
 procedure TCustomChromeTabs.MouseDown(Button: TMouseButton; Shift: TShiftState; x, y: Integer);
+var
+  HitTestResult: THitTestResult;
+  AllowClose: Boolean;
 begin
   inherited;
 
@@ -2049,6 +2052,27 @@ begin
                (FMouseDownHitTest.TabIndex <> ActiveTabIndex) then
             begin
               Tabs[FMouseDownHitTest.TabIndex].Active := TRUE;
+            end;
+          end
+          else if Button = TMouseButton.mbMiddle then
+          begin
+            HitTestResult := HitTest(Point(X, Y));
+            AllowClose := True;
+            if Assigned(FOnButtonCloseTabClick) then
+              FOnButtonCloseTabClick(Self, Tabs[FMouseDownHitTest.TabIndex], AllowClose);
+
+            if (AllowClose) and (not Tabs[HitTestResult.TabIndex].Pinned) and (FOptions.Behaviour.CloseOnWheel) then
+            begin
+              // Reset the tab closing state
+              ClearTabClosingStates;
+
+              AddState(stsDeletingUnPinnedTabs);
+
+              FClosedTabRect := TabControls[HitTestResult.TabIndex].EndRect;
+              FClosedTabIndex := HitTestResult.TabIndex;
+
+              DeleteTab(HitTestResult.TabIndex);
+              AddState(stsControlPositionsInvalidated);
             end;
           end;
         finally
