@@ -941,6 +941,7 @@ type
     FTabRightClickSelect: Boolean;
     FActivateNewTab: Boolean;
     FDebugMode: Boolean;
+    FCloseOnWheel: Boolean;
   private
     procedure SetTabRightClickSelect(const Value: Boolean);
     procedure SetTabSmartDeleteResizeCancelDelay(const Value: Integer);
@@ -951,6 +952,7 @@ type
     procedure SetDebugMode(const Value: Boolean);
     procedure SetBackgroundDragMovesForm(const Value: Boolean);
     procedure SetIgnoreDoubleClicksWhileAnimatingMovement(const Value: Boolean);
+    procedure SetCloseOnWheel(const Value: Boolean);
   public
     constructor Create(AOwner: TPersistent); override;
   published
@@ -962,6 +964,7 @@ type
     property TabRightClickSelect: Boolean read FTabRightClickSelect write SetTabRightClickSelect;
     property ActivateNewTab: Boolean read FActivateNewTab write SetActivateNewTab;
     property DebugMode: Boolean read FDebugMode write SetDebugMode;
+    property CloseOnWheel: Boolean read FCloseOnWheel write SetCloseOnWheel;
     property IgnoreDoubleClicksWhileAnimatingMovement: Boolean read FIgnoreDoubleClicksWhileAnimatingMovement write SetIgnoreDoubleClicksWhileAnimatingMovement;
   end;
 
@@ -2834,6 +2837,7 @@ begin
   FTabRightClickSelect := TRUE;
   FActivateNewTab := TRUE;
   FIgnoreDoubleClicksWhileAnimatingMovement := TRUE;
+  FCloseOnWheel := TRUE;
 end;
 
 procedure TChromeTabsBehaviourOptions.SetActivateNewTab(const Value: Boolean);
@@ -2880,6 +2884,11 @@ procedure TChromeTabsBehaviourOptions.SetBackgroundDragMovesForm(
   const Value: Boolean);
 begin
   FBackgroundDragMovesForm := Value;
+end;
+
+procedure TChromeTabsBehaviourOptions.SetCloseOnWheel(const Value: Boolean);
+begin
+  FCloseOnWheel := Value;
 end;
 
 procedure TChromeTabsBehaviourOptions.SetUseBuiltInPopupMenu(
