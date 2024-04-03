@@ -80,9 +80,11 @@ unit ChromeTabs;
   {$IF CompilerVersion >= 31.0}
     {$DEFINE CURRENT_PPI_SUPPORT}
   {$IFEND}
+  {$if CompilerVersion >= 19.0}
+    {$DEFINE EXPLICIT_DRAW_STATE}
+  {$IFEND}
   {$if CompilerVersion >= 18.0}
     {$DEFINE ADDITIONAL_MOUSE_EVENTS}
-    {$DEFINE EXPLICIT_DRAW_STATE}
   {$IFEND}
 {$ENDIF}
 
@@ -2054,7 +2056,7 @@ begin
               Tabs[FMouseDownHitTest.TabIndex].Active := TRUE;
             end;
           end
-          else if Button = TMouseButton.mbMiddle then
+          else if Button = {$IFDEF EXPLICIT_DRAW_STATE}TMouseButton.{$ENDIF}mbMiddle then
           begin
             HitTestResult := HitTest(Point(X, Y));
             AllowClose := True;

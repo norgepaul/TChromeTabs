@@ -30,7 +30,7 @@ interface
   {$IF CompilerVersion >= 23.0}
     {$DEFINE UNIT_SCOPE_NAMES}
   {$IFEND}
-  {$if CompilerVersion >= 18.0}
+  {$if CompilerVersion >= 19.0}
     {$DEFINE MODERN_THREAD}
   {$IFEND}
 {$ENDIF}
