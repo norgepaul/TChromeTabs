@@ -1,0 +1,54 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{b4c9db87-1a56-444c-aa9d-7377f1d72473}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Projects Include="Demo\ChromeTabsDemoD2007.dproj" />
+    <Projects Include="Packages\Delphi 2007\ChromeTabs_D.dproj" />
+    <Projects Include="Packages\Delphi 2007\ChromeTabs_R.dproj" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="ChromeTabsDemoD2007">
+    <MSBuild Projects="Demo\ChromeTabsDemoD2007.dproj" Targets="" />
+  </Target>
+  <Target Name="ChromeTabsDemoD2007:Clean">
+    <MSBuild Projects="Demo\ChromeTabsDemoD2007.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="ChromeTabsDemoD2007:Make">
+    <MSBuild Projects="Demo\ChromeTabsDemoD2007.dproj" Targets="Make" />
+  </Target>
+  <Target Name="ChromeTabs_R">
+    <MSBuild Projects="Packages\Delphi 2007\ChromeTabs_R.dproj" Targets="" />
+  </Target>
+  <Target Name="ChromeTabs_R:Clean">
+    <MSBuild Projects="Packages\Delphi 2007\ChromeTabs_R.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="ChromeTabs_R:Make">
+    <MSBuild Projects="Packages\Delphi 2007\ChromeTabs_R.dproj" Targets="Make" />
+  </Target>
+  <Target Name="ChromeTabs_D">
+    <MSBuild Projects="Packages\Delphi 2007\ChromeTabs_D.dproj" Targets="" />
+  </Target>
+  <Target Name="ChromeTabs_D:Clean">
+    <MSBuild Projects="Packages\Delphi 2007\ChromeTabs_D.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="ChromeTabs_D:Make">
+    <MSBuild Projects="Packages\Delphi 2007\ChromeTabs_D.dproj" Targets="Make" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="ChromeTabsDemoD2007;ChromeTabs_R;ChromeTabs_D" />
+  </Target>
+  <Target Name="Clean">
+    <CallTarget Targets="ChromeTabsDemoD2007:Clean;ChromeTabs_R:Clean;ChromeTabs_D:Clean" />
+  </Target>
+  <Target Name="Make">
+    <CallTarget Targets="ChromeTabsDemoD2007:Make;ChromeTabs_R:Make;ChromeTabs_D:Make" />
+  </Target>
+  <Import Condition="Exists('$(MSBuildBinPath)\Borland.Group.Targets')" Project="$(MSBuildBinPath)\Borland.Group.Targets" />
+</Project>
