@@ -77,7 +77,7 @@
         <DCC_UsePackage>vcl;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DllVersion>350</DllVersion>
+        <DllVersion>290</DllVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_BplOutput>$(BDSCOMMONDIR)\Bpl\Win64</DCC_BplOutput>
