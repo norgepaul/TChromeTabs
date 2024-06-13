@@ -2056,7 +2056,8 @@ begin
               Tabs[FMouseDownHitTest.TabIndex].Active := TRUE;
             end;
           end
-          else if Button = {$IFDEF EXPLICIT_DRAW_STATE}TMouseButton.{$ENDIF}mbMiddle then
+          else if (Button = {$IFDEF EXPLICIT_DRAW_STATE}TMouseButton.{$ENDIF}mbMiddle)
+                   and (FMouseDownHitTest.HitTestArea = htTab) then
           begin
             HitTestResult := HitTest(Point(X, Y));
             AllowClose := True;
@@ -2644,7 +2645,7 @@ begin
       EndDrag(X, Y, FDragCancelled);
     end;
 
-    if (HitTestResult.HitTestArea = htAddButton) and
+    if (FMouseButton = mbLeft) and (HitTestResult.HitTestArea = htAddButton) and
        (FMouseDownHitTest.HitTestArea = htAddButton) then
     begin
       DoOnButtonAddClick;
